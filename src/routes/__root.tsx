@@ -111,16 +111,14 @@ function Nav() {
       <Link to="/" aria-label="Blindsight home" onClick={closeMenu}>
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
-      {menuOpen && (
-        <div className="nav-mobile-menu">
-          <Link to="/" onClick={closeMenu}>Solution</Link>
-          <Link to="/in-action" onClick={closeMenu}>In Action</Link>
-          <Link to="/careers" onClick={closeMenu}>Careers</Link>
-          <Link to="/blog" onClick={closeMenu}>Blog</Link>
-          <Link to="/contact" onClick={closeMenu}>Contact</Link>
-          <Link to="/demo" onClick={closeMenu}>Request a Demo</Link>
-        </div>
-      )}
+      <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
+        <Link to="/" onClick={closeMenu}>Solution</Link>
+        <Link to="/in-action" onClick={closeMenu}>In Action</Link>
+        <Link to="/careers" onClick={closeMenu}>Careers</Link>
+        <Link to="/blog" onClick={closeMenu}>Blog</Link>
+        <Link to="/contact" onClick={closeMenu}>Contact</Link>
+        <Link to="/demo" onClick={closeMenu}>Request a Demo</Link>
+      </div>
       <div className="nav-right">
         <ul className="nav-links">
           <li><Link to="/">Solution</Link></li>
@@ -190,12 +188,12 @@ function Nav() {
           <li><Link to="/contact">Contact</Link></li>
         </ul>
         <Link to="/demo" className="btn btn-violet">Request a Demo</Link>
-        <button className="nav-hamburger" aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
-          {menuOpen ? (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-          ) : (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-          )}
+        <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line className="ham-top" x1="4" y1="6" x2="20" y2="6" />
+            <line className="ham-mid" x1="4" y1="12" x2="20" y2="12" />
+            <line className="ham-bot" x1="4" y1="18" x2="20" y2="18" />
+          </svg>
         </button>
       </div>
     </nav>
