@@ -103,7 +103,7 @@ function ApplyPage() {
             {done ? (
               <div className="demo-success">
                 <span className="tag">Received</span>
-                <h2>Thanks — we'll be in touch.</h2>
+                <h2>Thanks - we'll be in touch.</h2>
                 <p>
                   Questions in the meantime? Write to{" "}
                   <a href="mailto:careers@blindsight.io">careers@blindsight.io</a>.
@@ -127,12 +127,12 @@ function ApplyPage() {
                   <input name="cv" type="file" accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" />
                 </label>
                 <label className="demo-field">
-                  <span>Anything you'd like us to know?</span>
+                  <span>Tell us anything relevant about you, your needs, your use case</span>
                   <textarea
                     name="message"
                     rows={4}
                     maxLength={2000}
-                    placeholder="Optional — links, what you'd build here, when you can start."
+                    placeholder="Optional - links, what you'd build here, when you can start."
                   />
                 </label>
                 <label className="demo-consent">

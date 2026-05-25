@@ -98,17 +98,29 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <Link to="/" aria-label="Blindsight home">
+      <Link to="/" aria-label="Blindsight home" onClick={closeMenu}>
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
+      {menuOpen && (
+        <div className="nav-mobile-menu">
+          <Link to="/" onClick={closeMenu}>Solution</Link>
+          <Link to="/in-action" onClick={closeMenu}>In Action</Link>
+          <Link to="/careers" onClick={closeMenu}>Careers</Link>
+          <Link to="/blog" onClick={closeMenu}>Blog</Link>
+          <Link to="/contact" onClick={closeMenu}>Contact</Link>
+          <Link to="/demo" onClick={closeMenu}>Request a Demo</Link>
+        </div>
+      )}
       <div className="nav-right">
         <ul className="nav-links">
           <li><Link to="/">Solution</Link></li>
@@ -178,6 +190,13 @@ function Nav() {
           <li><Link to="/contact">Contact</Link></li>
         </ul>
         <Link to="/demo" className="btn btn-violet">Request a Demo</Link>
+        <button className="nav-hamburger" aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
+          {menuOpen ? (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          )}
+        </button>
       </div>
     </nav>
   );

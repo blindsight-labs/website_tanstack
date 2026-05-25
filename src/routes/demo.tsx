@@ -78,7 +78,7 @@ function DemoPage() {
             {done ? (
               <div className="demo-success">
                 <span className="tag">Got it</span>
-                <h2>Thanks — we'll be in touch.</h2>
+                <h2>Thanks - we'll be in touch.</h2>
                 <p>
                   A founder will reply within one business day from{" "}
                   <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
@@ -95,12 +95,12 @@ function DemoPage() {
                   <input name="email" type="email" required maxLength={255} autoComplete="email" />
                 </label>
                 <label className="demo-field">
-                  <span>Anything you'd like us to know?</span>
+                  <span>Tell us anything relevant about you, your needs, your use case</span>
                   <textarea
                     name="message"
                     rows={4}
                     maxLength={2000}
-                    placeholder="Optional — what you're shipping, where the risk lives."
+                    placeholder="Optional - what you're shipping, where the risk lives."
                   />
                 </label>
                 <label className="demo-consent">
