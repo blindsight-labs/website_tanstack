@@ -1467,4 +1467,49 @@ const TG_CSS = `
   .tg-variant { min-height: 0; border-radius: 14px; }
   .tg-footer { padding: 16px 18px 32px; flex-direction: column; gap: 8px; text-align: center; }
 }
+
+/* Picker: replace circular layout with a 2-column grid on small/medium screens */
+@keyframes tgThreatInMobile { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 1100px) {
+  .tg-picker { padding: 8px 16px 20px; gap: 14px; }
+  .tg-reactor {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0;
+    align-items: start;
+    justify-items: center;
+  }
+  .tg-reactor-ring { display: none !important; }
+  .tg-reactor-core {
+    grid-column: 1 / -1;
+    position: relative !important;
+    transform: none !important;
+    margin-bottom: 8px;
+    width: 140px !important;
+    height: 140px !important;
+  }
+  .tg-threat {
+    position: static !important;
+    transform: none !important;
+    width: 100%;
+    max-width: 180px;
+    opacity: 0;
+    animation: tgThreatInMobile .5s ease-out forwards !important;
+  }
+  .tg-threat-orb { width: 72px; height: 72px; }
+  .tg-threat-icon { width: 30px; height: 30px; }
+  .tg-threat-name { font-size: 13px; }
+  .tg-picker-hint { font-size: 13px; }
+}
+@media (max-width: 640px) {
+  .tg-picker { padding: 8px 12px 16px; }
+  .tg-reactor { gap: 10px; }
+  .tg-reactor-core { width: 120px !important; height: 120px !important; }
+  .tg-threat-orb { width: 64px; height: 64px; }
+  .tg-threat-name { font-size: 12px; }
+}
 `;

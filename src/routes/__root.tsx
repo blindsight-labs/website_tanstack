@@ -43,13 +43,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Blindsight - Securing AI" },
-      { name: "description", content: "Blindsight secures the full AI pipeline — runtime, data, and governance — in one consolidated platform built for regulated enterprises." },
+      { name: "description", content: "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform." },
       { property: "og:title", content: "Blindsight - Securing AI" },
-      { property: "og:description", content: "Blindsight secures the full AI pipeline — runtime, data, and governance — in one consolidated platform built for regulated enterprises." },
+      { property: "og:description", content: "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Blindsight - Securing AI" },
-      { name: "twitter:description", content: "Blindsight secures the full AI pipeline — runtime, data, and governance — in one consolidated platform built for regulated enterprises." },
+      { name: "twitter:description", content: "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -113,7 +113,7 @@ function Nav() {
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
         <Link to="/" onClick={closeMenu}>Solution</Link>
-        <Link to="/in-action" onClick={closeMenu}>In Action</Link>
+        <Link to="/in-action" onClick={closeMenu}>Watch It Work</Link>
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
@@ -122,7 +122,7 @@ function Nav() {
       <div className="nav-right">
         <ul className="nav-links">
           <li><Link to="/">Solution</Link></li>
-          <li><Link to="/in-action">In Action</Link></li>
+          <li><Link to="/in-action">Watch It Work</Link></li>
           <li><Link to="/careers">Careers</Link></li>
           <li
             className="nav-dropdown"
