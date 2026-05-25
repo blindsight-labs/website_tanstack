@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { escapeHtml, renderFields, sendNotification } from "./mailer.server";
 
 const DemoRequestSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(120),
@@ -21,20 +21,32 @@ export const submitDemoRequest = createServerFn({ method: "POST" })
       throw new Error("You must agree to be contacted.");
     }
 
-    const { error } = await supabaseAdmin.from("demo_requests").insert({
-      name: data.name,
-      work_email: data.workEmail,
-      company: data.company,
-      role: data.role || null,
-      company_size: data.companySize || null,
-      use_case: data.useCase || null,
-      message: data.message || null,
-      consent: data.consent,
-      source: data.source || "website",
-    });
+    const to = process.env.MAIL_TO_DEMO;
+    if (!to) throw new Error("MAIL_TO_DEMO is not set");
 
-    if (error) {
-      console.error("[demo_requests] insert failed", error);
+    const html = `
+      <h2 style="font-family:system-ui,sans-serif;font-size:16px;margin:0 0 12px;">New demo request</h2>
+      ${renderFields([
+        ["Name", data.name],
+        ["Work email", data.workEmail],
+        ["Company", data.company],
+        ["Role", data.role || null],
+        ["Company size", data.companySize || null],
+        ["Use case", data.useCase || null],
+        ["Source", data.source || "website"],
+      ])}
+      ${data.message ? `<p style="font-family:system-ui,sans-serif;font-size:14px;margin-top:16px;"><strong>Message:</strong><br>${escapeHtml(data.message).replace(/\n/g, "<br>")}</p>` : ""}
+    `;
+
+    try {
+      await sendNotification({
+        to,
+        subject: `Demo request — ${data.company} (${data.name})`,
+        html,
+        replyTo: data.workEmail,
+      });
+    } catch (err) {
+      console.error("[demo_requests] mail send failed", err);
       throw new Error("Could not submit your request. Please try again.");
     }
 

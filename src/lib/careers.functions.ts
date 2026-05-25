@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { escapeHtml, renderFields, sendNotification } from "./mailer.server";
 
 const ApplicationSchema = z.object({
   role: z.string().trim().min(1).max(160),
@@ -26,45 +26,54 @@ const ALLOWED_MIME = new Set([
   "text/plain",
 ]);
 
+// Resend's API caps total payload at ~40MB but practical attachment limit is
+// lower because the message also has to fit through downstream mail servers.
+// We keep the same 5MB ceiling the old Supabase Storage path used.
+const MAX_CV_BYTES = 5 * 1024 * 1024;
+
 export const submitApplication = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ApplicationSchema.parse(input))
   .handler(async ({ data }) => {
     if (!data.consent) throw new Error("You must agree to be contacted.");
 
-    let cvPath: string | null = null;
+    const to = process.env.MAIL_TO_CAREERS;
+    if (!to) throw new Error("MAIL_TO_CAREERS is not set");
+
+    let attachment: { filename: string; content: Buffer } | undefined;
 
     if (data.cv) {
       if (!ALLOWED_MIME.has(data.cv.mimeType)) {
         throw new Error("Unsupported CV file type. Please upload PDF, DOC, DOCX, or TXT.");
       }
       const bytes = Buffer.from(data.cv.base64, "base64");
-      if (bytes.byteLength > 5 * 1024 * 1024) {
+      if (bytes.byteLength > MAX_CV_BYTES) {
         throw new Error("CV file is too large (max 5MB).");
       }
       const safeName = data.cv.filename.replace(/[^\w.\-]+/g, "_").slice(0, 120);
-      const key = `${crypto.randomUUID()}/${safeName}`;
-      const { error: upErr } = await supabaseAdmin.storage
-        .from("cv-uploads")
-        .upload(key, bytes, { contentType: data.cv.mimeType, upsert: false });
-      if (upErr) {
-        console.error("[cv-uploads] upload failed", upErr);
-        throw new Error("Could not upload your CV. Please try again.");
-      }
-      cvPath = key;
+      attachment = { filename: safeName, content: bytes };
     }
 
-    const { error } = await supabaseAdmin.from("job_applications").insert({
-      role: data.role,
-      name: data.name,
-      email: data.email,
-      message: data.message || null,
-      cv_path: cvPath,
-      consent: data.consent,
-      source: "careers-apply",
-    });
+    const html = `
+      <h2 style="font-family:system-ui,sans-serif;font-size:16px;margin:0 0 12px;">New job application</h2>
+      ${renderFields([
+        ["Role", data.role],
+        ["Name", data.name],
+        ["Email", data.email],
+        ["CV", attachment ? attachment.filename : "(none attached)"],
+      ])}
+      ${data.message ? `<p style="font-family:system-ui,sans-serif;font-size:14px;margin-top:16px;"><strong>Message:</strong><br>${escapeHtml(data.message).replace(/\n/g, "<br>")}</p>` : ""}
+    `;
 
-    if (error) {
-      console.error("[job_applications] insert failed", error);
+    try {
+      await sendNotification({
+        to,
+        subject: `Application — ${data.role} — ${data.name}`,
+        html,
+        replyTo: data.email,
+        attachments: attachment ? [attachment] : undefined,
+      });
+    } catch (err) {
+      console.error("[job_applications] mail send failed", err);
       throw new Error("Could not submit your application. Please try again.");
     }
 
