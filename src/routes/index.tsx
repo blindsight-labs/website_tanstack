@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import logo from "@/assets/logo.png";
+import emblem from "@/assets/emblem.png";
 import icebergImg from "@/assets/iceberg.webp";
 import { HexBg } from "@/components/HexBg";
 
@@ -429,7 +430,7 @@ function Platform() {
             influenced it, closing the loop other tools leave open.
           </p>
           <Link to="/in-action" className="headline-logo-trigger reveal" aria-label="Open the In Action demo" style={{ alignSelf: "center" }}>
-            <img src={logo} alt="" />
+            <img src={emblem} alt="" />
             <span className="ht">
               <span className="top">Interactive demo</span>
               <span className="bot">See how attacks happen, and how you can stop them</span>
