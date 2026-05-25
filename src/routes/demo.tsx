@@ -100,7 +100,7 @@ function DemoPage() {
                     name="message"
                     rows={4}
                     maxLength={2000}
-                    placeholder="Optional - what you're shipping, where the risk lives."
+                    placeholder="e.g. I'm deploying AI across my organization and need to make sure we don't leak information to third parties."
                   />
                 </label>
                 <label className="demo-consent">
