@@ -22,28 +22,30 @@ export const Route = createFileRoute("/")({
 
 function Hero() {
   return (
-    <header className="hero-hex">
-      <HexBg className="hero-hex-canvas" />
-      <div className="hero-hex-inner reveal">
-        <span className="tag">Securing AI · Built in Zurich</span>
-        <h1>
-          <span className="hero-line">Deploy AI Systems</span>
-          <br />
-          <span className="accent-grad">you can trust.</span>
-        </h1>
-        <p className="lede">
-          Deploy AI without blind spots. AI systems face threats from bad actors, misuse, and
-          human error at every layer. Blindsight is the only platform securing all of them.
-        </p>
-        <div className="hero-actions">
-          <Link to="/demo" className="btn btn-violet">Request a Demo</Link>
-          <Link to="/in-action" className="btn btn-outline-violet">See attacks in action →</Link>
+    <>
+      <header className="hero-hex">
+        <HexBg className="hero-hex-canvas" />
+        <div className="hero-hex-inner reveal">
+          <span className="tag">Securing AI · Built in Zurich</span>
+          <h1>
+            <span className="hero-line">Deploy AI Systems</span>
+            <br />
+            <span className="accent-grad">you can trust.</span>
+          </h1>
+          <p className="lede">
+            Deploy AI without blind spots. AI systems face threats from bad actors, misuse, and
+            human error at every layer. Blindsight is the only platform securing all of them.
+          </p>
+          <div className="hero-actions">
+            <Link to="/demo" className="btn btn-violet">Request a Demo</Link>
+            <Link to="/in-action" className="btn btn-outline-violet">See attacks in action →</Link>
+          </div>
         </div>
-        <div className="threat-strip">
-          <strong>Threat vectors //</strong> Bad actors · Misuse · Human error · Supply chain
-        </div>
+      </header>
+      <div className="threat-strip">
+        <strong>Threat vectors //</strong> Bad actors · Misuse · Human error · Supply chain
       </div>
-    </header>
+    </>
   );
 }
 
