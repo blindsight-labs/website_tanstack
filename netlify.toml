@@ -1,0 +1,14 @@
+# Netlify build config for the TanStack Start app.
+# The @netlify/vite-plugin-tanstack-start plugin emits the serverless
+# functions automatically — no [functions] block needed here.
+
+[build]
+command = "bun run build"
+publish = "dist/client"
+
+[build.environment]
+# Pin Bun to match local. Netlify auto-detects from bun.lock but pinning
+# prevents drift on Netlify image upgrades.
+BUN_VERSION = "1.2"
+# Node is required by some build tooling even when Bun is the package manager.
+NODE_VERSION = "20"
