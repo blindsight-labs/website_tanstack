@@ -147,6 +147,7 @@ h1, h2, h3, h4 {
 @media (max-width: 768px) {
   .nav { padding: 14px 20px; }
   .nav-links { display: none; }
+  .nav .btn { font-size: 12px; padding: 8px 14px; }
 }
 
 .nav-hamburger {
@@ -356,7 +357,8 @@ h1, h2, h3, h4 {
   display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px;
   align-items: start; margin-top: 56px;
 }
-@media (max-width: 980px) { .iceberg-grid { grid-template-columns: 1fr; gap: 48px; } }
+@media (max-width: 980px) { .iceberg-grid { grid-template-columns: 1.3fr 1fr; gap: 24px; } }
+@media (max-width: 640px) { .iceberg-grid { grid-template-columns: 3fr 2fr; gap: 8px; align-items: stretch; } }
 
 .threat-list { display: flex; flex-direction: column; gap: 4px; }
 .threat-row {
@@ -394,6 +396,17 @@ h1, h2, h3, h4 {
   background-position: center;
 }
 @media (max-width: 980px) { .iceberg-img { min-height: 460px; margin-top: 0; max-width: 100%; } }
+@media (max-width: 640px) {
+  .iceberg-img {
+    min-height: 0; height: 100%; margin-top: 0;
+    aspect-ratio: unset;
+    background-size: 900% auto;
+    background-position: 42% -170px;
+    border-radius: 8px 0 0 8px;
+    width: calc(100% + 20px);
+    margin-right: -20px;
+  }
+}
 
 /* ── Platform / architecture diagram ── */
 .arch-wrap {
