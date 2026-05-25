@@ -238,15 +238,9 @@ h1, h2, h3, h4 {
   font-family: var(--font-mono); font-size: 11px;
   letter-spacing: 0.15em; color: var(--dim);
   text-transform: uppercase;
-  text-shadow:
-    0 0 1px rgba(0,0,0,0.85),
-    0 1px 2px rgba(0,0,0,0.55);
 }
 .threat-strip strong {
   color: var(--muted); font-weight: 500; margin-right: 14px;
-  text-shadow:
-    0 0 1px rgba(0,0,0,0.85),
-    0 1px 2px rgba(0,0,0,0.55);
 }
 
 /* ── Hero · Hex Lattice (full-bleed center pulse) ── */
@@ -266,9 +260,7 @@ h1, h2, h3, h4 {
   content: "";
   position: absolute; inset: 0;
   z-index: 1; pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 40%, transparent 0%, rgba(10,6,24,0.55) 70%),
-    linear-gradient(to bottom, transparent 60%, rgba(10,6,24,0.85) 100%);
+  background: linear-gradient(to bottom, transparent 65%, rgba(250,248,255,0.9) 100%);
 }
 .hero-hex-inner {
   position: relative; z-index: 2;

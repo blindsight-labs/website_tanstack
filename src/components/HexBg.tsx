@@ -56,14 +56,14 @@ export function HexBg({ className }: { className?: string }) {
           const dist = Math.sqrt(dxc * dxc + dyc * dyc);
           const wave = Math.sin(dist / (80 * dpr) - t * 1.8);
           const fill = Math.max(0, wave) * 0.5;
-          const alpha = 0.08 + fill * 0.3;
+          const alpha = 0.18 + fill * 0.55;
 
           hexPath(cx, cy, R - 1.5 * dpr);
           if (fill > 0.02) {
-            ctx.fillStyle = `rgba(167, 139, 250, ${fill * 0.55})`;
+            ctx.fillStyle = `rgba(124, 58, 237, ${fill * 0.35})`;
             ctx.fill();
           }
-          ctx.strokeStyle = `rgba(167, 139, 250, ${alpha})`;
+          ctx.strokeStyle = `rgba(139, 92, 246, ${alpha})`;
           ctx.lineWidth = 1 * dpr;
           ctx.stroke();
         }
