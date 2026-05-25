@@ -11,9 +11,9 @@ export const Route = createFileRoute("/demo")({
       { name: "description", content: "Book a 30-minute working session with the Blindsight team. Bring a real AI deployment, leave with a live threat map." },
       { property: "og:title", content: "Request a Demo · Blindsight" },
       { property: "og:description", content: "Book a 30-minute working session with the Blindsight team." },
-      { property: "og:url", content: "https://ai-trust-test-1337.lovable.app/demo" },
+      { property: "og:url", content: "https://blindsight.io/demo" },
     ],
-    links: [{ rel: "canonical", href: "https://ai-trust-test-1337.lovable.app/demo" }],
+    links: [{ rel: "canonical", href: "https://blindsight.io/demo" }],
   }),
 });
 

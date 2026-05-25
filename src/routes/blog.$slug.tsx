@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getAllPosts, getPost } from "@/lib/blog-content";
 
-const BASE = "https://ai-trust-test-1337.lovable.app";
+const BASE = "https://blindsight.io";
 
 function PostNotFound() {
   return (

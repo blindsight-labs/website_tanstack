@@ -9,13 +9,13 @@ export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "LLM Security & AI Threat Detection — Blindsight" },
+      { title: "AI Security - Blindsight" },
       { name: "description", content: "Blindsight delivers LLM security and AI threat detection for regulated enterprises — runtime, data, and governance in one platform. Defend against prompt injection, jailbreaks, and back-doors." },
-      { property: "og:title", content: "LLM Security & AI Threat Detection — Blindsight" },
+      { property: "og:title", content: "AI Security - Blindsight" },
       { property: "og:description", content: "LLM security and AI threat detection for regulated enterprises. Runtime, data, and governance in one platform." },
-      { property: "og:url", content: "https://ai-trust-test-1337.lovable.app/" },
+      { property: "og:url", content: "https://blindsight.io/" },
     ],
-    links: [{ rel: "canonical", href: "https://ai-trust-test-1337.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://blindsight.io/" }],
   }),
 });
 

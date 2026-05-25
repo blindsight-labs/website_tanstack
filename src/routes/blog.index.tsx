@@ -5,13 +5,13 @@ export const Route = createFileRoute("/blog/")({
   component: BlogPage,
   head: () => ({
     meta: [
-      { title: "LLM Security Research & AI Threat Detection Insights | Blindsight Blog" },
+      { title: "AI Security Research & Insights | Blindsight Blog" },
       { name: "description", content: "Research notes, attack walkthroughs, and field reports on LLM security, AI threat detection, prompt injection, jailbreaks, and back-doors from the Blindsight team." },
-      { property: "og:title", content: "LLM Security Research & AI Threat Detection Insights" },
+      { property: "og:title", content: "AI Security Research & Insights" },
       { property: "og:description", content: "Research notes and field reports on LLM security and AI threat detection." },
-      { property: "og:url", content: "https://ai-trust-test-1337.lovable.app/blog" },
+      { property: "og:url", content: "https://blindsight.io/blog" },
     ],
-    links: [{ rel: "canonical", href: "https://ai-trust-test-1337.lovable.app/blog" }],
+    links: [{ rel: "canonical", href: "https://blindsight.io/blog" }],
   }),
 });
 
