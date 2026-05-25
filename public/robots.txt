@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ai-trust-test-1337.lovable.app/sitemap.xml

@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Anyone can submit a demo request" ON public.demo_requests;

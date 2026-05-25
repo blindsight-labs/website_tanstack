@@ -1,0 +1,136 @@
+---
+title: "Security in AI: An Introduction"
+slug: security-in-ai-introduction
+category: "Threat primer"
+date: "2026-05-25"
+read: "18 min"
+author: "Filipa Barros"
+excerpt: "How to secure AI Systems. The opening primer in our series. An introduction to how AI models are compromised, a map of the attack surface, and what you can do about it."
+references:
+  - label: "Dastin, J. (2018) - Amazon scraps secret AI recruiting tool that showed bias against women (Reuters)"
+    href: "https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G/"
+  - label: "OWASP AI Exchange - AI Security and Privacy Guide"
+    href: "https://owaspai.org/"
+  - label: "OWASP Top 10 for LLM Applications and Generative AI Security Project"
+    href: "https://genai.owasp.org/"
+  - label: "MITRE ATLAS - Adversarial Threat Landscape for Artificial-Intelligence Systems"
+    href: "https://atlas.mitre.org/pdf-files/MITRE_ATLAS_Fact_Sheet.pdf"
+  - label: "NIST AI 100-2 - Adversarial Machine Learning: Taxonomy and Terminology"
+    href: "https://csrc.nist.gov/pubs/ai/100/2/e2023/final"
+---
+
+In 2014, Amazon set out to build the ideal recruiting engine. The goal was simple: if you fed it a hundred CVs, it spat out the top five without subjectivity nor human mistakes. However, what has since become beknown is that this engine had an inherent bias. By 2015, the company's own engineers had discovered a problem: the system had developed a preference for male candidates in technical roles, penalising CVs that contained the word "women's" and downgrading graduates of certain all-women colleges. Now you might be wondering: Was this programmed and thought of by design? No. The models had been trained on CVs submitted to Amazon over a ten-year period, most of which came from men, a mere reflection of a higher proportion of men across the industry. The system had learned from that history and replicated it faithfully. [1]
+
+There was no malicious actor to point to as nobody had touched the codebase nor was there any intrusion. The bias had been woven in at the beginning, in training, and the model was just doing what it had learned to do. And this is what makes AI security different from everything that came before it.
+
+When there's a traditional breach, there's traces; logs; anomalous traffic; a file where there should be none. The cybersec community has spent decades building tools to find those traces and has become rather good at it. But when a model is trained on compromised data, it leaves none of that. It just runs; produces outputs; passes evaluation; and gets deployed. And it continues to misbehave long after the "attack" is gone and the system is patched, because the vulnerability lives in the model's weights (which we explain a bit later), in what it learned instead of the infrastructure around it.
+
+These AI models are now making decisions in places and systems where small mistakes have tremendous consequences, be it credit, medical triage, code generation, autonomously driven vehicles, or even critical defence infrastructure. Worst of all, there's, often times, no human in the loop reviewing individual outputs so the model runs and the result stands.
+
+One other issue is that the failure modes aren't always dramatic. A model under these circumstances can degrade silently, whilst still running, still producing plausible-looking outputs, just wrong in ways that are hard to detect without knowing what to look for. It can break catastrophically when the deployment environment shifts away from what it was trained on, or, it can carry a backdoor, behaving perfectly fine in every input until one specific trigger condition is met, at which point it does exactly what it was designed to do.
+
+The good news is that security research in AI is accelerating, and documented cases are accumulating across healthcare, finance, autonomous systems and developer tooling. Most security programs though have not kept pace with this changing landscape and keep on treating models as black boxes to monitor at the edges, focusing on inputs and outputs, and largely ignore the pipeline where the model's behaviour was actually determined: the data it was trained on.
+
+What a model learns, it keeps. That is the problem, and that is where this series begins.
+
+## What is an AI model?
+
+AI has accumulated a great deal of mystique, some of it earned, most of it convenient. The opacity serves companies well and users poorly, and it creates a blind spot that is directly relevant to security: you cannot reason about how a system can be attacked if you do not understand what it is doing. So before the attacks, a brief detour into the machinery.
+
+Neural networks are not the whole of machine learning, but they are the architecture this series is most concerned with, covering both the predictive systems embedded in critical infrastructure and the large language models behind most generative AI, and they are where the mechanics of how training shapes behaviour, and how that can be exploited, are most clearly worked out.
+
+At its core, an AI model is an algorithm that finds patterns in data. Nothing more, nothing less. It takes inputs, passes them through a series of mathematical operations involving weights and biases, and produces an output. A weight is just a number that determines how much influence a given input has on the final result. A bias shifts the output in a particular direction. Together, they define what the model has learned. The diagram below shows a simple neural network: inputs on the left, a series of weighted connections through hidden layers, and an output on the right.
+
+![Simple neural network: inputs, hidden layers, output, with bias and loss, weights updated via gradient descent to minimise L](/blog/neural-network.jpg)
+
+Training is the process of finding the right values for these weights and biases. The model makes a prediction, compares it to the correct answer, measures how wrong it was using a function called the loss, and then adjusts its weights slightly to reduce that error. This process, called gradient descent, repeats across millions of examples until the model's predictions are good enough. At the end of training, the model has no memory of any individual sample it saw. What it retains is the aggregate effect of all of them, compressed into its weights.
+
+This is precisely what makes attacks on training data so effective. The model has no mechanism for distinguishing a legitimate sample from a malicious one during training. It cannot flag a suspicious label or question a strange pattern. It optimises toward whatever the data tells it to, and it does so faithfully.
+
+Another thing worth understanding is that models do not process raw data directly. An image, a block of text, a sensor reading: before any of that reaches the model's core operations, it is converted into a high-dimensional numerical vector, a representation of the data in a space where patterns can be detected mathematically. This is where poisoning and skewing attacks do their real work, not on the raw data as a human would see it, but on the representations the model actually operates on.
+
+This is the machinery. And like any machinery, it can be interfered with, at the point where the data goes in, at the point where the weights are set, and at the point where the outputs come out. These systems can be attacked at multiple points, by actors with very different levels of access and knowledge, and where in the pipeline the attack happens changes almost everything about how it can be detected and stopped.
+
+## AI security: a different kind of threat
+
+Traditional cybersecurity has a well-defined perimeter: you protect the network, the endpoints, the credentials, the code, and while the attack surface is large, it is at least bounded. AI systems break that model entirely, because the data used to train a model, the model itself, the pipeline that processes and labels that data, the environment where the model is deployed, and the outputs it produces are all attack surfaces, each with its own threat profile and its own set of mitigations. A security programme that only watches the edges of an AI system, monitoring inputs and outputs at inference time, is arriving after most of the interesting things have already happened.
+
+Classifying attacks on AI systems requires three variables: what is being targeted, at which stage of the lifecycle the attack occurs, and what the attacker's goal is, and keeping these separate matters more than it might seem. Stage matters because an attack that happens before training requires no access to the model at all, while an attack at inference time may require only a prompt, and the defences appropriate to each are completely different. Goal matters because the same technique can be used to degrade a model's performance, extract private information from it, or hide a backdoor that only activates under specific conditions, and most existing taxonomies conflate these dimensions, treating the consequences of an attack as if they were the attack itself rather than a separate variable.
+
+The closest thing to a standard in this space is NIST AI 100-2, the adversarial machine learning taxonomy published by the National Institute of Standards and Technology in 2024, which divides attacks into two broad classes: those targeting predictive AI systems, which learn to map inputs to outputs, and those targeting generative AI systems, which produce new content. We use that structure here and note where relevant threats fall outside its scope entirely.
+
+Before diving into the individual attack categories, the diagram below maps the full ML pipeline from data collection through to inference, showing where each attack type enters the system. It is intended as a reference point for everything that follows.
+
+![ML pipeline attack surface: data collection, labeling, training, model distribution, inference - mapped to NIST AI 100-2 and OWASP threats](/blog/ml-pipeline-attack-surface.jpg)
+
+## Predictive AI: attacks on models that learn to classify and predict
+
+Before generative AI captured most of the public's attention, predictive AI had already quietly embedded itself into the systems that matter most, and it is still there, scoring credit applications, flagging intrusions, classifying medical images, predicting equipment failure. The attacks that target these systems tend to be less dramatic than a jailbroken chatbot and considerably harder to detect.
+
+Data poisoning is the most fundamental of these. An attacker who can influence what goes into a training dataset can influence what the model learns, without ever touching the model itself or the infrastructure around it. The manipulation happens before training begins, requires no model access, and leaves no trace in the system logs. The model that emerges from training will behave incorrectly in ways that look, from the outside, entirely normal. Two subtypes are worth distinguishing: availability poisoning, where the goal is to degrade overall model performance, and targeted poisoning, where the goal is to cause specific misclassifications on specific inputs while leaving general performance intact.
+
+Backdoor attacks are a subclass of poisoning with a particular structure. The attacker embeds a hidden trigger in the training data, a pattern, a pixel arrangement, a specific phrase, such that the model learns to associate that trigger with a particular output. On every clean input, the model behaves normally and passes evaluation. The backdoor only activates when the trigger is present, which means it can survive deployment, monitoring, and even retraining on clean data if the trigger is subtle enough. The model is not broken in any detectable sense; it has simply learned one extra rule that its trainers did not intend.
+
+Model poisoning shifts the target from the training data to the model weights directly. Rather than corrupting what the model learns from, the attacker distributes a model that has already been compromised, typically through a public repository or a supply chain dependency. The recipient trains further or deploys directly, unaware that the model's behaviour has been shaped in advance. A particularly sophisticated variant exploits the quantization process, where models are compressed for cheaper inference: the attacker designs weights that behave normally at full precision but produce malicious outputs once quantized, meaning the poisoning only activates after the victim has processed the model themselves.
+
+Model skewing operates at inference rather than training, exploiting patterns or biases in a model's decision-making without modifying the model or its data. If a real estate valuation model has learned that purple walls correlate with high-value properties, an attacker who knows this can paint their walls purple and receive an inflated valuation. The model is doing exactly what it learned to do; the attacker is simply finding the features it overweights and maximising them. No code was touched, no data was altered, and the model would pass any standard evaluation.
+
+Evasion attacks are the inference-time counterpart to poisoning: rather than changing what the model learned, they craft inputs that exploit how it classifies. Adversarial examples, inputs with carefully computed perturbations that are imperceptible to humans but cause consistent misclassification, are the canonical case. An image of a stop sign with a specific pattern of stickers becomes a speed limit sign to an object detection model. A block of text with minor character substitutions bypasses a content filter. The model has not been modified; the input has been engineered to sit in a region of the input space where the model's decision boundary is wrong.
+
+Membership inference moves from integrity attacks to privacy attacks. Given a trained model and a data sample, an attacker attempts to determine whether that sample was part of the training set, by observing that models tend to produce higher confidence scores on data they have seen before. In contexts where the training data is sensitive, knowing that a specific record was included, a medical history, a financial transaction, a private communication, is itself a privacy violation, even if the record itself is never recovered.
+
+Model inversion is the reconstruction counterpart to membership inference: where the latter establishes that a specific record was in the training set, the former attempts to recover what that record contained, working backwards from the model's outputs to the data that shaped them. Starting from a target output, an attacker iteratively adjusts an input to minimise the difference between the model's prediction and the target, using the model's gradients as a guide. Over enough iterations, the reconstructed input begins to resemble the original training data. A facial recognition model can be inverted to produce approximate images of individuals in its training set. A medical diagnostic model can be inverted to reveal the kinds of patient records it was trained on.
+
+Everything above assumes a model with a bounded output either a class, a score or a flag. Generative AI removes that boundary, and in doing so it opens an attack surface that has less to do with what the model learned and more to do with the gap between what it was instructed to do and what it can be persuaded to do instead.
+
+## Generative AI: attacks on models that produce content
+
+Generative AI systems, models that produce text, images, code, or other content rather than predicting a fixed output, introduce two attack categories that have no direct equivalent in predictive AI, not because the underlying vulnerabilities are entirely different, but because the interface between the model and the outside world is fundamentally more open.
+
+Prompt injection exploits that openness directly. A generative model takes natural language as input and produces natural language as output, and the boundary between instructions and content is not enforced at the architectural level. An attacker who can insert text into the model's input, whether through a direct prompt or through content the model is asked to process, can attempt to override the model's instructions, extract its system prompt, cause it to produce content it was designed to refuse, or manipulate it into taking unintended actions. Direct prompt injection is when the attacker controls the prompt itself. Indirect prompt injection is subtler: the attacker plants instructions in an external source the model is asked to read, a webpage, a document, a database entry, and the model executes those instructions as if they were legitimate. A model asked to summarise a webpage that contains hidden instructions in white text on a white background may follow those instructions without the user ever seeing them. In agentic systems, where a model can search the web, query tools, or retrieve documents as part of completing a task, this attack surface expands considerably. A poisoned search result, a manipulated tool output, or a compromised document in the retrieval pipeline can all function as indirect injection vectors, feeding the model instructions it treats as legitimate context. The boundary between RAG poisoning and indirect prompt injection collapses here: a retrieval result that contains injected instructions is both at once, and the model has no reliable way to distinguish content it is meant to process from instructions it is meant to follow.
+
+Supply chain attacks target the components a model depends on rather than the model itself, and they can occur at any stage of the pipeline. A malicious actor who publishes a dataset, a pre-trained model, or a software library under a name that resembles a trusted source can compromise any system that ingests it. Over a hundred malicious models were identified on Hugging Face carrying serialized code that executed on load, handing the attacker control of the victim's machine before the model had produced a single output. The attack required no access to the victim's system and no interaction beyond the victim downloading what they believed to be a legitimate model. As organisations increasingly fine-tune foundation models on third-party datasets and pull dependencies from public repositories, the supply chain becomes one of the largest and least audited parts of the AI attack surface. In agentic deployments, this extends to the tools and data sources the model queries at runtime: a compromised search API, a poisoned knowledge base, or a manipulated tool output can influence the model's actions without ever touching its weights or its training data.
+
+## Beyond the taxonomy: implementation-layer and sociotechnical risks
+
+A model can survive every attack in the NIST taxonomy and still cause serious harm, because some of the most damaging failure modes have nothing to do with adversarial manipulation of the training data or the weights. They have to do with how the model's outputs are handled, what it is allowed to invoke, and whether the people depending on it have retained any meaningful oversight of what it produces. The OWASP AI Security and Privacy Guide [2,3] catalogues this territory, covering risks that sit at the intersection of AI systems and the environments they operate in.
+
+Denial of service applied to AI systems follows the same logic as traditional DoS attacks but with a different cost structure. Large models are expensive to run, and an attacker who can force repeated inference calls, particularly with inputs engineered to maximise compute, can degrade availability in ways that have direct financial consequences, quite apart from any impact on the model's outputs.
+
+Insecure output handling covers what happens downstream of the model's response. When an AI system's output is passed directly to another system, a browser rendering HTML, a code interpreter executing a suggestion, a database accepting a query, without validation or sanitisation, the model becomes an injection vector. The model itself may be behaving exactly as intended; the vulnerability is in how its output is consumed.
+
+Insecure plugin design extends this to agentic and tool-using systems, where a model can invoke external services, read files, execute code, or make API calls. A poorly designed plugin interface gives a prompt injection attack or a jailbreak a path into the real world, turning a language model into an execution environment the attacker can address directly.
+
+Overreliance is the sociotechnical risk that sits underneath all the others. A model can be technically sound, trained on clean data, free of backdoors, correctly deployed, and still cause harm if the humans using it defer to its outputs without appropriate scrutiny. In high-stakes domains like medical diagnosis, legal review, or financial decision-making, the failure mode is not always a compromised model; it is a human who stopped checking. The risk compounds when the model's outputs are plausible and confident, which they frequently are even when wrong.
+
+Sensitive information disclosure covers the leakage of private or confidential data through a model's outputs, whether through memorisation of training data, model inversion, or simply a system prompt that has not been adequately protected. The distinction from model inversion is one of intent and mechanism: model inversion is a deliberate attack; sensitive information disclosure can occur through normal use of a system that was not designed with disclosure risks in mind.
+
+The table below brings the same information into a single reference, mapping each attack type across what it targets, at which stage it occurs, what level of access the attacker needs, its impact in CIA terms, and its classification under NIST AI 100-2. The footnote marks attacks that fall outside the NIST taxonomy entirely.
+
+| Attack type | Target | Stage | Access required | Impact | NIST AI 100-2 category |
+|---|---|---|---|---|---|
+| Data poisoning | Training data | Pre-training | None | Integrity | Predictive AI: Poisoning (availability + targeted poisoning) |
+| Backdoor attacks | Training data / model weights | Pre-training | None to partial | Integrity | Predictive AI: Poisoning (backdoor poisoning) |
+| Model poisoning | Model weights | Pre-training / model distribution | Partial to full | Integrity | Predictive AI: Poisoning (model poisoning) |
+| Model skewing | Model decision patterns | Inference | Black-box | Integrity | Predictive AI: Evasion attacks (closest mapping) |
+| Evasion attacks | Model inputs | Inference | Black-box | Integrity | Predictive AI: Evasion attacks |
+| Prompt injection | Model inputs | Inference | Black-box | Integrity / Confidentiality | Generative AI: Direct and indirect prompt injection |
+| Membership inference | Model outputs | Inference | Black-box | Confidentiality | Predictive AI: Privacy (membership inference) |
+| Model inversion | Model outputs | Inference | Black-box to white-box | Confidentiality | Predictive AI: Privacy (data reconstruction) |
+| Supply chain attacks | Pipeline components | Any stage | None to partial | Integrity / Confidentiality / Availability | Generative AI: Supply chain attacks |
+| Misalignment | Model objectives | Training / inference | None | Integrity | Not in NIST AI 100-2 * |
+| Denial of service | Model availability | Inference | Black-box | Availability | Not in NIST AI 100-2 * |
+| Insecure output handling | Model outputs / downstream systems | Inference | Black-box | Integrity / Confidentiality | Not in NIST AI 100-2 * |
+| Insecure plugin design | Model environment | Inference | Black-box | Integrity / Confidentiality / Availability | Not in NIST AI 100-2 * |
+| Overreliance | Human decision layer | Inference | None | Integrity | Not in NIST AI 100-2 * |
+| Sensitive information disclosure | Model outputs | Inference | Black-box | Confidentiality | Predictive AI: Privacy (data reconstruction / property inference) |
+
+## Where does this leave us?
+
+The gap between AI adoption and security practice is widening, with models being deployed into consequential systems faster than the tooling to secure them is being built, and most organisations doing so today have no visibility into their training data, no audit trail for what went into their models, and no framework for thinking about the dataset layer as an attack surface. The field has become rather good at watching outputs and rather less good at asking what produced them.
+
+The regulatory landscape is finally beginning to catch up, with the EU AI Act being one of the clearest signs, introducing data governance requirements for high-risk AI systems that go beyond anything previously mandated, and while compliance alone will not secure these systems, it is creating pressure on organisations to take the question seriously in ways they have not before. The NIST AI Risk Management Framework sits alongside it as a structured approach to identifying and managing AI-related risks, and sector-specific requirements in healthcare, finance, and critical infrastructure are adding further obligations on top of both.
+
+Most current defensive practice operates post-training, monitoring model outputs for anomalies, red-teaming deployed systems, filtering inputs and outputs at inference time, and while these measures are necessary, they address the problem at the wrong end of the pipeline. A backdoor baked into a model's weights at training time will survive monitoring, and a poisoned dataset will survive patching, because neither intervention touches the place where the vulnerability was introduced. The least developed area of AI security, which also happens to be the one with the most leverage, is pre-training defence at the data layer, the place where the model's behaviour is actually determined. For practitioners who want to map this space in detail, MITRE ATLAS [4] does for adversarial ML what ATT&CK did for traditional security, cataloguing real-world techniques against ML systems with enough granularity to be operationally useful rather than just descriptive.
+
+The good news, and there is some, is that the tools to address this are being built, the frameworks to reason about it are maturing, and the cases that make the risks concrete are accumulating fast enough that ignoring them is becoming harder to justify. This series is an attempt to make that case, one attack category at a time, from the training pipeline to the systems that depend on it, from code generation tools to medical diagnostics to the infrastructure we use to watch the sun.
