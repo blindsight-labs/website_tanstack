@@ -127,7 +127,7 @@ function ApplyPage() {
                   <input name="cv" type="file" accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" />
                 </label>
                 <label className="demo-field">
-                  <span>Tell us anything relevant about you, your needs, your use case</span>
+                  <span>Anything you'd like us to know</span>
                   <textarea
                     name="message"
                     rows={4}
