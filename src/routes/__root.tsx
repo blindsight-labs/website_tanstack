@@ -208,6 +208,7 @@ function Footer() {
         <div className="footer-links">
           <Link to="/contact">Contact</Link>
           <Link to="/imprint">Imprint</Link>
+          <Link to="/privacy">Privacy Notice</Link>
           <a href="mailto:info@blindsight.io">info@blindsight.io</a>
         </div>
       </div>

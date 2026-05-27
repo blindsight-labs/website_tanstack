@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestTopologyRouteImport } from './routes/test-topology'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as InActionRouteImport } from './routes/in-action'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as HowToSecureLlmsRouteImport } from './routes/how-to-secure-llms'
@@ -33,6 +34,11 @@ const TestTopologyRoute = TestTopologyRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InActionRoute = InActionRouteImport.update({
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/test-topology': typeof TestTopologyRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByTo {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/test-topology': typeof TestTopologyRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -146,6 +154,7 @@ export interface FileRoutesById {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
+  '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/test-topology': typeof TestTopologyRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/in-action'
+    | '/privacy'
     | '/sitemap.xml'
     | '/test-topology'
     | '/blog/$slug'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/in-action'
+    | '/privacy'
     | '/sitemap.xml'
     | '/test-topology'
     | '/blog/$slug'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/in-action'
+    | '/privacy'
     | '/sitemap.xml'
     | '/test-topology'
     | '/blog/$slug'
@@ -216,6 +228,7 @@ export interface RootRouteChildren {
   HowToSecureLlmsRoute: typeof HowToSecureLlmsRoute
   ImprintRoute: typeof ImprintRoute
   InActionRoute: typeof InActionRoute
+  PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TestTopologyRoute: typeof TestTopologyRoute
   CareersApplyRoute: typeof CareersApplyRoute
@@ -235,6 +248,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/in-action': {
@@ -354,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   HowToSecureLlmsRoute: HowToSecureLlmsRoute,
   ImprintRoute: ImprintRoute,
   InActionRoute: InActionRoute,
+  PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TestTopologyRoute: TestTopologyRoute,
   CareersApplyRoute: CareersApplyRoute,
