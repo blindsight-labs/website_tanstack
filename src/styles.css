@@ -61,6 +61,8 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  /* Avoid orphaned single words on the last line of body copy. */
+  text-wrap: pretty;
 }
 
 h1, h2, h3, h4 {
@@ -68,6 +70,8 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
   font-weight: 600;
   color: var(--text);
+  /* Balance heading line lengths so titles don't leave a stray last word. */
+  text-wrap: balance;
 }
 
 .mono { font-family: var(--font-mono); }
@@ -447,7 +451,7 @@ h1, h2, h3, h4 {
   stroke-width: 1.75;
   stroke-dasharray: 6 5;
 }
-.arch-box.dark rect {
+.arch-box.model rect {
   fill: #E9EFFA;
   stroke: #4A74BE;
 }
@@ -470,7 +474,7 @@ h1, h2, h3, h4 {
   fill: var(--text); text-anchor: middle;
 }
 .arch-h.v { fill: var(--violet); }
-.arch-h.dark { fill: #2E5391; }
+.arch-h.model { fill: #2E5391; }
 .arch-h.amber { fill: var(--amber); }
 .arch-sub {
   font-family: var(--font-mono); font-size: 10.5px;

@@ -140,10 +140,10 @@ function ArchitectureDiagram({
         </g>
 
         {/* AI MODEL */}
-        <g className="arch-box dark static">
+        <g className="arch-box model static">
           <rect x="600" y="100" width="140" height="180" rx="14" />
           <Brain className="arch-brain-icon" x={642} y={146} width={56} height={56} strokeWidth={1.25} aria-hidden="true" />
-          <text x="670" y="232" className="arch-h dark">AI MODEL</text>
+          <text x="670" y="232" className="arch-h model">AI MODEL</text>
         </g>
 
         {/* RAG */}
@@ -254,10 +254,10 @@ function VerticalArchitectureDiagram({
           <text x="300" y="322" className="arch-cta">{isActive("interceptor") ? "− hide details" : "+ tap or hover"}</text>
         </g>
 
-        <g className="arch-box dark static">
+        <g className="arch-box model static">
           <rect x="210" y="440" width="180" height="160" rx="14" />
           <Brain className="arch-brain-icon" x={272} y={478} width={56} height={56} strokeWidth={1.25} aria-hidden="true" />
-          <text x="300" y="562" className="arch-h dark">AI MODEL</text>
+          <text x="300" y="562" className="arch-h model">AI MODEL</text>
         </g>
 
         <g className="arch-box static">
