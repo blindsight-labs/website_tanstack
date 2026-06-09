@@ -1227,7 +1227,7 @@ footer {
 .nav-mega {
   position: absolute; top: calc(100% + 14px); right: 0;
   display: grid;
-  grid-template-columns: 200px 220px 340px;
+  grid-template-columns: 200px 340px;
   gap: 28px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1239,6 +1239,7 @@ footer {
   z-index: 60;
 }
 .nav-mega.open { opacity: 1; visibility: visible; transform: none; }
+.nav-mega-stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 .nav-mega-col { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .nav-mega-label {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;

@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { ArrowRight, BookOpen, ChevronDown, CirclePlay, Code, Mail, Menu, X } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronDown, Code, Menu, X } from "lucide-react";
 
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
 import appCss from "../styles.css?url";
@@ -144,27 +144,21 @@ function Nav() {
               <ChevronDown className="nav-caret" size={14} aria-hidden="true" />
             </button>
             <div className={`nav-mega ${resourcesOpen ? "open" : ""}`} role="menu">
-              <div className="nav-mega-col">
-                <div className="nav-mega-label">Resources</div>
-                <Link to="/blog" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <BookOpen className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
-                  <span>Blog</span>
-                </Link>
-                <Link to="/in-action" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <CirclePlay className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
-                  <span>Live Demo</span>
-                </Link>
-                <Link to="/contact" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <Mail className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
-                  <span>Contact</span>
-                </Link>
-              </div>
-              <div className="nav-mega-col">
-                <div className="nav-mega-label">Developers</div>
-                <a href="https://docs.blindsight.io" target="_blank" rel="noopener noreferrer" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <Code className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
-                  <span>Documentation</span>
-                </a>
+              <div className="nav-mega-stack">
+                <div className="nav-mega-col">
+                  <div className="nav-mega-label">Resources</div>
+                  <Link to="/blog" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
+                    <BookOpen className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
+                    <span>Blog</span>
+                  </Link>
+                </div>
+                <div className="nav-mega-col">
+                  <div className="nav-mega-label">Developers</div>
+                  <a href="https://docs.blindsight.io" target="_blank" rel="noopener noreferrer" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
+                    <Code className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
+                    <span>Documentation</span>
+                  </a>
+                </div>
               </div>
               <div className="nav-mega-col nav-mega-col-wide">
                 <div className="nav-mega-label">AI Security Guides</div>
