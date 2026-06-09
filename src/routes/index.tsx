@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
+  Brain,
   Briefcase,
   Building2,
   ChevronDown,
@@ -141,20 +142,8 @@ function ArchitectureDiagram({
         {/* AI MODEL */}
         <g className="arch-box dark static">
           <rect x="600" y="100" width="140" height="180" rx="14" />
-          <g transform="translate(670,175)" className="arch-brain">
-            {/* Left hemisphere */}
-            <path d="M -4,-30 C -16,-30 -24,-22 -24,-12 C -32,-10 -32,2 -24,4 C -28,12 -22,22 -12,22 C -8,28 -4,28 -4,22 Z" />
-            {/* Right hemisphere */}
-            <path d="M 4,-30 C 16,-30 24,-22 24,-12 C 32,-10 32,2 24,4 C 28,12 22,22 12,22 C 8,28 4,28 4,22 Z" />
-            {/* Folds */}
-            <path d="M -10,-18 C -16,-14 -16,-8 -10,-6" />
-            <path d="M -14,0 C -18,4 -16,12 -10,12" />
-            <path d="M 10,-18 C 16,-14 16,-8 10,-6" />
-            <path d="M 14,0 C 18,4 16,12 10,12" />
-            {/* Center stem */}
-            <path d="M 0,-26 L 0,22" />
-          </g>
-          <text x="670" y="262" className="arch-h dark">AI MODEL</text>
+          <Brain className="arch-brain-icon" x={642} y={146} width={56} height={56} strokeWidth={1.25} aria-hidden="true" />
+          <text x="670" y="232" className="arch-h dark">AI MODEL</text>
         </g>
 
         {/* RAG */}
@@ -267,16 +256,8 @@ function VerticalArchitectureDiagram({
 
         <g className="arch-box dark static">
           <rect x="210" y="440" width="180" height="160" rx="14" />
-          <g transform="translate(300,510)" className="arch-brain">
-            <path d="M -4,-30 C -16,-30 -24,-22 -24,-12 C -32,-10 -32,2 -24,4 C -28,12 -22,22 -12,22 C -8,28 -4,28 -4,22 Z" />
-            <path d="M 4,-30 C 16,-30 24,-22 24,-12 C 32,-10 32,2 24,4 C 28,12 22,22 12,22 C 8,28 4,28 4,22 Z" />
-            <path d="M -10,-18 C -16,-14 -16,-8 -10,-6" />
-            <path d="M -14,0 C -18,4 -16,12 -10,12" />
-            <path d="M 10,-18 C 16,-14 16,-8 10,-6" />
-            <path d="M 14,0 C 18,4 16,12 10,12" />
-            <path d="M 0,-26 L 0,22" />
-          </g>
-          <text x="300" y="582" className="arch-h dark">AI MODEL</text>
+          <Brain className="arch-brain-icon" x={272} y={478} width={56} height={56} strokeWidth={1.25} aria-hidden="true" />
+          <text x="300" y="562" className="arch-h dark">AI MODEL</text>
         </g>
 
         <g className="arch-box static">

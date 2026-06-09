@@ -448,8 +448,8 @@ h1, h2, h3, h4 {
   stroke-dasharray: 6 5;
 }
 .arch-box.dark rect {
-  fill: var(--dark);
-  stroke: var(--dark);
+  fill: #2E2E3A;
+  stroke: #2E2E3A;
 }
 
 .arch-box.clickable { cursor: pointer; }
@@ -491,6 +491,8 @@ h1, h2, h3, h4 {
   fill: none; stroke: #FFFFFF;
   stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
 }
+/* lucide Brain icon inside the AI MODEL box (stroke follows currentColor) */
+.arch-brain-icon { color: #FFFFFF; }
 
 /* Pipes — straight tubes, casing + animated flow particles */
 .pipe path { fill: none; stroke-linecap: round; }
