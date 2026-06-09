@@ -18,6 +18,7 @@ import {
 import emblem from "@/assets/emblem.png";
 import { useDemoModal } from "@/components/DemoModal";
 import { HexBg } from "@/components/HexBg";
+import { TopologyGraphDemo } from "@/routes/in-action";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -359,6 +360,7 @@ function Pipeline() {
 /* ── Section progress rail ── */
 const SECTIONS: { id: string; label: string }[] = [
   { id: "hero", label: "Top" },
+  { id: "watch", label: "Watch" },
   { id: "pipeline", label: "Pipeline" },
   { id: "clients", label: "Clients" },
   { id: "showcase", label: "Platform" },
@@ -543,11 +545,22 @@ function FAQ() {
   );
 }
 
+function WatchItWork() {
+  return (
+    <section className="section" id="watch">
+      <div className="section-inner">
+        <TopologyGraphDemo embedded initialScenarioId="confidential" startOnVisible />
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   return (
     <main>
       <SectionRail />
       <Hero />
+      <WatchItWork />
       <Pipeline />
       <LogoStrip />
       <PlatformShowcase />

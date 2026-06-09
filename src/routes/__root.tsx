@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight, BookOpen, ChevronDown, Code, Menu, X } from "lucide-react";
 
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
+import { InActionModalProvider, useInActionModal } from "@/components/InActionModal";
 import appCss from "../styles.css?url";
 import logo from "@/assets/logo.png";
 
@@ -100,6 +101,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function Nav() {
   const { open: openDemo } = useDemoModal();
+  const { open: openInAction } = useInActionModal();
   const [scrolled, setScrolled] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -117,7 +119,7 @@ function Nav() {
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
         <Link to="/" onClick={closeMenu}>Solution</Link>
-        <Link to="/in-action" onClick={closeMenu}>Watch It Work</Link>
+        <button type="button" onClick={() => { closeMenu(); openInAction(); }}>Watch It Work</button>
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
@@ -126,7 +128,7 @@ function Nav() {
       <div className="nav-right">
         <ul className="nav-links">
           <li><Link to="/">Solution</Link></li>
-          <li><Link to="/in-action">Watch It Work</Link></li>
+          <li><button type="button" className="nav-link-btn" onClick={openInAction}>Watch It Work</button></li>
           <li><Link to="/careers">Careers</Link></li>
           <li
             className="nav-dropdown"
@@ -215,9 +217,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <DemoModalProvider>
-        <Nav />
-        <Outlet />
-        <Footer />
+        <InActionModalProvider>
+          <Nav />
+          <Outlet />
+          <Footer />
+        </InActionModalProvider>
       </DemoModalProvider>
     </QueryClientProvider>
   );

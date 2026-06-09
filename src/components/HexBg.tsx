@@ -16,10 +16,15 @@ export function HexBg({ className }: { className?: string }) {
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
-      canvas.width = r.width * dpr;
-      canvas.height = r.height * dpr;
+      canvas.width = Math.max(1, Math.round(r.width * dpr));
+      canvas.height = Math.max(1, Math.round(r.height * dpr));
     };
     resize();
+    // Re-measure whenever the canvas's own box changes (e.g. the hero grows
+    // taller when content is added) — not just on window resize — so the
+    // hex grid never gets stretched by CSS scaling of a stale backing store.
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
     window.addEventListener("resize", resize);
 
     const hexPath = (cx: number, cy: number, r: number) => {
@@ -73,6 +78,7 @@ export function HexBg({ className }: { className?: string }) {
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
+      ro.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, []);

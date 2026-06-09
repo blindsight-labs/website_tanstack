@@ -538,15 +538,49 @@ const SPEEDS = [
    ============================================================ */
 type Phase = "off" | "prompt" | "on" | "complete";
 
-function TopologyGraphDemo() {
+/** Briefly block page scrolling so a freshly-triggered animation can be noticed. */
+function holdScroll(ms: number) {
+  if (typeof window === "undefined") return;
+  const prevent = (e: Event) => e.preventDefault();
+  const keyPrevent = (e: KeyboardEvent) => {
+    if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " ", "Spacebar"].includes(e.key)) {
+      e.preventDefault();
+    }
+  };
+  const opts: AddEventListenerOptions = { passive: false };
+  window.addEventListener("wheel", prevent, opts);
+  window.addEventListener("touchmove", prevent, opts);
+  window.addEventListener("keydown", keyPrevent, opts);
+  window.setTimeout(() => {
+    window.removeEventListener("wheel", prevent, opts);
+    window.removeEventListener("touchmove", prevent, opts);
+    window.removeEventListener("keydown", keyPrevent, opts);
+  }, ms);
+}
+
+export function TopologyGraphDemo({
+  embedded = false,
+  initialScenarioId,
+  startOnVisible = false,
+}: {
+  embedded?: boolean;
+  initialScenarioId?: Scenario["id"];
+  startOnVisible?: boolean;
+}) {
   const { open: openDemo } = useDemoModal();
-  const [view, setView] = useState<"picker" | "scenario">("picker");
-  const [scenarioIdx, setScenarioIdx] = useState<number>(0);
+  const initialIdx = initialScenarioId
+    ? Math.max(0, SCENARIOS.findIndex((s) => s.id === initialScenarioId))
+    : 0;
+  const rootRef = useRef<HTMLDivElement>(null);
+  const startedRef = useRef(false);
+  const [view, setView] = useState<"picker" | "scenario">(initialScenarioId ? "scenario" : "picker");
+  const [scenarioIdx, setScenarioIdx] = useState<number>(initialIdx);
   const [secOn, setSecOn] = useState(false);
   const [phase, setPhase] = useState<Phase>("off");
   const [stage, setStage] = useState(0);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(!startOnVisible);
   const [speed, setSpeed] = useState(1);
+  const [flashing, setFlashing] = useState(false);
 
   const scenario = SCENARIOS[scenarioIdx];
   const stages = secOn ? scenario.on : scenario.off;
@@ -577,6 +611,40 @@ function TopologyGraphDemo() {
     }, currentHold);
     return () => { if (timer.current) clearTimeout(timer.current); };
   }, [playing, stage, view, phase, currentHold, stageCount, speed]);
+
+  /* Start the scenario the first time the embedded demo scrolls into view:
+     begin playback, flash the window, and briefly hold the scroll so the
+     start is noticed. Skipped for reduced-motion users (just starts playing). */
+  useEffect(() => {
+    if (!startOnVisible) return;
+    const trigger = () => {
+      if (startedRef.current) return;
+      startedRef.current = true;
+      setPlaying(true);
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      setFlashing(true);
+      window.setTimeout(() => setFlashing(false), 2400);
+      holdScroll(2200);
+    };
+    // Fire when the demo window reaches the middle of the viewport. Use a tall
+    // (~20% of viewport) detection band rather than a 0-height line so fast
+    // scrolling can't skip across it between observer samples.
+    const el = rootRef.current?.querySelector(".tg-variant") ?? rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting && !startedRef.current) {
+            io.disconnect();
+            trigger();
+          }
+        }
+      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [startOnVisible]);
 
   const openScenario = (i: number) => {
     setScenarioIdx(i);
@@ -619,7 +687,7 @@ function TopologyGraphDemo() {
   const edges = edgesFor(pos, scenario.id, secOn);
 
   return (
-    <div className="tg-page">
+    <div ref={rootRef} className={`tg-page ${embedded ? "tg-embed" : ""}`}>
       <style>{TG_CSS}</style>
 
       <header className="tg-header">
@@ -633,7 +701,7 @@ function TopologyGraphDemo() {
         <ReactorPicker onPick={openScenario} />
       ) : (
         <main className="tg-stage-wrap">
-          <section className={`tg-variant tg-mode-${secOn ? "on" : "off"}`}>
+          <section className={`tg-variant tg-mode-${secOn ? "on" : "off"} ${flashing ? "tg-flash" : ""}`}>
             <div className="tg-topbar">
               <button className="tg-back" onClick={backToPicker} aria-label="Back to scenarios">
                 <ChevronLeft size={14} aria-hidden="true" />
@@ -1268,6 +1336,41 @@ function IconVendor({ size = 32 }: { size?: number }) {
    ============================================================ */
 const TG_CSS = `
 .tg-page { min-height: 100vh; background: radial-gradient(1200px 600px at 50% -10%, rgba(124,58,237,0.08), transparent 70%), var(--bg); color: var(--text); font-family: var(--font-sans); }
+.tg-page.tg-embed { min-height: 0; background: none; padding-top: 0; }
+.tg-page.tg-embed .tg-header { padding-top: 0; }
+.tg-page.tg-embed .tg-title { font-size: clamp(20px, 3vw, 28px); }
+.tg-page.tg-embed .tg-title-line2 {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  color: var(--violet);
+}
+/* A single glass-like shine that sweeps once along the demo window's border
+   when it first scrolls into view. */
+@property --tg-beam { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.tg-variant.tg-flash::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  padding: 2.5px;
+  background: conic-gradient(from var(--tg-beam),
+    transparent 0deg,
+    rgba(124,58,237,0) 48deg,
+    rgba(124,58,237,0.6) 74deg,
+    rgba(255,255,255,1) 90deg,
+    rgba(124,58,237,0.6) 106deg,
+    rgba(124,58,237,0) 132deg,
+    transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  filter: drop-shadow(0 0 5px rgba(124,58,237,0.55));
+  animation: tg-beam 2.2s ease-in-out;
+}
+@keyframes tg-beam { from { --tg-beam: 0deg; } to { --tg-beam: 360deg; } }
 .tg-header { max-width: 1240px; margin: 0 auto; padding: 88px 32px 8px; text-align: center; }
 .tg-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 .tg-title { font-family: var(--font-display); font-weight: 500; font-size: clamp(34px, 5vw, 52px); letter-spacing: -0.02em; margin: 0; line-height: 1.08; display: flex; flex-direction: column; align-items: center; gap: 2px; }
@@ -1300,7 +1403,7 @@ const TG_CSS = `
 
 /* Layout */
 .tg-stage-wrap { max-width: 1320px; margin: 0 auto; padding: 16px 32px 48px; }
-.tg-variant { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow-md); overflow: hidden; min-height: 440px; transition: border-color .3s; animation: tgVariantIn .4s ease-out; }
+.tg-variant { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow-md); overflow: hidden; min-height: 440px; transition: border-color .3s; animation: tgVariantIn .4s ease-out; }
 .tg-mode-off .tg-variant { border-color: var(--red-border); }
 @keyframes tgVariantIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
 

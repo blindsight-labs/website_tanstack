@@ -236,10 +236,14 @@ h1, h2, h3, h4 {
 /* ── Hero · Hex Lattice (full-bleed center pulse) ── */
 .hero-hex {
   position: relative;
-  min-height: 92vh;
-  padding: 160px 32px 100px;
+  min-height: 82vh;
+  padding: 120px 32px 80px;
   overflow: hidden;
   isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .hero-hex-canvas {
   position: absolute; inset: 0;
@@ -1550,9 +1554,20 @@ footer {
 /* The modal card is the container, so the inner form-wrap drops its own chrome. */
 .demo-modal .demo-compact-head { text-align: center; margin-bottom: 24px; }
 .demo-modal .demo-form-wrap { background: none; border: none; padding: 0; box-shadow: none; }
+/* Large modal — used for the in-action demo. */
+.modal-card-lg { max-width: 1080px; padding: 20px; }
 @media (max-width: 540px) {
   .modal-card { padding: 28px 22px; }
+  .modal-card-lg { padding: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .modal-backdrop, .modal-card { animation: none; }
 }
+
+/* ── Nav link rendered as a button (e.g. contextual "Watch It Work") ── */
+.nav-link-btn {
+  background: none; border: none; cursor: pointer; padding: 0;
+  font-family: var(--font-sans); font-size: 13.5px; color: var(--muted);
+  font-weight: 500; line-height: 1; transition: color .15s;
+}
+.nav-link-btn:hover { color: var(--text); }
