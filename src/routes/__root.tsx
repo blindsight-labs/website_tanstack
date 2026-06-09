@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -102,15 +103,32 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function Nav() {
   const { open: openDemo } = useDemoModal();
   const { open: openInAction } = useInActionModal();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [scrolled, setScrolled] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Hide the nav CTA while the hero is on screen (it duplicates the hero CTA).
+  // Initialise from the path (homepage has the hero) to avoid a load-time flash.
+  const [heroInView, setHeroInView] = useState(pathname === "/");
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    if (!hero) {
+      setHeroInView(false);
+      return;
+    }
+    setHeroInView(true);
+    const io = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting), {
+      threshold: 0,
+    });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, [pathname]);
   const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
@@ -187,7 +205,7 @@ function Nav() {
           </li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
-        <button type="button" className="btn btn-primary" onClick={openDemo}>Request a Demo</button>
+        <button type="button" className={`btn btn-primary nav-cta ${heroInView ? "is-hidden" : ""}`} onClick={openDemo}>Request a Demo</button>
         <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
           {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>
