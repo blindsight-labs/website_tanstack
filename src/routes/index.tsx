@@ -433,7 +433,9 @@ const CLIENT_LOGOS: { Icon: typeof Building2; name: string }[] = [
 ];
 
 function LogoStrip() {
-  const row = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
+  // One group repeats the set enough to exceed the viewport width; two identical
+  // groups side-by-side make translateX(-50%) loop seamlessly with no visible seam.
+  const group = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
   return (
     <section className="logostrip-section section-alt" id="clients" aria-label="Trusted by">
       <div className="logostrip-eyebrow">
@@ -441,11 +443,15 @@ function LogoStrip() {
       </div>
       <div className="logostrip">
         <div className="logostrip-track">
-          {row.map(({ Icon, name }, i) => (
-            <span className="logostrip-item" key={i} aria-hidden={i >= CLIENT_LOGOS.length}>
-              <Icon className="logostrip-icon" strokeWidth={1.5} />
-              <span className="logostrip-name">{name}</span>
-            </span>
+          {[0, 1].map((g) => (
+            <div className="logostrip-group" key={g} aria-hidden={g === 1}>
+              {group.map(({ Icon, name }, i) => (
+                <span className="logostrip-item" key={i}>
+                  <Icon className="logostrip-icon" strokeWidth={1.5} />
+                  <span className="logostrip-name">{name}</span>
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>

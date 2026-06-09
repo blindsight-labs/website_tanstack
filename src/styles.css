@@ -1411,6 +1411,7 @@ footer {
   display: flex; align-items: center; width: max-content;
   animation: logostrip-scroll 34s linear infinite;
 }
+.logostrip-group { display: flex; align-items: center; flex-shrink: 0; }
 .logostrip:hover .logostrip-track { animation-play-state: paused; }
 @keyframes logostrip-scroll { to { transform: translateX(-50%); } }
 .logostrip-item {
