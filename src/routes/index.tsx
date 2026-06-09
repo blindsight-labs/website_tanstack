@@ -313,7 +313,7 @@ function Pipeline() {
       <div className="section-inner">
         <div className="s-head reveal" style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}>
           <span className="tag">The Pipeline</span>
-          <h2>One platform. Every layer of AI security.</h2>
+          <h2>One platform.<br />Every layer of AI security.</h2>
           <p>
             Blindsight secures the path from user input to model output to the data that
             influenced it, closing the loop other tools leave open.
