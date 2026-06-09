@@ -40,9 +40,9 @@ function Hero() {
       <div className="hero-hex-inner reveal">
         <span className="tag">Securing AI · Built in Zurich</span>
         <h1>
-          <span className="hero-line">Gain sight over</span>
+          <span className="hero-line">Start by gaining sight over</span>
           <br />
-          <span className="accent-grad">Shadow AI.</span>
+          <span className="accent-grad">Shadow AI</span>
         </h1>
         <p className="lede">
           Deploy AI without blind spots. AI systems face threats from bad actors, misuse, and
