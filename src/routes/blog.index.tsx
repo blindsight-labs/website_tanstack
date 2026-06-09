@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { useDemoModal } from "@/components/DemoModal";
 import { getAllPosts } from "@/lib/blog-content";
 
 export const Route = createFileRoute("/blog/")({
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogPage() {
+  const { open: openDemo } = useDemoModal();
   const posts = getAllPosts();
   const [featured, ...rest] = posts;
 
@@ -35,7 +37,7 @@ function BlogPage() {
             production.
           </p>
           <div className="hero-actions">
-            <Link to="/demo" className="btn btn-primary">Request a Demo</Link>
+            <button type="button" className="btn btn-primary" onClick={openDemo}>Request a Demo</button>
             <Link to="/in-action" className="btn btn-secondary">See attacks in action <ArrowRight size={16} aria-hidden="true" /></Link>
           </div>
 

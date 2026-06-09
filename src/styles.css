@@ -158,22 +158,27 @@ h1, h2, h3, h4 {
   transform: translateY(0);
   pointer-events: auto;
 }
-.nav-mobile-menu a {
+.nav-mobile-menu a,
+.nav-mobile-menu button {
   font-size: 15px; font-weight: 500; color: var(--text);
-  text-decoration: none; padding: 14px 0;
+  text-decoration: none; padding: 14px 0; width: 100%;
+  text-align: left; background: none; border: none; cursor: pointer; font-family: inherit;
   border-bottom: 1px solid var(--border);
   opacity: 0; transform: translateY(-4px);
   transition: opacity 0.18s ease, transform 0.18s ease, color 0.15s;
 }
-.nav-mobile-menu.open a { opacity: 1; transform: translateY(0); }
-.nav-mobile-menu.open a:nth-child(1) { transition-delay: 0.04s; }
-.nav-mobile-menu.open a:nth-child(2) { transition-delay: 0.08s; }
-.nav-mobile-menu.open a:nth-child(3) { transition-delay: 0.12s; }
-.nav-mobile-menu.open a:nth-child(4) { transition-delay: 0.16s; }
-.nav-mobile-menu.open a:nth-child(5) { transition-delay: 0.20s; }
-.nav-mobile-menu.open a:nth-child(6) { transition-delay: 0.24s; }
-.nav-mobile-menu a:last-child { border-bottom: none; }
-.nav-mobile-menu a:hover { color: var(--violet); }
+.nav-mobile-menu.open a,
+.nav-mobile-menu.open button { opacity: 1; transform: translateY(0); }
+.nav-mobile-menu.open > *:nth-child(1) { transition-delay: 0.04s; }
+.nav-mobile-menu.open > *:nth-child(2) { transition-delay: 0.08s; }
+.nav-mobile-menu.open > *:nth-child(3) { transition-delay: 0.12s; }
+.nav-mobile-menu.open > *:nth-child(4) { transition-delay: 0.16s; }
+.nav-mobile-menu.open > *:nth-child(5) { transition-delay: 0.20s; }
+.nav-mobile-menu.open > *:nth-child(6) { transition-delay: 0.24s; }
+.nav-mobile-menu a:last-child,
+.nav-mobile-menu button:last-child { border-bottom: none; }
+.nav-mobile-menu a:hover,
+.nav-mobile-menu button:hover { color: var(--violet); }
 
 
 /* ── Layout ── */
@@ -1500,3 +1505,47 @@ footer {
 .faq-item.open .faq-a { grid-template-rows: 1fr; }
 .faq-a > div { overflow: hidden; }
 .faq-a p { color: var(--muted); font-size: 15px; line-height: 1.6; padding: 0 4px 22px; margin: 0; }
+
+/* ── Modal / overlay ── */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: color-mix(in oklab, var(--dark) 55%, transparent);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  animation: modal-fade .2s ease;
+}
+@keyframes modal-fade { from { opacity: 0; } to { opacity: 1; } }
+.modal-card {
+  position: relative;
+  width: 100%; max-width: 560px;
+  max-height: calc(100dvh - 48px); overflow-y: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: var(--shadow-lg);
+  animation: modal-pop .22s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes modal-pop {
+  from { opacity: 0; transform: translateY(10px) scale(.985); }
+  to { opacity: 1; transform: none; }
+}
+.modal-card:focus { outline: none; }
+.modal-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 32px; height: 32px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: none; cursor: pointer; color: var(--muted);
+  transition: background .15s ease, color .15s ease;
+}
+.modal-close:hover { background: var(--surface-2); color: var(--text); }
+/* The modal card is the container, so the inner form-wrap drops its own chrome. */
+.demo-modal .demo-compact-head { text-align: center; margin-bottom: 24px; }
+.demo-modal .demo-form-wrap { background: none; border: none; padding: 0; box-shadow: none; }
+@media (max-width: 540px) {
+  .modal-card { padding: 28px 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-card { animation: none; }
+}

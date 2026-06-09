@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import emblem from "@/assets/emblem.png";
+import { useDemoModal } from "@/components/DemoModal";
 import { HexBg } from "@/components/HexBg";
 
 export const Route = createFileRoute("/")({
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Hero() {
+  const { open: openDemo } = useDemoModal();
   return (
     <header className="hero-hex" id="hero">
       <HexBg className="hero-hex-canvas" />
@@ -47,7 +49,7 @@ function Hero() {
           human error at every layer. Blindsight is the only platform securing all of them.
         </p>
         <div className="hero-actions">
-          <Link to="/demo" className="btn btn-primary">Request a Demo</Link>
+          <button type="button" className="btn btn-primary" onClick={openDemo}>Request a Demo</button>
         </div>
       </div>
     </header>

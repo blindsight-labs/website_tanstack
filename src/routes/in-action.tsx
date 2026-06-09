@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
@@ -19,6 +19,7 @@ import {
   Terminal,
   User,
 } from "lucide-react";
+import { useDemoModal } from "@/components/DemoModal";
 
 export const Route = createFileRoute("/in-action")({
   head: () => ({
@@ -538,6 +539,7 @@ const SPEEDS = [
 type Phase = "off" | "prompt" | "on" | "complete";
 
 function TopologyGraphDemo() {
+  const { open: openDemo } = useDemoModal();
   const [view, setView] = useState<"picker" | "scenario">("picker");
   const [scenarioIdx, setScenarioIdx] = useState<number>(0);
   const [secOn, setSecOn] = useState(false);
@@ -747,7 +749,7 @@ function TopologyGraphDemo() {
                         </div>
                         <div className="tg-cta-demo">
                           <div className="tg-cta-demo-title">Want to secure your AI Systems?</div>
-                          <Link to="/demo" className="tg-cta tg-cta-primary">Request a demo</Link>
+                          <button type="button" className="tg-cta tg-cta-primary" onClick={openDemo}>Request a demo</button>
                         </div>
                       </div>
                     }

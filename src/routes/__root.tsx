@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 import { ArrowRight, BookOpen, ChevronDown, CirclePlay, Code, Mail, Menu, X } from "lucide-react";
 
+import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
 import appCss from "../styles.css?url";
 import logo from "@/assets/logo.png";
 
@@ -98,6 +99,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function Nav() {
+  const { open: openDemo } = useDemoModal();
   const [scrolled, setScrolled] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -119,7 +121,7 @@ function Nav() {
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
-        <Link to="/demo" onClick={closeMenu}>Request a Demo</Link>
+        <button type="button" onClick={() => { closeMenu(); openDemo(); }}>Request a Demo</button>
       </div>
       <div className="nav-right">
         <ul className="nav-links">
@@ -189,7 +191,7 @@ function Nav() {
           </li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
-        <Link to="/demo" className="btn btn-primary">Request a Demo</Link>
+        <button type="button" className="btn btn-primary" onClick={openDemo}>Request a Demo</button>
         <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
           {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>
@@ -218,9 +220,11 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <Nav />
-      <Outlet />
-      <Footer />
+      <DemoModalProvider>
+        <Nav />
+        <Outlet />
+        <Footer />
+      </DemoModalProvider>
     </QueryClientProvider>
   );
 }
