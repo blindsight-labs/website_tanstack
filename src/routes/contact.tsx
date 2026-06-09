@@ -31,7 +31,7 @@ function ContactPage() {
           </p>
           <div className="hero-actions">
             <a href="mailto:info@blindsight.io" className="btn btn-primary">info@blindsight.io</a>
-            <a href="mailto:careers@blindsight.io" className="btn btn-ghost">careers@blindsight.io</a>
+            <a href="mailto:careers@blindsight.io" className="btn btn-secondary">careers@blindsight.io</a>
           </div>
         </div>
       </header>

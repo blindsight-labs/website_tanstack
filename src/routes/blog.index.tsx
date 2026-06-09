@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { getAllPosts } from "@/lib/blog-content";
 
 export const Route = createFileRoute("/blog/")({
@@ -35,7 +36,7 @@ function BlogPage() {
           </p>
           <div className="hero-actions">
             <Link to="/demo" className="btn btn-primary">Request a Demo</Link>
-            <Link to="/in-action" className="btn btn-ghost">See attacks in action →</Link>
+            <Link to="/in-action" className="btn btn-secondary">See attacks in action <ArrowRight size={16} aria-hidden="true" /></Link>
           </div>
 
         </div>
@@ -56,8 +57,8 @@ function BlogPage() {
                 <span>{featured.read}</span>
                 <span>{featured.author}</span>
               </div>
-              <Link to="/blog/$slug" params={{ slug: featured.slug }} className="btn btn-ghost">
-                Read the post →
+              <Link to="/blog/$slug" params={{ slug: featured.slug }} className="btn btn-secondary">
+                Read the post <ArrowRight size={16} aria-hidden="true" />
               </Link>
             </article>
           </div>

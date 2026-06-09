@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { z } from "zod";
@@ -109,7 +110,7 @@ function ApplyPage() {
                   <a href="mailto:careers@blindsight.io">careers@blindsight.io</a>.
                 </p>
                 <p style={{ marginTop: 18 }}>
-                  <Link to="/careers" className="btn btn-ghost">← Back to careers</Link>
+                  <Link to="/careers" className="btn btn-secondary"><ArrowLeft size={16} aria-hidden="true" />Back to careers</Link>
                 </p>
               </div>
             ) : (

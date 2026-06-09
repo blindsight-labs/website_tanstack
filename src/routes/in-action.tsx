@@ -1,5 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import {
+  AlertTriangle,
+  Brain,
+  ChevronLeft,
+  CircleX,
+  Database,
+  Droplet,
+  FileLock,
+  FileText,
+  Pause,
+  Play,
+  Shield,
+  ShieldCheck,
+  SkipBack,
+  SkipForward,
+  Store,
+  Terminal,
+  User,
+} from "lucide-react";
 
 export const Route = createFileRoute("/in-action")({
   head: () => ({
@@ -615,7 +634,7 @@ function TopologyGraphDemo() {
           <section className={`tg-variant tg-mode-${secOn ? "on" : "off"}`}>
             <div className="tg-topbar">
               <button className="tg-back" onClick={backToPicker} aria-label="Back to scenarios">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+                <ChevronLeft size={14} aria-hidden="true" />
                 <span>All scenarios</span>
               </button>
               <button
@@ -663,7 +682,7 @@ function TopologyGraphDemo() {
                     onClick={() => { setPlaying(false); setStage((s) => Math.max(0, s - 1)); }}
                     disabled={stage === 0}
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h2v16H6zM20 4 9 12l11 8z"/></svg>
+                    <SkipBack size={14} fill="currentColor" aria-hidden="true" />
                   </button>
 
                   <button
@@ -675,8 +694,8 @@ function TopologyGraphDemo() {
                     }}
                   >
                     {playing
-                      ? <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-                      : <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>}
+                      ? <Pause size={14} fill="currentColor" aria-hidden="true" />
+                      : <Play size={14} fill="currentColor" aria-hidden="true" />}
                   </button>
 
                   <button
@@ -685,7 +704,7 @@ function TopologyGraphDemo() {
                     onClick={() => { setPlaying(false); setStage((s) => Math.min(stageCount - 1, s + 1)); }}
                     disabled={stage >= stageCount - 1}
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16 4h2v16h-2zM4 4l11 8L4 20z"/></svg>
+                    <SkipForward size={14} fill="currentColor" aria-hidden="true" />
                   </button>
 
                   <span className="tg-pb-sep" />
@@ -769,11 +788,11 @@ function TopologyGraphDemo() {
    ============================================================ */
 function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
   const iconById: Record<Scenario["id"], React.ReactNode> = {
-    prompt: (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 6h16M4 12h10M4 18h16"/><path d="M16 14l4 4-4 4"/></svg>),
-    leak: (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/></svg>),
-    poison: (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>),
-    misuse: (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg>),
-    confidential: (<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><rect x="9.5" y="12" width="5" height="4" rx="0.8"/><path d="M10.5 12v-1.2a1.5 1.5 0 0 1 3 0V12"/></svg>),
+    prompt: (<Terminal strokeWidth={1.6} aria-hidden="true" />),
+    leak: (<Droplet strokeWidth={1.6} aria-hidden="true" />),
+    poison: (<Database strokeWidth={1.6} aria-hidden="true" />),
+    misuse: (<CircleX strokeWidth={1.6} aria-hidden="true" />),
+    confidential: (<FileLock strokeWidth={1.6} aria-hidden="true" />),
   };
 
   const visible = SCENARIOS.map((s, idx) => ({ s, idx }));
@@ -981,6 +1000,22 @@ function Graph({
   );
 }
 
+// Map a leading status emoji to a lucide icon (graph bubbles).
+function statusIcon(text: string): { Icon: typeof AlertTriangle | null; label: string } {
+  if (text.startsWith("⚠ ")) return { Icon: AlertTriangle, label: text.slice(2) };
+  if (text.startsWith("📄 ")) return { Icon: FileText, label: text.slice(2) };
+  return { Icon: null, label: text };
+}
+
+// Replace inline status emoji in chat text with lucide icons.
+function renderStatusText(text: string) {
+  return text.split(/(⚠|📄)/g).map((part, i) => {
+    if (part === "⚠") return <AlertTriangle key={i} className="tg-inline-icon" size={13} aria-hidden="true" />;
+    if (part === "📄") return <FileText key={i} className="tg-inline-icon" size={13} aria-hidden="true" />;
+    return <Fragment key={i}>{part}</Fragment>;
+  });
+}
+
 function Bubble({ x, y, text, tone }: { x: number; y: number; text: string; tone: "red" | "violet" | "muted" }) {
   // pick side: prefer above; if near top, go below
   const above = y > 160;
@@ -988,11 +1023,23 @@ function Bubble({ x, y, text, tone }: { x: number; y: number; text: string; tone
   const stroke = tone === "red" ? "#DC2626" : tone === "violet" ? "#7C3AED" : "rgba(17,17,24,0.20)";
   const fill = tone === "red" ? "#FEF2F2" : tone === "violet" ? "#F5F3FF" : "#FFFFFF";
   const color = tone === "red" ? "#7F1D1D" : tone === "violet" ? "#5B21B6" : "#374151";
-  const w = Math.min(360, 36 + text.length * 6.6);
+  const { Icon, label } = statusIcon(text);
+  const iconW = Icon ? 15 : 0;
+  const gap = Icon ? 6 : 0;
+  const contentW = iconW + gap + label.length * 6.6;
+  const w = Math.min(360, 36 + contentW);
+  const startX = -contentW / 2;
   return (
     <g transform={`translate(${x},${y + dy})`} className="tg-bubble">
       <rect x={-w / 2} y={-18} width={w} height={36} rx={10} fill={fill} stroke={stroke} strokeWidth={1.2} />
-      <text textAnchor="middle" dy={5} className="tg-bubble-text" fill={color}>{text}</text>
+      {Icon ? (
+        <>
+          <Icon x={startX} y={-7.5} width={15} height={15} color={color} strokeWidth={1.8} />
+          <text x={startX + iconW + gap} textAnchor="start" dy={5} className="tg-bubble-text" fill={color}>{label}</text>
+        </>
+      ) : (
+        <text textAnchor="middle" dy={5} className="tg-bubble-text" fill={color}>{label}</text>
+      )}
       <path
         d={above ? `M -6 18 L 0 28 L 6 18 Z` : `M -6 -18 L 0 -28 L 6 -18 Z`}
         fill={fill}
@@ -1176,7 +1223,7 @@ function ChatPanel({
             className={`tg-msg tg-msg-${m.role} ${m.tone ? `tone-${m.tone}` : ""}`}
           >
             {m.role === "assistant" && <div className="tg-msg-avatar">AI</div>}
-            <div className="tg-msg-bubble">{m.text}</div>
+            <div className="tg-msg-bubble">{renderStatusText(m.text)}</div>
           </div>
         ))}
         {lastIsUser && (
@@ -1196,22 +1243,22 @@ function ChatPanel({
 
 
 function IconUser({ size = 32 }: { size?: number }) {
-  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>);
+  return (<User width={size} height={size} strokeWidth={1.6} />);
 }
 function IconBrain({ size = 44 }: { size?: number }) {
-  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 4a3 3 0 0 0-3 3v.5A3 3 0 0 0 4 10v2a3 3 0 0 0 1.5 2.6V16a3 3 0 0 0 3 3h.5"/><path d="M15 4a3 3 0 0 1 3 3v.5A3 3 0 0 1 20 10v2a3 3 0 0 1-1.5 2.6V16a3 3 0 0 1-3 3H15"/><path d="M12 4v15"/></svg>);
+  return (<Brain width={size} height={size} strokeWidth={1.5} />);
 }
 function IconShield({ size = 32 }: { size?: number }) {
-  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/></svg>);
+  return (<Shield width={size} height={size} strokeWidth={1.6} />);
 }
 function IconWarden({ size = 32 }: { size?: number }) {
-  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>);
+  return (<ShieldCheck width={size} height={size} strokeWidth={1.6} />);
 }
 function IconDb({ size = 32 }: { size?: number }) {
-  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>);
+  return (<Database width={size} height={size} strokeWidth={1.6} />);
 }
 function IconVendor({ size = 32 }: { size?: number }) {
-  return (<svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="7" width="18" height="13" rx="1.5"/><path d="M3 7l3-4h12l3 4"/><path d="M9 11h6"/></svg>);
+  return (<Store width={size} height={size} strokeWidth={1.6} />);
 }
 
 /* ============================================================
@@ -1272,16 +1319,16 @@ const TG_CSS = `
 
 /* Nodes */
 .tg-node .tg-node-base { stroke: rgba(17,17,24,0.14); stroke-width: 1.4; transition: stroke .3s, fill .3s; }
-.tg-node g[transform] { color: #111118; transition: color .3s; }
+.tg-node g[transform] { color: var(--text); transition: color .3s; }
 .tg-node .tg-node-label { font-family: var(--font-mono); font-size: 10px; fill: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
-.tg-node.is-attacker .tg-node-base    { stroke: #DC2626; fill: #FEF2F2; }
-.tg-node.is-attacker g[transform]      { color: #DC2626; }
-.tg-node.is-compromised .tg-node-base { stroke: #DC2626; fill: #FEE2E2; animation: tgShake .5s ease-in-out infinite; }
-.tg-node.is-compromised g[transform]   { color: #DC2626; }
-.tg-node.is-alert .tg-node-base       { stroke: #7C3AED; fill: #F5F3FF; }
-.tg-node.is-alert g[transform]         { color: #7C3AED; }
-.tg-node.is-safe .tg-node-base        { stroke: #7C3AED; fill: #FFFFFF; }
-.tg-node.is-def g[transform]           { color: #7C3AED; }
+.tg-node.is-attacker .tg-node-base    { stroke: var(--red); fill: #FEF2F2; }
+.tg-node.is-attacker g[transform]      { color: var(--red); }
+.tg-node.is-compromised .tg-node-base { stroke: var(--red); fill: #FEE2E2; animation: tgShake .5s ease-in-out infinite; }
+.tg-node.is-compromised g[transform]   { color: var(--red); }
+.tg-node.is-alert .tg-node-base       { stroke: var(--violet); fill: var(--violet-soft); }
+.tg-node.is-alert g[transform]         { color: var(--violet); }
+.tg-node.is-safe .tg-node-base        { stroke: var(--violet); fill: var(--surface); }
+.tg-node.is-def g[transform]           { color: var(--violet); }
 @keyframes tgShake {
   0%,100% { transform: translate(0,0); }
   25% { transform: translate(-1px,0); }
@@ -1357,21 +1404,22 @@ const TG_CSS = `
 /* Chat panel (left) */
 .tg-chat { border-right: 1px solid var(--border); background: var(--bg-alt); display: flex; flex-direction: column; min-height: 0; }
 .tg-chat-head { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
-.cd { width: 10px; height: 10px; border-radius: 50%; background: #FF5F57; }
-.cd.y { background: #FEBC2E; } .cd.g { background: #28C840; }
+.cd { width: 10px; height: 10px; border-radius: 50%; background: var(--border-mid); }
+.cd.y { background: var(--dim); } .cd.g { background: var(--muted); }
 .tg-chat-title { margin-left: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
 .tg-chat-body { flex: 1; padding: 18px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
 .tg-chat-empty { color: var(--dim); font-size: 13px; font-style: italic; text-align: center; margin-top: 40%; }
 .tg-msg { display: flex; gap: 8px; align-items: flex-end; opacity: 0; animation: tgMsgIn .35s ease-out forwards; }
 .tg-msg-user { justify-content: flex-end; }
 .tg-msg-user .tg-msg-bubble { background: var(--text); color: var(--bg); border-bottom-right-radius: 4px; max-width: 86%; }
-.tg-msg-user.tone-red .tg-msg-bubble { background: #DC2626; color: #fff; }
+.tg-msg-user.tone-red .tg-msg-bubble { background: var(--red); color: #fff; }
 .tg-msg-assistant .tg-msg-bubble { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; max-width: 86%; }
 .tg-msg-assistant.tone-red .tg-msg-bubble { border-color: var(--red-border); background: #FEF2F2; color: #7F1D1D; }
 .tg-msg-system { justify-content: center; }
-.tg-msg-system .tg-msg-bubble { background: transparent; color: var(--violet-deep); border: 1px dashed var(--green-border); font-family: var(--font-mono); font-size: 11px; padding: 6px 10px; border-radius: 8px; }
+.tg-msg-system .tg-msg-bubble { background: transparent; color: var(--violet-deep); border: 1px dashed var(--violet-border); font-family: var(--font-mono); font-size: 11px; padding: 6px 10px; border-radius: 8px; }
 .tg-msg-system.tone-red .tg-msg-bubble { border-color: var(--red-border); color: #7F1D1D; }
 .tg-msg-bubble { padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; white-space: pre-line; }
+.tg-inline-icon { display: inline; vertical-align: -2px; margin-right: 1px; }
 .tg-msg-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--violet-soft); color: var(--violet-deep); font-family: var(--font-mono); font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .tg-typing .tg-msg-bubble { display: inline-flex; gap: 3px; padding: 10px 12px; }
 .tg-typing .tg-msg-bubble span { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); animation: tgDot 1.2s infinite ease-in-out; }

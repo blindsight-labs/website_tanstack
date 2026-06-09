@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import { ArrowRight, BookOpen, ChevronDown, CirclePlay, Code, Mail, Menu, X } from "lucide-react";
+
 import appCss from "../styles.css?url";
 import logo from "@/assets/logo.png";
 
@@ -56,7 +58,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" },
     ],
     scripts: [
       {
@@ -137,28 +139,28 @@ function Nav() {
               onClick={() => setResourcesOpen((o) => !o)}
             >
               Resources
-              <span className="nav-caret" aria-hidden="true">▾</span>
+              <ChevronDown className="nav-caret" size={14} aria-hidden="true" />
             </button>
             <div className={`nav-mega ${resourcesOpen ? "open" : ""}`} role="menu">
               <div className="nav-mega-col">
                 <div className="nav-mega-label">Resources</div>
                 <Link to="/blog" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <svg className="nav-mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 5h12a3 3 0 0 1 3 3v11H7a3 3 0 0 1-3-3V5Z"/><path d="M4 5v11a3 3 0 0 0 3 3"/><path d="M9 9h7M9 13h7"/></svg>
+                  <BookOpen className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
                   <span>Blog</span>
                 </Link>
                 <Link to="/in-action" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <svg className="nav-mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><circle cx="12" cy="12" r="9"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg>
+                  <CirclePlay className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
                   <span>Live Demo</span>
                 </Link>
                 <Link to="/contact" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <svg className="nav-mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+                  <Mail className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
                   <span>Contact</span>
                 </Link>
               </div>
               <div className="nav-mega-col">
                 <div className="nav-mega-label">Developers</div>
                 <a href="https://docs.blindsight.io" target="_blank" rel="noopener noreferrer" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
-                  <svg className="nav-mega-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M8 6 3 12l5 6"/><path d="m16 6 5 6-5 6"/><path d="m14 4-4 16"/></svg>
+                  <Code className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
                   <span>Documentation</span>
                 </a>
               </div>
@@ -167,19 +169,19 @@ function Nav() {
                 <Link to="/blog/$slug" params={{ slug: "security-in-ai-introduction" }} className="nav-mega-card" onClick={() => setResourcesOpen(false)}>
                   <div className="nav-mega-card-body">
                     <div className="nav-mega-card-title">Security in AI: An Introduction</div>
-                    <div className="nav-mega-card-cta">Read primer <span aria-hidden="true">→</span></div>
+                    <div className="nav-mega-card-cta">Read primer <ArrowRight size={13} aria-hidden="true" /></div>
                   </div>
                 </Link>
                 <Link to="/blog/$slug" params={{ slug: "ai-threat-detection" }} className="nav-mega-card" onClick={() => setResourcesOpen(false)}>
                   <div className="nav-mega-card-body">
                     <div className="nav-mega-card-title">AI Threat Detection - Runtime Defense for Enterprise AI</div>
-                    <div className="nav-mega-card-cta">Read guide <span aria-hidden="true">→</span></div>
+                    <div className="nav-mega-card-cta">Read guide <ArrowRight size={13} aria-hidden="true" /></div>
                   </div>
                 </Link>
                 <Link to="/blog/$slug" params={{ slug: "how-to-secure-llms" }} className="nav-mega-card" onClick={() => setResourcesOpen(false)}>
                   <div className="nav-mega-card-body">
                     <div className="nav-mega-card-title">How to Secure LLMs: A Step-by-Step Playbook</div>
-                    <div className="nav-mega-card-cta">Read guide <span aria-hidden="true">→</span></div>
+                    <div className="nav-mega-card-cta">Read guide <ArrowRight size={13} aria-hidden="true" /></div>
                   </div>
                 </Link>
               </div>
@@ -187,13 +189,9 @@ function Nav() {
           </li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
-        <Link to="/demo" className="btn btn-violet">Request a Demo</Link>
+        <Link to="/demo" className="btn btn-primary">Request a Demo</Link>
         <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <line className="ham-top" x1="4" y1="6" x2="20" y2="6" />
-            <line className="ham-mid" x1="4" y1="12" x2="20" y2="12" />
-            <line className="ham-bot" x1="4" y1="18" x2="20" y2="18" />
-          </svg>
+          {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>
       </div>
     </nav>

@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getAllPosts, getPost } from "@/lib/blog-content";
@@ -13,7 +14,7 @@ function PostNotFound() {
           <span className="tag">404</span>
           <h1>Post not found.</h1>
           <p className="lede">That entry doesn't exist — yet.</p>
-          <Link to="/blog" className="btn btn-ghost">← Back to blog</Link>
+          <Link to="/blog" className="btn btn-secondary"><ArrowLeft size={16} aria-hidden="true" />Back to blog</Link>
         </div>
       </section>
     </main>
@@ -33,7 +34,7 @@ function BlogPostError({ error, reset }: { error: Error; reset: () => void }) {
             <button type="button" className="btn btn-primary" onClick={() => { router.invalidate(); reset(); }}>
               Try again
             </button>
-            <Link to="/blog" className="btn btn-ghost">← Back to blog</Link>
+            <Link to="/blog" className="btn btn-secondary"><ArrowLeft size={16} aria-hidden="true" />Back to blog</Link>
           </div>
         </div>
       </section>
@@ -129,7 +130,7 @@ function BlogPostPage() {
     <main>
       <article className="post-article">
         <header className="post-article-head reveal">
-          <Link to="/blog" className="post-back">← All posts</Link>
+          <Link to="/blog" className="post-back"><ArrowLeft size={14} aria-hidden="true" />All posts</Link>
           <span className="post-cat">{post.category}</span>
           <h1>{post.title}</h1>
           <p className="lede">{post.excerpt}</p>

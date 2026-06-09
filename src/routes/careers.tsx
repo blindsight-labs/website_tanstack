@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowDown, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/careers")({
   component: CareersPage,
@@ -86,7 +87,7 @@ function CareersPage() {
           </p>
           <div className="hero-actions">
             <a href="mailto:careers@blindsight.io" className="btn btn-primary">Email the founders</a>
-            <a href="#roles" className="btn btn-ghost">See open roles ↓</a>
+            <a href="#roles" className="btn btn-secondary">See open roles <ArrowDown size={16} aria-hidden="true" /></a>
           </div>
         </div>
       </header>
@@ -145,7 +146,7 @@ function CareersPage() {
                   <span>{r.location}</span>
                   <span>{r.type}</span>
                 </div>
-                <span className="role-arrow">→</span>
+                <ArrowRight className="role-arrow" size={20} aria-hidden="true" />
               </Link>
             ))}
           </div>

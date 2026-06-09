@@ -1,9 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  ArrowRight,
+  Briefcase,
+  Building2,
+  ChevronDown,
+  Cpu,
+  Database,
+  Globe,
+  Landmark,
+  MonitorPlay,
+  Network,
+  ShieldCheck,
+} from "lucide-react";
 
-import logo from "@/assets/logo.png";
 import emblem from "@/assets/emblem.png";
-import icebergImg from "@/assets/iceberg.webp";
 import { HexBg } from "@/components/HexBg";
 
 export const Route = createFileRoute("/")({
@@ -22,131 +33,24 @@ export const Route = createFileRoute("/")({
 
 function Hero() {
   return (
-    <>
-      <header className="hero-hex">
-        <HexBg className="hero-hex-canvas" />
-        <div className="hero-hex-inner reveal">
-          <span className="tag">Securing AI · Built in Zurich</span>
-          <h1>
-            <span className="hero-line">Deploy AI Systems</span>
-            <br />
-            <span className="accent-grad">you can trust.</span>
-          </h1>
-          <p className="lede">
-            Deploy AI without blind spots. AI systems face threats from bad actors, misuse, and
-            human error at every layer. Blindsight is the only platform securing all of them.
-          </p>
-          <div className="hero-actions">
-            <Link to="/demo" className="btn btn-violet">Request a Demo</Link>
-            <Link to="/in-action" className="btn btn-outline-violet">See attacks in action →</Link>
-          </div>
-        </div>
-      </header>
-      <div className="threat-strip">
-        <strong>Threat vectors //</strong> Bad actors · Misuse · Human error · Supply chain
-      </div>
-    </>
-  );
-}
-
-function Stats() {
-  return (
-    <section className="section section-alt">
-      <div className="section-inner">
-        <div className="s-head reveal" style={{ marginBottom: 56 }}>
-          <span className="tag">The Trust Gap</span>
-          <h2>AI is shipping faster than it's being secured.</h2>
-          <p>Regulators, boards, and customers are catching up. The market is responding.</p>
-        </div>
-        <div className="stats-grid reveal">
-          <div className="stat">
-            <div className="stat-num">$38.94<span className="unit">B</span></div>
-            <div className="stat-label">Projected AI governance &amp; policy management market by 2030.</div>
-            <div className="stat-source">Mordor Intelligence · 2025</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">39.85<span className="unit">%</span></div>
-            <div className="stat-label">CAGR for AI governance platforms through the end of the decade.</div>
-            <div className="stat-source">Mordor Intelligence · 2025</div>
-          </div>
-          <div className="stat">
-            <div className="stat-num">4 / 7</div>
-            <div className="stat-label">Independent AI security competitors acquired into broader platforms since 2023.</div>
-            <div className="stat-source">Blindsight market analysis</div>
-          </div>
+    <header className="hero-hex" id="hero">
+      <HexBg className="hero-hex-canvas" />
+      <div className="hero-hex-inner reveal">
+        <span className="tag">Securing AI · Built in Zurich</span>
+        <h1>
+          <span className="hero-line">Gain sight over</span>
+          <br />
+          <span className="accent-grad">Shadow AI.</span>
+        </h1>
+        <p className="lede">
+          Deploy AI without blind spots. AI systems face threats from bad actors, misuse, and
+          human error at every layer. Blindsight is the only platform securing all of them.
+        </p>
+        <div className="hero-actions">
+          <Link to="/demo" className="btn btn-primary">Request a Demo</Link>
         </div>
       </div>
-    </section>
-  );
-}
-
-function Iceberg() {
-  return (
-    <section className="section">
-      <div className="section-inner">
-        <div className="s-head reveal">
-          <span className="tag">The Problem</span>
-          <h2>Existing tools only see the tip.</h2>
-          <p>
-            Most AI security platforms catch the surface threats, the prompts that look obviously
-            wrong. Hackers adapt and evolve. The most dangerous attacks are the ones others least
-            expect, and the ones that look legitimate all the way through.
-          </p>
-        </div>
-
-        <div className="iceberg-grid">
-          <div className="reveal">
-            <div className="threat-list">
-              <div className="threat-row">
-                <div className="name">Obvious prompt injections</div>
-                <div className="meta">Visible · Caught today</div>
-              </div>
-              <div className="threat-row">
-                <div className="name">Known jailbreak strings</div>
-                <div className="meta">Visible · Caught today</div>
-              </div>
-              <div className="threat-row hidden-row">
-                <div className="name">Poisoned training samples</div>
-                <div className="meta">Hidden</div>
-              </div>
-              <div className="threat-row hidden-row">
-                <div className="name">Adversarial RAG ingestion</div>
-                <div className="meta">Hidden</div>
-              </div>
-              <div className="threat-row hidden-row">
-                <div className="name">Demographic shortcut learning</div>
-                <div className="meta">Hidden</div>
-              </div>
-              <div className="threat-row hidden-row">
-                <div className="name">Back-doors</div>
-                <div className="meta">Hidden</div>
-              </div>
-              <div className="threat-row hidden-row">
-                <div className="name">Adversarial patching</div>
-                <div className="meta">Hidden</div>
-              </div>
-              <div className="threat-row hidden-row">
-                <div className="name">Misuse by privileged insiders</div>
-                <div className="meta">Hidden</div>
-              </div>
-            </div>
-            <p className="iceberg-footnote">
-              If even <span className="iceberg-footnote-accent">1</span> of these threats reach production, the model is compromised, and you
-              won't know until the damage has been done.
-            </p>
-          </div>
-
-          <div className="reveal">
-            <div
-              className="iceberg-img"
-              role="img"
-              aria-label="Iceberg illustration: visible threats above water, hidden mass below"
-              style={{ backgroundImage: `url(${icebergImg})` }}
-            />
-          </div>
-        </div>
-      </div>
-    </section>
+    </header>
   );
 }
 
@@ -414,7 +318,7 @@ function VerticalArchitectureDiagram({
 }
 
 
-function Platform() {
+function Pipeline() {
   const [active, setActive] = useState<ModuleKey | null>(null);
   const select = (k: ModuleKey, hover?: boolean) => {
     if (hover) setActive(k);
@@ -422,10 +326,10 @@ function Platform() {
   };
   const info = active ? MODULE_INFO[active] : null;
   return (
-    <section className="section section-alt" id="platform">
+    <section className="section section-alt" id="pipeline">
       <div className="section-inner">
         <div className="s-head reveal" style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}>
-          <span className="tag">The Solution</span>
+          <span className="tag">The Pipeline</span>
           <h2>One platform. Every layer of AI security.</h2>
           <p>
             Blindsight secures the path from user input to model output to the data that
@@ -437,7 +341,7 @@ function Platform() {
               <span className="top">Interactive demo</span>
               <span className="bot">See how attacks happen, and how you can stop them</span>
             </span>
-            <span className="arrow">→</span>
+            <span className="arrow"><ArrowRight size={16} aria-hidden="true" /></span>
           </Link>
         </div>
 
@@ -469,16 +373,182 @@ function Platform() {
 }
 
 
-function CTA() {
+/* ── Section progress rail ── */
+const SECTIONS: { id: string; label: string }[] = [
+  { id: "hero", label: "Top" },
+  { id: "pipeline", label: "Pipeline" },
+  { id: "clients", label: "Clients" },
+  { id: "showcase", label: "Platform" },
+  { id: "case-studies", label: "Case Studies" },
+  { id: "faq", label: "FAQ" },
+];
+
+function SectionRail() {
+  const [active, setActive] = useState<string>("hero");
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        }
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+    for (const s of SECTIONS) {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    }
+    return () => observer.disconnect();
+  }, []);
+  const go = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   return (
-    <section style={{ padding: "100px 0" }}>
-      <div className="cta-banner reveal">
-        <div>
-          <span className="tag" style={{ color: "var(--dark-muted)" }}>Get started</span>
-          <h2 style={{ marginTop: 10 }}>Deploy AI you can defend.</h2>
-          <p>30-minute working session. Bring a real AI system. Leave with a threat map and a remediation path mapped to the regulators that matter to you.</p>
+    <nav className="section-rail" aria-label="Page progress">
+      {SECTIONS.map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          className={`section-rail-item ${active === s.id ? "active" : ""}`}
+          onClick={() => go(s.id)}
+          aria-current={active === s.id ? "true" : undefined}
+        >
+          <span className="section-rail-label">{s.label}</span>
+          <span className="section-rail-dot" />
+        </button>
+      ))}
+    </nav>
+  );
+}
+
+/* ── Client / partner logo strip (placeholder marquee) ── */
+const CLIENT_LOGOS: { Icon: typeof Building2; name: string }[] = [
+  { Icon: Building2, name: "Northwind" },
+  { Icon: Landmark, name: "Meridian Bank" },
+  { Icon: Globe, name: "Atlas Global" },
+  { Icon: Cpu, name: "Nodal AI" },
+  { Icon: Network, name: "Lattice" },
+  { Icon: ShieldCheck, name: "Aegis" },
+  { Icon: Database, name: "Vaultstore" },
+  { Icon: Briefcase, name: "Corveau" },
+];
+
+function LogoStrip() {
+  const row = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
+  return (
+    <section className="logostrip-section section-alt" id="clients" aria-label="Trusted by">
+      <div className="logostrip-eyebrow">
+        <span className="tag">Trusted by teams securing AI</span>
+      </div>
+      <div className="logostrip">
+        <div className="logostrip-track">
+          {row.map(({ Icon, name }, i) => (
+            <span className="logostrip-item" key={i} aria-hidden={i >= CLIENT_LOGOS.length}>
+              <Icon className="logostrip-icon" strokeWidth={1.5} />
+              <span className="logostrip-name">{name}</span>
+            </span>
+          ))}
         </div>
-        <a href="mailto:info@blindsight.io" className="btn btn-primary">Request a Demo</a>
+      </div>
+    </section>
+  );
+}
+
+/* ── Platform showcase (placeholder for product animation) ── */
+function PlatformShowcase() {
+  return (
+    <section className="section" id="showcase">
+      <div className="section-inner">
+        <div className="s-head reveal" style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}>
+          <span className="tag">Platform Showcase</span>
+          <h2>See Blindsight at work.</h2>
+          <p>A guided walkthrough of the platform defending a live AI system — interactive showcase landing here soon.</p>
+        </div>
+        <div className="showcase-frame reveal">
+          <div className="showcase-frame-inner">
+            <MonitorPlay size={44} strokeWidth={1.3} aria-hidden="true" />
+            <span className="showcase-frame-label">Product animation placeholder</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Case studies (placeholder success stories) ── */
+const CASE_STUDIES: { Icon: typeof Building2; sector: string; metric: string; quote: string }[] = [
+  { Icon: Landmark, sector: "Financial Services", metric: "92% fewer incidents", quote: "Blindsight gave us visibility into AI risk we couldn't get anywhere else." },
+  { Icon: ShieldCheck, sector: "Healthcare", metric: "100% audit coverage", quote: "We passed our regulatory review with a full trail mapped to every model call." },
+  { Icon: Globe, sector: "Public Sector", metric: "3× faster rollout", quote: "We shipped citizen-facing AI months earlier, with guardrails in place from day one." },
+];
+
+function CaseStudies() {
+  return (
+    <section className="section section-alt" id="case-studies">
+      <div className="section-inner">
+        <div className="s-head reveal">
+          <span className="tag">Case Studies</span>
+          <h2>Proven in production.</h2>
+          <p>How teams in regulated industries deploy AI with Blindsight. Full stories coming soon.</p>
+        </div>
+        <div className="case-grid">
+          {CASE_STUDIES.map(({ Icon, sector, metric, quote }, i) => (
+            <article className="case-card reveal" key={i}>
+              <div className="case-card-top">
+                <span className="case-card-logo"><Icon size={22} strokeWidth={1.6} aria-hidden="true" /></span>
+                <span className="case-card-sector">{sector}</span>
+              </div>
+              <div className="case-card-metric">{metric}</div>
+              <p className="case-card-quote">“{quote}”</p>
+              <span className="case-card-link">Read story <ArrowRight size={15} aria-hidden="true" /></span>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── FAQ (placeholder accordion) ── */
+const FAQS: { q: string; a: string }[] = [
+  { q: "What is Blindsight?", a: "Blindsight is a platform for securing AI systems across runtime, data, and governance. (Placeholder answer.)" },
+  { q: "How does Blindsight deploy?", a: "Cloud, private cloud, or fully on-prem, alongside your existing AI stack. (Placeholder answer.)" },
+  { q: "What threats does it stop?", a: "Prompt injection, data exfiltration, poisoning, model misuse, and Shadow AI. (Placeholder answer.)" },
+  { q: "Does it work with my model provider?", a: "Yes — Blindsight is model-agnostic and sits between your users, tools, and any model. (Placeholder answer.)" },
+  { q: "How does it handle compliance?", a: "It produces an audit trail mapped to the EU AI Act, GDPR, and sector regulators. (Placeholder answer.)" },
+  { q: "Will it slow down my AI?", a: "Inspection happens inline with negligible latency overhead. (Placeholder answer.)" },
+  { q: "Can I monitor my RAG and data lake?", a: "Yes — Warden continuously watches retrieval and training data sources. (Placeholder answer.)" },
+  { q: "Is my data sent to Blindsight?", a: "No — in on-prem and private deployments your data never leaves your environment. (Placeholder answer.)" },
+  { q: "How long does onboarding take?", a: "Most teams are up and running in a single working session. (Placeholder answer.)" },
+  { q: "How do I get started?", a: "Request a demo and we'll map your AI threat surface in 30 minutes. (Placeholder answer.)" },
+];
+
+function FAQ() {
+  const [open, setOpen] = useState<number[]>([]);
+  const toggle = (i: number) =>
+    setOpen((cur) => (cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i]));
+  return (
+    <section className="section" id="faq">
+      <div className="section-inner faq-inner">
+        <div className="s-head reveal" style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}>
+          <span className="tag">FAQ</span>
+          <h2>Questions, answered.</h2>
+        </div>
+        <div className="faq-list reveal">
+          {FAQS.map((f, i) => {
+            const isOpen = open.includes(i);
+            return (
+              <div className={`faq-item ${isOpen ? "open" : ""}`} key={i}>
+                <button type="button" className="faq-q" aria-expanded={isOpen} onClick={() => toggle(i)}>
+                  <span>{f.q}</span>
+                  <ChevronDown className="faq-chevron" size={18} aria-hidden="true" />
+                </button>
+                <div className="faq-a">
+                  <div><p>{f.a}</p></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -487,10 +557,13 @@ function CTA() {
 function Home() {
   return (
     <main>
+      <SectionRail />
       <Hero />
-      <Iceberg />
-      <Platform />
-      <CTA />
+      <Pipeline />
+      <LogoStrip />
+      <PlatformShowcase />
+      <CaseStudies />
+      <FAQ />
     </main>
   );
 }
