@@ -39,6 +39,13 @@ Blog posts are Markdown files in `src/content/blog/` with YAML frontmatter. They
 
 Tailwind CSS v4 with a custom design token layer defined in `src/styles.css`. Design tokens are CSS custom properties (e.g. `--bg`, `--text`, `--violet`) bridged into Tailwind via `@theme inline`. Fonts: **IBM Plex Sans** (display/headings + body), **IBM Plex Mono** (mono). The `--font-display` token aliases IBM Plex Sans — there is intentionally no separate display typeface. Path alias `@/*` resolves to `src/*`.
 
+**Design system rules:**
+
+- **Color:** black & white + a single violet accent in three saturations (`--violet`, `--violet-deep`, `--violet-soft`), with red (`--red`) reserved for semantic danger/alert states. This applies to **UI chrome** (nav, buttons, cards, sections, copy).
+  - **Exception:** illustrative content keeps its own descriptive colors — the **architecture diagram** uses `--amber` for data-source nodes (RAG / Data Lake), and the **animated demo** (`in-action`) uses the red/amber/green chat "traffic-light" dots. Don't normalize these to violet.
+- **Icons:** use [lucide.dev](https://lucide.dev) (`lucide-react`) for all UI icons — no bespoke inline-SVG icon glyphs, unicode arrows, or emoji as icons. (Structural SVG diagrams/illustrations are not icons and are exempt.)
+- **Buttons:** three tiers — **primary** `btn-primary` (violet filled), **secondary** `btn-secondary` (transparent + violet border), **tertiary** (plain text / nav links). One class per tier.
+
 ### UI components
 
 `src/components/ui/` contains shadcn/ui components. The project config for shadcn is in `components.json`.

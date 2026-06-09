@@ -36,6 +36,7 @@
   --red: #DC2626;
   --red-mid: rgba(220,38,38,0.07);
   --red-border: rgba(220,38,38,0.24);
+  --amber: #D97706;
   --dark: #0B0B12;
   --dark-text: #ECEEF3;
   --dark-muted: #8A8A9C;
@@ -465,7 +466,7 @@ h1, h2, h3, h4 {
 }
 .arch-h.v { fill: var(--violet); }
 .arch-h.dark { fill: #FFFFFF; }
-.arch-h.amber { fill: var(--muted); }
+.arch-h.amber { fill: var(--amber); }
 .arch-sub {
   font-family: var(--font-mono); font-size: 10.5px;
   letter-spacing: 0.06em; fill: var(--muted); text-anchor: middle;
@@ -1407,13 +1408,14 @@ footer {
   mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
 }
 .logostrip-track {
-  display: flex; align-items: center; gap: 56px; width: max-content;
+  display: flex; align-items: center; width: max-content;
   animation: logostrip-scroll 34s linear infinite;
 }
 .logostrip:hover .logostrip-track { animation-play-state: paused; }
 @keyframes logostrip-scroll { to { transform: translateX(-50%); } }
 .logostrip-item {
   display: inline-flex; align-items: center; gap: 10px;
+  margin-right: 56px;
   color: var(--dim); transition: color .2s ease;
 }
 .logostrip-item:hover { color: var(--muted); }

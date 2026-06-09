@@ -1404,8 +1404,8 @@ const TG_CSS = `
 /* Chat panel (left) */
 .tg-chat { border-right: 1px solid var(--border); background: var(--bg-alt); display: flex; flex-direction: column; min-height: 0; }
 .tg-chat-head { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
-.cd { width: 10px; height: 10px; border-radius: 50%; background: var(--border-mid); }
-.cd.y { background: var(--dim); } .cd.g { background: var(--muted); }
+.cd { width: 10px; height: 10px; border-radius: 50%; background: #FF5F57; }
+.cd.y { background: #FEBC2E; } .cd.g { background: #28C840; }
 .tg-chat-title { margin-left: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
 .tg-chat-body { flex: 1; padding: 18px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
 .tg-chat-empty { color: var(--dim); font-size: 13px; font-style: italic; text-align: center; margin-top: 40%; }
