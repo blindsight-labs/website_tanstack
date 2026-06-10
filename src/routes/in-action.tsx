@@ -646,6 +646,28 @@ export function TopologyGraphDemo({
     return () => io.disconnect();
   }, [startOnVisible]);
 
+  /* Replay on demand (e.g. the homepage nav "Watch It Work" button): scroll the
+     demo into view, restart the scenario from the top, then flash + hold scroll. */
+  useEffect(() => {
+    if (!startOnVisible) return;
+    const onReplay = () => {
+      rootRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      setScenarioIdx(initialIdx);
+      setSecOn(false);
+      setPhase("off");
+      setStage(0);
+      setView("scenario");
+      setPlaying(true);
+      startedRef.current = true; // suppress the scroll observer's own trigger
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      setFlashing(true);
+      window.setTimeout(() => setFlashing(false), 2400);
+      holdScroll(2200);
+    };
+    window.addEventListener("watch-replay", onReplay);
+    return () => window.removeEventListener("watch-replay", onReplay);
+  }, [startOnVisible, initialIdx]);
+
   const openScenario = (i: number) => {
     setScenarioIdx(i);
     setSecOn(false);

@@ -130,6 +130,11 @@ function Nav() {
     return () => io.disconnect();
   }, [pathname]);
   const closeMenu = () => setMenuOpen(false);
+  // Homepage: scroll to the demo section + restart/lock it. Elsewhere: open the modal.
+  const watchItWork = () => {
+    if (pathname === "/") window.dispatchEvent(new Event("watch-replay"));
+    else openInAction();
+  };
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <Link to="/" aria-label="Blindsight home" onClick={closeMenu}>
@@ -137,7 +142,7 @@ function Nav() {
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
         <Link to="/" onClick={closeMenu}>Solution</Link>
-        <button type="button" onClick={() => { closeMenu(); openInAction(); }}>Watch It Work</button>
+        <button type="button" onClick={() => { closeMenu(); watchItWork(); }}>Watch It Work</button>
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
@@ -146,7 +151,7 @@ function Nav() {
       <div className="nav-right">
         <ul className="nav-links">
           <li><Link to="/">Solution</Link></li>
-          <li><button type="button" className="nav-link-btn" onClick={openInAction}>Watch It Work</button></li>
+          <li><button type="button" className="nav-link-btn" onClick={watchItWork}>Watch It Work</button></li>
           <li><Link to="/careers">Careers</Link></li>
           <li
             className="nav-dropdown"
