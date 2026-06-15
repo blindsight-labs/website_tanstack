@@ -56,10 +56,10 @@ export function HexBg({ className }: { className?: string }) {
           const intensity = intensityAt(cx, cy);
           hexPath(cx, cy, R - 1.5 * dpr);
           if (intensity > 0.04) {
-            ctx.fillStyle = `rgba(124, 58, 237, ${intensity * 0.32})`;
+            ctx.fillStyle = `rgba(85, 70, 224, ${intensity * 0.32})`;
             ctx.fill();
           }
-          ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 + intensity * 0.6})`;
+          ctx.strokeStyle = `rgba(123, 110, 236, ${0.1 + intensity * 0.6})`;
           ctx.lineWidth = 1 * dpr;
           ctx.stroke();
         }

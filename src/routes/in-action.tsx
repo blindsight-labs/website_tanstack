@@ -3,7 +3,6 @@ import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   Brain,
-  ChevronLeft,
   CircleX,
   Database,
   Droplet,
@@ -646,27 +645,18 @@ export function TopologyGraphDemo({
     return () => io.disconnect();
   }, [startOnVisible]);
 
-  /* Replay on demand (e.g. the homepage nav "Watch It Work" button): scroll the
-     demo into view, restart the scenario from the top, then flash + hold scroll. */
+  /* Replay on demand (homepage nav "Watch It Work" button): scroll the embedded
+     demo into view and reset it to the threat-selection menu. */
   useEffect(() => {
-    if (!startOnVisible) return;
+    if (!embedded) return;
     const onReplay = () => {
       rootRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      setScenarioIdx(initialIdx);
-      setSecOn(false);
-      setPhase("off");
-      setStage(0);
-      setView("scenario");
-      setPlaying(true);
-      startedRef.current = true; // suppress the scroll observer's own trigger
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      setFlashing(true);
-      window.setTimeout(() => setFlashing(false), 2400);
-      holdScroll(2200);
+      setView("picker");
+      setPlaying(false);
     };
     window.addEventListener("watch-replay", onReplay);
     return () => window.removeEventListener("watch-replay", onReplay);
-  }, [startOnVisible, initialIdx]);
+  }, [embedded]);
 
   const openScenario = (i: number) => {
     setScenarioIdx(i);
@@ -712,25 +702,28 @@ export function TopologyGraphDemo({
     <div ref={rootRef} className={`tg-page ${embedded ? "tg-embed" : ""}`}>
       <style>{TG_CSS}</style>
 
-      <header className="tg-header">
-        <h1 className="tg-title">
-          <span className="tg-title-line1">See how attacks happen,</span>
-          <span className="tg-title-line2">and how Blindsight stops them.</span>
-        </h1>
-      </header>
-
       {view === "picker" ? (
         <ReactorPicker onPick={openScenario} />
       ) : (
         <main className="tg-stage-wrap">
           <section className={`tg-variant tg-mode-${secOn ? "on" : "off"} ${flashing ? "tg-flash" : ""}`}>
             <div className="tg-topbar">
-              <button className="tg-back" onClick={backToPicker} aria-label="Back to scenarios">
-                <ChevronLeft size={14} aria-hidden="true" />
-                <span>All scenarios</span>
-              </button>
+              <div className="tg-scenario-switch">
+                {SCENARIOS.map((s, i) =>
+                  i === scenarioIdx ? null : (
+                    <button
+                      key={s.id}
+                      type="button"
+                      className="tg-scenario-btn"
+                      onClick={() => openScenario(i)}
+                    >
+                      {s.title}
+                    </button>
+                  ),
+                )}
+              </div>
               <button
-                className={`tg-switch tg-switch-center ${secOn ? "is-on" : ""}`}
+                className={`tg-switch ${secOn ? "is-on" : ""}`}
                 onClick={toggleSecurity}
                 aria-pressed={secOn}
                 title="Toggle Blindsight Security"
@@ -741,7 +734,6 @@ export function TopologyGraphDemo({
                 <span className="tg-switch-track"><span className="tg-switch-thumb" /></span>
                 <span className="tg-switch-label">Blindsight Security <strong>{secOn ? "ON" : "OFF"}</strong></span>
               </button>
-              <span className="tg-topbar-spacer" />
             </div>
 
 
@@ -971,7 +963,7 @@ function Graph({
   const packets: PacketDef[] = stage.packets ?? (stage.packet ? [stage.packet] : []);
 
   const intentColor = (intent: PacketDef["intent"]) =>
-    intent === "malicious" ? "#DC2626" : intent === "safe" ? "#7C3AED" : "#9CA3AF";
+    intent === "malicious" ? "#DC2626" : intent === "safe" ? "#5546E0" : "#9CA3AF";
 
   // expand a packet into consecutive (a,b) segment pairs
   const packetSegments = (p: PacketDef): Array<[NodeId, NodeId]> => {
@@ -1059,7 +1051,7 @@ function Graph({
             className={`tg-node ${isDef ? "is-def" : ""} ${s ? `is-${s}` : ""}`}
           >
             {/* pulse ring when alert */}
-            {s === "alert" && <circle r={isBig ? 44 : 36} className="tg-node-pulse" fill="none" stroke="#7C3AED" />}
+            {s === "alert" && <circle r={isBig ? 44 : 36} className="tg-node-pulse" fill="none" stroke="#5546E0" />}
             <circle r={isBig ? 38 : 28} fill="#FFFFFF" className="tg-node-base" />
             <g transform={`translate(${isBig ? -22 : -16},${isBig ? -22 : -16})`}>
               <NodeIcon id={id} size={isBig ? 44 : 32} />
@@ -1112,9 +1104,9 @@ function Bubble({ x, y, text, tone }: { x: number; y: number; text: string; tone
   // pick side: prefer above; if near top, go below
   const above = y > 160;
   const dy = above ? -64 : 64;
-  const stroke = tone === "red" ? "#DC2626" : tone === "violet" ? "#7C3AED" : "rgba(17,17,24,0.20)";
-  const fill = tone === "red" ? "#FEF2F2" : tone === "violet" ? "#F5F3FF" : "#FFFFFF";
-  const color = tone === "red" ? "#7F1D1D" : tone === "violet" ? "#5B21B6" : "#374151";
+  const stroke = tone === "red" ? "#DC2626" : tone === "violet" ? "#5546E0" : "rgba(17,17,24,0.20)";
+  const fill = tone === "red" ? "#FEF2F2" : tone === "violet" ? "#F0EEFB" : "#FFFFFF";
+  const color = tone === "red" ? "#7F1D1D" : tone === "violet" ? "#3F2FB5" : "#374151";
   const { Icon, label } = statusIcon(text);
   const iconW = Icon ? 15 : 0;
   const gap = Icon ? 6 : 0;
@@ -1303,10 +1295,6 @@ function ChatPanel({
 
   return (
     <aside className="tg-chat">
-      <div className="tg-chat-head">
-        <span className="cd" /><span className="cd y" /><span className="cd g" />
-        <span className="tg-chat-title">acme-chat · new conversation</span>
-      </div>
       <div className="tg-chat-body">
         {msgs.length === 0 && <div className="tg-chat-empty">Waiting for input…</div>}
         {msgs.map((m, i) => (
@@ -1324,10 +1312,6 @@ function ChatPanel({
             <div className="tg-msg-bubble"><span /><span /><span /></div>
           </div>
         )}
-      </div>
-      <div className="tg-chat-composer">
-        <span className="tg-chat-ph">Message acme-chat…</span>
-        <span className="tg-chat-caret" />
       </div>
     </aside>
   );
@@ -1357,7 +1341,7 @@ function IconVendor({ size = 32 }: { size?: number }) {
    Styles
    ============================================================ */
 const TG_CSS = `
-.tg-page { min-height: 100vh; background: radial-gradient(1200px 600px at 50% -10%, rgba(124,58,237,0.08), transparent 70%), var(--bg); color: var(--text); font-family: var(--font-sans); }
+.tg-page { min-height: 100vh; background: radial-gradient(1200px 600px at 50% -10%, rgba(85,70,224,0.08), transparent 70%), var(--bg); color: var(--text); font-family: var(--font-sans); }
 .tg-page.tg-embed { min-height: 0; background: none; padding-top: 0; }
 .tg-page.tg-embed .tg-header { padding-top: 0; }
 .tg-page.tg-embed .tg-title { font-size: clamp(20px, 3vw, 28px); }
@@ -1378,18 +1362,18 @@ const TG_CSS = `
   padding: 2.5px;
   background: conic-gradient(from var(--tg-beam),
     transparent 0deg,
-    rgba(124,58,237,0) 48deg,
-    rgba(124,58,237,0.6) 74deg,
+    rgba(85,70,224,0) 48deg,
+    rgba(85,70,224,0.6) 74deg,
     rgba(255,255,255,1) 90deg,
-    rgba(124,58,237,0.6) 106deg,
-    rgba(124,58,237,0) 132deg,
+    rgba(85,70,224,0.6) 106deg,
+    rgba(85,70,224,0) 132deg,
     transparent 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
   pointer-events: none;
-  filter: drop-shadow(0 0 5px rgba(124,58,237,0.55));
+  filter: drop-shadow(0 0 5px rgba(85,70,224,0.55));
   animation: tg-beam 2.2s ease-in-out;
 }
 @keyframes tg-beam { from { --tg-beam: 0deg; } to { --tg-beam: 360deg; } }
@@ -1397,7 +1381,7 @@ const TG_CSS = `
 .tg-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
 .tg-title { font-family: var(--font-display); font-weight: 500; font-size: clamp(34px, 5vw, 52px); letter-spacing: -0.02em; margin: 0; line-height: 1.08; display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .tg-title-line1 { color: var(--text); }
-.tg-title-line2 { background: linear-gradient(180deg, #0a0612 0%, #4c1d95 55%, #7c3aed 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tg-title-line2 { background: linear-gradient(180deg, #0a0612 0%, #3A2AA0 55%, #5546E0 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .tg-sub { color: var(--muted); margin: 0 0 28px; max-width: 70ch; }
 .tg-link { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
 
@@ -1425,12 +1409,19 @@ const TG_CSS = `
 
 /* Layout */
 .tg-stage-wrap { max-width: 1320px; margin: 0 auto; padding: 16px 32px 48px; }
-.tg-variant { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow-md); overflow: hidden; min-height: 440px; transition: border-color .3s; animation: tgVariantIn .4s ease-out; }
-.tg-mode-off .tg-variant { border-color: var(--red-border); }
+.tg-variant { position: relative; display: flex; flex-direction: column; min-height: 440px; animation: tgVariantIn .4s ease-out; }
 @keyframes tgVariantIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: none; } }
 
 /* Topbar */
-.tg-topbar { display: flex; align-items: center; gap: 16px; padding: 12px 18px; border-bottom: 1px solid var(--border); background: var(--bg-alt); }
+.tg-topbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 4px 4px 20px; }
+.tg-scenario-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tg-scenario-btn {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--border-mid); border-radius: 999px;
+  padding: 6px 13px; cursor: pointer; transition: color .15s, border-color .15s, background .15s;
+}
+.tg-scenario-btn:hover { color: var(--violet); border-color: var(--violet); background: var(--violet-soft); }
 .tg-back { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; color: var(--muted); transition: all .15s; }
 .tg-back:hover { background: var(--surface); color: var(--text); }
 .tg-topbar-title { flex: 1; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text); justify-content: center; }
@@ -1440,7 +1431,7 @@ const TG_CSS = `
 .tg-topbar-spacer { width: 110px; }
 
 /* Body grid: chat | canvas */
-.tg-body { display: grid; grid-template-columns: 320px 1fr; min-height: 340px; }
+.tg-body { display: grid; grid-template-columns: 320px 1fr; gap: 28px; min-height: 340px; }
 .tg-canvas { position: relative; padding: 6px 28px 12px; min-height: 340px; display: flex; flex-direction: column; }
 .tg-svg { width: 100%; flex: 1; min-height: 280px; display: block; }
 
@@ -1529,7 +1520,7 @@ const TG_CSS = `
 .tg-pb-speed:hover { background: var(--bg-alt); color: var(--text); }
 
 /* Chat panel (left) */
-.tg-chat { border-right: 1px solid var(--border); background: var(--bg-alt); display: flex; flex-direction: column; min-height: 0; }
+.tg-chat { display: flex; flex-direction: column; min-height: 0; }
 .tg-chat-head { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface); }
 .cd { width: 10px; height: 10px; border-radius: 50%; background: #FF5F57; }
 .cd.y { background: #FEBC2E; } .cd.g { background: #28C840; }
@@ -1562,14 +1553,14 @@ const TG_CSS = `
 /* Reactor picker */
 .tg-picker { max-width: 1320px; margin: 0 auto; padding: 8px 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .tg-reactor { position: relative; width: 640px; height: 640px; display: flex; align-items: center; justify-content: center; }
-.tg-reactor-ring { position: absolute; top: 50%; left: 50%; border: 1px dashed rgba(124,58,237,0.18); border-radius: 50%; transform: translate(-50%,-50%); }
+.tg-reactor-ring { position: absolute; top: 50%; left: 50%; border: 1px dashed rgba(85,70,224,0.18); border-radius: 50%; transform: translate(-50%,-50%); }
 .tg-rr-1 { width: 200px; height: 200px; animation: tgSpin 22s linear infinite; }
-.tg-rr-2 { width: 360px; height: 360px; border-color: rgba(124,58,237,0.12); animation: tgSpin 36s linear infinite reverse; }
+.tg-rr-2 { width: 360px; height: 360px; border-color: rgba(85,70,224,0.12); animation: tgSpin 36s linear infinite reverse; }
 .tg-rr-3 { width: 500px; height: 500px; border-color: rgba(17,17,24,0.08); animation: tgSpin 60s linear infinite; }
 @keyframes tgSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
 
-.tg-reactor-core { position: relative; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #ffffff, #f4f0ff 60%, #ede5ff 100%); border: 1px solid var(--violet); box-shadow: 0 0 0 6px rgba(124,58,237,0.06), 0 10px 40px -10px rgba(124,58,237,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; animation: tgCorePulse 3s ease-in-out infinite; }
-@keyframes tgCorePulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(124,58,237,0.06), 0 10px 40px -10px rgba(124,58,237,0.4); } 50% { box-shadow: 0 0 0 14px rgba(124,58,237,0.04), 0 10px 50px -8px rgba(124,58,237,0.55); } }
+.tg-reactor-core { position: relative; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #ffffff, #f4f0ff 60%, #ede5ff 100%); border: 1px solid var(--violet); box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; animation: tgCorePulse 3s ease-in-out infinite; }
+@keyframes tgCorePulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); } 50% { box-shadow: 0 0 0 14px rgba(85,70,224,0.04), 0 10px 50px -8px rgba(85,70,224,0.55); } }
 .tg-reactor-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--violet); }
 .tg-reactor-title { font-family: var(--font-display); font-size: 20px; font-weight: 500; text-align: center; line-height: 1.1; color: var(--text); }
 
@@ -1594,8 +1585,8 @@ const TG_CSS = `
 .tg-overlay-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 .tg-overlay-title { font-family: var(--font-display); font-size: 22px; font-weight: 500; margin: 0 0 8px; color: var(--text); }
 .tg-overlay-body { color: var(--muted); font-size: 14px; line-height: 1.5; margin: 0 0 18px; }
-.tg-cta { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; background: var(--violet); color: #fff; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s; box-shadow: 0 10px 24px -8px rgba(124,58,237,0.55); }
-.tg-cta:hover { transform: translateY(-1px); box-shadow: 0 14px 28px -8px rgba(124,58,237,0.65); }
+.tg-cta { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; background: var(--violet); color: #fff; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s; box-shadow: 0 10px 24px -8px rgba(85,70,224,0.55); }
+.tg-cta:hover { transform: translateY(-1px); box-shadow: 0 14px 28px -8px rgba(85,70,224,0.65); }
 .tg-cta-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); box-shadow: none; }
 .tg-cta-ghost:hover { background: var(--bg-alt); box-shadow: none; }
 .tg-cta-row { display: inline-flex; gap: 10px; }
@@ -1611,7 +1602,7 @@ const TG_CSS = `
 
 @media (max-width: 1100px) {
   .tg-body { grid-template-columns: 1fr; }
-  .tg-chat { border-right: 0; border-bottom: 1px solid var(--border); max-height: 280px; }
+  .tg-chat { max-height: 280px; }
   .tg-reactor { width: 100%; height: 520px; }
 }
 @media (max-width: 720px) {

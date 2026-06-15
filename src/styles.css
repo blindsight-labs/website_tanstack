@@ -28,11 +28,11 @@
   --text: #111118;
   --muted: #6B6B7A;
   --dim: #A0A0AE;
-  --violet: #7C3AED;
-  --violet-deep: #5B21B6;
-  --violet-soft: #F5F3FF;
-  --violet-mid: rgba(124,58,237,0.09);
-  --violet-border: rgba(124,58,237,0.30);
+  --violet: #5546E0;
+  --violet-deep: #3F2FB5;
+  --violet-soft: #F0EEFB;
+  --violet-mid: rgba(85,70,224,0.09);
+  --violet-border: rgba(85,70,224,0.30);
   --red: #DC2626;
   --red-mid: rgba(220,38,38,0.07);
   --red-border: rgba(220,38,38,0.24);
@@ -106,9 +106,9 @@ h1, h2, h3, h4 {
 .btn-primary {
   background: linear-gradient(135deg, var(--violet) 0%, var(--violet-deep) 100%);
   color: #fff;
-  box-shadow: 0 6px 18px rgba(124,58,237,0.28);
+  box-shadow: 0 6px 18px rgba(85,70,224,0.28);
 }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(124,58,237,0.40); filter: brightness(1.05); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(85,70,224,0.40); filter: brightness(1.05); }
 /* Secondary CTA — transparent with violet border */
 .btn-secondary { background: transparent; color: var(--text); border: 1.5px solid var(--violet); }
 .btn-secondary:hover { background: var(--violet-soft); transform: translateY(-1px); }
@@ -280,7 +280,7 @@ h1, h2, h3, h4 {
 .hero-hex-inner .hero-line { white-space: nowrap; }
 .hero-hex-inner .accent-grad {
   display: inline-block;
-  background: linear-gradient(180deg, #0a0a0a 0%, #1a0a2e 35%, #5b21b6 75%, #a78bfa 100%);
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a0a2e 35%, #3F2FB5 75%, #A99BF2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -473,11 +473,11 @@ h1, h2, h3, h4 {
 .arch-box.clickable { cursor: pointer; }
 .arch-box.clickable:hover rect {
   stroke-width: 2;
-  filter: drop-shadow(0 4px 14px rgba(124,58,237,0.18));
+  filter: drop-shadow(0 4px 14px rgba(85,70,224,0.18));
 }
 .arch-box.selected rect {
   stroke-width: 2.25;
-  filter: drop-shadow(0 6px 18px rgba(124,58,237,0.28));
+  filter: drop-shadow(0 6px 18px rgba(85,70,224,0.28));
 }
 
 /* Text styles */
@@ -644,7 +644,7 @@ footer {
 .threat-card:hover {
   transform: translateY(-2px);
   border-color: var(--violet);
-  box-shadow: 0 14px 34px rgba(124,58,237,0.14);
+  box-shadow: 0 14px 34px rgba(85,70,224,0.14);
 }
 .threat-card-icon {
   width: 52px; height: 52px;
@@ -845,7 +845,7 @@ footer {
 }
 .stage::before {
   content: ""; position: absolute; inset: 0;
-  background-image: radial-gradient(circle, rgba(124,58,237,0.07) 1px, transparent 1.5px);
+  background-image: radial-gradient(circle, rgba(85,70,224,0.07) 1px, transparent 1.5px);
   background-size: 22px 22px;
   mask-image: radial-gradient(circle at 50% 50%, #000 30%, transparent 80%);
   pointer-events: none;
@@ -921,7 +921,7 @@ footer {
 .actor-interceptor .actor-orb,
 .actor-warden .actor-orb {
   background: #fff; border-color: var(--violet); color: var(--violet);
-  box-shadow: 0 0 0 6px rgba(124,58,237,0.10), 0 8px 22px rgba(124,58,237,0.18);
+  box-shadow: 0 0 0 6px rgba(85,70,224,0.10), 0 8px 22px rgba(85,70,224,0.18);
 }
 .actor-interceptor .actor-label,
 .actor-warden .actor-label { color: var(--violet); font-weight: 600; }
@@ -935,7 +935,7 @@ footer {
   text-transform: uppercase;
   padding: 7px 12px; border-radius: 6px;
   display: inline-flex; align-items: center; gap: 8px;
-  box-shadow: 0 10px 24px rgba(124,58,237,0.32);
+  box-shadow: 0 10px 24px rgba(85,70,224,0.32);
   animation: alert-in .35s ease;
   z-index: 5;
 }
@@ -977,7 +977,7 @@ footer {
 }
 .packet-safe {
   background: var(--violet);
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.20), 0 0 18px 4px rgba(124,58,237,0.55);
+  box-shadow: 0 0 0 3px rgba(85,70,224,0.20), 0 0 18px 4px rgba(85,70,224,0.55);
 }
 .packet-blocked {
   animation: packet-blocked 1.6s cubic-bezier(0.6, 0, 0.4, 1) forwards;
@@ -1194,6 +1194,29 @@ footer {
   font-family: var(--font-mono); font-size: 10.5px;
   letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim);
   padding-top: 12px; border-top: 1px solid var(--border);
+}
+
+/* ── Version A — split hero (heading | demo) ── */
+.va-hero {
+  position: relative;
+  max-width: 1320px; margin: 0 auto;
+  padding: 130px 48px 80px;
+}
+.va-hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 56px;
+  align-items: center;
+}
+.va-hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+.va-hero-copy h1 { font-size: clamp(38px, 4.6vw, 60px); line-height: 1.04; letter-spacing: -0.03em; }
+.va-hero-copy h1 .accent { color: var(--violet); }
+.va-hero-copy .lede { font-size: 18px; color: var(--muted); line-height: 1.55; max-width: 460px; }
+.va-hero-demo { width: 100%; min-width: 0; }
+@media (max-width: 980px) {
+  .va-hero { padding: 116px 20px 56px; }
+  .va-hero-inner { grid-template-columns: 1fr; gap: 36px; }
+  .va-hero-copy .lede { max-width: none; }
 }
 
 /* ── Docs page ── */
