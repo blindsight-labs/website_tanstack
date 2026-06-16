@@ -10,6 +10,7 @@ import {
   Landmark,
   Network,
   ShieldCheck,
+  UserRound,
 } from "lucide-react";
 
 import { useDemoModal } from "@/components/DemoModal";
@@ -40,8 +41,8 @@ export const Route = createFileRoute("/")({
 /* ── Section progress rail ── */
 const SECTIONS: { id: string; label: string }[] = [
   { id: "hero", label: "Top" },
-  { id: "clients", label: "Clients" },
   { id: "why", label: "Why" },
+  { id: "founders", label: "Team" },
   { id: "faq", label: "FAQ" },
 ];
 
@@ -176,7 +177,7 @@ function Hero() {
         <div className="va-hero-copy reveal">
           <span className="tag">Shadow AI</span>
           <h1>
-            See more with <span className="accent">Blindsight</span>.
+            See more with <span className="accent">Blindsight</span>
           </h1>
           <p className="lede">
             Your team is already using AI tools you never approved. Blindsight surfaces every
@@ -193,7 +194,50 @@ function Hero() {
           <TopologyGraphDemo embedded />
         </div>
       </div>
+
+      <LogoStrip />
     </header>
+  );
+}
+
+/* ── Why Blindsight — founders / offensive-security pedigree ── */
+function WhyBlindsight() {
+  return (
+    <section className="section section-alt" id="founders">
+      <div className="section-inner">
+        <div
+          className="s-head reveal"
+          style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
+        >
+          <span className="tag">Why Blindsight</span>
+          <h2>Offensive security, turned to your defense</h2>
+          <p>
+            Blindsight's founders attacked AI systems professionally before building the layer
+            that defends them. The CEO is a top global ethical hacker and former Kühne+Nagel
+            security architect, the CTO a former Checkmarx security lead, both with dozens of CVEs
+            to their name. Detection is built from the attacks they find themselves. Tested on
+            competitors' own public benchmarks, where it is hardest to win, Blindsight beats the
+            leading runtime benchmarks and covers a wider spectrum of attacks. In security, the
+            cost of being second best is the breach you did not stop.
+          </p>
+        </div>
+
+        <div className="founders-grid reveal">
+          {[
+            { role: "CEO", label: "CEO photo" },
+            { role: "CTO", label: "CTO photo" },
+          ].map(({ role, label }) => (
+            <figure className="founder-card" key={role}>
+              <div className="founder-photo" role="img" aria-label={`Placeholder for ${role} photo`}>
+                <UserRound className="founder-photo-icon" strokeWidth={1.5} aria-hidden="true" />
+                <span className="founder-photo-label">{label}</span>
+              </div>
+              <figcaption className="founder-role">{role}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -202,8 +246,8 @@ function Home() {
     <main>
       <SectionRail sections={SECTIONS} />
       <Hero />
-      <LogoStrip />
       <Iceberg id="why" eyebrow="Why Blindsight?" />
+      <WhyBlindsight />
       <FAQ />
     </main>
   );

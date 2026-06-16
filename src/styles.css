@@ -1200,23 +1200,57 @@ footer {
 .va-hero {
   position: relative;
   max-width: 1320px; margin: 0 auto;
-  padding: 130px 48px 80px;
+  padding: 104px 48px 16px;
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 .va-hero-inner {
+  flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   gap: 56px;
   align-items: center;
 }
+/* Clients banner lives inside the hero — compact it so the whole top
+   (copy + demo + banner) stays above the fold without scrolling. */
+.va-hero .logostrip-section { margin-top: 12px; padding: 18px 0; }
+.va-hero .logostrip-eyebrow { margin-bottom: 12px; }
+.va-hero .tg-picker-hint { display: none; }
 .va-hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
 .va-hero-copy h1 { font-size: clamp(38px, 4.6vw, 60px); line-height: 1.04; letter-spacing: -0.03em; }
 .va-hero-copy h1 .accent { color: var(--violet); }
 .va-hero-copy .lede { font-size: 18px; color: var(--muted); line-height: 1.55; max-width: 460px; }
 .va-hero-demo { width: 100%; min-width: 0; }
 @media (max-width: 980px) {
-  .va-hero { padding: 116px 20px 56px; }
+  .va-hero { padding: 116px 20px 32px; min-height: 0; }
   .va-hero-inner { grid-template-columns: 1fr; gap: 36px; }
   .va-hero-copy .lede { max-width: none; }
+}
+
+/* ── Why Blindsight — founder photo placeholders ── */
+.founders-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px;
+  max-width: 760px; margin: 56px auto 0;
+}
+@media (max-width: 640px) { .founders-grid { grid-template-columns: 1fr; gap: 20px; } }
+.founder-card { display: flex; flex-direction: column; gap: 14px; margin: 0; }
+.founder-photo {
+  aspect-ratio: 4 / 5; border-radius: 16px;
+  border: 1.5px dashed var(--violet-border);
+  background: linear-gradient(180deg, var(--violet-soft) 0%, var(--surface) 100%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  color: var(--violet);
+}
+.founder-photo-icon { width: 40px; height: 40px; }
+.founder-photo-label {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--muted);
+}
+.founder-role {
+  text-align: center; font-family: var(--font-mono); font-size: 13px;
+  letter-spacing: 0.08em; font-weight: 500; color: var(--text);
 }
 
 /* ── Docs page ── */
