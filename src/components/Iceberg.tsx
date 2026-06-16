@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { X } from "lucide-react";
 
 import icebergImg from "@/assets/iceberg.webp";
 
-/** The iceberg illustration is painted as a centered background scaled to 165%
- *  of the container width (see `.iceberg-img` in styles.css). To drop markers
- *  *on* the iceberg we express each one as a fraction of the source image and
- *  convert it to container pixels with the same scale/centre transform — so the
- *  markers track the artwork at any viewport width. */
+/** The iceberg illustration is painted as a centered background scaled above the
+ *  container (see `.iceberg-img` in styles.css). To drop markers *on* the iceberg
+ *  we express each one as a fraction of the source image and convert it to
+ *  container pixels using the live background-size / position — so the markers
+ *  track the artwork at any viewport width or breakpoint. */
 const IMG_RATIO = 922 / 1640; // iceberg.webp natural height / width
-const BG_SCALE = 1.65; // matches `background-size: 165% auto`
 
 type Threat = {
   id: string;
@@ -55,7 +55,7 @@ const THREATS: Threat[] = [
     name: "Adversarial RAG ingestion",
     meta: "Hidden",
     visible: false,
-    fx: 0.55,
+    fx: 0.56,
     fy: 0.42,
     desc: "Malicious instructions hidden inside the documents your model retrieves at run time. The prompt looks clean; the payload rides in on a source the model has been told to trust.",
   },
@@ -73,8 +73,8 @@ const THREATS: Threat[] = [
     name: "Back-doors",
     meta: "Hidden",
     visible: false,
-    fx: 0.56,
-    fy: 0.51,
+    fx: 0.57,
+    fy: 0.52,
     desc: "A hidden trigger sewn into the model: it behaves perfectly until it meets the secret key — a rare token, a watermark — then switches to the attacker’s behaviour on cue.",
   },
   {
@@ -92,7 +92,7 @@ const THREATS: Threat[] = [
     meta: "Hidden",
     visible: false,
     fx: 0.5,
-    fy: 0.7,
+    fy: 0.71,
     desc: "Legitimate access turned against you — sanctioned credentials used to siphon data or bend outputs. Every request is authorised, so perimeter defences never raise a flag.",
   },
 ];
@@ -100,32 +100,62 @@ const THREATS: Threat[] = [
 /** "Only see the tip" iceberg section. Eyebrow/id are parametrized so different
  *  landing-page versions can re-frame it (e.g. "The Problem" vs "Why Blindsight?"). */
 export function Iceberg({ id = "why", eyebrow = "The Problem" }: { id?: string; eyebrow?: string }) {
-  const [active, setActive] = useState<string | null>(null);
+  // `hovered` is the transient desktop hover; `pinned` is the click-to-keep-open
+  // popup that drives the mobile modal.
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [pinned, setPinned] = useState<string | null>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const [box, setBox] = useState({ w: 0, h: 0 });
+  const [geom, setGeom] = useState({ w: 0, h: 0, scale: 1.65, px: 0.5, py: 0.5 });
 
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
-    const measure = () => setBox({ w: el.clientWidth, h: el.clientHeight });
+    const measure = () => {
+      const cs = getComputedStyle(el);
+      const sizeTok = cs.backgroundSize.split(" ")[0].trim();
+      const scale = sizeTok.endsWith("%") ? parseFloat(sizeTok) / 100 : 1.65;
+      const pos = cs.backgroundPosition.split(" ");
+      const px = pos[0]?.endsWith("%") ? parseFloat(pos[0]) / 100 : 0.5;
+      const py = pos[1]?.endsWith("%") ? parseFloat(pos[1]) / 100 : 0.5;
+      setGeom({ w: el.clientWidth, h: el.clientHeight, scale, px, py });
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
 
-  const enter = (tid: string) => setActive(tid);
-  const leave = (tid: string) => setActive((cur) => (cur === tid ? null : cur));
-  const tap = (tid: string) => setActive((cur) => (cur === tid ? null : tid));
+  // Persistent popup closes on Escape.
+  useEffect(() => {
+    if (!pinned) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPinned(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pinned]);
 
   const markerPos = (t: Threat) => {
-    const { w, h } = box;
-    const bw = BG_SCALE * w;
+    const { w, h, scale, px, py } = geom;
+    const bw = scale * w;
     const bh = bw * IMG_RATIO;
-    const offX = (w - bw) / 2;
-    const offY = (h - bh) / 2;
+    const offX = px * (w - bw);
+    const offY = py * (h - bh);
     return { left: `${offX + t.fx * bw}px`, top: `${offY + t.fy * bh}px` };
   };
+
+  const isMobile = () =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches;
+
+  // Desktop: click pins/un-pins the side tooltip. Mobile: click opens/closes the modal.
+  const tap = (tid: string) =>
+    isMobile()
+      ? setPinned((cur) => (cur === tid ? null : tid))
+      : setHovered((cur) => (cur === tid ? null : tid));
+  const enter = (tid: string) => setHovered(tid);
+  const leave = (tid: string) => setHovered((cur) => (cur === tid ? null : cur));
+
+  const pinnedThreat = THREATS.find((t) => t.id === pinned) ?? null;
 
   return (
     <section className="section" id={id}>
@@ -140,20 +170,22 @@ export function Iceberg({ id = "why", eyebrow = "The Problem" }: { id?: string; 
           </p>
         </div>
 
+        <p className="iceberg-hint">Tap any threat to read more.</p>
+
         <div className="iceberg-grid">
-          <div className="reveal">
+          <div className="reveal iceberg-col-list">
             <div className="threat-list">
               {THREATS.map((t, i) => (
                 <button
                   type="button"
                   key={t.id}
-                  className={`threat-row ${t.visible ? "" : "hidden-row"} ${active === t.id ? "active" : ""}`}
+                  className={`threat-row ${t.visible ? "" : "hidden-row"} ${hovered === t.id ? "active" : ""}`}
                   onMouseEnter={() => enter(t.id)}
                   onMouseLeave={() => leave(t.id)}
                   onFocus={() => enter(t.id)}
                   onBlur={() => leave(t.id)}
                   onClick={() => tap(t.id)}
-                  aria-expanded={active === t.id}
+                  aria-expanded={hovered === t.id}
                 >
                   <span className="threat-num" aria-hidden="true">
                     {i + 1}
@@ -171,38 +203,74 @@ export function Iceberg({ id = "why", eyebrow = "The Problem" }: { id?: string; 
             </p>
           </div>
 
-          <div className="reveal">
+          <div className="reveal iceberg-col-art">
             <div
               className="iceberg-img"
               ref={stageRef}
               style={{ backgroundImage: `url(${icebergImg})` }}
             >
-              {box.w > 0 &&
-                THREATS.map((t, i) => (
-                  <button
-                    type="button"
-                    key={t.id}
-                    className={`ib-marker ${t.visible ? "is-visible" : "is-hidden"} ${active === t.id ? "active" : ""}`}
-                    style={markerPos(t)}
-                    onMouseEnter={() => enter(t.id)}
-                    onMouseLeave={() => leave(t.id)}
-                    onFocus={() => enter(t.id)}
-                    onBlur={() => leave(t.id)}
-                    onClick={() => tap(t.id)}
-                    aria-label={`${t.name}. ${t.desc}`}
-                  >
-                    <span aria-hidden="true">{i + 1}</span>
-                    <span className="ib-tip" role="tooltip">
-                      <span className="ib-tip-meta">{t.visible ? "Visible · caught today" : "Hidden threat"}</span>
-                      <span className="ib-tip-name">{t.name}</span>
-                      <span className="ib-tip-desc">{t.desc}</span>
-                    </span>
-                  </button>
-                ))}
+              {geom.w > 0 &&
+                THREATS.map((t, i) => {
+                  const active = hovered === t.id || pinned === t.id;
+                  return (
+                    <button
+                      type="button"
+                      key={t.id}
+                      className={`ib-marker ${t.visible ? "is-visible" : "is-hidden"} ${active ? "active" : ""} ${t.fx < 0.5 ? "label-left" : "label-right"}`}
+                      style={markerPos(t)}
+                      onMouseEnter={() => enter(t.id)}
+                      onMouseLeave={() => leave(t.id)}
+                      onFocus={() => enter(t.id)}
+                      onBlur={() => leave(t.id)}
+                      onClick={() => tap(t.id)}
+                      aria-label={`${t.name}. ${t.desc}`}
+                    >
+                      <span className="ib-marker-num" aria-hidden="true">
+                        {i + 1}
+                      </span>
+                      <span className="ib-marker-label" aria-hidden="true">
+                        {t.name}
+                      </span>
+                      <span className="ib-tip" role="tooltip">
+                        <span className="ib-tip-meta">
+                          {t.visible ? "Visible · caught today" : "Hidden threat"}
+                        </span>
+                        <span className="ib-tip-name">{t.name}</span>
+                        <span className="ib-tip-desc">{t.desc}</span>
+                      </span>
+                    </button>
+                  );
+                })}
             </div>
           </div>
         </div>
       </div>
+
+      {pinnedThreat && (
+        <div
+          className="ib-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-label={pinnedThreat.name}
+          onClick={() => setPinned(null)}
+        >
+          <div className="ib-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="ib-modal-close"
+              onClick={() => setPinned(null)}
+              aria-label="Close"
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
+            <span className="ib-tip-meta">
+              {pinnedThreat.visible ? "Visible · caught today" : "Hidden threat"}
+            </span>
+            <span className="ib-tip-name">{pinnedThreat.name}</span>
+            <p className="ib-tip-desc">{pinnedThreat.desc}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

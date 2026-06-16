@@ -440,17 +440,8 @@ h1, h2, h3, h4 {
   background-position: center;
 }
 @media (max-width: 980px) { .iceberg-img { min-height: 460px; margin-top: 0; max-width: 100%; } }
-@media (max-width: 640px) {
-  .iceberg-img {
-    min-height: 0; height: 100%; margin-top: 0;
-    aspect-ratio: unset;
-    background-size: 900% auto;
-    background-position: 42% -100px;
-    border-radius: 8px 0 0 8px;
-    width: calc(100% + 20px);
-    margin-right: -20px;
-  }
-}
+/* (Phone treatment for .iceberg-img lives in the markers block below, where the
+   iceberg becomes the full-width focus.) */
 
 /* ── Iceberg markers + hover tooltips ── */
 .ib-marker {
@@ -497,8 +488,79 @@ h1, h2, h3, h4 {
 .ib-tip-name { display: block; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
 .ib-tip-desc { display: block; font-size: 12.5px; line-height: 1.55; color: var(--muted); }
 
+/* Name pills beside each marker + the "tap for more" hint + the pinned popup
+   modal are all phone-only; on desktop the hover tooltip covers the same job. */
+.iceberg-hint { display: none; }
+.ib-marker-label { display: none; }
+.ib-modal { display: none; }
+
 @media (max-width: 640px) {
-  .ib-marker { display: none; }
+  /* Iceberg becomes the full-width focus; the name column collapses away and
+     the footnote slides beneath the art. */
+  .iceberg-grid { grid-template-columns: 1fr; gap: 0; margin-top: 28px; }
+  .iceberg-col-art { order: 1; }
+  .iceberg-col-list { order: 2; }
+  .iceberg-col-list .threat-list { display: none; }
+  .iceberg-footnote { margin-top: 24px; text-align: center; }
+
+  .iceberg-hint {
+    display: block; text-align: center; margin: 4px 0 0;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em;
+    color: var(--violet-deep);
+  }
+
+  .iceberg-img {
+    position: relative;
+    aspect-ratio: 7 / 5; min-height: 0; margin: 0; width: 100%;
+    background-size: 188%;
+    background-position: center;
+    border-radius: 12px;
+  }
+
+  /* Numbered tokens shrink a touch and carry their name as a pill alongside. */
+  .ib-marker { width: 26px; height: 26px; font-size: 11px; }
+  .ib-marker-label {
+    display: block; position: absolute; top: 50%; transform: translateY(-50%);
+    width: max-content; max-width: 38vw; padding: 3px 7px;
+    font-family: var(--font-sans); font-size: 10px; line-height: 1.18; font-weight: 600;
+    color: var(--text); background: rgba(255, 255, 255, 0.94);
+    border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--shadow-sm);
+  }
+  .ib-marker.label-left .ib-marker-label { right: calc(100% + 6px); text-align: right; }
+  .ib-marker.label-right .ib-marker-label { left: calc(100% + 6px); text-align: left; }
+  .ib-marker.active { z-index: 30; }
+  .ib-marker.active .ib-marker-label { border-color: var(--violet); }
+
+  /* The side tooltip is replaced by a centred, dismissible modal on touch. */
+  .ib-tip { display: none; }
+  .ib-modal {
+    display: flex; position: fixed; inset: 0; z-index: 200;
+    align-items: center; justify-content: center; padding: 24px;
+    background: rgba(17, 17, 24, 0.5); backdrop-filter: blur(3px);
+    animation: ib-modal-in 0.18s ease-out;
+  }
+  .ib-modal-card {
+    position: relative; width: 100%; max-width: 360px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 22px 22px 24px; box-shadow: var(--shadow-lg);
+    animation: ib-modal-card-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .ib-modal-card .ib-tip-name { font-size: 17px; margin-bottom: 8px; padding-right: 28px; }
+  .ib-modal-card .ib-tip-desc { font-size: 13.5px; }
+  .ib-modal-close {
+    position: absolute; top: 12px; right: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--bg-alt); border: 1px solid var(--border); color: var(--muted);
+    cursor: pointer;
+  }
+  .ib-modal-close:hover { color: var(--text); border-color: var(--border-mid); }
+}
+
+@keyframes ib-modal-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ib-modal-card-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: none; }
 }
 
 /* ── Platform / architecture diagram ── */
