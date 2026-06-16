@@ -9,6 +9,8 @@ import {
   Globe,
   Landmark,
   Network,
+  Scale,
+  ScanEye,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
@@ -42,6 +44,7 @@ export const Route = createFileRoute("/")({
 const SECTIONS: { id: string; label: string }[] = [
   { id: "hero", label: "Top" },
   { id: "why", label: "Why" },
+  { id: "stack", label: "Layers" },
   { id: "founders", label: "Team" },
   { id: "faq", label: "FAQ" },
 ];
@@ -255,12 +258,105 @@ function WhyBlindsight() {
   );
 }
 
+/* ── Coverage stack — Detect → Protect → Govern (each builds on the last) ── */
+const STAGES: {
+  id: "detect" | "protect" | "govern";
+  num: string;
+  name: string;
+  Icon: typeof ScanEye;
+  tagline: string;
+  requires: string;
+  items: string[];
+}[] = [
+  {
+    id: "detect",
+    num: "01",
+    name: "Detect",
+    Icon: ScanEye,
+    tagline: "See every AI interaction — and the exposure hiding inside it. Visibility is the proof of value, before you spend a franc on defense.",
+    requires: "Foundation · start here",
+    items: ["Shadow AI visibility", "Prompt injection", "PII", "PHI", "Data leak prevention"],
+  },
+  {
+    id: "protect",
+    num: "02",
+    name: "Protect",
+    Icon: ShieldCheck,
+    tagline: "Top-of-the-line security that stops what Detect surfaces — at the prompt, in the data, and across retrieval.",
+    requires: "Requires Detect",
+    items: ["Prompt injection", "Data poisoning", "Adversarial patching"],
+  },
+  {
+    id: "govern",
+    num: "03",
+    name: "Govern",
+    Icon: Scale,
+    tagline: "Turn enforcement into an audit trail you can prove — mapped to the regulations you answer to.",
+    requires: "Requires Protect",
+    items: ["Compliance"],
+  },
+];
+
+function Stages() {
+  return (
+    <section className="section section-alt cstack-section" id="stack">
+      <div className="section-inner">
+        <div
+          className="s-head reveal"
+          style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
+        >
+          <span className="tag">Adopt in stages</span>
+          <h2>See it. Stop it. Prove it.</h2>
+          <p>
+            The three layers stack in order — protection builds on what Detect can see, governance
+            on what Protect enforces. What you turn on inside each layer is scoped to you.
+          </p>
+        </div>
+
+        <ol className="cstack reveal">
+          {STAGES.map(({ id, num, name, Icon, tagline, requires, items }, i) => (
+            <li className={`cstack-tier cstack-${id}`} key={id}>
+              <div className="cstack-rail" aria-hidden="true">
+                <span className="cstack-num">{num}</span>
+                {i < STAGES.length - 1 && <span className="cstack-spine" />}
+              </div>
+              <div className="cstack-card">
+                <div className="cstack-head">
+                  <span className="cstack-icon">
+                    <Icon strokeWidth={1.6} aria-hidden="true" />
+                  </span>
+                  <div className="cstack-headtext">
+                    <h3 className="cstack-name">{name}</h3>
+                    <span className="cstack-requires">{requires}</span>
+                  </div>
+                </div>
+                <p className="cstack-tagline">{tagline}</p>
+                <ul className="cstack-items">
+                  {items.map((it) => (
+                    <li className="cstack-chip" key={it}>{it}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <p className="cstack-note reveal">
+          Modular by design — begin with Detect to prove the value, then layer in Protect and Govern
+          as you need them.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   return (
     <main>
       <SectionRail sections={SECTIONS} />
       <Hero />
       <Iceberg id="why" eyebrow="Why Blindsight?" />
+      <Stages />
       <WhyBlindsight />
       <FAQ />
     </main>

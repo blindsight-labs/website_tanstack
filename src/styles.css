@@ -696,6 +696,66 @@ h1, h2, h3, h4 {
 .s-head h2 { font-size: clamp(28px, 3.4vw, 44px); line-height: 1.08; }
 .s-head p { color: var(--muted); font-size: 16px; }
 
+/* ── Coverage stack: Detect → Protect → Govern ──
+   A left rail with numbered nodes connected by a dashed "builds-on" spine.
+   Node fill escalates (outline → soft → solid) to encode accumulating value.
+   Note: classes are prefixed `cstack-` to avoid colliding with the diagram
+   `.stage`/`.stage-rail` classes defined later in this file. */
+.cstack { list-style: none; margin: 56px auto 0; max-width: 860px; display: flex; flex-direction: column; }
+.cstack-tier { display: grid; grid-template-columns: 48px 1fr; gap: 24px; }
+.cstack-rail { display: flex; flex-direction: column; align-items: center; }
+.cstack-num {
+  position: relative; z-index: 1; flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+  background: var(--surface); color: var(--violet);
+  border: 1.5px solid var(--violet-border); box-shadow: var(--shadow-md);
+}
+/* fill escalates with the stack */
+.cstack-protect .cstack-num { background: var(--violet-soft); border-color: var(--violet); }
+.cstack-govern .cstack-num { background: var(--violet); border-color: var(--violet); color: #fff; }
+.cstack-spine {
+  flex: 1; width: 2px; margin: 8px 0;
+  background: repeating-linear-gradient(var(--violet-border) 0 5px, transparent 5px 11px);
+}
+.cstack-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px 26px; margin-bottom: 22px; box-shadow: var(--shadow-md);
+}
+.cstack-tier:last-child .cstack-card { margin-bottom: 0; }
+.cstack-head { display: flex; align-items: center; gap: 14px; }
+.cstack-icon {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: var(--violet-soft); color: var(--violet-deep);
+}
+.cstack-icon svg { width: 24px; height: 24px; }
+.cstack-headtext { display: flex; flex-direction: column; gap: 4px; }
+.cstack-name { font-size: 22px; line-height: 1; letter-spacing: -0.01em; }
+.cstack-requires {
+  font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted);
+}
+.cstack-detect .cstack-requires { color: var(--violet); }
+.cstack-tagline { color: var(--muted); font-size: 15px; line-height: 1.55; margin-top: 16px; max-width: 60ch; }
+.cstack-items { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.cstack-chip {
+  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.02em; color: var(--text);
+  background: var(--surface-2); border: 1px solid var(--border-mid); border-radius: 999px;
+  padding: 6px 12px;
+}
+.cstack-note {
+  margin: 30px auto 0; max-width: 560px; text-align: center;
+  color: var(--muted); font-size: 14px; line-height: 1.55;
+}
+@media (max-width: 620px) {
+  .cstack-tier { grid-template-columns: 38px 1fr; gap: 16px; }
+  .cstack-num { width: 38px; height: 38px; font-size: 12px; }
+  .cstack-card { padding: 20px; }
+  .cstack-name { font-size: 19px; }
+}
+
 /* ── CTA banner ── */
 .cta-banner {
   margin: 0 auto; max-width: 980px;
