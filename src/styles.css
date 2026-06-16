@@ -197,7 +197,7 @@ h1, h2, h3, h4 {
 
 /* ── Layout ── */
 .section { padding: 120px 48px; position: relative; }
-.section-inner { max-width: 1240px; margin: 0 auto; }
+.section-inner { max-width: 1600px; margin: 0 auto; }
 .section-alt { background: var(--bg-alt); }
 .section-dark { background: var(--dark); color: var(--dark-text); }
 .section-dark h1, .section-dark h2, .section-dark h3 { color: var(--dark-text); }
@@ -583,7 +583,7 @@ footer {
   padding: 48px; background: var(--bg);
 }
 .footer-inner {
-  max-width: 1240px; margin: 0 auto;
+  max-width: 1600px; margin: 0 auto;
   display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px;
   align-items: center;
 }
@@ -1199,7 +1199,7 @@ footer {
 /* ── Version A — split hero (heading | demo) ── */
 .va-hero {
   position: relative;
-  max-width: 1320px; margin: 0 auto;
+  max-width: 1600px; margin: 0 auto;
   padding: 104px 48px 16px;
   min-height: 100vh;
   box-sizing: border-box;
@@ -1213,9 +1213,16 @@ footer {
   gap: 56px;
   align-items: center;
 }
-/* Clients banner lives inside the hero — compact it so the whole top
-   (copy + demo + banner) stays above the fold without scrolling. */
-.va-hero .logostrip-section { margin-top: 12px; padding: 18px 0; }
+/* Clients banner lives inside the hero — break it out of the hero's centered
+   max-width/padding so it spans the full viewport edge-to-edge, and compact it
+   so the whole top (copy + demo + banner) stays above the fold. */
+.va-hero .logostrip-section {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 12px;
+  padding: 18px 0;
+}
 .va-hero .logostrip-eyebrow { margin-bottom: 12px; }
 .va-hero .tg-picker-hint { display: none; }
 .va-hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
