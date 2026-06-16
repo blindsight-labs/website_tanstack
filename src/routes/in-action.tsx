@@ -714,10 +714,15 @@ export function TopologyGraphDemo({
                     <button
                       key={s.id}
                       type="button"
-                      className="tg-scenario-btn"
+                      className="tg-scenario-orb"
                       onClick={() => openScenario(i)}
+                      aria-label={`Switch to ${s.title}`}
                     >
-                      {s.title}
+                      <span className="tg-scenario-orb-circle">
+                        <span className="tg-scenario-orb-glow" />
+                        <span className="tg-scenario-orb-icon">{THREAT_ICONS[s.id]}</span>
+                      </span>
+                      <span className="tg-scenario-orb-tip" aria-hidden="true">{s.title}</span>
                     </button>
                   ),
                 )}
@@ -870,15 +875,16 @@ export function TopologyGraphDemo({
 /* ============================================================
    Reactor picker
    ============================================================ */
-function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
-  const iconById: Record<Scenario["id"], React.ReactNode> = {
-    prompt: (<Terminal strokeWidth={1.6} aria-hidden="true" />),
-    leak: (<Droplet strokeWidth={1.6} aria-hidden="true" />),
-    poison: (<Database strokeWidth={1.6} aria-hidden="true" />),
-    misuse: (<CircleX strokeWidth={1.6} aria-hidden="true" />),
-    confidential: (<FileLock strokeWidth={1.6} aria-hidden="true" />),
-  };
+/** Lucide icon per scenario — shared by the reactor picker and the in-scenario top bar. */
+const THREAT_ICONS: Record<Scenario["id"], React.ReactNode> = {
+  prompt: (<Terminal strokeWidth={1.6} aria-hidden="true" />),
+  leak: (<Droplet strokeWidth={1.6} aria-hidden="true" />),
+  poison: (<Database strokeWidth={1.6} aria-hidden="true" />),
+  misuse: (<CircleX strokeWidth={1.6} aria-hidden="true" />),
+  confidential: (<FileLock strokeWidth={1.6} aria-hidden="true" />),
+};
 
+function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
   const visible = SCENARIOS.map((s, idx) => ({ s, idx }));
 
   return (
@@ -909,7 +915,7 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
             >
               <span className="tg-threat-orb">
                 <span className="tg-threat-glow" />
-                <span className="tg-threat-icon">{iconById[s.id]}</span>
+                <span className="tg-threat-icon">{THREAT_ICONS[s.id]}</span>
               </span>
               <span className="tg-threat-label">
                 <span className="tg-threat-num">0{i + 1}</span>
@@ -1414,14 +1420,33 @@ const TG_CSS = `
 
 /* Topbar */
 .tg-topbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 4px 4px 20px; }
-.tg-scenario-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.tg-scenario-btn {
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--muted); background: transparent;
-  border: 1px solid var(--border-mid); border-radius: 999px;
-  padding: 6px 13px; cursor: pointer; transition: color .15s, border-color .15s, background .15s;
+.tg-scenario-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.tg-scenario-orb { position: relative; width: 38px; height: 38px; padding: 0; background: transparent; border: 0; cursor: pointer; font: inherit; }
+.tg-scenario-orb-circle {
+  position: relative; width: 38px; height: 38px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; color: var(--red);
+  box-shadow: var(--shadow-md); transition: transform .25s, border-color .25s, box-shadow .25s;
 }
-.tg-scenario-btn:hover { color: var(--violet); border-color: var(--violet); background: var(--violet-soft); }
+.tg-scenario-orb-glow { position: absolute; inset: -4px; border-radius: 50%; background: radial-gradient(circle, rgba(220,38,38,0.18), transparent 70%); opacity: 0; transition: opacity .25s; }
+.tg-scenario-orb-icon { position: relative; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+.tg-scenario-orb-icon svg { width: 100%; height: 100%; }
+.tg-scenario-orb:hover .tg-scenario-orb-circle,
+.tg-scenario-orb:focus-visible .tg-scenario-orb-circle { transform: translateY(-2px); border-color: var(--red); box-shadow: 0 10px 26px -8px rgba(220,38,38,0.35); }
+.tg-scenario-orb:hover .tg-scenario-orb-glow,
+.tg-scenario-orb:focus-visible .tg-scenario-orb-glow { opacity: 1; }
+/* name tooltip — revealed on hover/focus, below the orb */
+.tg-scenario-orb-tip {
+  position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%) translateY(-4px);
+  white-space: nowrap; pointer-events: none; opacity: 0; z-index: 5;
+  background: var(--text); color: var(--bg);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em;
+  padding: 4px 8px; border-radius: 6px; box-shadow: var(--shadow-md);
+  transition: opacity .15s, transform .15s;
+}
+.tg-scenario-orb-tip::before { content: ""; position: absolute; left: 50%; top: -3px; transform: translateX(-50%) rotate(45deg); width: 7px; height: 7px; background: var(--text); }
+.tg-scenario-orb:hover .tg-scenario-orb-tip,
+.tg-scenario-orb:focus-visible .tg-scenario-orb-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
 .tg-back { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; color: var(--muted); transition: all .15s; }
 .tg-back:hover { background: var(--surface); color: var(--text); }
 .tg-topbar-title { flex: 1; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text); justify-content: center; }
