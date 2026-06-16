@@ -191,6 +191,15 @@ function Hero() {
       </div>
 
       <LogoStrip />
+
+      <button
+        type="button"
+        className="hero-scroll-cue"
+        aria-label="Scroll to see more"
+        onClick={() => document.getElementById("why")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+      >
+        <ChevronDown className="hero-scroll-chevron" strokeWidth={2} aria-hidden="true" />
+      </button>
     </header>
   );
 }

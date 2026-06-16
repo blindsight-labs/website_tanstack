@@ -8,12 +8,12 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 import { ArrowRight, BookOpen, ChevronDown, Code, Menu, X } from "lucide-react";
 
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
-import { InActionModalProvider, useInActionModal } from "@/components/InActionModal";
+import { InActionModalProvider } from "@/components/InActionModal";
 import appCss from "../styles.css?url";
 import logo from "@/assets/logo.png";
 
@@ -102,7 +102,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function Nav() {
   const { open: openDemo } = useDemoModal();
-  const { open: openInAction } = useInActionModal();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [scrolled, setScrolled] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
@@ -117,32 +116,59 @@ function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   useEffect(() => {
-    const hero = document.getElementById("hero");
-    if (!hero) {
-      setHeroInView(false);
-      return;
-    }
-    setHeroInView(true);
-    const io = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting), {
-      threshold: 0,
-    });
-    io.observe(hero);
-    return () => io.disconnect();
+    let io: IntersectionObserver | null = null;
+    let raf = 0;
+    const attach = () => {
+      const hero = document.getElementById("hero");
+      if (!hero) {
+        // No hero on non-home routes; on "/" the route content may not have
+        // mounted yet, so keep trying until #hero appears.
+        if (pathname !== "/") {
+          setHeroInView(false);
+          return;
+        }
+        raf = requestAnimationFrame(attach);
+        return;
+      }
+      setHeroInView(true);
+      io = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting), {
+        threshold: 0,
+      });
+      io.observe(hero);
+    };
+    attach();
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      io?.disconnect();
+    };
   }, [pathname]);
   const closeMenu = () => setMenuOpen(false);
-  // Homepage: scroll to the demo section + restart/lock it. Elsewhere: open the modal.
-  const watchItWork = () => {
-    if (pathname === "/") window.dispatchEvent(new Event("watch-replay"));
-    else openInAction();
+  // "Platform" → the homepage. When already there, scroll to + restart the demo
+  // instead of a no-op navigation (the former "Watch It Work" behavior).
+  const goPlatform = (e: MouseEvent) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      window.dispatchEvent(new Event("watch-replay"));
+    }
   };
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <Link to="/" aria-label="Blindsight home" onClick={closeMenu}>
+      <Link
+        to="/"
+        aria-label="Blindsight home"
+        onClick={(e) => {
+          // Already home → scroll back to the top instead of a no-op navigation.
+          if (pathname === "/") {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+          closeMenu();
+        }}
+      >
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        <Link to="/" onClick={closeMenu}>Solution</Link>
-        <button type="button" onClick={() => { closeMenu(); watchItWork(); }}>Watch It Work</button>
+        <Link to="/" onClick={(e) => { goPlatform(e); closeMenu(); }}>Platform</Link>
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
@@ -150,8 +176,7 @@ function Nav() {
       </div>
       <div className="nav-right">
         <ul className="nav-links">
-          <li><Link to="/">Solution</Link></li>
-          <li><button type="button" className="nav-link-btn" onClick={watchItWork}>Watch It Work</button></li>
+          <li><Link to="/" onClick={goPlatform}>Platform</Link></li>
           <li><Link to="/careers">Careers</Link></li>
           <li
             className="nav-dropdown"

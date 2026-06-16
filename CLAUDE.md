@@ -5,10 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-bun run dev       # start dev server (with Netlify Functions emulation)
-bun run build     # production build → dist/client
-bun run lint      # ESLint
-bun run format    # Prettier (writes in place)
+bun run dev        # start dev server (with Netlify Functions emulation)
+bun run build      # production build → dist/client
+bun run build:dev  # build in development mode (unminified, for debugging)
+bun run preview    # serve the production build locally
+bun run lint       # ESLint
+bun run format     # Prettier (writes in place)
 ```
 
 No test suite is configured.
@@ -19,7 +21,7 @@ No test suite is configured.
 
 ### Entry points
 
-- `src/start.ts` — creates the TanStack Start instance with a global error-handling middleware
+- `src/start.ts` — creates the TanStack Start instance with a global error-handling middleware that serves the standalone HTML fallback in `src/lib/error-page.ts`
 - `src/router.tsx` — creates the TanStack Router with a `QueryClient` injected as router context
 - `src/routes/__root.tsx` — root route: wraps all pages in `QueryClientProvider`, renders `<Nav>` and `<Footer>`
 
