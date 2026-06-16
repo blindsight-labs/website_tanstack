@@ -125,14 +125,9 @@ function LogoStrip() {
 /* ── FAQ (placeholder accordion) ── */
 const FAQS: { q: string; a: string }[] = [
   { q: "What is Blindsight?", a: "Blindsight is a platform for securing AI systems across runtime, data, and governance. (Placeholder answer.)" },
-  { q: "How does Blindsight deploy?", a: "Cloud, private cloud, or fully on-prem, alongside your existing AI stack. (Placeholder answer.)" },
   { q: "What threats does it stop?", a: "Prompt injection, data exfiltration, poisoning, model misuse, and Shadow AI. (Placeholder answer.)" },
-  { q: "Does it work with my model provider?", a: "Yes — Blindsight is model-agnostic and sits between your users, tools, and any model. (Placeholder answer.)" },
+  { q: "How does Blindsight deploy?", a: "Cloud, private cloud, or fully on-prem, alongside your existing AI stack. (Placeholder answer.)" },
   { q: "How does it handle compliance?", a: "It produces an audit trail mapped to the EU AI Act, GDPR, and sector regulators. (Placeholder answer.)" },
-  { q: "Will it slow down my AI?", a: "Inspection happens inline with negligible latency overhead. (Placeholder answer.)" },
-  { q: "Can I monitor my RAG and data lake?", a: "Yes — Warden continuously watches retrieval and training data sources. (Placeholder answer.)" },
-  { q: "Is my data sent to Blindsight?", a: "No — in on-prem and private deployments your data never leaves your environment. (Placeholder answer.)" },
-  { q: "How long does onboarding take?", a: "Most teams are up and running in a single working session. (Placeholder answer.)" },
   { q: "How do I get started?", a: "Request a demo and we'll map your AI threat surface in 30 minutes. (Placeholder answer.)" },
 ];
 
