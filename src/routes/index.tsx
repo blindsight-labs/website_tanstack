@@ -208,26 +208,36 @@ function WhyBlindsight() {
           <h2>Offensive security, turned to your defense</h2>
           <p>
             Blindsight's founders attacked AI systems professionally before building the layer
-            that defends them. The CEO is a top global ethical hacker and former Kühne+Nagel
-            security architect, the CTO a former Checkmarx security lead, both with dozens of CVEs
-            to their name. Detection is built from the attacks they find themselves. Tested on
-            competitors' own public benchmarks, where it is hardest to win, Blindsight beats the
-            leading runtime benchmarks and covers a wider spectrum of attacks. In security, the
-            cost of being second best is the breach you did not stop.
+            that defends them — between them, dozens of CVEs to their name. Detection is built from
+            the attacks they find themselves. Tested on competitors' own public benchmarks, where it
+            is hardest to win, Blindsight beats the leading runtime benchmarks and covers a wider
+            spectrum of attacks. In security, the cost of being second best is the breach you did not
+            stop.
           </p>
         </div>
 
         <div className="founders-grid reveal">
           {[
-            { role: "CEO", label: "CEO photo" },
-            { role: "CTO", label: "CTO photo" },
-          ].map(({ role, label }) => (
+            {
+              role: "CEO",
+              label: "CEO photo",
+              bio: "Top global ethical hacker and former Kühne+Nagel security architect.",
+            },
+            {
+              role: "CTO",
+              label: "CTO photo",
+              bio: "Former Checkmarx security lead.",
+            },
+          ].map(({ role, label, bio }) => (
             <figure className="founder-card" key={role}>
               <div className="founder-photo" role="img" aria-label={`Placeholder for ${role} photo`}>
                 <UserRound className="founder-photo-icon" strokeWidth={1.5} aria-hidden="true" />
                 <span className="founder-photo-label">{label}</span>
               </div>
-              <figcaption className="founder-role">{role}</figcaption>
+              <figcaption className="founder-info">
+                <span className="founder-role">{role}</span>
+                <p className="founder-bio">{bio}</p>
+              </figcaption>
             </figure>
           ))}
         </div>
