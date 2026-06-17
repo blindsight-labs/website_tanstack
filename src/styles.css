@@ -1837,6 +1837,88 @@ footer {
 .faq-a > div { overflow: hidden; }
 .faq-a p { color: var(--muted); font-size: 15px; line-height: 1.6; padding: 0 4px 22px; margin: 0; }
 
+/* ── FAQ — topic tabs ── */
+.faq-tabs {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  margin: 40px 0 4px;
+}
+.faq-tab {
+  font: inherit; font-size: 13.5px; font-weight: 500; line-height: 1;
+  padding: 10px 18px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+  background: transparent; color: var(--muted); border: 1px solid var(--border-mid);
+  transition: color .18s ease, border-color .18s ease, background .18s ease;
+}
+.faq-tab:hover { color: var(--text); border-color: var(--violet); }
+.faq-tab.active {
+  background: linear-gradient(135deg, var(--violet) 0%, var(--violet-deep) 100%);
+  color: #fff; border-color: transparent; box-shadow: 0 6px 18px rgba(85, 70, 224, 0.28);
+}
+@media (max-width: 640px) {
+  .faq-tabs {
+    flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto;
+    margin-inline: -20px; padding: 0 20px 6px; -webkit-overflow-scrolling: touch;
+  }
+  .faq-tab { flex: 0 0 auto; }
+}
+
+/* The list keeps its existing top border; multi-paragraph answers + citations. */
+.faq-a-body { display: flex; flex-direction: column; gap: 14px; padding: 0 4px 24px; }
+.faq-a-body p { padding: 0; }
+.faq-caveat {
+  border-left: 3px solid var(--violet); background: var(--violet-soft);
+  border-radius: 0 8px 8px 0; padding: 12px 14px;
+  font-size: 14px; line-height: 1.55; color: var(--text);
+}
+.faq-caveat strong { color: var(--violet-deep); }
+
+/* Citation superscripts → jump to the cluster's Sources list. */
+.faq-cites { line-height: 0; }
+.faq-cite {
+  color: var(--violet); font-weight: 600; text-decoration: none;
+  font-size: 0.7em; padding: 0 1px; vertical-align: super;
+}
+.faq-cite + .faq-cite { margin-left: 1px; }
+.faq-cite:hover { text-decoration: underline; }
+
+/* ── FAQ — comparison tables ── */
+.faq-table-block { margin-top: 34px; }
+.faq-table-title {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 12px;
+}
+.faq-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+.faq-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.faq-table th, .faq-table td {
+  text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.45;
+}
+.faq-table thead th {
+  background: var(--bg-alt); font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500;
+  white-space: nowrap;
+}
+.faq-table tbody td:first-child { font-weight: 600; color: var(--text); }
+.faq-table tbody tr:last-child td { border-bottom: none; }
+.faq-table-note { margin-top: 10px; font-size: 12.5px; line-height: 1.5; color: var(--dim); }
+
+/* ── FAQ — per-cluster sources ── */
+.faq-sources { margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--border); }
+.faq-sources-title {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 14px;
+}
+.faq-sources-list { list-style: none; margin: 0; padding: 0; }
+.faq-source { display: flex; gap: 10px; font-size: 12.5px; line-height: 1.55; color: var(--muted); }
+.faq-source + .faq-source { margin-top: 10px; }
+.faq-source-n {
+  flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--violet-soft); color: var(--violet-deep);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+}
+.faq-source a { color: var(--violet); word-break: break-word; }
+.faq-source a:hover { text-decoration: underline; }
+
 /* ── Modal / overlay ── */
 .modal-backdrop {
   position: fixed; inset: 0; z-index: 200;

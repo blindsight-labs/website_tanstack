@@ -99,7 +99,13 @@ const THREATS: Threat[] = [
 
 /** "Only see the tip" iceberg section. Eyebrow/id are parametrized so different
  *  landing-page versions can re-frame it (e.g. "The Problem" vs "Why Blindsight?"). */
-export function Iceberg({ id = "why", eyebrow = "The Problem" }: { id?: string; eyebrow?: string }) {
+export function Iceberg({
+  id = "why",
+  eyebrow = "The Problem",
+}: {
+  id?: string;
+  eyebrow?: string;
+}) {
   // `hovered` is the transient desktop hover; `pinned` is the click-to-keep-open
   // popup that drives the mobile modal.
   const [hovered, setHovered] = useState<string | null>(null);
@@ -198,8 +204,8 @@ export function Iceberg({ id = "why", eyebrow = "The Problem" }: { id?: string; 
             </div>
             <p className="iceberg-footnote">
               If even <span className="iceberg-footnote-accent">1</span> of these threats reach
-              production, the model is compromised, and you won&apos;t know until the damage has been
-              done.
+              production, the model is compromised, and you won&apos;t know until the damage has
+              been done.
             </p>
           </div>
 
