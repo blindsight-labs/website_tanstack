@@ -25,16 +25,22 @@ export const Route = createFileRoute("/in-action")({
   head: () => ({
     meta: [
       { title: "Blindsight In Action - See how attacks happen" },
-      { name: "description", content: "Walk through prompt injection, data leakage, data poisoning, model misuse and Shadow AI — and see Blindsight stop each one in real time." },
+      {
+        name: "description",
+        content:
+          "Walk through prompt injection, data leakage, data poisoning, model misuse and Shadow AI — and see Blindsight stop each one in real time.",
+      },
       { property: "og:title", content: "Blindsight In Action" },
-      { property: "og:description", content: "See attacks happen — and how Blindsight stops them." },
+      {
+        property: "og:description",
+        content: "See attacks happen — and how Blindsight stops them.",
+      },
       { property: "og:url", content: "/in-action" },
     ],
     links: [{ rel: "canonical", href: "/in-action" }],
   }),
   component: TopologyGraphDemo,
 });
-
 
 /* ============================================================
    Scenarios + stages
@@ -51,7 +57,11 @@ type PacketDef = {
   delayMs?: number;
 };
 
-type ExtraMsg = { role: "user" | "assistant" | "system"; text: string; tone?: "red" | "violet" | "muted" };
+type ExtraMsg = {
+  role: "user" | "assistant" | "system";
+  text: string;
+  tone?: "red" | "violet" | "muted";
+};
 
 type Stage = {
   caption: string;
@@ -109,7 +119,11 @@ const SCENARIOS: Scenario[] = [
         packet: { from: "AI", to: "User", intent: "malicious" },
         arrival: "deliver",
         state: { User: "attacker", AI: "compromised" },
-        bubble: { node: "AI", text: "Sure!\nJane Doe, jane@acme.com\nJohn Doe, john@acme.com\n[...]", tone: "red" },
+        bubble: {
+          node: "AI",
+          text: "Sure!\nJane Doe, jane@acme.com\nJohn Doe, john@acme.com\n[...]",
+          tone: "red",
+        },
       },
     ],
     on: [
@@ -134,7 +148,11 @@ const SCENARIOS: Scenario[] = [
         packet: { from: "Interceptor", to: "User", intent: "safe" },
         arrival: "deliver",
         state: { Interceptor: "safe" },
-        bubble: { node: "AI", text: "I'm sorry, but I can't assist with that request.", tone: "violet" },
+        bubble: {
+          node: "AI",
+          text: "I'm sorry, but I can't assist with that request.",
+          tone: "violet",
+        },
       },
     ],
   },
@@ -207,8 +225,8 @@ const SCENARIOS: Scenario[] = [
         detail: "Three files arrive in quick succession — one carries a hidden directive.",
         state: { Vendor: "attacker" },
         packets: [
-          { from: "Vendor", to: "RAG", intent: "normal",    delayMs: 0 },
-          { from: "Vendor", to: "RAG", intent: "normal",    delayMs: 160 },
+          { from: "Vendor", to: "RAG", intent: "normal", delayMs: 0 },
+          { from: "Vendor", to: "RAG", intent: "normal", delayMs: 160 },
           { from: "Vendor", to: "RAG", intent: "malicious", delayMs: 320 },
         ],
         bubble: { node: "Vendor", text: "uploading 3 files", tone: "red" },
@@ -216,7 +234,11 @@ const SCENARIOS: Scenario[] = [
         messages: [
           { role: "system", text: "📄 Uploader · spec_sheet.pdf", tone: "muted" },
           { role: "system", text: "📄 Uploader · pricing.xlsx", tone: "muted" },
-          { role: "system", text: "⚠ Uploader · compat_notes.md  —  poisoned to favour NorthPeak CRM", tone: "red" },
+          {
+            role: "system",
+            text: "⚠ Uploader · compat_notes.md  —  poisoned to favour NorthPeak CRM",
+            tone: "red",
+          },
         ],
         holdMs: 2800,
       },
@@ -260,8 +282,8 @@ const SCENARIOS: Scenario[] = [
         detail: "Files are scanned at ingestion before anything reaches the knowledge base.",
         state: { Vendor: "attacker" },
         packets: [
-          { from: "Vendor", to: "Warden", intent: "normal",    delayMs: 0 },
-          { from: "Vendor", to: "Warden", intent: "normal",    delayMs: 160 },
+          { from: "Vendor", to: "Warden", intent: "normal", delayMs: 0 },
+          { from: "Vendor", to: "Warden", intent: "normal", delayMs: 160 },
           { from: "Vendor", to: "Warden", intent: "malicious", delayMs: 320 },
         ],
         bubble: { node: "Vendor", text: "uploading 3 files", tone: "red" },
@@ -269,7 +291,11 @@ const SCENARIOS: Scenario[] = [
         messages: [
           { role: "system", text: "📄 Uploader · spec_sheet.pdf", tone: "muted" },
           { role: "system", text: "📄 Uploader · pricing.xlsx", tone: "muted" },
-          { role: "system", text: "⚠ Uploader · compat_notes.md  —  poisoned to favour NorthPeak CRM", tone: "red" },
+          {
+            role: "system",
+            text: "⚠ Uploader · compat_notes.md  —  poisoned to favour NorthPeak CRM",
+            tone: "red",
+          },
         ],
         holdMs: 2800,
       },
@@ -360,14 +386,19 @@ const SCENARIOS: Scenario[] = [
         packet: { from: "Interceptor", to: "User", intent: "safe" },
         arrival: "deliver",
         state: { Interceptor: "safe" },
-        bubble: { node: "AI", text: "I'm sorry, but I can't assist with that request.", tone: "violet" },
+        bubble: {
+          node: "AI",
+          text: "I'm sorry, but I can't assist with that request.",
+          tone: "violet",
+        },
       },
     ],
   },
   {
     id: "confidential",
     title: "Shadow AI",
-    blurb: "A developer pastes code into a third-party chatbot to debug it — and accidentally leaks an API token.",
+    blurb:
+      "A developer pastes code into a third-party chatbot to debug it — and accidentally leaks an API token.",
     off: [
       {
         caption: "Developer pastes code into a third-party model",
@@ -456,45 +487,63 @@ const H = 360;
 
 /** Which nodes appear per scenario, per security mode */
 const VISIBLE: Record<Scenario["id"], { off: NodeId[]; on: NodeId[] }> = {
-  prompt: { off: ["User", "AI"],                        on: ["User", "Interceptor", "AI"] },
-  leak:   { off: ["User", "AI"],                        on: ["User", "Interceptor", "AI"] },
-  misuse: { off: ["User", "AI"],                        on: ["User", "Interceptor", "AI"] },
-  confidential: { off: ["User", "AI"],                  on: ["User", "Interceptor", "AI"] },
-  poison: { off: ["User", "AI", "RAG", "Vendor"],       on: ["User", "AI", "Warden", "RAG", "Vendor"] },
+  prompt: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
+  leak: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
+  misuse: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
+  confidential: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
+  poison: { off: ["User", "AI", "RAG", "Vendor"], on: ["User", "AI", "Warden", "RAG", "Vendor"] },
 };
 
 /** Position presets for each layout shape */
 const POS_PRESETS = {
   // simple 2-node line (User → AI)
   duoOff: {
-    User: { x: 240, y: 180 }, AI: { x: 660, y: 180 },
+    User: { x: 240, y: 180 },
+    AI: { x: 660, y: 180 },
   } as Partial<Record<NodeId, { x: number; y: number }>>,
   // 3-node line (User → Interceptor → AI)
   duoOn: {
-    User: { x: 160, y: 180 }, Interceptor: { x: 410, y: 180 }, AI: { x: 680, y: 180 },
+    User: { x: 160, y: 180 },
+    Interceptor: { x: 410, y: 180 },
+    AI: { x: 680, y: 180 },
   } as Partial<Record<NodeId, { x: number; y: number }>>,
   // poisoning, no interceptor
   poisonOff: {
-    User: { x: 110, y: 180 }, AI: { x: 450, y: 180 },
-    RAG: { x: 790, y: 80 }, Vendor: { x: 790, y: 280 },
+    User: { x: 110, y: 180 },
+    AI: { x: 450, y: 180 },
+    RAG: { x: 790, y: 80 },
+    Vendor: { x: 790, y: 280 },
   } as Partial<Record<NodeId, { x: number; y: number }>>,
   // poisoning with warden gating ingress
   poisonOn: {
-    User: { x: 90,  y: 180 }, AI: { x: 410, y: 180 },
+    User: { x: 90, y: 180 },
+    AI: { x: 410, y: 180 },
     Warden: { x: 640, y: 180 },
-    RAG: { x: 820, y: 80 }, Vendor: { x: 820, y: 280 },
+    RAG: { x: 820, y: 80 },
+    Vendor: { x: 820, y: 280 },
   } as Partial<Record<NodeId, { x: number; y: number }>>,
 };
 
-function posFor(scenarioId: Scenario["id"], secOn: boolean): Record<NodeId, { x: number; y: number } | undefined> {
+function posFor(
+  scenarioId: Scenario["id"],
+  secOn: boolean,
+): Record<NodeId, { x: number; y: number } | undefined> {
   const visible = VISIBLE[scenarioId][secOn ? "on" : "off"];
   const preset =
     scenarioId === "poison"
-      ? (secOn ? POS_PRESETS.poisonOn : POS_PRESETS.poisonOff)
-      : (secOn ? POS_PRESETS.duoOn : POS_PRESETS.duoOff);
+      ? secOn
+        ? POS_PRESETS.poisonOn
+        : POS_PRESETS.poisonOff
+      : secOn
+        ? POS_PRESETS.duoOn
+        : POS_PRESETS.duoOff;
   const out: Record<NodeId, { x: number; y: number } | undefined> = {
-    User: undefined, Interceptor: undefined, AI: undefined,
-    Warden: undefined, RAG: undefined, Vendor: undefined,
+    User: undefined,
+    Interceptor: undefined,
+    AI: undefined,
+    Warden: undefined,
+    RAG: undefined,
+    Vendor: undefined,
   };
   for (const id of visible) out[id] = preset[id];
   return out;
@@ -529,8 +578,8 @@ function edgesFor(
 
 const SPEEDS = [
   { id: 0.5, label: "0.5×" },
-  { id: 1,   label: "1×" },
-  { id: 2,   label: "2×" },
+  { id: 1, label: "1×" },
+  { id: 2, label: "2×" },
 ];
 
 /* ============================================================
@@ -543,7 +592,9 @@ function holdScroll(ms: number) {
   if (typeof window === "undefined") return;
   const prevent = (e: Event) => e.preventDefault();
   const keyPrevent = (e: KeyboardEvent) => {
-    if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " ", "Spacebar"].includes(e.key)) {
+    if (
+      ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " ", "Spacebar"].includes(e.key)
+    ) {
       e.preventDefault();
     }
   };
@@ -569,11 +620,16 @@ export function TopologyGraphDemo({
 }) {
   const { open: openDemo } = useDemoModal();
   const initialIdx = initialScenarioId
-    ? Math.max(0, SCENARIOS.findIndex((s) => s.id === initialScenarioId))
+    ? Math.max(
+        0,
+        SCENARIOS.findIndex((s) => s.id === initialScenarioId),
+      )
     : 0;
   const rootRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef(false);
-  const [view, setView] = useState<"picker" | "scenario">(initialScenarioId ? "scenario" : "picker");
+  const [view, setView] = useState<"picker" | "scenario">(
+    initialScenarioId ? "scenario" : "picker",
+  );
   const [scenarioIdx, setScenarioIdx] = useState<number>(initialIdx);
   const [secOn, setSecOn] = useState(false);
   const [phase, setPhase] = useState<Phase>("off");
@@ -609,7 +665,9 @@ export function TopologyGraphDemo({
         return s;
       });
     }, currentHold);
-    return () => { if (timer.current) clearTimeout(timer.current); };
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
   }, [playing, stage, view, phase, currentHold, stageCount, speed]);
 
   /* Start the scenario the first time the embedded demo scrolls into view:
@@ -694,7 +752,6 @@ export function TopologyGraphDemo({
     setPlaying(false);
   };
 
-
   const current = stages[stage];
   const pos = posFor(scenario.id, secOn);
   const edges = edgesFor(pos, scenario.id, secOn);
@@ -707,7 +764,9 @@ export function TopologyGraphDemo({
         <ReactorPicker onPick={openScenario} />
       ) : (
         <main className="tg-stage-wrap">
-          <section className={`tg-variant tg-mode-${secOn ? "on" : "off"} ${flashing ? "tg-flash" : ""}`}>
+          <section
+            className={`tg-variant tg-mode-${secOn ? "on" : "off"} ${flashing ? "tg-flash" : ""}`}
+          >
             <div className="tg-topbar">
               <div className="tg-scenario-switch">
                 <button
@@ -733,7 +792,9 @@ export function TopologyGraphDemo({
                         <span className="tg-scenario-orb-glow" />
                         <span className="tg-scenario-orb-icon">{THREAT_ICONS[s.id]}</span>
                       </span>
-                      <span className="tg-scenario-orb-tip" aria-hidden="true">{s.title}</span>
+                      <span className="tg-scenario-orb-tip" aria-hidden="true">
+                        {s.title}
+                      </span>
                     </button>
                   ),
                 )}
@@ -747,17 +808,23 @@ export function TopologyGraphDemo({
                 <span className={`tg-dot ${secOn ? "dot-violet" : "dot-red"}`} />
                 <strong>{scenario.title}</strong>
                 <span className="tg-sep">·</span>
-                <span className="tg-switch-track"><span className="tg-switch-thumb" /></span>
-                <span className="tg-switch-label">Blindsight Security <strong>{secOn ? "ON" : "OFF"}</strong></span>
+                <span className="tg-switch-track">
+                  <span className="tg-switch-thumb" />
+                </span>
+                <span className="tg-switch-label">
+                  Blindsight Security <strong>{secOn ? "ON" : "OFF"}</strong>
+                </span>
               </button>
             </div>
 
-
-
-
-
             <div className="tg-body">
-              <ChatPanel stages={stages} stage={stage} scenarioId={scenario.id} secOn={secOn} stageMs={currentHold} />
+              <ChatPanel
+                stages={stages}
+                stage={stage}
+                scenarioId={scenario.id}
+                secOn={secOn}
+                stageMs={currentHold}
+              />
 
               <div className="tg-canvas">
                 <div className="tg-narration">
@@ -774,12 +841,14 @@ export function TopologyGraphDemo({
                   scenarioId={scenario.id}
                 />
 
-
                 <div className="tg-playbar" role="toolbar" aria-label="Playback">
                   <button
                     className="tg-pb-btn"
                     aria-label="Previous stage"
-                    onClick={() => { setPlaying(false); setStage((s) => Math.max(0, s - 1)); }}
+                    onClick={() => {
+                      setPlaying(false);
+                      setStage((s) => Math.max(0, s - 1));
+                    }}
                     disabled={stage === 0}
                   >
                     <SkipBack size={14} fill="currentColor" aria-hidden="true" />
@@ -793,15 +862,20 @@ export function TopologyGraphDemo({
                       setPlaying((p) => !p);
                     }}
                   >
-                    {playing
-                      ? <Pause size={14} fill="currentColor" aria-hidden="true" />
-                      : <Play size={14} fill="currentColor" aria-hidden="true" />}
+                    {playing ? (
+                      <Pause size={14} fill="currentColor" aria-hidden="true" />
+                    ) : (
+                      <Play size={14} fill="currentColor" aria-hidden="true" />
+                    )}
                   </button>
 
                   <button
                     className="tg-pb-btn"
                     aria-label="Next stage"
-                    onClick={() => { setPlaying(false); setStage((s) => Math.min(stageCount - 1, s + 1)); }}
+                    onClick={() => {
+                      setPlaying(false);
+                      setStage((s) => Math.min(stageCount - 1, s + 1));
+                    }}
                     disabled={stage >= stageCount - 1}
                   >
                     <SkipForward size={14} fill="currentColor" aria-hidden="true" />
@@ -828,7 +902,9 @@ export function TopologyGraphDemo({
                     body="Watch the exact same attack get intercepted before it ever reaches the model."
                     cta={
                       <button className="tg-cta" onClick={enableSecurity}>
-                        <span className="tg-cta-switch"><span /></span>
+                        <span className="tg-cta-switch">
+                          <span />
+                        </span>
                         Enable Blindsight Security
                       </button>
                     }
@@ -842,12 +918,22 @@ export function TopologyGraphDemo({
                     cta={
                       <div className="tg-cta-stack">
                         <div className="tg-cta-row">
-                          <button className="tg-cta tg-cta-ghost" onClick={replayCurrent}>Replay</button>
-                          <button className="tg-cta" onClick={backToPicker}>Pick another scenario</button>
+                          <button className="tg-cta tg-cta-ghost" onClick={replayCurrent}>
+                            Replay
+                          </button>
+                          <button className="tg-cta" onClick={backToPicker}>
+                            Pick another scenario
+                          </button>
                         </div>
                         <div className="tg-cta-demo">
                           <div className="tg-cta-demo-title">Want to secure your AI Systems?</div>
-                          <button type="button" className="tg-cta tg-cta-primary" onClick={openDemo}>Request a demo</button>
+                          <button
+                            type="button"
+                            className="tg-cta tg-cta-primary"
+                            onClick={openDemo}
+                          >
+                            Request a demo
+                          </button>
                         </div>
                       </div>
                     }
@@ -857,13 +943,18 @@ export function TopologyGraphDemo({
             </div>
 
             <div className="tg-stages-strip">
-              <span className="tg-stages-label">Stage {String(stage + 1).padStart(2, "0")} / {String(stageCount).padStart(2, "0")}</span>
+              <span className="tg-stages-label">
+                Stage {String(stage + 1).padStart(2, "0")} / {String(stageCount).padStart(2, "0")}
+              </span>
               <ol className="tg-stages-row">
                 {stages.map((s, i) => (
                   <li key={i} className={i === stage ? "is-current" : ""}>
                     <button
                       className={`tg-stage-pill ${i === stage ? "is-on" : ""} ${i < stage ? "is-done" : ""}`}
-                      onClick={() => { setPlaying(false); setStage(i); }}
+                      onClick={() => {
+                        setPlaying(false);
+                        setStage(i);
+                      }}
                       title={`${i + 1}. ${s.caption}`}
                       aria-label={`Stage ${i + 1}: ${s.caption}`}
                     >
@@ -874,11 +965,9 @@ export function TopologyGraphDemo({
                 ))}
               </ol>
             </div>
-
           </section>
         </main>
       )}
-
     </div>
   );
 }
@@ -888,11 +977,11 @@ export function TopologyGraphDemo({
    ============================================================ */
 /** Lucide icon per scenario — shared by the reactor picker and the in-scenario top bar. */
 const THREAT_ICONS: Record<Scenario["id"], React.ReactNode> = {
-  prompt: (<Terminal strokeWidth={1.6} aria-hidden="true" />),
-  leak: (<Droplet strokeWidth={1.6} aria-hidden="true" />),
-  poison: (<Database strokeWidth={1.6} aria-hidden="true" />),
-  misuse: (<CircleX strokeWidth={1.6} aria-hidden="true" />),
-  confidential: (<FileLock strokeWidth={1.6} aria-hidden="true" />),
+  prompt: <Terminal strokeWidth={1.6} aria-hidden="true" />,
+  leak: <Droplet strokeWidth={1.6} aria-hidden="true" />,
+  poison: <Database strokeWidth={1.6} aria-hidden="true" />,
+  misuse: <CircleX strokeWidth={1.6} aria-hidden="true" />,
+  confidential: <FileLock strokeWidth={1.6} aria-hidden="true" />,
 };
 
 function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
@@ -906,22 +995,28 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
         <div className="tg-reactor-ring tg-rr-3" />
         <div className="tg-reactor-core">
           <span className="tg-reactor-eyebrow">Select</span>
-          <span className="tg-reactor-title">Threat<br/>scenarios</span>
+          <span className="tg-reactor-title">
+            Threat
+            <br />
+            scenarios
+          </span>
         </div>
 
         {visible.map(({ s, idx }, i) => {
           const angle = (i / visible.length) * Math.PI * 2 - Math.PI / 2;
-          const R = 240;
-          const x = Math.cos(angle) * R;
-          const y = Math.sin(angle) * R;
+          // Unit-vector position; the orbit radius (--tg-r) is set in CSS so the
+          // circular layout can scale fluidly down to mobile.
           return (
             <button
               key={s.id}
               className="tg-threat"
-              style={{
-                transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
-                animationDelay: `${i * 0.1}s`,
-              }}
+              style={
+                {
+                  "--cx": Math.cos(angle).toFixed(4),
+                  "--cy": Math.sin(angle).toFixed(4),
+                  animationDelay: `${i * 0.1}s`,
+                } as React.CSSProperties
+              }
               onClick={() => onPick(idx)}
             >
               <span className="tg-threat-orb">
@@ -942,8 +1037,16 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
 }
 
 function PhaseOverlay({
-  eyebrow, title, body, cta,
-}: { eyebrow: string; title: string; body: string; cta: React.ReactNode }) {
+  eyebrow,
+  title,
+  body,
+  cta,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  cta: React.ReactNode;
+}) {
   return (
     <div className="tg-overlay">
       <div className="tg-overlay-card">
@@ -960,7 +1063,12 @@ function PhaseOverlay({
    Graph
    ============================================================ */
 function Graph({
-  pos, edges, stage, stageKey, stageMs, scenarioId,
+  pos,
+  edges,
+  stage,
+  stageKey,
+  stageMs,
+  scenarioId,
 }: {
   pos: Record<NodeId, { x: number; y: number } | undefined>;
   edges: Array<[NodeId, NodeId]>;
@@ -969,12 +1077,8 @@ function Graph({
   stageMs: number;
   scenarioId: Scenario["id"];
 }) {
-  const labelFor = (id: NodeId) =>
-    id === "Vendor" && scenarioId === "poison" ? "Uploader" : id;
-  const visibleNodes = useMemo(
-    () => (Object.keys(pos) as NodeId[]).filter((k) => pos[k]),
-    [pos],
-  );
+  const labelFor = (id: NodeId) => (id === "Vendor" && scenarioId === "poison" ? "Uploader" : id);
+  const visibleNodes = useMemo(() => (Object.keys(pos) as NodeId[]).filter((k) => pos[k]), [pos]);
 
   // normalize to packet array
   const packets: PacketDef[] = stage.packets ?? (stage.packet ? [stage.packet] : []);
@@ -993,9 +1097,7 @@ function Graph({
   // active packet on a given edge (either direction) — highest severity wins
   const activeOn = (a: NodeId, b: NodeId): PacketDef | undefined => {
     const matches = packets.filter((p) =>
-      packetSegments(p).some(
-        ([s, t]) => (s === a && t === b) || (s === b && t === a),
-      ),
+      packetSegments(p).some(([s, t]) => (s === a && t === b) || (s === b && t === a)),
     );
     if (matches.length === 0) return undefined;
     const rank = { malicious: 3, safe: 2, normal: 1 } as const;
@@ -1017,7 +1119,8 @@ function Graph({
 
       {/* base edges */}
       {edges.map(([a, b], i) => {
-        const A = pos[a]!; const B = pos[b]!;
+        const A = pos[a]!;
+        const B = pos[b]!;
         const active = activeOn(a, b);
         const color = active ? intentColor(active.intent) : "rgba(17,17,24,0.16)";
         return (
@@ -1038,7 +1141,10 @@ function Graph({
       {/* per-packet hidden path + traveling dot following the curve (JS-driven) */}
       {packets.map((p, idx) => {
         const chain = [p.from, ...(p.via ?? []), p.to];
-        const points = chain.map((id) => pos[id]).filter(Boolean) as Array<{ x: number; y: number }>;
+        const points = chain.map((id) => pos[id]).filter(Boolean) as Array<{
+          x: number;
+          y: number;
+        }>;
         if (points.length < 2) return null;
         const color = intentColor(p.intent);
         const delay = p.delayMs ?? 0;
@@ -1054,7 +1160,6 @@ function Graph({
         );
       })}
 
-
       {/* nodes */}
       {visibleNodes.map((id) => {
         const p = pos[id]!;
@@ -1068,19 +1173,24 @@ function Graph({
             className={`tg-node ${isDef ? "is-def" : ""} ${s ? `is-${s}` : ""}`}
           >
             {/* pulse ring when alert */}
-            {s === "alert" && <circle r={isBig ? 44 : 36} className="tg-node-pulse" fill="none" stroke="#5546E0" />}
+            {s === "alert" && (
+              <circle r={isBig ? 44 : 36} className="tg-node-pulse" fill="none" stroke="#5546E0" />
+            )}
             <circle r={isBig ? 38 : 28} fill="#FFFFFF" className="tg-node-base" />
             <g transform={`translate(${isBig ? -22 : -16},${isBig ? -22 : -16})`}>
               <NodeIcon id={id} size={isBig ? 44 : 32} />
             </g>
-            <text y={isBig ? 58 : 48} textAnchor="middle" className="tg-node-label">{labelFor(id)}</text>
+            <text y={isBig ? 58 : 48} textAnchor="middle" className="tg-node-label">
+              {labelFor(id)}
+            </text>
           </g>
         );
       })}
 
       {/* bubble — full bubble only for defenders; user/ai/vendor get a compact danger marker (text lives in chat) */}
-      {stage.bubble && pos[stage.bubble.node] && (
-        (stage.bubble.node === "Interceptor" || stage.bubble.node === "Warden") ? (
+      {stage.bubble &&
+        pos[stage.bubble.node] &&
+        (stage.bubble.node === "Interceptor" || stage.bubble.node === "Warden" ? (
           <Bubble
             key={`b-${stageKey}`}
             x={pos[stage.bubble.node]!.x}
@@ -1094,9 +1204,7 @@ function Graph({
             x={pos[stage.bubble.node]!.x}
             y={pos[stage.bubble.node]!.y}
           />
-        ) : null
-      )}
-
+        ) : null)}
     </svg>
   );
 }
@@ -1111,13 +1219,25 @@ function statusIcon(text: string): { Icon: typeof AlertTriangle | null; label: s
 // Replace inline status emoji in chat text with lucide icons.
 function renderStatusText(text: string) {
   return text.split(/(⚠|📄)/g).map((part, i) => {
-    if (part === "⚠") return <AlertTriangle key={i} className="tg-inline-icon" size={13} aria-hidden="true" />;
-    if (part === "📄") return <FileText key={i} className="tg-inline-icon" size={13} aria-hidden="true" />;
+    if (part === "⚠")
+      return <AlertTriangle key={i} className="tg-inline-icon" size={13} aria-hidden="true" />;
+    if (part === "📄")
+      return <FileText key={i} className="tg-inline-icon" size={13} aria-hidden="true" />;
     return <Fragment key={i}>{part}</Fragment>;
   });
 }
 
-function Bubble({ x, y, text, tone }: { x: number; y: number; text: string; tone: "red" | "violet" | "muted" }) {
+function Bubble({
+  x,
+  y,
+  text,
+  tone,
+}: {
+  x: number;
+  y: number;
+  text: string;
+  tone: "red" | "violet" | "muted";
+}) {
   // pick side: prefer above; if near top, go below
   const above = y > 160;
   const dy = above ? -64 : 64;
@@ -1132,14 +1252,33 @@ function Bubble({ x, y, text, tone }: { x: number; y: number; text: string; tone
   const startX = -contentW / 2;
   return (
     <g transform={`translate(${x},${y + dy})`} className="tg-bubble">
-      <rect x={-w / 2} y={-18} width={w} height={36} rx={10} fill={fill} stroke={stroke} strokeWidth={1.2} />
+      <rect
+        x={-w / 2}
+        y={-18}
+        width={w}
+        height={36}
+        rx={10}
+        fill={fill}
+        stroke={stroke}
+        strokeWidth={1.2}
+      />
       {Icon ? (
         <>
           <Icon x={startX} y={-7.5} width={15} height={15} color={color} strokeWidth={1.8} />
-          <text x={startX + iconW + gap} textAnchor="start" dy={5} className="tg-bubble-text" fill={color}>{label}</text>
+          <text
+            x={startX + iconW + gap}
+            textAnchor="start"
+            dy={5}
+            className="tg-bubble-text"
+            fill={color}
+          >
+            {label}
+          </text>
         </>
       ) : (
-        <text textAnchor="middle" dy={5} className="tg-bubble-text" fill={color}>{label}</text>
+        <text textAnchor="middle" dy={5} className="tg-bubble-text" fill={color}>
+          {label}
+        </text>
       )}
       <path
         d={above ? `M -6 18 L 0 28 L 6 18 Z` : `M -6 -18 L 0 -28 L 6 -18 Z`}
@@ -1152,8 +1291,16 @@ function Bubble({ x, y, text, tone }: { x: number; y: number; text: string; tone
 }
 
 function PacketDot({
-  d, color, delayMs, durMs,
-}: { d: string; color: string; delayMs: number; durMs: number }) {
+  d,
+  color,
+  delayMs,
+  durMs,
+}: {
+  d: string;
+  color: string;
+  delayMs: number;
+  durMs: number;
+}) {
   const pathRef = useRef<SVGPathElement | null>(null);
   const [pt, setPt] = useState<{ x: number; y: number } | null>(null);
   const [visible, setVisible] = useState(false);
@@ -1202,20 +1349,27 @@ function DangerMark({ x, y }: { x: number; y: number }) {
   return (
     <g transform={`translate(${x},${y + dy})`} className="tg-danger">
       <circle r="11" fill="#FEF2F2" stroke="#DC2626" strokeWidth="1.4" />
-      <text textAnchor="middle" dy="4" fontSize="13" fontWeight="700" fill="#DC2626">!</text>
+      <text textAnchor="middle" dy="4" fontSize="13" fontWeight="700" fill="#DC2626">
+        !
+      </text>
     </g>
   );
 }
 
 function NodeIcon({ id, size }: { id: NodeId; size: number }) {
-
   switch (id) {
-    case "User":        return <IconUser size={size} />;
-    case "AI":          return <IconBrain size={size} />;
-    case "Interceptor": return <IconShield size={size} />;
-    case "Warden":      return <IconWarden size={size} />;
-    case "RAG":         return <IconDb size={size} />;
-    case "Vendor":      return <IconVendor size={size} />;
+    case "User":
+      return <IconUser size={size} />;
+    case "AI":
+      return <IconBrain size={size} />;
+    case "Interceptor":
+      return <IconShield size={size} />;
+    case "Warden":
+      return <IconWarden size={size} />;
+    case "RAG":
+      return <IconDb size={size} />;
+    case "Vendor":
+      return <IconVendor size={size} />;
   }
 }
 
@@ -1285,8 +1439,18 @@ function stageMessages(s: Stage, secOn: boolean, scenarioId: string): ChatMsg[] 
 }
 
 function ChatPanel({
-  stages, stage, scenarioId, secOn, stageMs,
-}: { stages: Stage[]; stage: number; scenarioId: string; secOn: boolean; stageMs: number }) {
+  stages,
+  stage,
+  scenarioId,
+  secOn,
+  stageMs,
+}: {
+  stages: Stage[];
+  stage: number;
+  scenarioId: string;
+  secOn: boolean;
+  stageMs: number;
+}) {
   // Defer the current stage's chat messages when its packet lands on the User
   // (so the AI reply appears in the chat only AFTER the packet arrives visually).
   const cur = stages[stage];
@@ -1295,7 +1459,10 @@ function ChatPanel({
 
   const [revealCurrent, setRevealCurrent] = useState(!deferCurrent);
   useEffect(() => {
-    if (!deferCurrent) { setRevealCurrent(true); return; }
+    if (!deferCurrent) {
+      setRevealCurrent(true);
+      return;
+    }
     setRevealCurrent(false);
     const t = window.setTimeout(() => setRevealCurrent(true), Math.max(300, stageMs - 200));
     return () => window.clearTimeout(t);
@@ -1307,8 +1474,6 @@ function ChatPanel({
     msgs.push(...stageMessages(stages[i], secOn, scenarioId));
   }
   const lastIsUser = msgs.length > 0 && msgs[msgs.length - 1].role === "user";
-
-
 
   return (
     <aside className="tg-chat">
@@ -1326,7 +1491,11 @@ function ChatPanel({
         {lastIsUser && (
           <div className="tg-msg tg-msg-assistant tg-typing">
             <div className="tg-msg-avatar">AI</div>
-            <div className="tg-msg-bubble"><span /><span /><span /></div>
+            <div className="tg-msg-bubble">
+              <span />
+              <span />
+              <span />
+            </div>
           </div>
         )}
       </div>
@@ -1334,24 +1503,23 @@ function ChatPanel({
   );
 }
 
-
 function IconUser({ size = 32 }: { size?: number }) {
-  return (<User width={size} height={size} strokeWidth={1.6} />);
+  return <User width={size} height={size} strokeWidth={1.6} />;
 }
 function IconBrain({ size = 44 }: { size?: number }) {
-  return (<Brain width={size} height={size} strokeWidth={1.5} />);
+  return <Brain width={size} height={size} strokeWidth={1.5} />;
 }
 function IconShield({ size = 32 }: { size?: number }) {
-  return (<Shield width={size} height={size} strokeWidth={1.6} />);
+  return <Shield width={size} height={size} strokeWidth={1.6} />;
 }
 function IconWarden({ size = 32 }: { size?: number }) {
-  return (<ShieldCheck width={size} height={size} strokeWidth={1.6} />);
+  return <ShieldCheck width={size} height={size} strokeWidth={1.6} />;
 }
 function IconDb({ size = 32 }: { size?: number }) {
-  return (<Database width={size} height={size} strokeWidth={1.6} />);
+  return <Database width={size} height={size} strokeWidth={1.6} />;
 }
 function IconVendor({ size = 32 }: { size?: number }) {
-  return (<Store width={size} height={size} strokeWidth={1.6} />);
+  return <Store width={size} height={size} strokeWidth={1.6} />;
 }
 
 /* ============================================================
@@ -1591,29 +1759,31 @@ const TG_CSS = `
 
 /* Reactor picker */
 .tg-picker { max-width: 1320px; margin: 0 auto; padding: 8px 32px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.tg-reactor { position: relative; width: 640px; height: 640px; display: flex; align-items: center; justify-content: center; }
-.tg-reactor-ring { position: absolute; top: 50%; left: 50%; border: 1px dashed rgba(85,70,224,0.18); border-radius: 50%; transform: translate(-50%,-50%); }
-.tg-rr-1 { width: 200px; height: 200px; animation: tgSpin 22s linear infinite; }
-.tg-rr-2 { width: 360px; height: 360px; border-color: rgba(85,70,224,0.12); animation: tgSpin 36s linear infinite reverse; }
-.tg-rr-3 { width: 500px; height: 500px; border-color: rgba(17,17,24,0.08); animation: tgSpin 60s linear infinite; }
+/* Reactor stays circular at every width: orbit radius (--tg-r) scales fluidly,
+   threats are positioned from unit-vectors set inline, rings sized as % of the disc. */
+.tg-reactor { position: relative; width: min(640px, 92vw); aspect-ratio: 1; --tg-r: clamp(116px, 30vw, 240px); display: flex; align-items: center; justify-content: center; }
+.tg-reactor-ring { position: absolute; top: 50%; left: 50%; border: 1px dashed rgba(85,70,224,0.18); border-radius: 50%; transform: translate(-50%,-50%); aspect-ratio: 1; }
+.tg-rr-1 { width: 31.25%; animation: tgSpin 22s linear infinite; }
+.tg-rr-2 { width: 56.25%; border-color: rgba(85,70,224,0.12); animation: tgSpin 36s linear infinite reverse; }
+.tg-rr-3 { width: 78.125%; border-color: rgba(17,17,24,0.08); animation: tgSpin 60s linear infinite; }
 @keyframes tgSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
 
-.tg-reactor-core { position: relative; width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #ffffff, #f4f0ff 60%, #ede5ff 100%); border: 1px solid var(--violet); box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; animation: tgCorePulse 3s ease-in-out infinite; }
+.tg-reactor-core { position: relative; width: clamp(118px, 25vw, 160px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #ffffff, #f4f0ff 60%, #ede5ff 100%); border: 1px solid var(--violet); box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; animation: tgCorePulse 3s ease-in-out infinite; }
 @keyframes tgCorePulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); } 50% { box-shadow: 0 0 0 14px rgba(85,70,224,0.04), 0 10px 50px -8px rgba(85,70,224,0.55); } }
 .tg-reactor-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--violet); }
 .tg-reactor-title { font-family: var(--font-display); font-size: 20px; font-weight: 500; text-align: center; line-height: 1.1; color: var(--text); }
 
-.tg-threat { position: absolute; top: 50%; left: 50%; display: flex; flex-direction: column; align-items: center; gap: 10px; width: 180px; background: transparent; border: 0; cursor: pointer; font: inherit; opacity: 0; animation: tgThreatIn .6s ease-out forwards; }
+.tg-threat { position: absolute; top: 50%; left: 50%; transform: translate(calc(-50% + (var(--cx) * var(--tg-r))), calc(-50% + (var(--cy) * var(--tg-r)))); display: flex; flex-direction: column; align-items: center; gap: clamp(6px, 1.4vw, 10px); width: clamp(96px, 25vw, 180px); background: transparent; border: 0; cursor: pointer; font: inherit; opacity: 0; animation: tgThreatIn .6s ease-out forwards; }
 @keyframes tgThreatIn { from { opacity: 0; transform: translate(-50%, -50%) scale(.6); } to { opacity: 1; } }
-.tg-threat-orb { position: relative; width: 84px; height: 84px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--red); box-shadow: var(--shadow-md); transition: all .25s; }
+.tg-threat-orb { position: relative; width: clamp(56px, 14vw, 84px); aspect-ratio: 1; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--red); box-shadow: var(--shadow-md); transition: all .25s; }
 .tg-threat-glow { position: absolute; inset: -6px; border-radius: 50%; background: radial-gradient(circle, rgba(220,38,38,0.18), transparent 70%); opacity: .6; transition: opacity .25s; }
-.tg-threat-icon { position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+.tg-threat-icon { position: relative; width: clamp(26px, 6.5vw, 36px); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; }
 .tg-threat-icon svg { width: 100%; height: 100%; }
 .tg-threat:hover .tg-threat-orb { transform: translateY(-3px); border-color: var(--red); box-shadow: 0 14px 40px -10px rgba(220,38,38,0.35); }
 .tg-threat:hover .tg-threat-glow { opacity: 1; }
 .tg-threat-label { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
 .tg-threat-num { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; color: var(--muted); }
-.tg-threat-name { font-size: 14px; font-weight: 500; color: var(--text); }
+.tg-threat-name { font-size: clamp(11px, 2.6vw, 14px); font-weight: 500; color: var(--text); }
 .tg-picker-hint { color: var(--muted); font-size: 15px; text-align: center; margin: 0; }
 
 /* Phase overlay */
@@ -1642,7 +1812,6 @@ const TG_CSS = `
 @media (max-width: 1100px) {
   .tg-body { grid-template-columns: 1fr; }
   .tg-chat { max-height: 280px; }
-  .tg-reactor { width: 100%; height: 520px; }
 }
 @media (max-width: 720px) {
   .tg-header { padding: 88px 18px 8px; }
@@ -1650,8 +1819,6 @@ const TG_CSS = `
   .tg-sub { font-size: 13px; margin-bottom: 16px; }
   .tg-stage-wrap { padding: 8px 12px 32px; }
   .tg-picker { padding: 12px 16px 24px; gap: 18px; }
-  .tg-reactor { height: 360px; }
-  .tg-reactor-core { width: 120px; height: 120px; }
   .tg-reactor-title { font-size: 15px; }
   .tg-topbar { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
   .tg-topbar-spacer { display: none; }
@@ -1673,48 +1840,14 @@ const TG_CSS = `
   .tg-footer { padding: 16px 18px 32px; flex-direction: column; gap: 8px; text-align: center; }
 }
 
-/* Picker: replace circular layout with a 2-column grid on small/medium screens */
-@keyframes tgThreatInMobile { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+/* Picker keeps its circular layout at every breakpoint — the orbit radius and
+   orb/label sizes scale fluidly via clamp() in the base rules above. */
 @media (max-width: 1100px) {
   .tg-picker { padding: 8px 16px 20px; gap: 14px; }
-  .tg-reactor {
-    position: static !important;
-    width: 100% !important;
-    height: auto !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 0;
-    align-items: start;
-    justify-items: center;
-  }
-  .tg-reactor-ring { display: none !important; }
-  .tg-reactor-core {
-    grid-column: 1 / -1;
-    position: relative !important;
-    transform: none !important;
-    margin-bottom: 8px;
-    width: 140px !important;
-    height: 140px !important;
-  }
-  .tg-threat {
-    position: static !important;
-    transform: none !important;
-    width: 100%;
-    max-width: 180px;
-    opacity: 0;
-    animation: tgThreatInMobile .5s ease-out forwards !important;
-  }
-  .tg-threat-orb { width: 72px; height: 72px; }
-  .tg-threat-icon { width: 30px; height: 30px; }
-  .tg-threat-name { font-size: 13px; }
   .tg-picker-hint { font-size: 13px; }
 }
-@media (max-width: 640px) {
-  .tg-picker { padding: 8px 12px 16px; }
-  .tg-reactor { gap: 10px; }
-  .tg-reactor-core { width: 120px !important; height: 120px !important; }
-  .tg-threat-orb { width: 64px; height: 64px; }
-  .tg-threat-name { font-size: 12px; }
+@media (max-width: 380px) {
+  /* Drop the radius floor so the disc still fits on the narrowest phones. */
+  .tg-reactor { --tg-r: 30vw; }
 }
 `;
