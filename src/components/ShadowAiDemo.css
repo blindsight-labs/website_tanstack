@@ -1,0 +1,703 @@
+/* Co-located styles for ShadowAiDemo.tsx — loaded via the home route head()
+   (link to this file lives in src/routes/index.tsx). Kept out of the global
+   styles.css so edits to the hero animation don't collide there on merge.
+   Uses global design tokens (--font-mono / --font-sans) from styles.css. */
+
+/* ── Shadow AI hero demo (illustrative — keeps its own traffic-light palette) ── */
+.shadow-demo {
+  --ink: #020202;
+  --card: #fff;
+  --mute: #6b6b6b;
+  --line: #e4e4e4;
+  --indigo: #5b3df5;
+  --ind-s: #efeaff;
+  --red: #e5494d;
+  --red-s: #fdeaea;
+  --green: #2dd573;
+  --green-i: #138a4a;
+  --green-s: #e7f9ef;
+  --purple: #6d28d9;
+  --pur-s: #efe7fb;
+  --mono: var(--font-mono);
+  --sans: var(--font-sans);
+  width: 100%;
+}
+.shadow-demo .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Orientation switch — mirrors the iceberg's 640px aspect-ratio breakpoint. */
+.shadow-demo .sa2 {
+  display: block;
+  width: 100%;
+}
+.shadow-demo .sa3 {
+  display: none;
+  width: 100%;
+}
+@media (max-width: 640px) {
+  .shadow-demo .sa2 {
+    display: none;
+  }
+  .shadow-demo .sa3 {
+    display: block;
+  }
+}
+
+/* Card chrome */
+.shadow-demo .sa2-card,
+.shadow-demo .sa3-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.shadow-demo .sa2-card {
+  padding: 24px 26px 22px;
+}
+.shadow-demo .sa3-card {
+  padding: 22px 22px 20px;
+}
+.shadow-demo .sa2-top,
+.shadow-demo .sa3-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.shadow-demo .sa2-top {
+  margin-bottom: 4px;
+}
+.shadow-demo .sa2-kick,
+.shadow-demo .sa3-kick {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--indigo);
+  text-transform: uppercase;
+}
+.shadow-demo .sa2-ctrl,
+.shadow-demo .sa3-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.shadow-demo .sa2-badge,
+.shadow-demo .sa3-badge {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--red-s);
+  color: #bf2226;
+  transition: 0.25s;
+}
+.shadow-demo .sa2.on .sa2-badge,
+.shadow-demo .sa3.on .sa3-badge {
+  background: var(--ind-s);
+  color: var(--indigo);
+}
+.shadow-demo .sw {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 6px;
+  border-radius: 8px;
+}
+.shadow-demo .sw .lbl {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.shadow-demo .sw .track {
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  background: #d6d6d6;
+  position: relative;
+  transition: background 0.25s;
+}
+.shadow-demo .sa2.on .sw .track,
+.shadow-demo .sa3.on .sw .track {
+  background: var(--indigo);
+}
+.shadow-demo .sw .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.25s;
+}
+.shadow-demo .sa2.on .sw .knob,
+.shadow-demo .sa3.on .sw .knob {
+  left: 23px;
+}
+.shadow-demo .sw:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
+.shadow-demo .sa2-sub,
+.shadow-demo .sa3-sub {
+  font-size: 13px;
+  color: var(--mute);
+}
+.shadow-demo .sa2-sub {
+  margin: 6px 0 0;
+}
+.shadow-demo .sa3-sub {
+  margin: 8px 0 14px;
+}
+
+/* Packet chips (shared) */
+.shadow-demo .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 9px;
+  border-radius: 8px;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: #3a3a3a;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    border-color 0.25s;
+}
+.shadow-demo .chip .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  flex: none;
+}
+.shadow-demo .chip.benign .dot {
+  background: #c2c2c2;
+}
+.shadow-demo .chip svg {
+  width: 13px;
+  height: 13px;
+}
+.shadow-demo .chip.alert {
+  background: var(--red-s);
+  border-color: var(--red);
+  color: #bf2226;
+}
+.shadow-demo .chip.redact {
+  background: var(--ind-s);
+  border-color: var(--indigo);
+  color: var(--indigo);
+}
+.shadow-demo .chip.allow {
+  background: var(--green-s);
+  border-color: var(--green);
+  color: var(--green-i);
+}
+.shadow-demo .chip.block {
+  background: var(--pur-s);
+  border-color: var(--purple);
+  color: #5b21b6;
+}
+.shadow-demo .chip.leak {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+@keyframes sd-wallshake {
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+@keyframes sd-ring {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Horizontal (sa2) */
+.shadow-demo .sa2 .arena {
+  position: relative;
+  height: 224px;
+  margin: 48px 0 52px;
+}
+.shadow-demo .sa2 .aiwall {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 96px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #9a9a9a;
+  z-index: 1;
+  transition:
+    border-color 0.3s,
+    background 0.3s;
+}
+.shadow-demo .sa2 .aiwall svg {
+  width: 24px;
+  height: 24px;
+}
+.shadow-demo .sa2 .aiwall .l1 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-align: center;
+  line-height: 1.3;
+}
+.shadow-demo .sa2 .aiwall.hit {
+  border-color: var(--red);
+  background: var(--red-s);
+  color: #bf2226;
+  animation: sd-wallshake 0.4s;
+}
+.shadow-demo .sa2 .proxy {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: #cfcfcf;
+  transform: translateX(-50%);
+  z-index: 3;
+  transition: background 0.3s;
+}
+.shadow-demo .sa2.on .proxy {
+  background: var(--indigo);
+}
+.shadow-demo .sa2 .orb {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid #cfcfcf;
+  transition: border-color 0.3s;
+}
+.shadow-demo .sa2.on .orb {
+  border-color: var(--indigo);
+}
+.shadow-demo .sa2 .orb::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cfcfcf;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background 0.3s;
+}
+.shadow-demo .sa2.on .orb::before {
+  background: var(--indigo);
+}
+.shadow-demo .sa2 .orb::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1px solid #cdbffb;
+  opacity: 0;
+}
+.shadow-demo .sa2.on .orb::after {
+  animation: sd-ring 1.7s ease-out infinite;
+}
+.shadow-demo .sa2 .ptag {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: #a0a0a0;
+  transition: color 0.3s;
+}
+.shadow-demo .sa2.on .ptag {
+  color: var(--indigo);
+}
+.shadow-demo .sa2 .person {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 122px;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.shadow-demo .sa2 .ava {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--ind-s);
+  color: var(--indigo);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.shadow-demo .sa2 .pm .nm {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+.shadow-demo .sa2 .pm .rl {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #a0a0a0;
+  line-height: 1.15;
+}
+.shadow-demo .sa2 .lane-wire {
+  position: absolute;
+  left: 15%;
+  right: 13%;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, #dadada 0 5px, transparent 5px 11px);
+  z-index: 0;
+}
+.shadow-demo .sa2 .pkt {
+  position: absolute;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.shadow-demo .sa2-stats {
+  display: flex;
+  gap: 11px;
+  margin-top: 0;
+}
+.shadow-demo .sa2 .dgr {
+  flex: 0 0 auto;
+  min-width: 150px;
+  background: var(--red-s);
+  border: 1px solid #f3c9ca;
+  border-radius: 12px;
+  padding: 11px 14px;
+}
+.shadow-demo .sa2 .dgr .k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #bf2226;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.shadow-demo .sa2 .dgr .k svg {
+  width: 14px;
+  height: 14px;
+}
+.shadow-demo .sa2 .dgr .v {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--red);
+  line-height: 1.1;
+  margin-top: 3px;
+}
+.shadow-demo .minis {
+  flex: 1;
+  display: flex;
+  gap: 11px;
+}
+.shadow-demo .mini {
+  flex: 1;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 13px;
+}
+.shadow-demo .mini .k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #9a9a9a;
+}
+.shadow-demo .mini .v {
+  font-size: 19px;
+  font-weight: 600;
+  margin-top: 3px;
+  line-height: 1.1;
+}
+.shadow-demo .m-al .v {
+  color: var(--green-i);
+}
+.shadow-demo .m-rd .v {
+  color: var(--indigo);
+}
+.shadow-demo .m-bl .v {
+  color: var(--purple);
+}
+.shadow-demo .sa2-foot,
+.shadow-demo .sa3-foot {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #b3b3b3;
+  letter-spacing: 0.08em;
+  margin-top: 14px;
+  text-align: right;
+}
+
+/* Vertical (sa3) */
+.shadow-demo .sa3 .sources {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.shadow-demo .sa3 .src {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 3px;
+}
+.shadow-demo .sa3 .ava {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ind-s);
+  color: var(--indigo);
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shadow-demo .sa3 .src .nm {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.1;
+}
+.shadow-demo .sa3 .src .rl {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #a0a0a0;
+  line-height: 1.1;
+}
+.shadow-demo .sa3 .arena {
+  position: relative;
+  height: 344px;
+}
+.shadow-demo .sa3 .lane-wire {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  background: repeating-linear-gradient(180deg, #dadada 0 5px, transparent 5px 11px);
+  z-index: 0;
+}
+.shadow-demo .sa3 .aiwall {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #9a9a9a;
+  z-index: 1;
+  transition:
+    border-color 0.3s,
+    background 0.3s;
+}
+.shadow-demo .sa3 .aiwall svg {
+  width: 22px;
+  height: 22px;
+}
+.shadow-demo .sa3 .aiwall .l1 {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+.shadow-demo .sa3 .aiwall.hit {
+  border-color: var(--red);
+  background: var(--red-s);
+  color: #bf2226;
+  animation: sd-wallshake 0.4s;
+}
+.shadow-demo .sa3 .proxy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 53%;
+  height: 2px;
+  background: #cfcfcf;
+  z-index: 3;
+  transition: background 0.3s;
+}
+.shadow-demo .sa3.on .proxy {
+  background: var(--indigo);
+}
+.shadow-demo .sa3 .orb {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid #cfcfcf;
+  z-index: 4;
+  transition: border-color 0.3s;
+}
+.shadow-demo .sa3.on .orb {
+  border-color: var(--indigo);
+}
+.shadow-demo .sa3 .orb::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cfcfcf;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: background 0.3s;
+}
+.shadow-demo .sa3.on .orb::before {
+  background: var(--indigo);
+}
+.shadow-demo .sa3 .orb::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 1px solid #cdbffb;
+  opacity: 0;
+}
+.shadow-demo .sa3.on .orb::after {
+  animation: sd-ring 1.7s ease-out infinite;
+}
+.shadow-demo .sa3 .ptag {
+  position: absolute;
+  left: 50%;
+  top: calc(53% + 22px);
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: #a0a0a0;
+  background: var(--card);
+  padding: 0 6px;
+  z-index: 4;
+  transition: color 0.3s;
+}
+.shadow-demo .sa3.on .ptag {
+  color: var(--indigo);
+}
+.shadow-demo .sa3 .pkt {
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.shadow-demo .sa3-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.shadow-demo .sa3 .stat {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 13px;
+}
+.shadow-demo .sa3 .stat .k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #9a9a9a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.shadow-demo .sa3 .stat .k svg {
+  width: 14px;
+  height: 14px;
+}
+.shadow-demo .sa3 .stat .v {
+  font-size: 21px;
+  font-weight: 600;
+  margin-top: 3px;
+  line-height: 1.1;
+}
+.shadow-demo .sa3 .stat.dgr {
+  background: var(--red-s);
+  border-color: #f3c9ca;
+}
+.shadow-demo .sa3 .stat.dgr .k {
+  color: #bf2226;
+}
+.shadow-demo .sa3 .stat.dgr .v {
+  color: var(--red);
+}
+
+@media (max-width: 640px) {
+  .shadow-demo .sa2-stats {
+    flex-direction: column;
+  }
+  .shadow-demo .minis {
+    width: 100%;
+  }
+  .shadow-demo .sa2 .person {
+    width: 96px;
+  }
+  .shadow-demo .sa2 .pm .nm {
+    font-size: 11.5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shadow-demo .pkt,
+  .shadow-demo .orb::after,
+  .shadow-demo .aiwall.hit {
+    animation: none !important;
+  }
+}

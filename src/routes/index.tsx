@@ -19,6 +19,7 @@ import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Iceberg } from "@/components/Iceberg";
 import { ShadowAiDemo } from "@/components/ShadowAiDemo";
+import shadowDemoCss from "@/components/ShadowAiDemo.css?url";
 import { faqSchemaEntities } from "@/lib/faq-content";
 import { TopologyGraphDemo } from "@/routes/in-action";
 
@@ -39,7 +40,10 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: "https://blindsight.io/" },
     ],
-    links: [{ rel: "canonical", href: "https://blindsight.io/" }],
+    links: [
+      { rel: "canonical", href: "https://blindsight.io/" },
+      { rel: "stylesheet", href: shadowDemoCss },
+    ],
     scripts: [
       {
         type: "application/ld+json",
