@@ -18,6 +18,7 @@ import {
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Iceberg } from "@/components/Iceberg";
+import { ShadowAiDemo } from "@/components/ShadowAiDemo";
 import { faqSchemaEntities } from "@/lib/faq-content";
 import { TopologyGraphDemo } from "@/routes/in-action";
 
@@ -55,6 +56,7 @@ export const Route = createFileRoute("/")({
 /* ── Section progress rail ── */
 const SECTIONS: { id: string; label: string }[] = [
   { id: "hero", label: "Top" },
+  { id: "scenarios", label: "Threats" },
   { id: "why", label: "Why" },
   { id: "stack", label: "Layers" },
   { id: "founders", label: "Team" },
@@ -154,13 +156,13 @@ function Hero() {
           </p>
           <div className="hero-actions">
             <button type="button" className="btn btn-primary" onClick={openDemo}>
-              Request a Demo
+              Reveal your team&apos;s Shadow AI
             </button>
           </div>
         </div>
 
         <div className="va-hero-demo reveal">
-          <TopologyGraphDemo embedded />
+          <ShadowAiDemo />
         </div>
       </div>
 
@@ -171,12 +173,39 @@ function Hero() {
         className="hero-scroll-cue"
         aria-label="Scroll to see more"
         onClick={() =>
-          document.getElementById("why")?.scrollIntoView({ behavior: "smooth", block: "start" })
+          document
+            .getElementById("scenarios")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" })
         }
       >
         <ChevronDown className="hero-scroll-chevron" strokeWidth={2} aria-hidden="true" />
       </button>
     </header>
+  );
+}
+
+/* ── Scenarios — Shadow AI is the entry point; the old threat demo lives here ── */
+function Scenarios() {
+  return (
+    <section className="section" id="scenarios">
+      <div className="section-inner">
+        <div
+          className="s-head reveal"
+          style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
+        >
+          <span className="tag">Beyond Shadow AI</span>
+          <h2>Shadow AI is only the beginning.</h2>
+          <p>
+            It&apos;s the easiest exposure to see — and the first of many. The same pipeline hides
+            prompt injection, data leakage, poisoning and model misuse. Pick a scenario and watch
+            each one play out, with Blindsight off and on.
+          </p>
+        </div>
+        <div className="scenarios-demo reveal">
+          <TopologyGraphDemo embedded />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -337,6 +366,7 @@ function Home() {
     <main>
       <SectionRail sections={SECTIONS} />
       <Hero />
+      <Scenarios />
       <Iceberg id="why" eyebrow="Why Blindsight?" alt />
       <Stages />
       <WhyBlindsight />
