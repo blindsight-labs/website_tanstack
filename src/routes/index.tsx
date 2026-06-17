@@ -18,6 +18,7 @@ import {
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Iceberg } from "@/components/Iceberg";
+import { faqSchemaEntities } from "@/lib/faq-content";
 import { TopologyGraphDemo } from "@/routes/in-action";
 
 export const Route = createFileRoute("/")({
@@ -38,6 +39,16 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: "https://blindsight.io/" },
     ],
     links: [{ rel: "canonical", href: "https://blindsight.io/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqSchemaEntities(),
+        }),
+      },
+    ],
   }),
 });
 
