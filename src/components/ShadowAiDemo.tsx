@@ -118,6 +118,12 @@ const SUB_ON =
 const SUB_OFF =
   "Your team is sending requests to a third-party AI. Watch what gets through — then flip Blindsight on.";
 
+/** Playback speed for the whole animation. 1 = original; 0.5 = half speed.
+ *  Every duration (timers, packet-travel transitions, spawn cadence, fades)
+ *  is divided by this, so packets, pacing and auto-toggle all scale together. */
+const SPEED = 0.5;
+const d = (ms: number) => Math.round(ms / SPEED);
+
 type EngineConfig = {
   axis: "left" | "top";
   pos: { proxy: string; end: string };
@@ -144,7 +150,7 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
   const created: HTMLElement[] = [];
 
   const T = (fn: () => void, ms: number) => {
-    const id = window.setTimeout(fn, ms);
+    const id = window.setTimeout(fn, d(ms));
     timers.push(id);
     return id;
   };
@@ -163,7 +169,7 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
     c.innerHTML = (icon || '<span class="dot"></span>') + text;
   }
   function move(p: HTMLElement, to: string, ms: number) {
-    p.style.transition = cfg.axis + " " + ms + "ms linear";
+    p.style.transition = cfg.axis + " " + d(ms) + "ms linear";
     void p.offsetWidth;
     p.style.setProperty(cfg.axis, to);
   }
@@ -210,7 +216,7 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
       } else {
         setChip(p, "block", IC.ban, "Blocked");
         await sleep(720);
-        p.style.transition = "opacity .35s";
+        p.style.transition = "opacity " + d(350) + "ms";
         p.style.opacity = "0";
         await sleep(360);
         n.bl++;
@@ -244,7 +250,7 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
         const iv = window.setInterval(() => {
           fly(L, L.seq[idx % L.seq.length]);
           idx++;
-        }, 3300);
+        }, d(3300));
         timers.push(iv);
       },
       500 + i * 820,
