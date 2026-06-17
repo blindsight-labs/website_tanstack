@@ -99,7 +99,15 @@ const THREATS: Threat[] = [
 
 /** "Only see the tip" iceberg section. Eyebrow/id are parametrized so different
  *  landing-page versions can re-frame it (e.g. "The Problem" vs "Why Blindsight?"). */
-export function Iceberg({ id = "why", eyebrow = "The Problem" }: { id?: string; eyebrow?: string }) {
+export function Iceberg({
+  id = "why",
+  eyebrow = "The Problem",
+  alt = false,
+}: {
+  id?: string;
+  eyebrow?: string;
+  alt?: boolean;
+}) {
   // `hovered` is the transient desktop hover; `pinned` is the click-to-keep-open
   // popup that drives the mobile modal.
   const [hovered, setHovered] = useState<string | null>(null);
@@ -158,7 +166,7 @@ export function Iceberg({ id = "why", eyebrow = "The Problem" }: { id?: string; 
   const pinnedThreat = THREATS.find((t) => t.id === pinned) ?? null;
 
   return (
-    <section className="section" id={id}>
+    <section className={`section ${alt ? "section-alt" : ""}`} id={id}>
       <div className="section-inner">
         <div className="s-head reveal">
           <span className="tag">{eyebrow}</span>

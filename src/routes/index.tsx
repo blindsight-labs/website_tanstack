@@ -299,7 +299,7 @@ const STAGES: {
 
 function Stages() {
   return (
-    <section className="section section-alt cstack-section" id="stack">
+    <section className="section cstack-section" id="stack">
       <div className="section-inner">
         <div
           className="s-head reveal"
@@ -355,7 +355,7 @@ function Home() {
     <main>
       <SectionRail sections={SECTIONS} />
       <Hero />
-      <Iceberg id="why" eyebrow="Why Blindsight?" />
+      <Iceberg id="why" eyebrow="Why Blindsight?" alt />
       <Stages />
       <WhyBlindsight />
       <FAQ />
