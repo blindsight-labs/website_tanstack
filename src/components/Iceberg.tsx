@@ -44,7 +44,7 @@ const THREATS: Threat[] = [
   {
     id: "poisoned-training",
     name: "Poisoned training samples",
-    meta: "Hidden",
+    meta: "Only Blindsight",
     visible: false,
     fx: 0.45,
     fy: 0.41,
@@ -53,7 +53,7 @@ const THREATS: Threat[] = [
   {
     id: "adversarial-rag",
     name: "Adversarial RAG ingestion",
-    meta: "Hidden",
+    meta: "Only Blindsight",
     visible: false,
     fx: 0.56,
     fy: 0.42,
@@ -62,7 +62,7 @@ const THREATS: Threat[] = [
   {
     id: "demographic-shortcut",
     name: "Demographic shortcut learning",
-    meta: "Hidden",
+    meta: "Only Blindsight",
     visible: false,
     fx: 0.44,
     fy: 0.51,
@@ -71,7 +71,7 @@ const THREATS: Threat[] = [
   {
     id: "back-doors",
     name: "Back-doors",
-    meta: "Hidden",
+    meta: "Only Blindsight",
     visible: false,
     fx: 0.57,
     fy: 0.52,
@@ -80,7 +80,7 @@ const THREATS: Threat[] = [
   {
     id: "adversarial-patching",
     name: "Adversarial patching",
-    meta: "Hidden",
+    meta: "Only Blindsight",
     visible: false,
     fx: 0.49,
     fy: 0.61,
@@ -89,7 +89,7 @@ const THREATS: Threat[] = [
   {
     id: "insider-misuse",
     name: "Misuse by privileged insiders",
-    meta: "Hidden",
+    meta: "Only Blindsight",
     visible: false,
     fx: 0.5,
     fy: 0.71,
@@ -102,9 +102,12 @@ const THREATS: Threat[] = [
 export function Iceberg({
   id = "why",
   eyebrow = "The Problem",
+  segue,
 }: {
   id?: string;
   eyebrow?: string;
+  /** Optional closing line that hands off to whatever follows the section. */
+  segue?: string;
 }) {
   // `hovered` is the transient desktop hover; `pinned` is the click-to-keep-open
   // popup that drives the mobile modal.
@@ -239,7 +242,7 @@ export function Iceberg({
                       </span>
                       <span className="ib-tip" role="tooltip">
                         <span className="ib-tip-meta">
-                          {t.visible ? "Visible · caught today" : "Hidden threat"}
+                          {t.visible ? "Visible · caught today" : "Only Blindsight sees it"}
                         </span>
                         <span className="ib-tip-name">{t.name}</span>
                         <span className="ib-tip-desc">{t.desc}</span>
@@ -250,6 +253,8 @@ export function Iceberg({
             </div>
           </div>
         </div>
+
+        {segue && <p className="iceberg-segue reveal">{segue}</p>}
       </div>
 
       {pinnedThreat && (
@@ -270,7 +275,7 @@ export function Iceberg({
               <X size={18} aria-hidden="true" />
             </button>
             <span className="ib-tip-meta">
-              {pinnedThreat.visible ? "Visible · caught today" : "Hidden threat"}
+              {pinnedThreat.visible ? "Visible · caught today" : "Only Blindsight sees it"}
             </span>
             <span className="ib-tip-name">{pinnedThreat.name}</span>
             <p className="ib-tip-desc">{pinnedThreat.desc}</p>

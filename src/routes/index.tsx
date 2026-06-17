@@ -60,8 +60,8 @@ export const Route = createFileRoute("/")({
 /* ── Section progress rail ── */
 const SECTIONS: { id: string; label: string }[] = [
   { id: "hero", label: "Top" },
-  { id: "scenarios", label: "Threats" },
   { id: "why", label: "Why" },
+  { id: "scenarios", label: "Threats" },
   { id: "stack", label: "Layers" },
   { id: "founders", label: "Team" },
   { id: "faq", label: "FAQ" },
@@ -177,9 +177,7 @@ function Hero() {
         className="hero-scroll-cue"
         aria-label="Scroll to see more"
         onClick={() =>
-          document
-            .getElementById("scenarios")
-            ?.scrollIntoView({ behavior: "smooth", block: "start" })
+          document.getElementById("why")?.scrollIntoView({ behavior: "smooth", block: "start" })
         }
       >
         <ChevronDown className="hero-scroll-chevron" strokeWidth={2} aria-hidden="true" />
@@ -370,8 +368,12 @@ function Home() {
     <main>
       <SectionRail sections={SECTIONS} />
       <Hero />
+      <Iceberg
+        id="why"
+        eyebrow="Why Blindsight?"
+        segue="Now you've seen what hides beneath the surface. Want to go deeper? Watch each threat play out — and Blindsight shut it down — in the live demo below."
+      />
       <Scenarios />
-      <Iceberg id="why" eyebrow="Why Blindsight?" alt />
       <Stages />
       <WhyBlindsight />
       <FaqSection />
