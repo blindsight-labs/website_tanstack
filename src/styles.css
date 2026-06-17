@@ -2890,7 +2890,7 @@ footer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 28px;
-  max-width: 760px;
+  max-width: 860px;
   margin: 56px auto 0;
 }
 @media (max-width: 640px) {
@@ -2900,28 +2900,43 @@ footer {
   }
 }
 .founder-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  position: relative;
   margin: 0;
-}
-.founder-photo {
-  width: 50%; /* half the previous full-column placeholder */
   aspect-ratio: 4 / 5;
-  border-radius: 14px;
+  border-radius: 16px;
+  overflow: hidden;
   border: 1.5px dashed var(--violet-border);
+  box-shadow: var(--shadow-sm);
+}
+/* Photo layer fills the card and zooms slightly on hover */
+.founder-photo {
+  position: absolute;
+  inset: 0;
   background: linear-gradient(180deg, var(--violet-soft) 0%, var(--surface) 100%);
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
   color: var(--violet);
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.founder-card:hover .founder-photo {
+  transform: scale(1.05);
+}
+@media (prefers-reduced-motion: reduce) {
+  .founder-photo {
+    transition: none;
+  }
+  .founder-card:hover .founder-photo {
+    transform: none;
+  }
 }
 .founder-photo-icon {
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
 }
 .founder-photo-label {
   font-family: var(--font-mono);
@@ -2930,25 +2945,55 @@ footer {
   text-transform: uppercase;
   color: var(--muted);
 }
+/* Fixed-height scrim — constant regardless of text content, keeps text readable over any photo */
+.founder-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 29.4%;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(8, 6, 16, 0.92) 0%,
+    rgba(8, 6, 16, 0.62) 45%,
+    rgba(8, 6, 16, 0) 100%
+  );
+}
+/* Title + bio overlaid bottom-left */
 .founder-info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 22px 24px;
+  text-align: left;
 }
 .founder-role {
+  margin: 0;
   font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  font-weight: 500;
-  color: var(--text);
+  font-size: 34px;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
 }
 .founder-bio {
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--muted);
-  max-width: 30ch;
+  margin: 0;
+  font-size: 20.25px;
+  line-height: 1.5;
+  min-height: 3em;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 36ch;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
 }
 
 /* ── Docs page ── */
