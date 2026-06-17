@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
+  ArrowLeft,
   Brain,
   CircleX,
   Database,
@@ -709,6 +710,16 @@ export function TopologyGraphDemo({
           <section className={`tg-variant tg-mode-${secOn ? "on" : "off"} ${flashing ? "tg-flash" : ""}`}>
             <div className="tg-topbar">
               <div className="tg-scenario-switch">
+                <button
+                  type="button"
+                  className="tg-back-btn"
+                  onClick={backToPicker}
+                  aria-label="Back to scenario selection"
+                  title="Back to scenario selection"
+                >
+                  <ArrowLeft size={18} strokeWidth={2} aria-hidden="true" />
+                </button>
+                <span className="tg-back-sep" aria-hidden="true" />
                 {SCENARIOS.map((s, i) =>
                   i === scenarioIdx ? null : (
                     <button
@@ -1421,6 +1432,9 @@ const TG_CSS = `
 /* Topbar */
 .tg-topbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; padding: 4px 4px 20px; }
 .tg-scenario-switch { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.tg-back-btn { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; padding: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 50%; color: var(--muted); cursor: pointer; box-shadow: var(--shadow-sm); transition: color .2s, border-color .2s, transform .2s, box-shadow .2s; }
+.tg-back-btn:hover, .tg-back-btn:focus-visible { color: var(--violet-deep); border-color: var(--violet); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.tg-back-sep { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; }
 .tg-scenario-orb { position: relative; width: 38px; height: 38px; padding: 0; background: transparent; border: 0; cursor: pointer; font: inherit; }
 .tg-scenario-orb-circle {
   position: relative; width: 38px; height: 38px; border-radius: 50%;
@@ -1510,7 +1524,7 @@ const TG_CSS = `
 }
 
 /* Narration */
-.tg-narration { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; padding: 4px 16px 14px; text-align: center; pointer-events: none; height: 64px; box-sizing: content-box; overflow: hidden; }
+.tg-narration { position: relative; flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; padding: 4px 16px 14px; text-align: center; pointer-events: none; min-height: 64px; box-sizing: content-box; }
 .tg-narration-line { font-size: 19px; color: var(--text); font-weight: 600; letter-spacing: -0.01em; }
 .tg-narration-sub { font-size: 14px; color: var(--muted); }
 .tg-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
@@ -1645,7 +1659,7 @@ const TG_CSS = `
   .tg-switch-label { font-size: 12px; }
   .tg-canvas { padding: 16px 12px 18px; min-height: 480px; }
   .tg-svg { min-height: 380px; }
-  .tg-narration { height: auto; padding: 4px 8px 10px; }
+  .tg-narration { min-height: 0; padding: 4px 8px 10px; }
   .tg-narration-line { font-size: 14px; }
   .tg-narration-sub { font-size: 12px; }
   .tg-chat { max-height: 220px; }
