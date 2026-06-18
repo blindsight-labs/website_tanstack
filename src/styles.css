@@ -2885,8 +2885,15 @@ footer {
     grid-template-columns: 1fr;
     gap: 36px;
   }
+  .va-hero-copy {
+    align-items: center;
+    text-align: center;
+  }
   .va-hero-copy .lede {
     max-width: none;
+  }
+  .hero-actions {
+    justify-content: center;
   }
 }
 
