@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState, type MouseEvent } from "react";
 
-import { ArrowRight, BookOpen, ChevronDown, Code, Menu, X } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronDown, Code, Menu, Moon, Sun, X } from "lucide-react";
 
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
 import { InActionModalProvider } from "@/components/InActionModal";
@@ -91,10 +91,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+// Set the theme on <html> before paint to avoid a flash of the wrong theme.
+// Reads a saved choice, falling back to the OS preference on first visit.
+const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='dark'&&t!=='light'){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <HeadContent />
+      </head>
       <body>{children}<Scripts /></body>
     </html>
   );
@@ -106,6 +113,25 @@ function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // Theme is applied to <html> before paint by themeInitScript; mirror it into
+  // state on mount so the toggle shows the right icon.
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  useEffect(() => {
+    const t = document.documentElement.getAttribute("data-theme");
+    if (t === "dark" || t === "light") setTheme(t);
+  }, []);
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* ignore unavailable storage */
+      }
+      return next;
+    });
+  };
   // Hide the nav CTA while the hero is on screen (it duplicates the hero CTA).
   // Initialise from the path (homepage has the hero) to avoid a load-time flash.
   const [heroInView, setHeroInView] = useState(pathname === "/");
@@ -176,6 +202,14 @@ function Nav() {
         <button type="button" onClick={() => { closeMenu(); openDemo(); }}>Request a Demo</button>
       </div>
       <div className="nav-right">
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+        </button>
         <ul className="nav-links">
           <li><Link to="/" onClick={goPlatform}>Platform</Link></li>
           <li><Link to="/team">Team</Link></li>

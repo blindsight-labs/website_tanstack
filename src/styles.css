@@ -48,6 +48,83 @@
   --shadow-lg: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
 }
 
+/* ── Dark theme ─────────────────────────────────────────────────────────────
+   Same brand language as light, inverted surfaces. The violet accent is kept
+   identical so it reads as "the same colour"; only the neutral surfaces flip
+   (white → near-black) and the soft tints/shadows are re-derived for dark. */
+[data-theme="dark"] {
+  --bg: #0d0d13;
+  --bg-alt: #15151f;
+  --surface: #181821;
+  --surface-2: #20202b;
+  --border: #2a2a35;
+  --border-mid: #3a3a47;
+  --text: #ececf1;
+  --muted: #9a9aac;
+  --dim: #6c6c7b;
+  /* Brighter than the light-mode violet so the accent stays legible as TEXT on
+     near-black. Fills that carry white text are pinned back to the saturated
+     brand violet just below. */
+  --violet: #7c6cf5;
+  --violet-deep: #9d8ef8;
+  --violet-soft: #20193d;
+  --violet-mid: rgba(124, 110, 245, 0.14);
+  --violet-border: rgba(124, 110, 245, 0.36);
+  --red: #ef4444;
+  --red-mid: rgba(239, 68, 68, 0.16);
+  --red-border: rgba(239, 68, 68, 0.4);
+  --amber: #f59e0b;
+  /* Dark "callout" surfaces become an elevated panel so they stay distinct
+     from the (now dark) page rather than blending in. */
+  --dark: #20202b;
+  --dark-text: #ececf1;
+  --dark-muted: #9a9aac;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* Chrome surfaces that hardcode a light background need an explicit dark value. */
+[data-theme="dark"] .nav {
+  background: rgba(13, 13, 19, 0.72);
+}
+[data-theme="dark"] .nav.scrolled {
+  background: rgba(13, 13, 19, 0.9);
+}
+[data-theme="dark"] .nav-mobile-menu {
+  background: rgba(13, 13, 19, 0.97);
+}
+/* In-action threat-theater tints (illustrative) — keep the red/green
+   semantics but on a dark wash instead of a near-white one. */
+[data-theme="dark"] .chat-bubble.blocked,
+[data-theme="dark"] .upload-row.status-quarantined {
+  background: var(--red-mid);
+}
+[data-theme="dark"] .upload-row.status-indexed {
+  background: rgba(45, 213, 115, 0.16);
+  border-color: rgba(45, 213, 115, 0.4);
+}
+/* Violet FILLS that carry white text: keep the saturated brand violet so the
+   labels stay readable (the token above is brightened for text use). */
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .faq-tab.active {
+  background: linear-gradient(135deg, #6857ee 0%, #5546e0 100%);
+}
+[data-theme="dark"] .threat-row.hidden-row .threat-num,
+[data-theme="dark"] .ib-marker.is-hidden,
+[data-theme="dark"] .theater-cta .btn-primary:hover {
+  background: #5546e0;
+}
+/* Violet TEXT that sits on the white illustration chips (which stay white in
+   dark mode): keep it dark so it doesn't wash out. */
+[data-theme="dark"] .ib-marker.is-visible {
+  color: #3f2fb5;
+}
+[data-theme="dark"] .actor-interceptor .actor-orb,
+[data-theme="dark"] .actor-warden .actor-orb {
+  color: #5546e0;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -200,6 +277,34 @@ h4 {
   display: flex;
   align-items: center;
   gap: 24px;
+}
+/* Light/dark theme toggle — sits left of the nav links */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    background 0.15s,
+    border-color 0.15s;
+}
+.theme-toggle:hover {
+  color: var(--text);
+  background: var(--surface-2);
+  border-color: var(--violet);
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 /* Nav CTA collapses while the hero is on screen so the other nav items slide
    over to fill the space (box-sizing: border-box makes max-width:0 fully
@@ -1807,7 +1912,7 @@ footer {
 }
 .chat-msg.user .chat-bubble {
   background: var(--text);
-  color: #fff;
+  color: var(--bg);
   border-bottom-right-radius: 4px;
 }
 .chat-msg.assistant .chat-bubble {
@@ -1840,7 +1945,7 @@ footer {
   line-height: 1.5;
 }
 .chat-msg.user .chat-bubble .bubble-text {
-  color: #fff;
+  color: var(--bg);
 }
 .chat-bubble.typing {
   display: inline-flex;

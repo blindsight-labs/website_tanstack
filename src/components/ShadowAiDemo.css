@@ -701,3 +701,88 @@
     animation: none !important;
   }
 }
+
+/* ── Dark variant ───────────────────────────────────────────────────────────
+   Re-points the demo's scoped tokens and its few hardcoded light surfaces onto
+   dark equivalents, keeping the indigo/red/green/purple "traffic-light"
+   semantics. The accent hues are nudged brighter only as far as legibility on
+   dark requires, so it still reads as the same palette. */
+[data-theme="dark"] .shadow-demo {
+  --ink: #ececf1;
+  --card: #181821;
+  --mute: #9a9aac;
+  --line: #2a2a35;
+  --indigo: #7c6cf5;
+  --ind-s: rgba(124, 108, 245, 0.16);
+  --red: #f1656a;
+  --red-s: rgba(241, 101, 106, 0.16);
+  --green: #2dd573;
+  --green-i: #43d782;
+  --green-s: rgba(45, 213, 115, 0.16);
+  --purple: #a78bfa;
+  --pur-s: rgba(124, 77, 217, 0.22);
+}
+/* Light card/chip/panel surfaces → elevated dark surfaces */
+[data-theme="dark"] .shadow-demo .chip,
+[data-theme="dark"] .shadow-demo .sa2 .aiwall,
+[data-theme="dark"] .shadow-demo .sa3 .aiwall,
+[data-theme="dark"] .shadow-demo .mini,
+[data-theme="dark"] .shadow-demo .sa3 .stat {
+  background: var(--surface-2);
+}
+[data-theme="dark"] .shadow-demo .chip {
+  color: var(--ink);
+}
+/* Hardcoded neutral grays used for muted text */
+[data-theme="dark"] .shadow-demo .sa2 .aiwall,
+[data-theme="dark"] .shadow-demo .sa3 .aiwall,
+[data-theme="dark"] .shadow-demo .mini .k,
+[data-theme="dark"] .shadow-demo .sa3 .stat .k,
+[data-theme="dark"] .shadow-demo .sa2 .ptag,
+[data-theme="dark"] .shadow-demo .sa3 .ptag,
+[data-theme="dark"] .shadow-demo .sa2 .pm .rl,
+[data-theme="dark"] .shadow-demo .sa3 .src .rl,
+[data-theme="dark"] .shadow-demo .sa2-foot,
+[data-theme="dark"] .shadow-demo .sa3-foot {
+  color: var(--mute);
+}
+/* Hardcoded neutral grays used for tracks, lines, borders and dots */
+[data-theme="dark"] .shadow-demo .sw .track,
+[data-theme="dark"] .shadow-demo .chip.benign .dot,
+[data-theme="dark"] .shadow-demo .sa2 .proxy,
+[data-theme="dark"] .shadow-demo .sa3 .proxy,
+[data-theme="dark"] .shadow-demo .sa2 .orb::before,
+[data-theme="dark"] .shadow-demo .sa3 .orb::before {
+  background: var(--border-mid);
+}
+[data-theme="dark"] .shadow-demo .sa2 .orb,
+[data-theme="dark"] .shadow-demo .sa3 .orb {
+  border-color: var(--border-mid);
+}
+[data-theme="dark"] .shadow-demo .sa2 .lane-wire {
+  background: repeating-linear-gradient(90deg, var(--border-mid) 0 5px, transparent 5px 11px);
+}
+[data-theme="dark"] .shadow-demo .sa3 .lane-wire {
+  background: repeating-linear-gradient(180deg, var(--border-mid) 0 5px, transparent 5px 11px);
+}
+/* Accent literals */
+[data-theme="dark"] .shadow-demo .sa2 .orb::after,
+[data-theme="dark"] .shadow-demo .sa3 .orb::after {
+  border-color: var(--violet-border);
+}
+[data-theme="dark"] .shadow-demo .sa2 .dgr,
+[data-theme="dark"] .shadow-demo .sa3 .stat.dgr {
+  border-color: rgba(241, 101, 106, 0.4);
+}
+[data-theme="dark"] .shadow-demo .sa2-badge,
+[data-theme="dark"] .shadow-demo .sa3-badge,
+[data-theme="dark"] .shadow-demo .chip.alert,
+[data-theme="dark"] .shadow-demo .sa2 .aiwall.hit,
+[data-theme="dark"] .shadow-demo .sa3 .aiwall.hit,
+[data-theme="dark"] .shadow-demo .sa2 .dgr .k,
+[data-theme="dark"] .shadow-demo .sa3 .stat.dgr .k {
+  color: var(--red);
+}
+[data-theme="dark"] .shadow-demo .chip.block {
+  color: var(--purple);
+}
