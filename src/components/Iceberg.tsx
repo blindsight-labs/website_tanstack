@@ -8,7 +8,7 @@ import icebergImg from "@/assets/iceberg.webp";
  *  we express each one as a fraction of the source image and convert it to
  *  container pixels using the live background-size / position — so the markers
  *  track the artwork at any viewport width or breakpoint. */
-const IMG_RATIO = 922 / 1640; // iceberg.webp natural height / width
+const IMG_RATIO = 1471 / 1594; // iceberg.webp natural height / width
 
 type Threat = {
   id: string;
@@ -28,8 +28,8 @@ const THREATS: Threat[] = [
     name: "Obvious prompt injections",
     meta: "Among the best",
     visible: true,
-    fx: 0.49,
-    fy: 0.2,
+    fx: 0.52,
+    fy: 0.21,
     desc: 'Direct attempts to talk the model out of its rules — "ignore your instructions and…". They’re the loudest, easiest attacks to catch, which is exactly why a serious adversary never stops here.',
   },
   {
@@ -37,8 +37,8 @@ const THREATS: Threat[] = [
     name: "Known jailbreak strings",
     meta: "Caught in depth",
     visible: true,
-    fx: 0.45,
-    fy: 0.3,
+    fx: 0.44,
+    fy: 0.31,
     desc: "Catalogued tricks — DAN-style personas, role-play wrappers — that coax a model past its guardrails. Signature filters block the known ones; the trouble is new variants appear faster than any blocklist can grow.",
   },
   {
@@ -46,8 +46,8 @@ const THREATS: Threat[] = [
     name: "Poisoned training samples",
     meta: "Most tools miss it",
     visible: false,
-    fx: 0.45,
-    fy: 0.41,
+    fx: 0.4,
+    fy: 0.42,
     desc: "Tainted examples slipped into training or fine-tuning data. The model learns the attacker’s intent as ground truth, so the flaw is baked into the weights — invisible to anything inspecting the prompt.",
   },
   {
@@ -55,8 +55,8 @@ const THREATS: Threat[] = [
     name: "Adversarial RAG ingestion",
     meta: "Most tools miss it",
     visible: false,
-    fx: 0.56,
-    fy: 0.42,
+    fx: 0.6,
+    fy: 0.49,
     desc: "Malicious instructions hidden inside the documents your model retrieves at run time. The prompt looks clean; the payload rides in on a source the model has been told to trust.",
   },
   {
@@ -64,8 +64,8 @@ const THREATS: Threat[] = [
     name: "Demographic shortcut learning",
     meta: "Most tools miss it",
     visible: false,
-    fx: 0.44,
-    fy: 0.51,
+    fx: 0.4,
+    fy: 0.56,
     desc: "The model quietly keys off a proxy — a name, a postcode, a turn of phrase — instead of the real signal. Aggregate accuracy looks healthy while specific groups are judged on the wrong evidence.",
   },
   {
@@ -73,8 +73,8 @@ const THREATS: Threat[] = [
     name: "Back-doors",
     meta: "Most tools miss it",
     visible: false,
-    fx: 0.57,
-    fy: 0.52,
+    fx: 0.58,
+    fy: 0.63,
     desc: "A hidden trigger sewn into the model: it behaves perfectly until it meets the secret key — a rare token, a watermark — then switches to the attacker’s behaviour on cue.",
   },
   {
@@ -82,8 +82,8 @@ const THREATS: Threat[] = [
     name: "Adversarial patching",
     meta: "Most tools miss it",
     visible: false,
-    fx: 0.49,
-    fy: 0.61,
+    fx: 0.45,
+    fy: 0.7,
     desc: "Small, deliberately crafted perturbations — a sticker on a sign, a few stray characters — that mean nothing to a human yet reliably steer the model to the wrong answer.",
   },
   {
@@ -91,8 +91,8 @@ const THREATS: Threat[] = [
     name: "Misuse by privileged insiders",
     meta: "Most tools miss it",
     visible: false,
-    fx: 0.5,
-    fy: 0.71,
+    fx: 0.51,
+    fy: 0.78,
     desc: "Legitimate access turned against you — sanctioned credentials used to siphon data or bend outputs. Every request is authorised, so perimeter defences never raise a flag.",
   },
 ];

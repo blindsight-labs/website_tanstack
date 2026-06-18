@@ -1108,7 +1108,7 @@ function Graph({
     <svg viewBox={`0 0 ${W} ${H}`} className="tg-svg">
       <defs>
         <pattern id="tgDots" width="22" height="22" patternUnits="userSpaceOnUse">
-          <circle cx="1" cy="1" r="1" fill="rgba(17,17,24,0.06)" />
+          <circle cx="1" cy="1" r="1" fill="var(--tg-dot)" />
         </pattern>
         <filter id="tgGlow" x="-100%" y="-100%" width="300%" height="300%">
           <feGaussianBlur stdDeviation="3" />
@@ -1122,7 +1122,7 @@ function Graph({
         const A = pos[a]!;
         const B = pos[b]!;
         const active = activeOn(a, b);
-        const color = active ? intentColor(active.intent) : "rgba(17,17,24,0.16)";
+        const color = active ? intentColor(active.intent) : "var(--tg-edge)";
         return (
           <g key={`e-${i}`}>
             <path
@@ -1174,9 +1174,9 @@ function Graph({
           >
             {/* pulse ring when alert */}
             {s === "alert" && (
-              <circle r={isBig ? 44 : 36} className="tg-node-pulse" fill="none" stroke="#5546E0" />
+              <circle r={isBig ? 44 : 36} className="tg-node-pulse" fill="none" stroke="var(--violet)" />
             )}
-            <circle r={isBig ? 38 : 28} fill="#FFFFFF" className="tg-node-base" />
+            <circle r={isBig ? 38 : 28} fill="var(--tg-node-fill)" className="tg-node-base" />
             <g transform={`translate(${isBig ? -22 : -16},${isBig ? -22 : -16})`}>
               <NodeIcon id={id} size={isBig ? 44 : 32} />
             </g>
@@ -1241,9 +1241,16 @@ function Bubble({
   // pick side: prefer above; if near top, go below
   const above = y > 160;
   const dy = above ? -64 : 64;
-  const stroke = tone === "red" ? "#DC2626" : tone === "violet" ? "#5546E0" : "rgba(17,17,24,0.20)";
-  const fill = tone === "red" ? "#FEF2F2" : tone === "violet" ? "#F0EEFB" : "#FFFFFF";
-  const color = tone === "red" ? "#7F1D1D" : tone === "violet" ? "#3F2FB5" : "#374151";
+  const stroke =
+    tone === "red" ? "var(--red)" : tone === "violet" ? "var(--violet)" : "var(--tg-pill-stroke)";
+  const fill =
+    tone === "red"
+      ? "var(--red-mid)"
+      : tone === "violet"
+        ? "var(--violet-soft)"
+        : "var(--tg-pill-fill)";
+  const color =
+    tone === "red" ? "var(--red)" : tone === "violet" ? "var(--violet)" : "var(--tg-pill-text)";
   const { Icon, label } = statusIcon(text);
   const iconW = Icon ? 15 : 0;
   const gap = Icon ? 6 : 0;
@@ -1348,8 +1355,8 @@ function DangerMark({ x, y }: { x: number; y: number }) {
   const dy = -42;
   return (
     <g transform={`translate(${x},${y + dy})`} className="tg-danger">
-      <circle r="11" fill="#FEF2F2" stroke="#DC2626" strokeWidth="1.4" />
-      <text textAnchor="middle" dy="4" fontSize="13" fontWeight="700" fill="#DC2626">
+      <circle r="11" fill="var(--red-mid)" stroke="var(--red)" strokeWidth="1.4" />
+      <text textAnchor="middle" dy="4" fontSize="13" fontWeight="700" fill="var(--red)">
         !
       </text>
     </g>
@@ -1526,7 +1533,29 @@ function IconVendor({ size = 32 }: { size?: number }) {
    Styles
    ============================================================ */
 const TG_CSS = `
-.tg-page { min-height: 100vh; background: radial-gradient(1200px 600px at 50% -10%, rgba(85,70,224,0.08), transparent 70%), var(--bg); color: var(--text); font-family: var(--font-sans); }
+.tg-page { min-height: 100vh; background: radial-gradient(1200px 600px at 50% -10%, rgba(85,70,224,0.08), transparent 70%), var(--bg); color: var(--text); font-family: var(--font-sans);
+  /* Neutral graph colours, theme-aware (the red/violet ones use global tokens). */
+  --tg-edge: rgba(17,17,24,0.16);
+  --tg-dot: rgba(17,17,24,0.06);
+  --tg-node-fill: #ffffff;
+  --tg-node-stroke: rgba(17,17,24,0.14);
+  --tg-node-danger: #FEF2F2;
+  --tg-node-danger-2: #FEE2E2;
+  --tg-pill-fill: #ffffff;
+  --tg-pill-stroke: rgba(17,17,24,0.20);
+  --tg-pill-text: #374151;
+}
+[data-theme="dark"] .tg-page {
+  --tg-edge: rgba(255,255,255,0.22);
+  --tg-dot: rgba(255,255,255,0.05);
+  --tg-node-fill: #20202b;
+  --tg-node-stroke: rgba(255,255,255,0.20);
+  --tg-node-danger: rgba(239,68,68,0.22);
+  --tg-node-danger-2: rgba(239,68,68,0.34);
+  --tg-pill-fill: #20202b;
+  --tg-pill-stroke: rgba(255,255,255,0.20);
+  --tg-pill-text: #c8c8d4;
+}
 .tg-page.tg-embed { min-height: 0; background: none; padding-top: 0; }
 .tg-page.tg-embed .tg-header { padding-top: 0; }
 .tg-page.tg-embed .tg-title { font-size: clamp(20px, 3vw, 28px); }
@@ -1567,6 +1596,7 @@ const TG_CSS = `
 .tg-title { font-family: var(--font-display); font-weight: 500; font-size: clamp(34px, 5vw, 52px); letter-spacing: -0.02em; margin: 0; line-height: 1.08; display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .tg-title-line1 { color: var(--text); }
 .tg-title-line2 { background: linear-gradient(180deg, #0a0612 0%, #3A2AA0 55%, #5546E0 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+[data-theme="dark"] .tg-title-line2 { background: linear-gradient(180deg, #ffffff 0%, #b9aefc 55%, #7c6cf5 100%); -webkit-background-clip: text; background-clip: text; }
 .tg-sub { color: var(--muted); margin: 0 0 28px; max-width: 70ch; }
 .tg-link { color: var(--violet); text-decoration: underline; text-underline-offset: 3px; }
 
@@ -1643,12 +1673,12 @@ const TG_CSS = `
 .tg-svg { width: 100%; flex: 1; min-height: 280px; display: block; }
 
 /* Nodes */
-.tg-node .tg-node-base { stroke: rgba(17,17,24,0.14); stroke-width: 1.4; transition: stroke .3s, fill .3s; }
+.tg-node .tg-node-base { stroke: var(--tg-node-stroke); stroke-width: 1.4; transition: stroke .3s, fill .3s; }
 .tg-node g[transform] { color: var(--text); transition: color .3s; }
 .tg-node .tg-node-label { font-family: var(--font-mono); font-size: 10px; fill: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
-.tg-node.is-attacker .tg-node-base    { stroke: var(--red); fill: #FEF2F2; }
+.tg-node.is-attacker .tg-node-base    { stroke: var(--red); fill: var(--tg-node-danger); }
 .tg-node.is-attacker g[transform]      { color: var(--red); }
-.tg-node.is-compromised .tg-node-base { stroke: var(--red); fill: #FEE2E2; animation: tgShake .5s ease-in-out infinite; }
+.tg-node.is-compromised .tg-node-base { stroke: var(--red); fill: var(--tg-node-danger-2); animation: tgShake .5s ease-in-out infinite; }
 .tg-node.is-compromised g[transform]   { color: var(--red); }
 .tg-node.is-alert .tg-node-base       { stroke: var(--violet); fill: var(--violet-soft); }
 .tg-node.is-alert g[transform]         { color: var(--violet); }
@@ -1739,10 +1769,10 @@ const TG_CSS = `
 .tg-msg-user .tg-msg-bubble { background: var(--text); color: var(--bg); border-bottom-right-radius: 4px; max-width: 86%; }
 .tg-msg-user.tone-red .tg-msg-bubble { background: var(--red); color: #fff; }
 .tg-msg-assistant .tg-msg-bubble { background: var(--surface); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; max-width: 86%; }
-.tg-msg-assistant.tone-red .tg-msg-bubble { border-color: var(--red-border); background: #FEF2F2; color: #7F1D1D; }
+.tg-msg-assistant.tone-red .tg-msg-bubble { border-color: var(--red-border); background: var(--red-mid); color: var(--red); }
 .tg-msg-system { justify-content: center; }
 .tg-msg-system .tg-msg-bubble { background: transparent; color: var(--violet-deep); border: 1px dashed var(--violet-border); font-family: var(--font-mono); font-size: 11px; padding: 6px 10px; border-radius: 8px; }
-.tg-msg-system.tone-red .tg-msg-bubble { border-color: var(--red-border); color: #7F1D1D; }
+.tg-msg-system.tone-red .tg-msg-bubble { border-color: var(--red-border); color: var(--red); }
 .tg-msg-bubble { padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; white-space: pre-line; }
 .tg-inline-icon { display: inline; vertical-align: -2px; margin-right: 1px; }
 .tg-msg-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--violet-soft); color: var(--violet-deep); font-family: var(--font-mono); font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -1765,10 +1795,11 @@ const TG_CSS = `
 .tg-reactor-ring { position: absolute; top: 50%; left: 50%; border: 1px dashed rgba(85,70,224,0.18); border-radius: 50%; transform: translate(-50%,-50%); aspect-ratio: 1; }
 .tg-rr-1 { width: 31.25%; animation: tgSpin 22s linear infinite; }
 .tg-rr-2 { width: 56.25%; border-color: rgba(85,70,224,0.12); animation: tgSpin 36s linear infinite reverse; }
-.tg-rr-3 { width: 78.125%; border-color: rgba(17,17,24,0.08); animation: tgSpin 60s linear infinite; }
+.tg-rr-3 { width: 78.125%; border-color: rgba(124,110,245,0.14); animation: tgSpin 60s linear infinite; }
 @keyframes tgSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
 
 .tg-reactor-core { position: relative; width: clamp(118px, 25vw, 160px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #ffffff, #f4f0ff 60%, #ede5ff 100%); border: 1px solid var(--violet); box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; animation: tgCorePulse 3s ease-in-out infinite; }
+[data-theme="dark"] .tg-reactor-core { background: radial-gradient(circle at 50% 35%, #2a2440, #1e1933 60%, #181426 100%); }
 @keyframes tgCorePulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); } 50% { box-shadow: 0 0 0 14px rgba(85,70,224,0.04), 0 10px 50px -8px rgba(85,70,224,0.55); } }
 .tg-reactor-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--violet); }
 .tg-reactor-title { font-family: var(--font-display); font-size: 20px; font-weight: 500; text-align: center; line-height: 1.1; color: var(--text); }
