@@ -48,19 +48,21 @@
   }
 }
 
-/* Card chrome */
+/* Freed hero: cards are transparent positioning stages, no chrome.
+   .sa2-card is the positioning context for the desktop floating overlays. */
 .shadow-demo .sa2-card,
 .shadow-demo .sa3-card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  overflow: hidden;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
 }
 .shadow-demo .sa2-card {
-  padding: 24px 26px 22px;
+  position: relative;
+  padding: 0;
 }
 .shadow-demo .sa3-card {
-  padding: 22px 22px 20px;
+  padding: 0;
 }
 .shadow-demo .sa2-top,
 .shadow-demo .sa3-top {
