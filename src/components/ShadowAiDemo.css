@@ -469,15 +469,6 @@
 .shadow-demo .m-bl .v {
   color: var(--purple);
 }
-.shadow-demo .sa2-foot,
-.shadow-demo .sa3-foot {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #b3b3b3;
-  letter-spacing: 0.08em;
-  margin-top: 14px;
-  text-align: right;
-}
 
 /* Vertical (sa3) */
 .shadow-demo .sa3 .sources {
@@ -743,9 +734,7 @@
 [data-theme="dark"] .shadow-demo .sa2 .ptag,
 [data-theme="dark"] .shadow-demo .sa3 .ptag,
 [data-theme="dark"] .shadow-demo .sa2 .pm .rl,
-[data-theme="dark"] .shadow-demo .sa3 .src .rl,
-[data-theme="dark"] .shadow-demo .sa2-foot,
-[data-theme="dark"] .shadow-demo .sa3-foot {
+[data-theme="dark"] .shadow-demo .sa3 .src .rl {
   color: var(--mute);
 }
 /* Hardcoded neutral grays used for tracks, lines, borders and dots */

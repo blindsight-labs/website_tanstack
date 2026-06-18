@@ -148,7 +148,6 @@ function Hero() {
     <header className="va-hero" id="hero">
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
-          <span className="tag">Shadow AI</span>
           <h1>
             See more with <span className="accent">Blindsight</span>
           </h1>
