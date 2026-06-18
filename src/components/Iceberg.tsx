@@ -26,7 +26,7 @@ const THREATS: Threat[] = [
   {
     id: "prompt-injection",
     name: "Obvious prompt injections",
-    meta: "Visible · Caught today",
+    meta: "Among the best",
     visible: true,
     fx: 0.49,
     fy: 0.2,
@@ -35,7 +35,7 @@ const THREATS: Threat[] = [
   {
     id: "jailbreak-strings",
     name: "Known jailbreak strings",
-    meta: "Visible · Caught today",
+    meta: "Caught in depth",
     visible: true,
     fx: 0.45,
     fy: 0.3,
@@ -44,7 +44,7 @@ const THREATS: Threat[] = [
   {
     id: "poisoned-training",
     name: "Poisoned training samples",
-    meta: "Only Blindsight",
+    meta: "Most tools miss it",
     visible: false,
     fx: 0.45,
     fy: 0.41,
@@ -53,7 +53,7 @@ const THREATS: Threat[] = [
   {
     id: "adversarial-rag",
     name: "Adversarial RAG ingestion",
-    meta: "Only Blindsight",
+    meta: "Most tools miss it",
     visible: false,
     fx: 0.56,
     fy: 0.42,
@@ -62,7 +62,7 @@ const THREATS: Threat[] = [
   {
     id: "demographic-shortcut",
     name: "Demographic shortcut learning",
-    meta: "Only Blindsight",
+    meta: "Most tools miss it",
     visible: false,
     fx: 0.44,
     fy: 0.51,
@@ -71,7 +71,7 @@ const THREATS: Threat[] = [
   {
     id: "back-doors",
     name: "Back-doors",
-    meta: "Only Blindsight",
+    meta: "Most tools miss it",
     visible: false,
     fx: 0.57,
     fy: 0.52,
@@ -80,7 +80,7 @@ const THREATS: Threat[] = [
   {
     id: "adversarial-patching",
     name: "Adversarial patching",
-    meta: "Only Blindsight",
+    meta: "Most tools miss it",
     visible: false,
     fx: 0.49,
     fy: 0.61,
@@ -89,7 +89,7 @@ const THREATS: Threat[] = [
   {
     id: "insider-misuse",
     name: "Misuse by privileged insiders",
-    meta: "Only Blindsight",
+    meta: "Most tools miss it",
     visible: false,
     fx: 0.5,
     fy: 0.71,
@@ -241,9 +241,7 @@ export function Iceberg({
                         {t.name}
                       </span>
                       <span className="ib-tip" role="tooltip">
-                        <span className="ib-tip-meta">
-                          {t.visible ? "Visible · caught today" : "Only Blindsight sees it"}
-                        </span>
+                        <span className="ib-tip-meta">{t.meta}</span>
                         <span className="ib-tip-name">{t.name}</span>
                         <span className="ib-tip-desc">{t.desc}</span>
                       </span>
@@ -274,9 +272,7 @@ export function Iceberg({
             >
               <X size={18} aria-hidden="true" />
             </button>
-            <span className="ib-tip-meta">
-              {pinnedThreat.visible ? "Visible · caught today" : "Only Blindsight sees it"}
-            </span>
+            <span className="ib-tip-meta">{pinnedThreat.meta}</span>
             <span className="ib-tip-name">{pinnedThreat.name}</span>
             <p className="ib-tip-desc">{pinnedThreat.desc}</p>
           </div>
