@@ -789,89 +789,21 @@
   color: var(--purple);
 }
 
-/* ── Freed hero — desktop two-column only (≥981px) ──────────────────────────
-   Below 981px the hero is single-column; the scene stays de-boxed but in
-   normal flow (no bleed, no floating overlays) so tablet/mobile never gain
-   horizontal scroll or overlay collisions. */
+/* ── Freed hero — desktop two-column (≥981px) ──────────────────────────────
+   The card chrome is gone (de-box) and the arena is taller so the animation
+   fills the hero. The controls/stats/footer stay in NORMAL FLOW — framing the
+   animation above (kicker + toggle) and below (stats + footer) instead of
+   floating over it: the four lanes plus the AI wall fill the arena, leaving no
+   open space for overlays, so floating chrome would collide with packets.
+   No right-edge bleed, so the AI wall stays inside the hero padding and clears
+   the fixed .section-rail nav (position:fixed; right:20px). Below 981px the
+   same de-boxed, in-flow scene applies; the vertical sa3 variant takes over at
+   640px. */
 @media (min-width: 981px) {
-  /* Taller stage; bleed the right edge so the AI wall meets the hero edge.
-     -48px exactly cancels .va-hero's 48px right padding (styles.css), so the
-     arena reaches the hero edge without exceeding the viewport. */
   .shadow-demo .sa2 .arena {
-    height: clamp(360px, 52vh, 520px);
-    margin: 20px -48px 24px 0;
-  }
-}
-
-@media (min-width: 981px) {
-  /* Top bar floats across the top: kicker pinned left, toggle/badge right.
-     right:64px keeps the toggle clear of the 96px AI wall + bleed (~16px gap).
-     pointer-events gating keeps the open arena non-interactive but the toggle
-     fully clickable. */
-  .shadow-demo .sa2 .sa2-top {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 64px;
-    z-index: 5;
-    margin: 0;
-    pointer-events: none;
-  }
-  .shadow-demo .sa2 .sa2-ctrl {
-    pointer-events: auto;
-  }
-
-  /* Sub-caption tucks under the toggle, right-aligned, clear of the wall. */
-  .shadow-demo .sa2 .sa2-sub {
-    position: absolute;
-    top: 42px;
-    right: 64px;
-    max-width: 300px;
-    margin: 0;
-    text-align: right;
-    z-index: 5;
-  }
-
-  /* Stats float as a translucent HUD row pinned bottom-left. */
-  .shadow-demo .sa2 .sa2-stats {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: auto;
-    margin: 0;
-    gap: 10px;
-    z-index: 5;
-  }
-  .shadow-demo .sa2 .minis {
-    flex: 0 0 auto;
-  }
-  .shadow-demo .sa2 .dgr {
-    min-width: 0;
-  }
-  /* HUD glass treatment on the counter pills. */
-  .shadow-demo .sa2 .dgr,
-  .shadow-demo .sa2 .mini {
-    background: color-mix(in srgb, var(--card) 72%, transparent);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-  }
-
-  /* Footer label pins to the bottom-right corner, clear of the wall. */
-  .shadow-demo .sa2 .sa2-foot {
-    position: absolute;
-    right: 64px;
-    bottom: 6px;
-    margin: 0;
-    z-index: 5;
-  }
-}
-
-/* Dark: keep the freed desktop HUD pills translucent + blurred (the base dark
-   rule sets them opaque via --surface-2). Specificity (4) + later position
-   beats [data-theme="dark"] .shadow-demo .mini. */
-@media (min-width: 981px) {
-  [data-theme="dark"] .shadow-demo .sa2 .dgr,
-  [data-theme="dark"] .shadow-demo .sa2 .mini {
-    background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+    height: clamp(340px, 46vh, 460px);
+    /* right margin keeps the AI wall clear of the fixed .section-rail nav;
+       bottom margin gives the proxy's "offline" label room above the stats. */
+    margin: 30px 48px 44px 0;
   }
 }
