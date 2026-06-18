@@ -865,3 +865,13 @@
     z-index: 5;
   }
 }
+
+/* Dark: keep the freed desktop HUD pills translucent + blurred (the base dark
+   rule sets them opaque via --surface-2). Specificity (4) + later position
+   beats [data-theme="dark"] .shadow-demo .mini. */
+@media (min-width: 981px) {
+  [data-theme="dark"] .shadow-demo .sa2 .dgr,
+  [data-theme="dark"] .shadow-demo .sa2 .mini {
+    background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+  }
+}
