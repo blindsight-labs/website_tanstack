@@ -15,7 +15,7 @@ import { ArrowRight, BookOpen, ChevronDown, Code, Menu, Moon, Sun, X } from "luc
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
 import { InActionModalProvider } from "@/components/InActionModal";
 import appCss from "../styles.css?url";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo.svg";
 
 function NotFoundComponent() {
   return (
