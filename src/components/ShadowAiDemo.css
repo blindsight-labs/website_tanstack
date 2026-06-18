@@ -802,3 +802,66 @@
     margin: 20px -48px 24px 0;
   }
 }
+
+@media (min-width: 981px) {
+  /* Top bar floats across the top: kicker pinned left, toggle/badge right.
+     right:64px keeps the toggle clear of the 96px AI wall + bleed (~16px gap).
+     pointer-events gating keeps the open arena non-interactive but the toggle
+     fully clickable. */
+  .shadow-demo .sa2 .sa2-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 64px;
+    z-index: 5;
+    margin: 0;
+    pointer-events: none;
+  }
+  .shadow-demo .sa2 .sa2-ctrl {
+    pointer-events: auto;
+  }
+
+  /* Sub-caption tucks under the toggle, right-aligned, clear of the wall. */
+  .shadow-demo .sa2 .sa2-sub {
+    position: absolute;
+    top: 42px;
+    right: 64px;
+    max-width: 300px;
+    margin: 0;
+    text-align: right;
+    z-index: 5;
+  }
+
+  /* Stats float as a translucent HUD row pinned bottom-left. */
+  .shadow-demo .sa2 .sa2-stats {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: auto;
+    margin: 0;
+    gap: 10px;
+    z-index: 5;
+  }
+  .shadow-demo .sa2 .minis {
+    flex: 0 0 auto;
+  }
+  .shadow-demo .sa2 .dgr {
+    min-width: 0;
+  }
+  /* HUD glass treatment on the counter pills. */
+  .shadow-demo .sa2 .dgr,
+  .shadow-demo .sa2 .mini {
+    background: color-mix(in srgb, var(--card) 72%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Footer label pins to the bottom-right corner, clear of the wall. */
+  .shadow-demo .sa2 .sa2-foot {
+    position: absolute;
+    right: 64px;
+    bottom: 6px;
+    margin: 0;
+    z-index: 5;
+  }
+}
