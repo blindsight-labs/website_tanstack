@@ -153,14 +153,23 @@ function CareersPage() {
         </div>
       </section>
 
-      <section style={{ padding: "100px 0" }}>
-        <div className="cta-banner reveal">
-          <div>
-            <span className="tag" style={{ color: "var(--dark-muted)" }}>Get in touch</span>
-            <h2 style={{ marginTop: 10 }}>Not on the list?</h2>
+      <section className="section section-alt">
+        <div className="section-inner">
+          <div
+            className="s-head reveal"
+            style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
+          >
+            <span className="tag">Get in touch</span>
+            <h2>Not on the list?</h2>
             <p>Tell us what you'd build here. We hire for trajectory.</p>
+            <a
+              href="mailto:careers@blindsight.io"
+              className="btn btn-primary"
+              style={{ marginTop: 20 }}
+            >
+              careers@blindsight.io
+            </a>
           </div>
-          <a href="mailto:careers@blindsight.io" className="btn btn-primary">careers@blindsight.io</a>
         </div>
       </section>
     </main>
