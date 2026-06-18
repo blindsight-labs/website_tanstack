@@ -169,6 +169,7 @@ function Nav() {
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
         <Link to="/" onClick={(e) => { goPlatform(e); closeMenu(); }}>Platform</Link>
+        <Link to="/team" onClick={closeMenu}>Team</Link>
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
@@ -177,6 +178,7 @@ function Nav() {
       <div className="nav-right">
         <ul className="nav-links">
           <li><Link to="/" onClick={goPlatform}>Platform</Link></li>
+          <li><Link to="/team">Team</Link></li>
           <li><Link to="/careers">Careers</Link></li>
           <li
             className="nav-dropdown"

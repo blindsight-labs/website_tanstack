@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestTopologyRouteImport } from './routes/test-topology'
+import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as InActionRouteImport } from './routes/in-action'
@@ -29,6 +30,11 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 const TestTopologyRoute = TestTopologyRouteImport.update({
   id: '/test-topology',
   path: '/test-topology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/in-action': typeof InActionRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/apply': typeof CareersApplyRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/in-action': typeof InActionRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/apply': typeof CareersApplyRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/in-action': typeof InActionRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers_/apply': typeof CareersApplyRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/in-action'
     | '/privacy'
     | '/sitemap.xml'
+    | '/team'
     | '/test-topology'
     | '/blog/$slug'
     | '/careers/apply'
@@ -193,6 +203,7 @@ export interface FileRouteTypes {
     | '/in-action'
     | '/privacy'
     | '/sitemap.xml'
+    | '/team'
     | '/test-topology'
     | '/blog/$slug'
     | '/careers/apply'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/in-action'
     | '/privacy'
     | '/sitemap.xml'
+    | '/team'
     | '/test-topology'
     | '/blog/$slug'
     | '/careers_/apply'
@@ -230,6 +242,7 @@ export interface RootRouteChildren {
   InActionRoute: typeof InActionRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TeamRoute: typeof TeamRoute
   TestTopologyRoute: typeof TestTopologyRoute
   CareersApplyRoute: typeof CareersApplyRoute
 }
@@ -241,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/test-topology'
       fullPath: '/test-topology'
       preLoaderRoute: typeof TestTopologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -376,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   InActionRoute: InActionRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TeamRoute: TeamRoute,
   TestTopologyRoute: TestTopologyRoute,
   CareersApplyRoute: CareersApplyRoute,
 }

@@ -1348,6 +1348,7 @@ h4 {
   gap: 12px;
   max-width: 760px;
 }
+.s-head h1,
 .s-head h2 {
   font-size: clamp(28px, 3.4vw, 44px);
   line-height: 1.08;
@@ -2962,7 +2963,7 @@ footer {
   text-transform: uppercase;
   color: var(--muted);
 }
-/* Fixed-height scrim — constant regardless of text content, keeps text readable over any photo */
+/* Fixed-height scrim — covers at most the bottom quarter of the photo, keeps text readable */
 .founder-card::after {
   content: "";
   position: absolute;
@@ -2970,16 +2971,16 @@ footer {
   right: 0;
   bottom: 0;
   z-index: 1;
-  height: 29.4%;
+  height: 25%;
   pointer-events: none;
   background: linear-gradient(
     to top,
     rgba(8, 6, 16, 0.92) 0%,
-    rgba(8, 6, 16, 0.62) 45%,
+    rgba(8, 6, 16, 0.62) 55%,
     rgba(8, 6, 16, 0) 100%
   );
 }
-/* Title + bio overlaid bottom-left */
+/* Title + bio overlaid bottom-left, kept within the bottom quarter of the card */
 .founder-info {
   position: absolute;
   left: 0;
@@ -2989,14 +2990,16 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
-  padding: 22px 24px;
+  justify-content: flex-start;
+  gap: 4px;
+  height: 25%;
+  padding: 16px 20px;
   text-align: left;
 }
 .founder-role {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 34px;
+  font-size: 22px;
   line-height: 1.1;
   letter-spacing: 0.06em;
   font-weight: 600;
@@ -3005,9 +3008,8 @@ footer {
 }
 .founder-bio {
   margin: 0;
-  font-size: 20.25px;
-  line-height: 1.5;
-  min-height: 3em;
+  font-size: 13.5px;
+  line-height: 1.45;
   color: rgba(255, 255, 255, 0.9);
   max-width: 36ch;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);

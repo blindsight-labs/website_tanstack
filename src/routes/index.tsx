@@ -12,7 +12,6 @@ import {
   Scale,
   ScanEye,
   ShieldCheck,
-  UserRound,
 } from "lucide-react";
 
 import { useDemoModal } from "@/components/DemoModal";
@@ -63,7 +62,6 @@ const SECTIONS: { id: string; label: string }[] = [
   { id: "why", label: "Why" },
   { id: "scenarios", label: "Threats" },
   { id: "stack", label: "Layers" },
-  { id: "founders", label: "Team" },
   { id: "faq", label: "FAQ" },
 ];
 
@@ -211,61 +209,6 @@ function Scenarios() {
   );
 }
 
-/* ── Why Blindsight — founders / offensive-security pedigree ── */
-function WhyBlindsight() {
-  return (
-    <section className="section section-alt" id="founders">
-      <div className="section-inner">
-        <div
-          className="s-head reveal"
-          style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
-        >
-          <span className="tag">Why Blindsight</span>
-          <h2>Offensive security, turned to your defense</h2>
-          <p>
-            Blindsight's founders attacked AI systems professionally before building the layer that
-            defends them — between them, dozens of CVEs to their name. Detection is built from the
-            attacks they find themselves. Tested on competitors' own public benchmarks, where it is
-            hardest to win, Blindsight beats the leading runtime benchmarks and covers a wider
-            spectrum of attacks. In security, the cost of being second best is the breach you did
-            not stop.
-          </p>
-        </div>
-
-        <div className="founders-grid reveal">
-          {[
-            {
-              role: "CEO",
-              label: "CEO photo",
-              bio: "Top global ethical hacker and former Kühne+Nagel security architect.",
-            },
-            {
-              role: "CTO",
-              label: "CTO photo",
-              bio: "Former Checkmarx security lead.",
-            },
-          ].map(({ role, label, bio }) => (
-            <figure className="founder-card" key={role}>
-              <div
-                className="founder-photo"
-                role="img"
-                aria-label={`Placeholder for ${role} photo`}
-              >
-                <UserRound className="founder-photo-icon" strokeWidth={1.5} aria-hidden="true" />
-                <span className="founder-photo-label">{label}</span>
-              </div>
-              <figcaption className="founder-info">
-                <span className="founder-role">{role}</span>
-                <p className="founder-bio">{bio}</p>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ── Coverage stack — Detect → Protect → Govern (each builds on the last) ── */
 const STAGES: {
   id: "detect" | "protect" | "govern";
@@ -375,7 +318,6 @@ function Home() {
       />
       <Scenarios />
       <Stages />
-      <WhyBlindsight />
       <FaqSection />
     </main>
   );
