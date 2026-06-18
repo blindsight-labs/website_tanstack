@@ -788,3 +788,17 @@
 [data-theme="dark"] .shadow-demo .chip.block {
   color: var(--purple);
 }
+
+/* ── Freed hero — desktop two-column only (≥981px) ──────────────────────────
+   Below 981px the hero is single-column; the scene stays de-boxed but in
+   normal flow (no bleed, no floating overlays) so tablet/mobile never gain
+   horizontal scroll or overlay collisions. */
+@media (min-width: 981px) {
+  /* Taller stage; bleed the right edge so the AI wall meets the hero edge.
+     -48px exactly cancels .va-hero's 48px right padding (styles.css), so the
+     arena reaches the hero edge without exceeding the viewport. */
+  .shadow-demo .sa2 .arena {
+    height: clamp(360px, 52vh, 520px);
+    margin: 20px -48px 24px 0;
+  }
+}
