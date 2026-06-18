@@ -802,8 +802,10 @@
 @media (min-width: 981px) {
   .shadow-demo .sa2 .arena {
     height: clamp(340px, 46vh, 460px);
-    /* right margin keeps the AI wall clear of the fixed .section-rail nav;
-       bottom margin gives the proxy's "offline" label room above the stats. */
-    margin: 30px 48px 44px 0;
+    /* top margin clears the proxy orb (it sits ~45px above the arena, ring
+       included) from the sub-caption above; right margin keeps the AI wall
+       clear of the fixed .section-rail nav; bottom margin gives the proxy's
+       "offline" label room above the stats. */
+    margin: 62px 48px 44px 0;
   }
 }
