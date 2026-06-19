@@ -449,7 +449,6 @@ export function ShadowAiDemo() {
               </div>
             </div>
           </div>
-          <div className="sa2-foot">// blindsight — securing AI</div>
         </div>
       </section>
 
@@ -516,7 +515,6 @@ export function ShadowAiDemo() {
               <div className="v c-bl">0</div>
             </div>
           </div>
-          <div className="sa3-foot">// blindsight — securing AI</div>
         </div>
       </section>
     </div>

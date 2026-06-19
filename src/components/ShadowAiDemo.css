@@ -48,19 +48,21 @@
   }
 }
 
-/* Card chrome */
+/* Freed hero: cards are transparent positioning stages, no chrome.
+   .sa2-card is the positioning context for the desktop floating overlays. */
 .shadow-demo .sa2-card,
 .shadow-demo .sa3-card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  overflow: hidden;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
 }
 .shadow-demo .sa2-card {
-  padding: 24px 26px 22px;
+  position: relative;
+  padding: 0;
 }
 .shadow-demo .sa3-card {
-  padding: 22px 22px 20px;
+  padding: 0;
 }
 .shadow-demo .sa2-top,
 .shadow-demo .sa3-top {
@@ -467,15 +469,6 @@
 .shadow-demo .m-bl .v {
   color: var(--purple);
 }
-.shadow-demo .sa2-foot,
-.shadow-demo .sa3-foot {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #b3b3b3;
-  letter-spacing: 0.08em;
-  margin-top: 14px;
-  text-align: right;
-}
 
 /* Vertical (sa3) */
 .shadow-demo .sa3 .sources {
@@ -741,9 +734,7 @@
 [data-theme="dark"] .shadow-demo .sa2 .ptag,
 [data-theme="dark"] .shadow-demo .sa3 .ptag,
 [data-theme="dark"] .shadow-demo .sa2 .pm .rl,
-[data-theme="dark"] .shadow-demo .sa3 .src .rl,
-[data-theme="dark"] .shadow-demo .sa2-foot,
-[data-theme="dark"] .shadow-demo .sa3-foot {
+[data-theme="dark"] .shadow-demo .sa3 .src .rl {
   color: var(--mute);
 }
 /* Hardcoded neutral grays used for tracks, lines, borders and dots */
@@ -785,4 +776,25 @@
 }
 [data-theme="dark"] .shadow-demo .chip.block {
   color: var(--purple);
+}
+
+/* ── Freed hero — desktop two-column (≥981px) ──────────────────────────────
+   The card chrome is gone (de-box) and the arena is taller so the animation
+   fills the hero. The controls/stats/footer stay in NORMAL FLOW — framing the
+   animation above (kicker + toggle) and below (stats + footer) instead of
+   floating over it: the four lanes plus the AI wall fill the arena, leaving no
+   open space for overlays, so floating chrome would collide with packets.
+   No right-edge bleed, so the AI wall stays inside the hero padding and clears
+   the fixed .section-rail nav (position:fixed; right:20px). Below 981px the
+   same de-boxed, in-flow scene applies; the vertical sa3 variant takes over at
+   640px. */
+@media (min-width: 981px) {
+  .shadow-demo .sa2 .arena {
+    height: clamp(340px, 46vh, 460px);
+    /* top margin clears the proxy orb (it sits ~45px above the arena, ring
+       included) from the sub-caption above; right margin keeps the AI wall
+       clear of the fixed .section-rail nav; bottom margin gives the proxy's
+       "offline" label room above the stats. */
+    margin: 62px 48px 44px 0;
+  }
 }
