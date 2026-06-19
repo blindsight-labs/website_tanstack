@@ -781,9 +781,9 @@ h4 {
 /* ── Iceberg section ── */
 .iceberg-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 40px;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
   margin-top: 56px;
 }
 @media (max-width: 980px) {
@@ -947,15 +947,17 @@ h4 {
 .iceberg-img {
   position: relative;
   width: 100%;
-  /* Box matches the artwork's aspect ratio so the iceberg fills it exactly
-     (no crop, no letterbox) — keeps the marker geometry in sync. */
-  aspect-ratio: 1594 / 1471;
+  /* Box is shorter than the artwork's native ratio so the empty sky above the
+     tip (and dead space below) is cropped and the iceberg fills the frame. The
+     marker geometry reads the live background-size / position, so the numbered
+     pins track the artwork through this crop. */
+  aspect-ratio: 1594 / 1275;
   min-height: 0;
   margin-top: 0;
   background-image: url("data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20version%3D%221.1%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20viewBox%3D%220%200%201920%201080%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3Aurl(%23linear-gradient-2)%3B%7D.cls-2%7Bfill%3Aurl(%23linear-gradient-4)%3B%7D.cls-3%7Bfill%3Aurl(%23linear-gradient-3)%3B%7D.cls-4%7Bfill%3Aurl(%23linear-gradient-5)%3B%7D.cls-5%7Bfill%3Aurl(%23linear-gradient-6)%3B%7D.cls-6%7Bfill%3Aurl(%23linear-gradient)%3B%7D%3C%2Fstyle%3E%3ClinearGradient%20id%3D%22linear-gradient%22%20x1%3D%22982.1%22%20y1%3D%22878.9%22%20x2%3D%22982.1%22%20y2%3D%22146.1%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%22.2%22%20stop-color%3D%22%23946cbd%22%2F%3E%3Cstop%20offset%3D%22.4%22%20stop-color%3D%22%23946ebe%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%239775c1%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%239b82c8%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%23a195d1%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%23a9addd%22%2F%3E%3Cstop%20offset%3D%22.7%22%20stop-color%3D%22%23b3caec%22%2F%3E%3Cstop%20offset%3D%22.7%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3Cstop%20offset%3D%22.8%22%20stop-color%3D%22%23c6ddf3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23e1ebf6%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-2%22%20x1%3D%221158.7%22%20y1%3D%22383.7%22%20x2%3D%221158.7%22%20y2%3D%22223.3%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3Cstop%20offset%3D%22.2%22%20stop-color%3D%22%23c0dbf3%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%23d9e9f8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-3%22%20x1%3D%221094.1%22%20y1%3D%22400.4%22%20x2%3D%221165.9%22%20y2%3D%22308.1%22%20xlink%3Ahref%3D%22%23linear-gradient-2%22%2F%3E%3ClinearGradient%20id%3D%22linear-gradient-4%22%20x1%3D%22935.9%22%20y1%3D%22321.7%22%20x2%3D%22852.6%22%20y2%3D%22261.4%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23deecf9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-5%22%20x1%3D%22960.9%22%20y1%3D%22876.7%22%20x2%3D%22799.8%22%20y2%3D%22388.1%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23946cbd%22%2F%3E%3Cstop%20offset%3D%22.8%22%20stop-color%3D%22%23a59ee6%22%2F%3E%3Cstop%20offset%3D%22.9%22%20stop-color%3D%22%23a9ade9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23b6d4f1%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-6%22%20x1%3D%22980.4%22%20y1%3D%22924.7%22%20x2%3D%22980.4%22%20y2%3D%22383.7%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23316db9%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%22.2%22%20stop-color%3D%22%23316db9%22%20stop-opacity%3D%22.2%22%2F%3E%3Cstop%20offset%3D%22.8%22%20stop-color%3D%22%23316db9%22%20stop-opacity%3D%22.8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23316db9%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%3E%3Cg%20id%3D%22Layer_1%22%3E%3Cg%3E%3Cpath%20class%3D%22cls-6%22%20d%3D%22M1235.5%2C383.7c1.5-.5-40.6-64.5-45.5-72-.3-.5-.7-.8-1.2-1.1l-35.4-17c-.3-.1-.6-.3-.8-.6l-70.8-70.3c-.4-.4-.8-.6-1.3-.8l-17.4-4.8c-.3%2C0-.6-.2-.8-.4l-112-72.5c-1-.7-2.3-.6-3.3%2C0l-8.5%2C5.8c-.7.5-1.2%2C1.3-1.3%2C2.2l-2.3%2C27.5c0%2C1-.6%2C1.8-1.4%2C2.3l-42.3%2C26.1c-.5.3-.9.8-1.2%2C1.4l-21.4%2C50.5c-.6%2C1.3-2%2C2.1-3.4%2C1.8l-22.2-4.4c-1-.2-2.1.2-2.8.9l-110.8%2C125.1c-.7.8-.9-1-.6%2C0l74.4%2C253.6c.2.8.8%2C1.4%2C1.5%2C1.8%2C8.1%2C4.2%2C57.1%2C29.9%2C55.6%2C29.9s64%2C136.4%2C67.5%2C143.7c0%2C.2.2.4.4.6l51.2%2C64.5c1.3%2C1.6%2C3.8%2C1.5%2C4.9-.3l57.3-91c.6-.9%2C1.6-1.4%2C2.6-1.4l31.6.9c1.1%2C0%2C2.1-.5%2C2.7-1.5l70.1-120.8c.2-.3.3-.6.4-1%2C1.6-8.9%2C24.1-131.1%2C22.6-130.6s28.7-24.2%2C32.2-27.1.4-.4.6-.6l16.4-23.9c.3-.4.4-.8.5-1.3l14.5-95.7Z%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%221081.8%20222.9%201087.2%20383.7%201235.5%20383.7%201188.8%20310.7%201152.6%20293.2%201081.8%20222.9%22%2F%3E%3Cpolygon%20class%3D%22cls-3%22%20points%3D%221152.6%20293.2%201087.2%20383.7%201097.1%20383.7%201188.8%20310.7%201152.6%20293.2%22%2F%3E%3Cpolygon%20class%3D%22cls-2%22%20points%3D%22842.5%20257.7%20911.7%20315.6%20868%20261.1%20842.5%20257.7%22%2F%3E%3Cpath%20class%3D%22cls-4%22%20d%3D%22M877.8%2C383.7l102.6%2C495-52.8-66-67.5-143.7-56.1-29.4c-.6-.3-1-.8-1.2-1.4l-74.2-254.4h149.2Z%22%2F%3E%3C%2Fg%3E%3Crect%20class%3D%22cls-5%22%20x%3D%22638.6%22%20y%3D%22383.7%22%20width%3D%22683.6%22%20height%3D%22540.9%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E");
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center 46%;
 }
 @media (max-width: 980px) {
   .iceberg-img {
@@ -1113,12 +1115,12 @@ h4 {
 
   .iceberg-img {
     position: relative;
-    aspect-ratio: 1594 / 1471;
+    aspect-ratio: 1594 / 1275;
     min-height: 0;
     margin: 0;
     width: 100%;
     background-size: 100% auto;
-    background-position: center;
+    background-position: center 46%;
     border-radius: 12px;
   }
 
