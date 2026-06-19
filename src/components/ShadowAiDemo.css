@@ -244,7 +244,7 @@
 .shadow-demo .sa2 .arena {
   position: relative;
   height: 224px;
-  margin: 48px 0 52px;
+  margin: 48px 0 80px;
 }
 .shadow-demo .sa2 .aiwall {
   position: absolute;
@@ -635,7 +635,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 48px;
 }
 .shadow-demo .sa3 .stat {
   background: #fff;
@@ -795,6 +795,6 @@
        included) from the sub-caption above; right margin keeps the AI wall
        clear of the fixed .section-rail nav; bottom margin gives the proxy's
        "offline" label room above the stats. */
-    margin: 62px 48px 44px 0;
+    margin: 62px 48px 104px 0;
   }
 }
