@@ -120,6 +120,11 @@
 [data-theme="dark"] .ib-marker.is-visible {
   color: #3f2fb5;
 }
+/* The responsive name pills beside each marker keep a white background in both
+   themes, so their label text must stay dark or it vanishes in dark mode. */
+[data-theme="dark"] .ib-marker-label {
+  color: #111118;
+}
 [data-theme="dark"] .actor-interceptor .actor-orb,
 [data-theme="dark"] .actor-warden .actor-orb {
   color: #5546e0;
@@ -781,15 +786,19 @@ h4 {
 /* ── Iceberg section ── */
 .iceberg-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 72px;
+  /* The iceberg (2nd column) holds its size; the label list (1st column, 1fr)
+     is the flexible part that gives way first as the viewport narrows. */
+  grid-template-columns: minmax(0, 1fr) clamp(440px, 40vw, 580px);
+  gap: clamp(28px, 4vw, 72px);
   align-items: center;
   margin-top: 56px;
 }
-@media (max-width: 980px) {
+@media (max-width: 900px) {
+  /* The label column has shrunk as far as it usefully can — now scale the
+     iceberg down too, keeping it the larger of the two. */
   .iceberg-grid {
-    grid-template-columns: 1.3fr 1fr;
-    gap: 24px;
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr);
+    gap: 20px;
   }
 }
 @media (max-width: 640px) {
@@ -915,6 +924,23 @@ h4 {
   font-size: 16px;
   line-height: 1.6;
   color: var(--muted);
+}
+/* As the iceberg holds its width and the label column narrows, let the rows
+   compact — names and meta wrap instead of overflowing their column. */
+@media (max-width: 1080px) {
+  .threat-row {
+    padding: 12px 8px;
+    gap: 6px 10px;
+  }
+  .threat-row .name {
+    white-space: normal;
+    font-size: 14px;
+  }
+  .threat-row .meta {
+    white-space: normal;
+    font-size: 9.5px;
+    text-align: right;
+  }
 }
 @media (max-width: 640px) {
   .threat-row {
