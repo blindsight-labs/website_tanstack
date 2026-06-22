@@ -1220,7 +1220,7 @@ export function TopologyGraphDemo({
                       aria-label={`Stage ${i + 1}: ${s.caption}`}
                     >
                       <span className="tg-stage-num">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="tg-stage-text">{s.caption}</span>
+                      {i === stage && <span className="tg-stage-text">{s.caption}</span>}
                     </button>
                   </li>
                 ))}
@@ -2067,21 +2067,19 @@ const TG_CSS = `
 .tg-sep { color: var(--dim); }
 
 /* Stages strip (bottom) — compact, current expands */
-.tg-stages-strip { display: flex; align-items: flex-start; gap: 14px; padding: 12px 22px; border-top: 1px solid var(--border); background: var(--bg-alt); }
-.tg-stages-strip .tg-stages-label { padding-top: 6px; }
+.tg-stages-strip { display: flex; align-items: center; gap: 14px; padding: 12px 22px; border-top: 1px solid var(--border); background: var(--bg-alt); overflow: hidden; }
 .tg-stages-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
-/* Every stage shows its name; the active one is enlarged + violet while the rest
-   stay a legible grey, so the strip reads like a labelled section navigator. */
-.tg-stages-row { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 0; align-items: center; }
+.tg-stages-row { list-style: none; padding: 0; margin: 0; display: flex; gap: 6px; flex: 1; min-width: 0; align-items: center; }
 .tg-stages-row li { flex: 0 0 auto; min-width: 0; }
-.tg-stage-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 11px; background: transparent; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font: inherit; font-size: 12px; color: var(--muted); transition: color .2s, background .2s, border-color .2s, box-shadow .2s, font-size .2s; text-align: left; }
+.tg-stages-row li.is-current { flex: 1 1 auto; min-width: 0; }
+.tg-stage-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; background: transparent; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; color: var(--muted); transition: all .2s; text-align: left; max-width: 100%; }
 .tg-stage-pill:hover { background: var(--surface); color: var(--text); }
-.tg-stage-pill.is-on { background: var(--surface); border-color: var(--violet); color: var(--text); box-shadow: var(--shadow-sm); font-size: 14px; font-weight: 600; padding: 7px 14px; }
-.tg-stage-pill.is-done { border-color: color-mix(in oklab, var(--violet) 30%, var(--border)); }
+.tg-stage-pill.is-on { background: var(--surface); border-color: var(--violet); color: var(--text); box-shadow: var(--shadow-sm); width: 100%; }
+.tg-stage-pill.is-done { color: var(--dim); border-color: color-mix(in oklab, var(--violet) 30%, var(--border)); }
 .tg-stage-pill.is-done .tg-stage-num { color: var(--violet); opacity: .8; }
-.tg-stage-num { font-family: var(--font-mono); font-size: 10px; color: var(--muted); flex-shrink: 0; }
-.tg-stage-pill.is-on .tg-stage-num { color: var(--violet); font-size: 11.5px; }
-.tg-stage-text { white-space: nowrap; }
+.tg-stage-num { font-family: var(--font-mono); font-size: 10px; color: var(--dim); flex-shrink: 0; }
+.tg-stage-pill.is-on .tg-stage-num { color: var(--violet); }
+.tg-stage-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 
 
 /* Compact playback bar */
@@ -2234,8 +2232,7 @@ const TG_CSS = `
   .tg-playbar { right: 10px; bottom: 10px; }
   .tg-stages-strip { padding: 10px 12px; gap: 8px; flex-wrap: wrap; }
   .tg-stages-row { gap: 4px; flex-wrap: wrap; }
-  .tg-stage-pill { padding: 5px 8px; font-size: 11px; }
-  .tg-stage-pill.is-on { font-size: 12.5px; padding: 6px 10px; }
+  .tg-stage-pill { padding: 5px 8px; font-size: 11.5px; }
   .tg-variant { min-height: 0; border-radius: 14px; }
   .tg-footer { padding: 16px 18px 32px; flex-direction: column; gap: 8px; text-align: center; }
 }
