@@ -148,6 +148,9 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
   const st = { mode: "off", touched: false };
   const timers: number[] = [];
   const created: HTMLElement[] = [];
+  // Packets currently animating. On a mode toggle we settle every one of them
+  // so none completes under the old mode and mis-counts after the reset.
+  const inflight = new Set<{ item: Item; p: HTMLElement; settled: boolean }>();
 
   const T = (fn: () => void, ms: number) => {
     const id = window.setTimeout(fn, d(ms));
@@ -178,6 +181,49 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
     T(() => ai!.classList.remove("hit"), 420);
   }
 
+  /** When protection flips, intercept everything still mid-flight and resolve it
+   *  under the new mode — caught/prevented when turning on, leaked when turning
+   *  off — no matter where on the wire each packet currently is. */
+  function snapInFlight(m: string) {
+    inflight.forEach((ctl) => {
+      inflight.delete(ctl);
+      ctl.settled = true; // makes the packet's own animation bail at its next step
+      const { p, item } = ctl;
+      if (!p.isConnected) return;
+      if (m === "on") {
+        if (item.k === "benign") {
+          setChip(p, "allow", IC.check, "Allowed");
+          n.al++;
+          setN(".c-al", "al");
+        } else if (item.k === "sensitive") {
+          setChip(p, "redact", IC.lock, item.red!);
+          n.rd++;
+          setN(".c-rd", "rd");
+        } else {
+          setChip(p, "block", IC.ban, "Blocked");
+          n.bl++;
+          setN(".c-bl", "bl");
+        }
+      } else if (item.k === "benign") {
+        n.al++;
+        setN(".c-al", "al");
+      } else {
+        setChip(p, "leak", IC.alert, item.k === "inject" ? "Hijacked" : "Leaked");
+        n.lk++;
+        setN(".c-lk", "lk");
+      }
+      // Freeze the packet where it is, then fade it out (don't let it snap to its
+      // old destination when the position transition is cleared).
+      const cur = getComputedStyle(p).getPropertyValue(cfg.axis);
+      p.style.transition = "none";
+      p.style.setProperty(cfg.axis, cur);
+      void p.offsetWidth;
+      p.style.transition = "opacity " + d(350) + "ms";
+      p.style.opacity = "0";
+      T(() => p.remove(), 420);
+    });
+  }
+
   async function fly(L: Lane, item: Item) {
     const p = document.createElement("div");
     p.className = "pkt";
@@ -191,14 +237,19 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
       "</span>";
     arena!.appendChild(p);
     created.push(p);
+    const ctl = { item, p, settled: false };
+    inflight.add(ctl);
     void p.offsetWidth;
     move(p, cfg.pos.proxy, 1500);
     await sleep(1500);
+    if (ctl.settled) return;
     if (st.mode === "on") {
       if (item.k === "benign") {
         setChip(p, "allow", IC.check, "Allowed");
         move(p, cfg.pos.end, 1300);
         await sleep(1300);
+        if (ctl.settled) return;
+        inflight.delete(ctl);
         n.al++;
         setN(".c-al", "al");
         p.remove();
@@ -206,19 +257,25 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
       }
       setChip(p, "alert", IC.alert, "Detected");
       await sleep(420);
+      if (ctl.settled) return;
       if (item.k === "sensitive") {
         setChip(p, "redact", IC.lock, item.red!);
         move(p, cfg.pos.end, 1300);
         await sleep(1300);
+        if (ctl.settled) return;
+        inflight.delete(ctl);
         n.rd++;
         setN(".c-rd", "rd");
         p.remove();
       } else {
         setChip(p, "block", IC.ban, "Blocked");
         await sleep(720);
+        if (ctl.settled) return;
         p.style.transition = "opacity " + d(350) + "ms";
         p.style.opacity = "0";
         await sleep(360);
+        if (ctl.settled) return;
+        inflight.delete(ctl);
         n.bl++;
         setN(".c-bl", "bl");
         p.remove();
@@ -226,7 +283,9 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
     } else {
       move(p, cfg.pos.end, 1300);
       await sleep(1300);
+      if (ctl.settled) return;
       if (item.k === "benign") {
+        inflight.delete(ctl);
         n.al++;
         setN(".c-al", "al");
         p.remove();
@@ -235,6 +294,8 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
       setChip(p, "leak", IC.alert, item.k === "inject" ? "Hijacked" : "Leaked");
       aiHit();
       await sleep(560);
+      if (ctl.settled) return;
+      inflight.delete(ctl);
       n.lk++;
       setN(".c-lk", "lk");
       p.remove();
@@ -262,6 +323,7 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
     root.classList.toggle("on", m === "on");
     root.classList.toggle("off", m !== "on");
     n.lk = n.al = n.rd = n.bl = 0;
+    snapInFlight(m);
     setN(".c-lk", "lk");
     setN(".c-al", "al");
     setN(".c-rd", "rd");
