@@ -582,6 +582,11 @@ const SPEEDS = [
   { id: 2, label: "2×" },
 ];
 
+/** Global pacing boost layered on top of the user-facing speed control: every
+ *  stage hold (and therefore every packet/edge/chat animation derived from it)
+ *  runs this many times faster. 1.5 = all animations 50% faster. */
+const SPEED_BOOST = 1.5;
+
 /* ============================================================
    Page
    ============================================================ */
@@ -642,7 +647,7 @@ export function TopologyGraphDemo({
   const stages = secOn ? scenario.on : scenario.off;
   const stageCount = stages.length;
   const baseStageMs = 2800;
-  const currentHold = (stages[stage]?.holdMs ?? baseStageMs) / speed;
+  const currentHold = (stages[stage]?.holdMs ?? baseStageMs) / speed / SPEED_BOOST;
 
   /* auto-advance — stops at the end of each phase */
   const timer = useRef<number | null>(null);
@@ -657,7 +662,7 @@ export function TopologyGraphDemo({
         if (phase === "off") {
           setPlaying(false);
           // brief pause so the final off-state lands before prompting
-          window.setTimeout(() => setPhase("prompt"), 1400 / speed);
+          window.setTimeout(() => setPhase("prompt"), 1400 / speed / SPEED_BOOST);
           return s;
         }
         setPlaying(false);
@@ -901,12 +906,17 @@ export function TopologyGraphDemo({
                     title="Now turn on Blindsight Security"
                     body="Watch the exact same attack get intercepted before it ever reaches the model."
                     cta={
-                      <button className="tg-cta" onClick={enableSecurity}>
-                        <span className="tg-cta-switch">
-                          <span />
-                        </span>
-                        Enable Blindsight Security
-                      </button>
+                      <div className="tg-cta-stack">
+                        <button className="tg-cta" onClick={enableSecurity}>
+                          <span className="tg-cta-switch">
+                            <span />
+                          </span>
+                          Enable Blindsight Security
+                        </button>
+                        <button type="button" className="tg-replay-link" onClick={replayCurrent}>
+                          Replay Animation?
+                        </button>
+                      </div>
                     }
                   />
                 )}
@@ -1831,6 +1841,8 @@ const TG_CSS = `
 .tg-cta-ghost:hover { background: var(--bg-alt); box-shadow: none; }
 .tg-cta-row { display: inline-flex; gap: 10px; }
 .tg-cta-stack { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.tg-replay-link { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; transition: color .2s; }
+.tg-replay-link:hover { color: var(--violet); }
 .tg-cta-demo { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 16px; border-top: 1px solid var(--border); width: 100%; }
 .tg-cta-demo-title { font-size: 14px; color: var(--text); font-weight: 500; }
 .tg-cta-primary { text-decoration: none; }
