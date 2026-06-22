@@ -1182,7 +1182,7 @@ export function TopologyGraphDemo({
                           <button className="tg-cta tg-cta-ghost" onClick={replayCurrent}>
                             Replay
                           </button>
-                          <button className="tg-cta" onClick={backToPicker}>
+                          <button className="tg-cta tg-cta-ghost" onClick={backToPicker}>
                             Pick another scenario
                           </button>
                         </div>
@@ -2194,7 +2194,7 @@ const TG_CSS = `
 .tg-cta { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; background: var(--violet); color: #fff; border: 0; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: all .2s; box-shadow: 0 10px 24px -8px rgba(85,70,224,0.55); }
 .tg-cta:hover { transform: translateY(-1px); box-shadow: 0 14px 28px -8px rgba(85,70,224,0.65); }
 .tg-cta-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); box-shadow: none; }
-.tg-cta-ghost:hover { background: var(--bg-alt); box-shadow: none; }
+.tg-cta-ghost:hover { background: var(--bg-alt); border-color: var(--violet); box-shadow: none; }
 .tg-cta-row { display: inline-flex; gap: 10px; }
 .tg-cta-stack { display: flex; flex-direction: column; align-items: center; gap: 18px; }
 .tg-replay-link { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; transition: color .2s; }
