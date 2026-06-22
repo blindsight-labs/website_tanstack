@@ -8,7 +8,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useState } from "react";
 
 import { ArrowRight, BookOpen, ChevronDown, Code, Menu, Moon, Sun, X } from "lucide-react";
 
@@ -169,14 +169,6 @@ function Nav() {
     };
   }, [pathname]);
   const closeMenu = () => setMenuOpen(false);
-  // "Platform" → the homepage. When already there, scroll to + restart the demo
-  // instead of a no-op navigation (the former "Watch It Work" behavior).
-  const goPlatform = (e: MouseEvent) => {
-    if (pathname === "/") {
-      e.preventDefault();
-      window.dispatchEvent(new Event("watch-replay"));
-    }
-  };
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <Link
@@ -194,7 +186,6 @@ function Nav() {
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        <Link to="/" onClick={(e) => { goPlatform(e); closeMenu(); }}>Platform</Link>
         <Link to="/team" onClick={closeMenu}>Team</Link>
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
@@ -211,7 +202,6 @@ function Nav() {
           {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
         <ul className="nav-links">
-          <li><Link to="/" onClick={goPlatform}>Platform</Link></li>
           <li><Link to="/team">Team</Link></li>
           <li><Link to="/careers">Careers</Link></li>
           <li
