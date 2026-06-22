@@ -7,6 +7,7 @@ import {
   CircleX,
   Database,
   Droplet,
+  Eye,
   FileLock,
   FileText,
   Pause,
@@ -80,6 +81,11 @@ type Stage = {
   messages?: ExtraMsg[];
   /** if set, the chat panel uses ONLY these messages for this stage (ignores bubble) */
   chatOnly?: boolean;
+  /** Interpretability note: a plain-language explanation of *why* the model
+   *  behaves this way and how the vulnerability arises. Rendered as a monospace
+   *  "insight" card in the chat, slotted between the user prompt and the AI's
+   *  reply while the model is thinking. */
+  insight?: string;
   /** override stage hold time in ms (before raw speed scaling) */
   holdMs?: number;
 };
@@ -113,6 +119,8 @@ const SCENARIOS: Scenario[] = [
       {
         caption: "Model complies with the injected directive",
         state: { User: "attacker", AI: "compromised" },
+        insight:
+          "The model reads system rules and user input as one undifferentiated token stream — it can't tell trusted instructions from untrusted ones. RLHF also trains it toward sycophancy: it's rewarded for being agreeable, so the latest, most assertive instruction tends to win.",
       },
       {
         caption: "Sensitive data leaves the system",
@@ -174,6 +182,8 @@ const SCENARIOS: Scenario[] = [
       {
         caption: "Model assembles a response containing PII",
         state: { AI: "compromised" },
+        insight:
+          "The model has no built-in notion of data sensitivity or access control. It optimizes for a complete, helpful answer, so any PII within reach gets surfaced — confidentiality simply isn't an objective it was trained to weigh.",
       },
       {
         caption: "PII delivered to the user",
@@ -262,6 +272,8 @@ const SCENARIOS: Scenario[] = [
         packet: { from: "RAG", to: "AI", intent: "malicious" },
         arrival: "compromise",
         state: { Vendor: "attacker", RAG: "compromised" },
+        insight:
+          "RAG treats retrieved context as ground truth. The model can't verify a chunk's provenance, so the planted text is accepted as authoritative fact and quietly steers the recommendation — no jailbreak required.",
       },
       {
         caption: "AI returns the attacker's recommendation",
@@ -355,6 +367,8 @@ const SCENARIOS: Scenario[] = [
       {
         caption: "Model complies - no policy boundary in place",
         state: { User: "attacker", AI: "compromised" },
+        insight:
+          "Instruction-tuned models default to fulfilling requests, and sycophancy biases them toward whatever the user is pushing for. With no external policy boundary, the only guardrail is the model's own training — inconsistent, and routinely jailbroken.",
       },
       {
         caption: "Harmful output delivered",
@@ -419,6 +433,8 @@ const SCENARIOS: Scenario[] = [
       {
         caption: "Token now resides outside the company — retained on vendor infrastructure",
         state: { User: "attacker", AI: "compromised" },
+        insight:
+          "Third-party providers may log and retain prompts for training or abuse monitoring. Once pasted, the secret has crossed your trust boundary — and the model will faithfully echo it back in its answer, spreading it further.",
       },
       {
         caption: "Model returns a fix — token echoed back in the answer",
@@ -1426,7 +1442,7 @@ function packetVars(
    Chat panel
    ============================================================ */
 type ChatMsg = {
-  role: "user" | "assistant" | "system";
+  role: "user" | "assistant" | "system" | "insight";
   text: string;
   tone?: "red" | "violet" | "muted";
 };
@@ -1452,6 +1468,9 @@ function stageMessages(s: Stage, secOn: boolean, scenarioId: string): ChatMsg[] 
     if (m) out.push(m);
   }
   if (s.messages) out.push(...s.messages);
+  // Interpretability note slots in after this stage's own messages — i.e.
+  // between the user's prompt (an earlier stage) and the AI's reply (a later one).
+  if (s.insight) out.push({ role: "insight", text: s.insight });
   return out;
 }
 
@@ -1490,22 +1509,35 @@ function ChatPanel({
   for (let i = 0; i <= upTo; i++) {
     msgs.push(...stageMessages(stages[i], secOn, scenarioId));
   }
-  const lastIsUser = msgs.length > 0 && msgs[msgs.length - 1].role === "user";
+  // The model is still "thinking" when the last thing in the thread is either the
+  // user's prompt or an interpretability note — keep the typing dots in both cases.
+  const lastRole = msgs.length > 0 ? msgs[msgs.length - 1].role : null;
+  const showTyping = lastRole === "user" || lastRole === "insight";
 
   return (
     <aside className="tg-chat">
       <div className="tg-chat-body">
         {msgs.length === 0 && <div className="tg-chat-empty">Waiting for input…</div>}
-        {msgs.map((m, i) => (
-          <div
-            key={`${scenarioId}-${secOn}-${i}`}
-            className={`tg-msg tg-msg-${m.role} ${m.tone ? `tone-${m.tone}` : ""}`}
-          >
-            {m.role === "assistant" && <div className="tg-msg-avatar">AI</div>}
-            <div className="tg-msg-bubble">{renderStatusText(m.text)}</div>
-          </div>
-        ))}
-        {lastIsUser && (
+        {msgs.map((m, i) =>
+          m.role === "insight" ? (
+            <div key={`${scenarioId}-${secOn}-${i}`} className="tg-insight">
+              <div className="tg-insight-head">
+                <Eye size={12} strokeWidth={2} aria-hidden="true" />
+                Why this happens
+              </div>
+              <div className="tg-insight-body">{m.text}</div>
+            </div>
+          ) : (
+            <div
+              key={`${scenarioId}-${secOn}-${i}`}
+              className={`tg-msg tg-msg-${m.role} ${m.tone ? `tone-${m.tone}` : ""}`}
+            >
+              {m.role === "assistant" && <div className="tg-msg-avatar">AI</div>}
+              <div className="tg-msg-bubble">{renderStatusText(m.text)}</div>
+            </div>
+          ),
+        )}
+        {showTyping && (
           <div className="tg-msg tg-msg-assistant tg-typing">
             <div className="tg-msg-avatar">AI</div>
             <div className="tg-msg-bubble">
@@ -1786,6 +1818,11 @@ const TG_CSS = `
 .tg-msg-bubble { padding: 10px 14px; border-radius: 14px; font-size: 14.5px; line-height: 1.5; white-space: pre-line; }
 .tg-inline-icon { display: inline; vertical-align: -2px; margin-right: 1px; }
 .tg-msg-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--violet-soft); color: var(--violet-deep); font-family: var(--font-mono); font-size: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+/* Interpretability note — a monospace "why this works" card slotted between the
+   user prompt and the AI reply while the model is thinking. */
+.tg-insight { align-self: stretch; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px dashed var(--violet-border); border-left: 2px solid var(--violet); border-radius: 10px; background: color-mix(in oklab, var(--violet) 6%, var(--surface)); opacity: 0; animation: tgMsgIn .35s ease-out forwards; }
+.tg-insight-head { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--violet-deep); }
+.tg-insight-body { font-family: var(--font-mono); font-size: 11.5px; line-height: 1.6; color: var(--muted); white-space: pre-line; }
 .tg-typing .tg-msg-bubble { display: inline-flex; gap: 3px; padding: 10px 12px; }
 .tg-typing .tg-msg-bubble span { width: 5px; height: 5px; border-radius: 50%; background: var(--dim); animation: tgDot 1.2s infinite ease-in-out; }
 .tg-typing .tg-msg-bubble span:nth-child(2) { animation-delay: .15s; }
