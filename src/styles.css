@@ -3626,6 +3626,10 @@ footer {
   cursor: pointer;
   padding: 0;
 }
+/* NOTE: the label TEXT is not set here. SectionRail (src/routes/index.tsx) reads
+   it live from each section's eyebrow (".s-head .tag"), so to rename a rail label
+   edit that section's eyebrow heading — not this file. (Hero's fallback label and
+   the rail's section list live in the SECTIONS array in that same file.) */
 .section-rail-label {
   position: absolute;
   right: calc(100% + 18px);

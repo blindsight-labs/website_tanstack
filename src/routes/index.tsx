@@ -56,7 +56,13 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-/* ── Section progress rail ── */
+/* ── Section progress rail ──
+   Each rail label is read LIVE from its section's eyebrow heading (the
+   `.s-head .tag` element) at runtime — so renaming a section's eyebrow
+   automatically renames its rail label, with no second place to edit.
+   The `label` below is only a FALLBACK: used for the hero (which has no
+   eyebrow) and as the server-rendered placeholder before hydration.
+   (The rail's appearance is styled in styles.css under ".section-rail".) */
 const SECTIONS: { id: string; label: string }[] = [
   { id: "hero", label: "Shadow AI" },
   { id: "why", label: "Why Blindsight?" },
@@ -67,6 +73,12 @@ const SECTIONS: { id: string; label: string }[] = [
 
 function SectionRail({ sections }: { sections: { id: string; label: string }[] }) {
   const [active, setActive] = useState<string>(sections[0]?.id ?? "");
+  // Labels stay in sync with the section titles automatically: we pull each
+  // one from the section's eyebrow (`.s-head .tag`) and only fall back to the
+  // configured `label` when a section has no eyebrow (e.g. the hero).
+  const [labels, setLabels] = useState<Record<string, string>>(() =>
+    Object.fromEntries(sections.map((s) => [s.id, s.label])),
+  );
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -76,10 +88,14 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
       },
       { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
     );
+    const derived: Record<string, string> = {};
     for (const s of sections) {
       const el = document.getElementById(s.id);
       if (el) observer.observe(el);
+      const eyebrow = el?.querySelector(".s-head .tag")?.textContent?.trim();
+      derived[s.id] = eyebrow || s.label;
     }
+    setLabels(derived);
     return () => observer.disconnect();
   }, [sections]);
   const go = (id: string) =>
@@ -94,7 +110,7 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
           onClick={() => go(s.id)}
           aria-current={active === s.id ? "true" : undefined}
         >
-          <span className="section-rail-label">{s.label}</span>
+          <span className="section-rail-label">{labels[s.id] ?? s.label}</span>
           <span className="section-rail-dot" />
         </button>
       ))}
