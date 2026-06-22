@@ -58,10 +58,10 @@ export const Route = createFileRoute("/")({
 
 /* ── Section progress rail ── */
 const SECTIONS: { id: string; label: string }[] = [
-  { id: "hero", label: "Top" },
-  { id: "why", label: "Why" },
-  { id: "scenarios", label: "Threats" },
-  { id: "stack", label: "Layers" },
+  { id: "hero", label: "Shadow AI" },
+  { id: "why", label: "Why Blindsight?" },
+  { id: "scenarios", label: "Beyond Shadow AI" },
+  { id: "stack", label: "Adopt in stages" },
   { id: "faq", label: "FAQ" },
 ];
 
