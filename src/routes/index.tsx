@@ -331,6 +331,25 @@ function Stages() {
           </p>
         </div>
 
+        <div className="cstack-deploy reveal">
+          <span className="cstack-deploy-label">Deploy anywhere</span>
+          <InfoPill
+            name="On-prem"
+            meta="Deployment"
+            desc="Runs entirely on your own hardware, air-gapped if required — nothing leaves your perimeter."
+          />
+          <InfoPill
+            name="Private cloud"
+            meta="Deployment"
+            desc="Deployed inside your own cloud tenant or VPC, isolated to your organization."
+          />
+          <InfoPill
+            name="Public cloud"
+            meta="Deployment"
+            desc="Managed by Blindsight in the cloud — the fastest way to stand up and evaluate."
+          />
+        </div>
+
         <ol className="cstack reveal">
           {STAGES.map(({ id, num, name, Icon, tagline, requires, items }, i) => (
             <li className={`cstack-tier cstack-${id}`} key={id}>
