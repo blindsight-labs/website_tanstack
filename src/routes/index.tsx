@@ -17,6 +17,7 @@ import {
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Iceberg } from "@/components/Iceberg";
+import { InfoPill, type PillInfo } from "@/components/InfoPill";
 import { ShadowAiDemo } from "@/components/ShadowAiDemo";
 import shadowDemoCss from "@/components/ShadowAiDemo.css?url";
 import { faqSchemaEntities } from "@/lib/faq-content";
@@ -232,7 +233,7 @@ const STAGES: {
   Icon: typeof ScanEye;
   tagline: string;
   requires: string;
-  items: string[];
+  items: PillInfo[];
 }[] = [
   {
     id: "detect",
@@ -242,7 +243,33 @@ const STAGES: {
     tagline:
       "See every AI interaction — and the exposure hiding inside it. Visibility is the proof of value, before you spend a franc on defense.",
     requires: "Foundation · start here",
-    items: ["Shadow AI visibility", "Prompt injection", "PII", "PHI", "Data leak prevention"],
+    items: [
+      {
+        name: "Shadow AI visibility",
+        meta: "Detect",
+        desc: "Surfaces every AI tool and interaction in use across your org — including the ones nobody approved.",
+      },
+      {
+        name: "Prompt injection",
+        meta: "Detect",
+        desc: "Flags attempts to talk the model out of its instructions, from the obvious to the subtly disguised.",
+      },
+      {
+        name: "PII",
+        meta: "Detect",
+        desc: "Spots personally identifiable information moving into or out of AI prompts and responses.",
+      },
+      {
+        name: "PHI",
+        meta: "Detect",
+        desc: "Identifies protected health information in AI traffic, so regulated data doesn't leak unnoticed.",
+      },
+      {
+        name: "Data leak prevention",
+        meta: "Detect",
+        desc: "Catches sensitive data leaving the organization through AI channels before it becomes an incident.",
+      },
+    ],
   },
   {
     id: "protect",
@@ -252,7 +279,23 @@ const STAGES: {
     tagline:
       "Top-of-the-line security that stops what Detect surfaces — at the prompt, in the data, and across retrieval.",
     requires: "Requires Detect",
-    items: ["Prompt injection", "Data poisoning", "Adversarial patching"],
+    items: [
+      {
+        name: "Prompt injection",
+        meta: "Protect",
+        desc: "Blocks injection attempts at the prompt boundary before they reach the model.",
+      },
+      {
+        name: "Data poisoning",
+        meta: "Protect",
+        desc: "Defends training and fine-tuning pipelines against tainted samples that corrupt model behavior.",
+      },
+      {
+        name: "Adversarial patching",
+        meta: "Protect",
+        desc: "Neutralizes crafted perturbations designed to steer the model toward the wrong answer.",
+      },
+    ],
   },
   {
     id: "govern",
@@ -262,7 +305,13 @@ const STAGES: {
     tagline:
       "Turn enforcement into an audit trail you can prove — mapped to the regulations you answer to.",
     requires: "Requires Protect",
-    items: ["Compliance"],
+    items: [
+      {
+        name: "Compliance",
+        meta: "Govern",
+        desc: "Maps enforcement to the regulations you answer to and produces an audit trail you can hand to an auditor.",
+      },
+    ],
   },
 ];
 
@@ -302,8 +351,8 @@ function Stages() {
                 <p className="cstack-tagline">{tagline}</p>
                 <ul className="cstack-items">
                   {items.map((it) => (
-                    <li className="cstack-chip" key={it}>
-                      {it}
+                    <li key={it.name}>
+                      <InfoPill name={it.name} meta={it.meta} desc={it.desc} />
                     </li>
                   ))}
                 </ul>
