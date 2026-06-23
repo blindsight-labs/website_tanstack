@@ -173,9 +173,10 @@ export function Iceberg({
           <span className="tag">{eyebrow}</span>
           <h2>Existing tools only see the tip.</h2>
           <p>
-            Most AI security platforms catch the surface threats, the prompts that look obviously
-            wrong. Hackers adapt and evolve. The most dangerous attacks are the ones others least
-            expect, and the ones that look legitimate all the way through.
+            Most AI security platforms catch the surface threats — the prompts that look obviously
+            wrong. Hackers adapt and evolve, and the most dangerous attacks are the ones that look
+            legitimate all the way through. Blindsight is built by the people who find them — so the
+            threats others never see are the ones we catch first.
           </p>
         </div>
 

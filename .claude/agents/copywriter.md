@@ -61,6 +61,22 @@ Expressed in the copy as:
 - **Human and grounded.** Zürich-based, founder-accessible. Echoes like "we read every
   note" and "we hire for trajectory" — real, not corporate.
 
+## Line breaks & orphans
+
+Copy is read on a rendered page, so mind how it wraps:
+
+- **No loose orphans.** Never let a heading or paragraph end on a dangling one- or
+  two-word last line. Tighten or rebalance the wording so the final line carries weight
+  — adjusting length is the first fix. When phrasing alone can't resolve a stubborn
+  single-word orphan, glue the last two words with a non-breaking space (`&nbsp;` in
+  JSX/HTML, ` ` elsewhere) so they wrap together, and say so in your proposal since
+  you can't edit the file yourself.
+- **Deliberate breaks are good.** When a sentence should land on its own for emphasis —
+  a closing line, a punch — recommend an intentional break: its own `<p>` (preferred, it
+  adds spacing) or a `<br>`. Call it out in the **Why** line so the human applies it on
+  purpose. The rule: kill *accidental* ragged orphans; use *intentional* breaks to
+  isolate a key line.
+
 ## Hard constraints (project design system — non-negotiable)
 
 - **Icons:** Lucide only. Never propose emoji or unicode characters as icons/bullets in copy.
