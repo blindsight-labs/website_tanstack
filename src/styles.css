@@ -3038,14 +3038,55 @@ footer {
 .founders-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
-  max-width: 860px;
-  margin: 56px auto 0;
+  gap: 24px;
+  /* Founders (the security story) stay the larger, emphasized pair — but smaller
+     than before so the leadership row below fits with minimal scrolling. */
+  max-width: 660px;
+  margin: 40px auto 0;
 }
 @media (max-width: 640px) {
   .founders-grid {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+}
+/* The rest of the team: three smaller cards, no security framing. Same card
+   visual as the founders, just scaled down and three-up. */
+.leadership-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  max-width: 820px;
+  margin: 28px auto 0;
+}
+/* These cards are shorter than the founders', so the caption needs a taller band
+   (and a matching scrim) to keep the role + bio from crowding. */
+.leadership-grid .founder-card::after {
+  height: 34%;
+}
+.leadership-grid .founder-info {
+  height: 34%;
+  padding: 14px 16px;
+  gap: 5px;
+}
+.leadership-grid .founder-role {
+  font-size: 18px;
+}
+.leadership-grid .founder-bio {
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+@media (max-width: 720px) {
+  .leadership-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    max-width: 560px;
+  }
+}
+@media (max-width: 460px) {
+  .leadership-grid {
+    grid-template-columns: 1fr;
+    max-width: 340px;
   }
 }
 .founder-card {
@@ -3102,7 +3143,7 @@ footer {
   right: 0;
   bottom: 0;
   z-index: 1;
-  height: 25%;
+  height: 28%;
   pointer-events: none;
   background: linear-gradient(
     to top,
@@ -3123,7 +3164,7 @@ footer {
   align-items: flex-start;
   justify-content: flex-start;
   gap: 4px;
-  height: 25%;
+  height: 28%;
   padding: 16px 20px;
   text-align: left;
 }
@@ -3719,10 +3760,12 @@ footer {
    980px, so the lane is applied only there. 232px clears the dot pill plus the
    widest always-on label; it replaces the 48px right gutter on the centered
    content wrappers (.va-hero and .section share max-width:1600 + 48px padding).
-   Full-bleed backgrounds stay edge-to-edge — only the inner content insets. */
+   Full-bleed backgrounds stay edge-to-edge — only the inner content insets.
+   Scoped to .page-home because the rail is rendered only on the home route —
+   other pages keep their normal symmetric gutters. */
 @media (min-width: 981px) {
-  .va-hero,
-  .section {
+  .page-home .va-hero,
+  .page-home .section {
     padding-right: 232px;
   }
 }

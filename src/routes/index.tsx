@@ -323,7 +323,7 @@ function Stages() {
 
 function Home() {
   return (
-    <main>
+    <main className="page-home">
       <SectionRail sections={SECTIONS} />
       <Hero />
       <Iceberg

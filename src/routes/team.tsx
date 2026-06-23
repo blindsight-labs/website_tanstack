@@ -15,7 +15,10 @@ export const Route = createFileRoute("/team")({
   }),
 });
 
-const FOUNDERS: { role: string; label: string; bio: string }[] = [
+type Person = { role: string; label: string; bio: string };
+
+// The two founders carry the security story told in the section intro.
+const FOUNDERS: Person[] = [
   {
     role: "CEO",
     label: "CEO photo",
@@ -28,20 +31,44 @@ const FOUNDERS: { role: string; label: string; bio: string }[] = [
   },
 ];
 
+// The rest of the team — shown smaller, without the founders' security framing.
+const LEADERSHIP: Person[] = [
+  {
+    role: "COO",
+    label: "COO photo",
+    bio: "Scales operations and delivery as Blindsight grows.",
+  },
+  {
+    role: "CFO",
+    label: "CFO photo",
+    bio: "Runs finance and fundraising for a venture-backed company.",
+  },
+  {
+    role: "Head of Research",
+    label: "Head of Research photo",
+    bio: "Directs Blindsight's research agenda and detection science.",
+  },
+];
+
+function PersonCard({ role, label, bio }: Person) {
+  return (
+    <figure className="founder-card">
+      <div className="founder-photo" role="img" aria-label={`Placeholder for ${role} photo`}>
+        <UserRound className="founder-photo-icon" strokeWidth={1.5} aria-hidden="true" />
+        <span className="founder-photo-label">{label}</span>
+      </div>
+      <figcaption className="founder-info">
+        <span className="founder-role">{role}</span>
+        <p className="founder-bio">{bio}</p>
+      </figcaption>
+    </figure>
+  );
+}
+
 function TeamPage() {
   return (
     <main>
-      <section
-        className="section section-alt"
-        style={{
-          paddingTop: 160,
-          minHeight: "calc(100vh - 120px)",
-          boxSizing: "border-box",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
+      <section className="section section-alt" style={{ paddingTop: 140 }}>
         <div className="section-inner">
           <div
             className="s-head reveal"
@@ -54,27 +81,20 @@ function TeamPage() {
               that defends them — between them, dozens of CVEs to their name. Detection is built
               from the attacks they find themselves. Tested on competitors' own public benchmarks,
               where it is hardest to win, Blindsight beats the leading runtime benchmarks and
-              covers a wider spectrum of attacks. In security, the cost of being second best is the
-              breach you did not stop.
+              covers a wider spectrum of attacks.
             </p>
+            <p>In security, the cost of being second best is the breach you did not stop.</p>
           </div>
 
           <div className="founders-grid reveal">
-            {FOUNDERS.map(({ role, label, bio }) => (
-              <figure className="founder-card" key={role}>
-                <div
-                  className="founder-photo"
-                  role="img"
-                  aria-label={`Placeholder for ${role} photo`}
-                >
-                  <UserRound className="founder-photo-icon" strokeWidth={1.5} aria-hidden="true" />
-                  <span className="founder-photo-label">{label}</span>
-                </div>
-                <figcaption className="founder-info">
-                  <span className="founder-role">{role}</span>
-                  <p className="founder-bio">{bio}</p>
-                </figcaption>
-              </figure>
+            {FOUNDERS.map((p) => (
+              <PersonCard key={p.role} {...p} />
+            ))}
+          </div>
+
+          <div className="leadership-grid reveal">
+            {LEADERSHIP.map((p) => (
+              <PersonCard key={p.role} {...p} />
             ))}
           </div>
         </div>
