@@ -1841,6 +1841,113 @@ h4 {
   color: var(--muted);
 }
 
+/* ── Two-column: coverage stack + engagement flow ── */
+.cstack-grid {
+  margin: 56px auto 0;
+  max-width: 1080px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+  gap: 48px;
+  align-items: start;
+}
+.cstack-grid .cstack {
+  margin: 0;
+  max-width: none;
+}
+.engage {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 26px;
+  box-shadow: var(--shadow-md);
+}
+.engage-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 22px;
+}
+.engage-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+.engage-step {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 16px;
+}
+.engage-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.engage-num {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--surface);
+  color: var(--violet);
+  border: 1.5px solid var(--violet-border);
+  box-shadow: var(--shadow-sm);
+}
+.engage-step.is-optional .engage-num {
+  border-style: dashed;
+  color: var(--muted);
+  background: var(--surface-2);
+}
+.engage-spine {
+  flex: 1;
+  width: 2px;
+  min-height: 16px;
+  margin: 6px 0;
+  background: repeating-linear-gradient(var(--violet-border) 0 5px, transparent 5px 11px);
+}
+.engage-body {
+  padding-top: 7px;
+  padding-bottom: 18px;
+}
+.engage-step:last-child .engage-body {
+  padding-bottom: 0;
+}
+.engage-step-label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.engage-step.is-optional .engage-step-label {
+  color: var(--muted);
+}
+.engage-step-note {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 3px;
+}
+@media (max-width: 900px) {
+  .cstack-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    max-width: 860px;
+  }
+}
+
 /* ── CTA banner ── */
 /* ── Footer ── */
 footer {

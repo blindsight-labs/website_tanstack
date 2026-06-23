@@ -315,6 +315,15 @@ const STAGES: {
   },
 ];
 
+/* ── Engagement flow shown beside the coverage stack ── */
+const ENGAGEMENT: { label: string; note?: string; optional?: boolean }[] = [
+  { label: "Fill out the form" },
+  { label: "Discovery call" },
+  { label: "Documents sent" },
+  { label: "Further call", note: "if needed", optional: true },
+  { label: "Demo" },
+];
+
 function Stages() {
   return (
     <section className="section cstack-section" id="stack">
@@ -350,35 +359,58 @@ function Stages() {
           />
         </div>
 
-        <ol className="cstack reveal">
-          {STAGES.map(({ id, num, name, Icon, tagline, requires, items }, i) => (
-            <li className={`cstack-tier cstack-${id}`} key={id}>
-              <div className="cstack-rail" aria-hidden="true">
-                <span className="cstack-num">{num}</span>
-                {i < STAGES.length - 1 && <span className="cstack-spine" />}
-              </div>
-              <div className="cstack-card">
-                <div className="cstack-head">
-                  <span className="cstack-icon">
-                    <Icon strokeWidth={1.6} aria-hidden="true" />
-                  </span>
-                  <div className="cstack-headtext">
-                    <h3 className="cstack-name">{name}</h3>
-                    <span className="cstack-requires">{requires}</span>
-                  </div>
+        <div className="cstack-grid reveal">
+          <ol className="cstack">
+            {STAGES.map(({ id, num, name, Icon, tagline, requires, items }, i) => (
+              <li className={`cstack-tier cstack-${id}`} key={id}>
+                <div className="cstack-rail" aria-hidden="true">
+                  <span className="cstack-num">{num}</span>
+                  {i < STAGES.length - 1 && <span className="cstack-spine" />}
                 </div>
-                <p className="cstack-tagline">{tagline}</p>
-                <ul className="cstack-items">
-                  {items.map((it) => (
-                    <li key={it.name}>
-                      <InfoPill name={it.name} meta={it.meta} desc={it.desc} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </li>
-          ))}
-        </ol>
+                <div className="cstack-card">
+                  <div className="cstack-head">
+                    <span className="cstack-icon">
+                      <Icon strokeWidth={1.6} aria-hidden="true" />
+                    </span>
+                    <div className="cstack-headtext">
+                      <h3 className="cstack-name">{name}</h3>
+                      <span className="cstack-requires">{requires}</span>
+                    </div>
+                  </div>
+                  <p className="cstack-tagline">{tagline}</p>
+                  <ul className="cstack-items">
+                    {items.map((it) => (
+                      <li key={it.name}>
+                        <InfoPill name={it.name} meta={it.meta} desc={it.desc} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          <aside className="engage">
+            <span className="engage-eyebrow">How engagement works</span>
+            <ol className="engage-steps">
+              {ENGAGEMENT.map((s, i) => (
+                <li
+                  className={`engage-step ${s.optional ? "is-optional" : ""}`}
+                  key={s.label}
+                >
+                  <div className="engage-rail" aria-hidden="true">
+                    <span className="engage-num">{i + 1}</span>
+                    {i < ENGAGEMENT.length - 1 && <span className="engage-spine" />}
+                  </div>
+                  <div className="engage-body">
+                    <span className="engage-step-label">{s.label}</span>
+                    {s.note && <span className="engage-step-note">{s.note}</span>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        </div>
 
         <p className="cstack-note reveal">
           Modular by design — begin with Detect to prove the value, then layer in Protect and Govern
