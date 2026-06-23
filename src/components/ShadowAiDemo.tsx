@@ -147,9 +147,12 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
   const n = { lk: 0, al: 0, rd: 0, bl: 0 };
   const st = { mode: "off", touched: false };
   const timers: number[] = [];
+  // Spawn-cadence timers (per-lane kickoff + interval), tracked separately so a
+  // mode toggle can stop the old cadence and restart traffic from scratch.
+  const spawnTimers: number[] = [];
   const created: HTMLElement[] = [];
-  // Packets currently animating. On a mode toggle we settle every one of them
-  // so none completes under the old mode and mis-counts after the reset.
+  // Packets currently animating. A mode toggle wipes them (see wipe()): every one
+  // is removed and marked settled, so nothing resolves under the previous mode.
   const inflight = new Set<{ item: Item; p: HTMLElement; settled: boolean }>();
 
   const T = (fn: () => void, ms: number) => {
@@ -181,47 +184,17 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
     T(() => ai!.classList.remove("hit"), 420);
   }
 
-  /** When protection flips, intercept everything still mid-flight and resolve it
-   *  under the new mode — caught/prevented when turning on, leaked when turning
-   *  off — no matter where on the wire each packet currently is. */
-  function snapInFlight(m: string) {
+  /** A mode toggle wipes the board: every in-flight packet is removed immediately
+   *  and all counters reset to zero. Nothing from the previous mode can cross the
+   *  proxy, resolve, or leak after the switch — the new mode starts from a clean
+   *  slate (see startSpawning, called right after this). */
+  function wipe() {
     inflight.forEach((ctl) => {
       inflight.delete(ctl);
-      ctl.settled = true; // makes the packet's own animation bail at its next step
-      const { p, item } = ctl;
-      if (!p.isConnected) return;
-      if (m === "on") {
-        if (item.k === "benign") {
-          setChip(p, "allow", IC.check, "Allowed");
-          n.al++;
-          setN(".c-al", "al");
-        } else if (item.k === "sensitive") {
-          setChip(p, "redact", IC.lock, item.red!);
-          n.rd++;
-          setN(".c-rd", "rd");
-        } else {
-          setChip(p, "block", IC.ban, "Blocked");
-          n.bl++;
-          setN(".c-bl", "bl");
-        }
-      } else if (item.k === "benign") {
-        n.al++;
-        setN(".c-al", "al");
-      } else {
-        setChip(p, "leak", IC.alert, item.k === "inject" ? "Hijacked" : "Leaked");
-        n.lk++;
-        setN(".c-lk", "lk");
-      }
-      // Freeze the packet where it is, then fade it out (don't let it snap to its
-      // old destination when the position transition is cleared).
-      const cur = getComputedStyle(p).getPropertyValue(cfg.axis);
-      p.style.transition = "none";
-      p.style.setProperty(cfg.axis, cur);
-      void p.offsetWidth;
-      p.style.transition = "opacity " + d(350) + "ms";
-      p.style.opacity = "0";
-      T(() => p.remove(), 420);
+      ctl.settled = true; // any suspended fly() bails at its next checkpoint
+      ctl.p.remove();
     });
+    n.lk = n.al = n.rd = n.bl = 0;
   }
 
   async function fly(L: Lane, item: Item) {
@@ -302,28 +275,39 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
     }
   }
 
-  cfg.lanes.forEach((L, i) => {
-    let idx = 0;
-    T(
-      () => {
+  /** (Re)start each lane's traffic from the top of its sequence. Clears any
+   *  previous cadence first so a toggle restarts cleanly instead of stacking. */
+  function startSpawning() {
+    spawnTimers.forEach((id) => {
+      clearTimeout(id);
+      clearInterval(id);
+    });
+    spawnTimers.length = 0;
+    cfg.lanes.forEach((L, i) => {
+      let idx = 0;
+      const kickoff = window.setTimeout(() => {
         fly(L, L.seq[idx % L.seq.length]);
         idx++;
         const iv = window.setInterval(() => {
           fly(L, L.seq[idx % L.seq.length]);
           idx++;
         }, d(3300));
+        spawnTimers.push(iv);
         timers.push(iv);
-      },
-      500 + i * 820,
-    );
-  });
+      }, d(500 + i * 820));
+      spawnTimers.push(kickoff);
+      timers.push(kickoff);
+    });
+  }
+  startSpawning();
 
   function setMode(m: string) {
     st.mode = m;
     root.classList.toggle("on", m === "on");
     root.classList.toggle("off", m !== "on");
-    n.lk = n.al = n.rd = n.bl = 0;
-    snapInFlight(m);
+    // Wipe the old mode's traffic and counters, then restart cadence from scratch.
+    wipe();
+    startSpawning();
     setN(".c-lk", "lk");
     setN(".c-al", "al");
     setN(".c-rd", "rd");
