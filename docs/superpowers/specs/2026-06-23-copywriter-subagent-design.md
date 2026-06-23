@@ -21,14 +21,26 @@ blog/threat-research posts or UI microcopy.
 No write access by design: the agent proposes copy and exact placement; the human applies
 the diff, keeping control of what lands in the working tree.
 
-## Voice rules (codified from the live site)
+## Voice rules
 
+Codified from the live site, then enriched from the brand doc
+*"Brand Persona and Tone of Voice"* (2026-06-23). Core triad: **Analytical, Bold, Human.**
+
+- **Brand essence** — "protect AI so it can protect us"; bold, idealistic, clear-sighted
+  ("we see what others don't" — the name is the promise). Bold brand, humble founders.
+- **Audience** — organizations, not individuals: C-suite/leadership, industry pros,
+  journalists, policymakers. Challenging-but-constructive for leaders; stakes-aware for industry.
 - **Second person, direct** — "Your team is already using AI tools you never approved."
 - **Confident, tight, no fluff** — short declaratives; cut hedging and adjective pile-ups.
 - **Three-beat rhythm** as a signature device — "See it. Stop it. Prove it." / "Doers, Thinkers, Builders."
-- **Threat-aware but optimistic** — name the danger plainly, then the resolution. "Concerned optimists," not fearmongers.
-- **Technically credible** — respects a security audience; never dumbs down, never buzzword-stuffs.
+- **Call to action, not panic** — decisive informed action, never fear; urgency used
+  sparingly; CTAs empowering ("act while it still matters"), never doom.
+- **Alternate fact and perspective** — data/evidence paired with an ethical or strategic read; plain analogies.
 - **Human & grounded** — Zürich, founder-accessible ("we read every note"), "we hire for trajectory."
+
+**Scope guardrail:** writes for Blindsight (org-facing), NOT the separate "Sky" personal brand.
+
+**Source doc (in repo):** [`docs/brand/brand-persona-and-tone-of-voice.md`](../../brand/brand-persona-and-tone-of-voice.md).
 
 ## Hard constraints (from CLAUDE.md design system)
 
