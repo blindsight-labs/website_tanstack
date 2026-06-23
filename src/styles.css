@@ -164,6 +164,16 @@ h4 {
   text-wrap: balance;
 }
 
+/* Short display copy — hero ledes, section intros, card bios. `text-wrap: pretty`
+   (inherited from body) only prevents a single-word last line; `balance` evens all
+   line lengths so these blocks don't strand a loose two-word orphan either. Scoped
+   to short blocks, where `balance` is effective (browsers stop balancing long text). */
+.lede,
+.s-head p,
+.founder-bio {
+  text-wrap: balance;
+}
+
 .mono {
   font-family: var(--font-mono);
 }
