@@ -1,18 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import {
-  Briefcase,
-  Building2,
-  ChevronDown,
-  Cpu,
-  Database,
-  Globe,
-  Landmark,
-  Network,
-  Scale,
-  ScanEye,
-  ShieldCheck,
-} from "lucide-react";
+import { ChevronDown, Scale, ScanEye, ShieldCheck } from "lucide-react";
 
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
@@ -22,6 +10,13 @@ import { ShadowAiDemo } from "@/components/ShadowAiDemo";
 import shadowDemoCss from "@/components/ShadowAiDemo.css?url";
 import { faqSchemaEntities } from "@/lib/faq-content";
 import { TopologyGraphDemo } from "@/routes/in-action";
+import logoAES from "@/assets/LOGO_AES.svg";
+import logoClinicBarcelona from "@/assets/LOGO_ClinicBarcelona.svg";
+import logoGCRAI from "@/assets/LOGO_GCRAI.png";
+import logoJFloor from "@/assets/LOGO_JFloor.svg";
+import logoNoeda from "@/assets/LOGO_Noéda.svg";
+import logoNvidiaInception from "@/assets/LOGO_nvidiainception.svg";
+import logoRebels from "@/assets/LOGO_Rebels.svg";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -119,16 +114,18 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
   );
 }
 
-/* ── Client / partner logo strip (placeholder marquee) ── */
-const CLIENT_LOGOS: { Icon: typeof Building2; name: string }[] = [
-  { Icon: Building2, name: "Northwind" },
-  { Icon: Landmark, name: "Meridian Bank" },
-  { Icon: Globe, name: "Atlas Global" },
-  { Icon: Cpu, name: "Nodal AI" },
-  { Icon: Network, name: "Lattice" },
-  { Icon: ShieldCheck, name: "Aegis" },
-  { Icon: Database, name: "Vaultstore" },
-  { Icon: Briefcase, name: "Corveau" },
+/* ── Client / partner logo strip (marquee) ──
+   Logos are flattened to a single ink (see .logostrip-logo) so mixed-polarity
+   brand art stays legible on both themes. Per-logo `h` optically balances visual
+   weight: dense / multi-line marks get more height, tall wordmarks get less. */
+const CLIENT_LOGOS: { src: string; name: string; h: number }[] = [
+  { src: logoAES, name: "Agent Economy Association", h: 42 },
+  { src: logoClinicBarcelona, name: "Clínic Barcelona · Universitat de Barcelona", h: 34 },
+  { src: logoGCRAI, name: "Global Council for Responsible AI", h: 40 },
+  { src: logoJFloor, name: "JFloor", h: 24 },
+  { src: logoNoeda, name: "Noéda", h: 30 },
+  { src: logoNvidiaInception, name: "NVIDIA Inception Program", h: 40 },
+  { src: logoRebels, name: "Rebels", h: 24 },
 ];
 
 function LogoStrip() {
@@ -144,10 +141,15 @@ function LogoStrip() {
         <div className="logostrip-track">
           {[0, 1].map((g) => (
             <div className="logostrip-group" key={g} aria-hidden={g === 1}>
-              {group.map(({ Icon, name }, i) => (
+              {group.map(({ src, name, h }, i) => (
                 <span className="logostrip-item" key={i}>
-                  <Icon className="logostrip-icon" strokeWidth={1.5} />
-                  <span className="logostrip-name">{name}</span>
+                  <img
+                    src={src}
+                    alt={name}
+                    className="logostrip-logo"
+                    style={{ height: h }}
+                    loading="lazy"
+                  />
                 </span>
               ))}
             </div>

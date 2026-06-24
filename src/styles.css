@@ -4069,23 +4069,25 @@ footer {
 .logostrip-item {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   margin-right: 56px;
-  color: var(--dim);
-  transition: color 0.2s ease;
 }
-.logostrip-item:hover {
-  color: var(--muted);
+/* Brand logos are flattened to a single ink so mixed-polarity art (light
+   wordmarks vs dark wordmarks) stays legible: black on light, white on dark.
+   Loaded via <img>, so a filter does the recolour. Per-logo height is set
+   inline (see CLIENT_LOGOS) to optically balance visual weight. */
+.logostrip-logo {
+  width: auto;
+  object-fit: contain;
+  opacity: 0.6;
+  filter: brightness(0);
+  transition: opacity 0.2s ease;
 }
-.logostrip-icon {
-  width: 26px;
-  height: 26px;
+.logostrip-item:hover .logostrip-logo {
+  opacity: 1;
 }
-.logostrip-name {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  font-weight: 500;
+[data-theme="dark"] .logostrip-logo {
+  filter: brightness(0) invert(1);
+  opacity: 0.78;
 }
 @media (prefers-reduced-motion: reduce) {
   .logostrip-track {
