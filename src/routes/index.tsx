@@ -134,9 +134,11 @@ const CLIENT_LOGOS: { src: string; name: string; h: number }[] = [
 ];
 
 function LogoStrip() {
-  // One group repeats the set enough to exceed the viewport width; two identical
-  // groups side-by-side make translateX(-50%) loop seamlessly with no visible seam.
-  const group = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
+  // translateX(-50%) only loops seamlessly when one half of the track is at least
+  // as wide as the viewport — otherwise a gap shows at the loop. The strip is
+  // full-bleed (100vw), so each half repeats the set enough times (×4 ≈ 4000px) to
+  // clear even ultrawide / 4K screens; the two identical halves do the seamless loop.
+  const group = [...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS];
   return (
     <section className="logostrip-section section-alt" id="clients" aria-label="Trusted by">
       <div className="logostrip-eyebrow">

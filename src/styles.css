@@ -4242,7 +4242,8 @@ footer {
   display: flex;
   align-items: center;
   width: max-content;
-  animation: logostrip-scroll 34s linear infinite;
+  /* Duration scales with the (now wider) half-track to keep the same scroll speed. */
+  animation: logostrip-scroll 68s linear infinite;
 }
 .logostrip-group {
   display: flex;
