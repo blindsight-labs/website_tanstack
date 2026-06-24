@@ -6,10 +6,9 @@ import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill, type PillInfo } from "@/components/InfoPill";
-import { ShadowAiDemo } from "@/components/ShadowAiDemo";
-import shadowDemoCss from "@/components/ShadowAiDemo.css?url";
 import { faqSchemaEntities } from "@/lib/faq-content";
 import { TopologyGraphDemo } from "@/routes/in-action";
+import iconBlindsight from "@/assets/ICON_Blindsight.svg";
 import logoAES from "@/assets/LOGO_AES.svg";
 import logoClinicBarcelona from "@/assets/LOGO_ClinicBarcelona.svg";
 import logoGCRAI from "@/assets/LOGO_GCRAI.png";
@@ -35,10 +34,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: "https://blindsight.io/" },
     ],
-    links: [
-      { rel: "canonical", href: "https://blindsight.io/" },
-      { rel: "stylesheet", href: shadowDemoCss },
-    ],
+    links: [{ rel: "canonical", href: "https://blindsight.io/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -168,11 +164,13 @@ function Hero() {
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
           <h1>
-            See more with <span className="accent">Blindsight</span>
+            If you can&apos;t even <span className="accent">see</span> Shadow AI, how can you secure
+            or govern it?
           </h1>
           <p className="lede">
-            Your team is already using AI tools you never approved. Blindsight surfaces every Shadow
-            AI interaction — and secures it before sensitive data walks out the door.
+            Your team is already using AI tools you never approved. Blindsight gives you visibility
+            into every Shadow AI interaction across your organization — the first step to securing
+            it before sensitive data walks out the door.
           </p>
           <div className="hero-actions">
             <button type="button" className="btn btn-primary" onClick={openDemo}>
@@ -182,7 +180,13 @@ function Hero() {
         </div>
 
         <div className="va-hero-demo reveal">
-          <ShadowAiDemo />
+          {/* Shadow AI animation parked for later — the component lives in
+              src/components/ShadowAiDemo.tsx (+ .css). To restore: re-add the
+              `ShadowAiDemo` import and the ShadowAiDemo.css head link, then swap
+              this placeholder back for <ShadowAiDemo />. */}
+          <div className="hero-placeholder">
+            <img src={iconBlindsight} alt="Blindsight" className="hero-placeholder-icon" />
+          </div>
         </div>
       </div>
 

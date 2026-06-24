@@ -3188,7 +3188,10 @@ footer {
 .va-hero-inner {
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  /* Copy-favoured split — gives the headline/lede room to breathe. The demo
+     slot currently holds the placeholder icon, which centres comfortably in
+     the narrower column. (Revisit if the wider Shadow AI animation returns.) */
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: 56px;
   align-items: center;
 }
@@ -3223,11 +3226,29 @@ footer {
   font-size: 18px;
   color: var(--muted);
   line-height: 1.55;
-  max-width: 460px;
+  max-width: 540px;
 }
 .va-hero-demo {
   width: 100%;
   min-width: 0;
+}
+/* Placeholder while the Shadow AI hero animation is parked — centred Blindsight
+   icon filling the demo slot. */
+.hero-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 340px;
+}
+.hero-placeholder-icon {
+  width: clamp(140px, 18vw, 240px);
+  height: auto;
+  opacity: 0.9;
+}
+/* The icon SVG is a solid black mark; flip it to white in dark mode. */
+[data-theme="dark"] .hero-placeholder-icon {
+  filter: brightness(0) invert(1);
 }
 /* Scroll affordance beneath the clients banner — a gently bobbing chevron. */
 .hero-scroll-cue {
