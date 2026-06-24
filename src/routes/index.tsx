@@ -124,13 +124,13 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
    brand art stays legible on both themes. Per-logo `h` optically balances visual
    weight: dense / multi-line marks get more height, tall wordmarks get less. */
 const CLIENT_LOGOS: { src: string; name: string; h: number }[] = [
-  { src: logoAES, name: "Agent Economy Association", h: 60 },
-  { src: logoClinicBarcelona, name: "Clínic Barcelona · Universitat de Barcelona", h: 46 },
-  { src: logoGCRAI, name: "Global Council for Responsible AI", h: 56 },
-  { src: logoJFloor, name: "JFloor", h: 22 },
-  { src: logoNoeda, name: "Noéda", h: 34 },
-  { src: logoNvidiaInception, name: "NVIDIA Inception Program", h: 52 },
-  { src: logoRebels, name: "Rebels", h: 28 },
+  { src: logoAES, name: "Agent Economy Association", h: 72 },
+  { src: logoClinicBarcelona, name: "Clínic Barcelona · Universitat de Barcelona", h: 58 },
+  { src: logoGCRAI, name: "Global Council for Responsible AI", h: 48 },
+  { src: logoJFloor, name: "JFloor", h: 20 },
+  { src: logoNoeda, name: "Noéda", h: 39 },
+  { src: logoNvidiaInception, name: "NVIDIA Inception Program", h: 59 },
+  { src: logoRebels, name: "Rebels", h: 35 },
 ];
 
 function LogoStrip() {
