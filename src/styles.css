@@ -1789,13 +1789,21 @@ h4 {
   gap: 8px;
   margin-top: 18px;
 }
-.cstack-note {
-  margin: 30px auto 0;
-  max-width: 560px;
+/* Emphasised lead line above the stage diagram. */
+.cstack-lead {
+  margin: 44px auto 0;
+  max-width: 720px;
   text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.55;
+  color: var(--text);
+  font-size: clamp(17px, 2.1vw, 21px);
+  line-height: 1.5;
+}
+.cstack-lead strong {
+  font-weight: 600;
+}
+.cstack-lead-key {
+  color: var(--violet);
+  font-weight: 600;
 }
 @media (max-width: 620px) {
   .cstack-tier {

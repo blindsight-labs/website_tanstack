@@ -258,7 +258,7 @@ const STAGES: {
     name: "Detect",
     Icon: ScanEye,
     tagline:
-      "See every AI interaction — and the exposure hiding inside it. Visibility is the proof of value, before you spend a franc on defense.",
+      "Blindsight inspects every prompt, document and tool output in real time, catching threats as they happen and surfacing the AI activity behind them.",
     requires: "Foundation · start here",
     items: [
       {
@@ -294,7 +294,7 @@ const STAGES: {
     name: "Protect",
     Icon: ShieldCheck,
     tagline:
-      "Top-of-the-line security that stops what Detect surfaces — at the prompt, in the data, and across retrieval.",
+      "Prompt injection, data poisoning and other attacks are blocked at the layer while legitimate traffic passes untouched. Attackers are shut out.",
     requires: "Requires Detect",
     items: [
       {
@@ -320,7 +320,7 @@ const STAGES: {
     name: "Govern",
     Icon: Scale,
     tagline:
-      "Turn enforcement into an audit trail you can prove — mapped to the regulations you answer to.",
+      "See every AI system in use, including shadow AI, with every action logged to a tamper-proof record and ready for audit.",
     requires: "Requires Protect",
     items: [
       {
@@ -581,6 +581,13 @@ function Stages() {
           />
         </div>
 
+        <p className="cstack-lead reveal">
+          <strong>Modular by design</strong> — begin with{" "}
+          <span className="cstack-lead-key">Detect</span> to prove the value, then layer in{" "}
+          <span className="cstack-lead-key">Protect</span> and{" "}
+          <span className="cstack-lead-key">Govern</span> as you need them.
+        </p>
+
         <div className="cstack-flow reveal">
           <StageDiagram />
 
@@ -632,11 +639,6 @@ function Stages() {
             ))}
           </ol>
         </aside>
-
-        <p className="cstack-note reveal">
-          Modular by design — begin with Detect to prove the value, then layer in Protect and Govern
-          as you need them.
-        </p>
       </div>
     </section>
   );
