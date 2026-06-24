@@ -806,20 +806,12 @@ h4 {
     align-items: stretch;
   }
 }
-/* The fixed rail reserves a ~232px right lane above 980px, and the whole loss
-   comes out of the threat-list column (the artwork holds its 440px min). In the
-   981–1280px band that leaves too little for a side-by-side list, so stack the
-   list above a full-width iceberg. Above 1280px the list column recovers enough
-   to sit beside the art again (with rows still stacked until 1500px — see the
-   .threat-row rule below). Below 981px the lane is gone and the original
-   2-column layout applies down to the 640px phone breakpoint. */
-@media (min-width: 981px) and (max-width: 1280px) {
-  .iceberg-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    align-items: stretch;
-  }
-}
+/* The list stays beside the iceberg at every width above the 640px phone
+   breakpoint — there is intentionally no intermediate step that stacks or drops
+   it. Where space is tight (the rail reserves a ~232px right lane above 980px),
+   the rows themselves compact instead: shorter type and wrapped name/meta via
+   the .threat-row rules below (≤1500px, then ≤820px). Only at ≤640px is the list
+   dropped and the iceberg given the full width. */
 
 .threat-list {
   display: flex;
