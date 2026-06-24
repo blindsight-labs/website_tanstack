@@ -179,13 +179,15 @@ function Hero() {
             or govern it?
           </h1>
           <p className="lede">
-            Your team is already using AI tools you never approved. Blindsight gives you visibility
-            into every Shadow AI interaction across your organization — the first step to securing
-            it before sensitive data walks out the door.
+            Companies are deploying AI faster than they can secure it. AI leaks data and is an active
+            attack surface, shadow AI spreads unmonitored, and most teams cannot even see where and
+            how AI is being used. The tools that exist focus on just the prompts, leaving the rest of
+            the AI pipeline wide open. Any attacker who can compromise one component can compromise
+            the rest, often with no sign until the damage is done.
           </p>
           <div className="hero-actions">
             <button type="button" className="btn btn-primary" onClick={openDemo}>
-              Reveal your team&apos;s Shadow AI
+              Book a Free Scan
             </button>
           </div>
         </div>
