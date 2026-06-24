@@ -1668,20 +1668,24 @@ h4 {
    `.stage`/`.stage-rail` classes defined later in this file. */
 .cstack {
   list-style: none;
-  margin: 56px auto 0;
-  max-width: 860px;
-  display: flex;
-  flex-direction: column;
+  margin: 0;
+  max-width: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
 }
 .cstack-tier {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 24px;
-}
-.cstack-rail {
   display: flex;
   flex-direction: column;
+  gap: 16px;
+}
+.cstack-rail {
+  position: relative;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
 .cstack-num {
   position: relative;
@@ -1710,18 +1714,23 @@ h4 {
   border-color: var(--violet);
   color: #fff;
 }
+/* Continuous connector behind the centred numbers: spans from this number's
+   centre to the next one's (card width + the 24px grid gap). */
 .cstack-spine {
-  flex: 1;
-  width: 2px;
-  margin: 8px 0;
-  background: repeating-linear-gradient(var(--violet-border) 0 5px, transparent 5px 11px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(100% + 24px);
+  height: 2px;
+  transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg, var(--violet-border) 0 5px, transparent 5px 11px);
 }
 .cstack-card {
+  flex: 1;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 24px 26px;
-  margin-bottom: 22px;
   box-shadow: var(--shadow-md);
 }
 .cstack-tier:last-child .cstack-card {
@@ -1819,29 +1828,185 @@ h4 {
   color: var(--muted);
 }
 
-/* ── Two-column: coverage stack + engagement flow ── */
-.cstack-grid {
+/* ── Diagram placeholder above the horizontal stage row ── */
+.cstack-flow {
   margin: 56px auto 0;
   max-width: 1080px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
-  gap: 48px;
-  align-items: start;
 }
-.cstack-grid .cstack {
-  margin: 0;
-  max-width: none;
+/* Stage-flow diagram. Colours come from design tokens so it adapts to theme;
+   the violet Blindsight layer + red danger states follow the design rules, and
+   the node glyphs are part of this structural illustration (icon-rule exempt). */
+.sd {
+  margin: 0 0 36px;
 }
+.sd-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.sd-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.sd-legend-swatch {
+  width: 22px;
+  border-top: 2px solid currentColor;
+}
+.sd-legend-ok {
+  color: var(--muted);
+}
+.sd-legend-mal {
+  color: var(--red);
+  border-top-style: dashed;
+}
+.sd-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-display);
+}
+/* Vertical layout swaps in where the stage cards also stack (≤900px). */
+.sd-svg-v {
+  display: none;
+}
+@media (max-width: 900px) {
+  .sd-svg {
+    display: none;
+  }
+  .sd-svg-v {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 460px;
+    margin: 0 auto;
+    font-family: var(--font-display);
+  }
+  /* Source pills are narrower in the single-row layout — tighten the label. */
+  .sd-svg-v .sd-title,
+  .sd-svg-v .sd-atitle {
+    font-size: 12px;
+  }
+}
+.sd-card {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 1.2;
+}
+.sd-title {
+  fill: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+.sd-sub {
+  fill: var(--dim);
+  font-size: 9px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.sd-ico {
+  fill: none;
+  stroke: var(--text);
+}
+.sd-acard {
+  fill: rgba(220, 38, 38, 0.06);
+  stroke: var(--red);
+  stroke-width: 1.2;
+}
+.sd-atitle {
+  fill: var(--red);
+  font-size: 15px;
+  font-weight: 600;
+}
+.sd-aico {
+  fill: none;
+  stroke: var(--red);
+}
+.sd-ok {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.4;
+}
+.sd-mal {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 1.4;
+  stroke-dasharray: 5 4;
+}
+.sd-x {
+  stroke: var(--red);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.sd-bar {
+  fill: var(--violet);
+}
+/* The Blindsight mark is a solid dark glyph: flipped white on the deep violet
+   bar in light mode, kept black on the lighter violet bar in dark mode. */
+.sd-mark {
+  filter: brightness(0) invert(1);
+}
+[data-theme="dark"] .sd-mark {
+  filter: none;
+}
+.sd-aicard {
+  fill: var(--surface);
+  stroke: var(--violet);
+  stroke-width: 1.5;
+}
+.sd-aititle {
+  fill: var(--text);
+  font-size: 18px;
+  font-weight: 600;
+}
+.sd-aisub {
+  fill: var(--violet);
+  font-size: 9px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 1.5px;
+}
+.sd-row {
+  fill: var(--surface-2);
+}
+.sd-rowtx {
+  fill: var(--text);
+  font-size: 12px;
+}
+.sd-badge {
+  fill: var(--violet);
+}
+.sd-check {
+  fill: none;
+  stroke: var(--violet);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sd-checkw {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Engagement flow sits below the stages as a full-width horizontal timeline
+   (no card box — it reads as an inline process strip). */
 .engage {
   position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 26px;
-  box-shadow: var(--shadow-md);
+  margin: 40px auto 0;
+  max-width: 1080px;
 }
 .engage-eyebrow {
   display: block;
+  text-align: center;
   font-family: var(--font-mono);
   font-size: 10.5px;
   letter-spacing: 0.12em;
@@ -1852,17 +2017,20 @@ h4 {
 .engage-steps {
   list-style: none;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 .engage-step {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 16px;
-}
-.engage-rail {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+.engage-rail {
+  position: relative;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
 }
 .engage-num {
   position: relative;
@@ -1886,16 +2054,21 @@ h4 {
   color: var(--muted);
   background: var(--surface-2);
 }
+/* Continuous connector behind the centred numbers (steps are gapless, so the
+   span from one number's centre to the next is exactly one step width). */
 .engage-spine {
-  flex: 1;
-  width: 2px;
-  min-height: 16px;
-  margin: 6px 0;
-  background: repeating-linear-gradient(var(--violet-border) 0 5px, transparent 5px 11px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg, var(--violet-border) 0 5px, transparent 5px 11px);
 }
 .engage-body {
-  padding-top: 7px;
-  padding-bottom: 18px;
+  padding-top: 0;
+  padding-bottom: 0;
+  text-align: center;
 }
 .engage-step:last-child .engage-body {
   padding-bottom: 0;
@@ -1919,10 +2092,29 @@ h4 {
   margin-top: 3px;
 }
 @media (max-width: 900px) {
-  .cstack-grid {
+  /* Stack the stage cards vertically; the horizontal "builds-on" connectors
+     don't read once they're in a single column. */
+  .cstack {
     grid-template-columns: 1fr;
-    gap: 32px;
-    max-width: 860px;
+    gap: 18px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .cstack-spine {
+    display: none;
+  }
+  .engage {
+    max-width: 640px;
+  }
+  .engage-steps {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .engage-step {
+    flex: none;
+  }
+  .engage-spine {
+    display: none;
   }
 }
 
