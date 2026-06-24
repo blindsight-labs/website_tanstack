@@ -1035,25 +1035,32 @@ export function TopologyGraphDemo({
                   <ArrowLeft size={18} strokeWidth={2} aria-hidden="true" />
                 </button>
                 <span className="tg-back-sep" aria-hidden="true" />
-                {SCENARIOS.map((s, i) =>
-                  i === scenarioIdx ? null : (
+                {SCENARIOS.map((s, i) => {
+                  const isCurrent = i === scenarioIdx;
+                  return (
                     <button
                       key={s.id}
                       type="button"
-                      className="tg-scenario-orb"
+                      className={`tg-scenario-orb ${isCurrent ? "is-current" : "is-dimmed"}`}
                       onClick={() => openScenario(i)}
-                      aria-label={`Switch to ${s.title}`}
+                      aria-current={isCurrent ? "true" : undefined}
+                      aria-label={
+                        isCurrent ? `Current scenario: ${s.title}` : `Switch to ${s.title}`
+                      }
                     >
                       <span className="tg-scenario-orb-circle">
                         <span className="tg-scenario-orb-glow" />
                         <span className="tg-scenario-orb-icon">{THREAT_ICONS[s.id]}</span>
                       </span>
+                      <span className="tg-scenario-orb-num" aria-hidden="true">
+                        {i + 1}
+                      </span>
                       <span className="tg-scenario-orb-tip" aria-hidden="true">
-                        {s.title}
+                        {i + 1}. {s.title}
                       </span>
                     </button>
-                  ),
-                )}
+                  );
+                })}
               </div>
               <button
                 className={`tg-switch ${secOn ? "is-on" : ""}`}
@@ -1252,61 +1259,34 @@ const THREAT_ICONS: Record<Scenario["id"], React.ReactNode> = {
  *  short label; deeper tiers sit closer to the centre, echoing the iceberg. */
 // `offset` rotates each ring so no orb lands at 12 o'clock, where the tier label
 // sits. Surface/deep orbs go to the sides; hidden orbs sit on the diagonals.
-const TIERS: { key: ScenarioTier; label: string; word: string; rVar: string; offset: number }[] = [
-  {
-    key: "surface",
-    label: "Surface · caught today",
-    word: "Surface",
-    rVar: "var(--tg-r-outer)",
-    offset: Math.PI / 2,
-  },
-  {
-    key: "hidden",
-    label: "Below the surface",
-    word: "Hidden",
-    rVar: "var(--tg-r-mid)",
-    offset: Math.PI / 4,
-  },
-  {
-    key: "deep",
-    label: "Deep · baked in",
-    word: "Deep",
-    rVar: "var(--tg-r-inner)",
-    offset: Math.PI / 2,
-  },
-];
+/** Catchability tier → short word shown in the reactor core on hover. */
+const TIER_WORD: Record<ScenarioTier, string> = {
+  surface: "Surface",
+  hidden: "Hidden",
+  deep: "Deep",
+};
 
 function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
   const [hovered, setHovered] = useState<number | null>(null);
 
-  // Place each tier's threats evenly around its ring. Numbering runs outer → inner
-  // so it climbs with depth, the same way the iceberg list is numbered.
-  let counter = 0;
-  const placed = TIERS.flatMap((tier) => {
-    const items = SCENARIOS.map((s, idx) => ({ s, idx })).filter(({ s }) => s.tier === tier.key);
-    return items.map(({ s, idx }, j) => {
-      const angle = (j / items.length) * Math.PI * 2 - Math.PI / 2 + tier.offset;
-      counter += 1;
-      return { s, idx, tier, num: counter, cx: Math.cos(angle), cy: Math.sin(angle) };
-    });
+  // One ring: every threat placed evenly around it, in list order and numbered
+  // to match the scenario switcher (and the iceberg).
+  const n = SCENARIOS.length;
+  const placed = SCENARIOS.map((s, idx) => {
+    const angle = (idx / n) * Math.PI * 2 - Math.PI / 2; // start at top, run clockwise
+    return { s, idx, num: idx + 1, cx: Math.cos(angle), cy: Math.sin(angle) };
   });
 
   const active = placed.find((p) => p.idx === hovered) ?? null;
 
   return (
     <div className="tg-picker">
-      <div className="tg-reactor tg-reactor-tiered">
-        {TIERS.map((t) => (
-          <div key={t.key} className={`tg-tier-ring tg-tier-${t.key}`} aria-hidden="true">
-            <span className="tg-tier-ring-label">{t.label}</span>
-          </div>
-        ))}
-
+      <div className="tg-reactor">
         <div className="tg-reactor-core">
           {active ? (
             <>
               <span className="tg-reactor-eyebrow">
-                {String(active.num).padStart(2, "0")} · {active.tier.word}
+                {String(active.num).padStart(2, "0")} · {TIER_WORD[active.s.tier]}
               </span>
               <span className="tg-reactor-title tg-reactor-title-sm">{active.s.title}</span>
             </>
@@ -1325,12 +1305,11 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
         {placed.map((p, i) => (
           <button
             key={p.s.id}
-            className={`tg-threat tg-threat-dot tg-tier-${p.tier.key} ${hovered === p.idx ? "active" : ""}`}
+            className={`tg-threat tg-threat-dot ${hovered === p.idx ? "active" : ""}`}
             style={
               {
                 "--cx": p.cx.toFixed(4),
                 "--cy": p.cy.toFixed(4),
-                "--r": p.tier.rVar,
                 animationDelay: `${i * 0.07}s`,
               } as React.CSSProperties
             }
@@ -1339,7 +1318,7 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
             onMouseLeave={() => setHovered((c) => (c === p.idx ? null : c))}
             onFocus={() => setHovered(p.idx)}
             onBlur={() => setHovered((c) => (c === p.idx ? null : c))}
-            aria-label={`${p.s.title} — ${p.tier.word.toLowerCase()} threat`}
+            aria-label={`${p.s.title} — ${TIER_WORD[p.s.tier].toLowerCase()} threat`}
           >
             <span className="tg-threat-orb">
               <span className="tg-threat-glow" />
@@ -1348,10 +1327,7 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
           </button>
         ))}
       </div>
-      <p className="tg-picker-hint">
-        Hover to preview, click to watch it unfold — the deeper the ring, the harder the threat is to
-        catch.
-      </p>
+      <p className="tg-picker-hint">Hover to preview, click to watch it unfold.</p>
     </div>
   );
 }
@@ -1995,6 +1971,30 @@ const TG_CSS = `
 .tg-scenario-orb-tip::before { content: ""; position: absolute; left: 50%; top: -3px; transform: translateX(-50%) rotate(45deg); width: 7px; height: 7px; background: var(--text); }
 .tg-scenario-orb:hover .tg-scenario-orb-tip,
 .tg-scenario-orb:focus-visible .tg-scenario-orb-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* Numbered badge — every threat stays visible in a stable order (mirrors the
+   iceberg's numbered list). */
+.tg-scenario-orb-num {
+  position: absolute; top: -5px; left: -5px; z-index: 3; box-sizing: border-box;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 999px; border: 1px solid var(--bg);
+  background: var(--dim); color: var(--bg);
+  font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; line-height: 1;
+  transition: background .25s;
+}
+/* Current scenario — highlighted so it's clear which one the user is on. */
+.tg-scenario-orb.is-current .tg-scenario-orb-circle {
+  border-color: var(--red); color: var(--red);
+  box-shadow: 0 0 0 2px var(--red), var(--shadow-md);
+}
+.tg-scenario-orb.is-current .tg-scenario-orb-num { background: var(--red); color: #fff; }
+/* Other scenarios — greyed back; brighten on hover to invite switching. */
+.tg-scenario-orb.is-dimmed .tg-scenario-orb-circle {
+  opacity: .45; filter: grayscale(1); box-shadow: var(--shadow-sm);
+  transition: opacity .2s, filter .2s, transform .25s, border-color .25s, box-shadow .25s;
+}
+.tg-scenario-orb.is-dimmed:hover .tg-scenario-orb-circle,
+.tg-scenario-orb.is-dimmed:focus-visible .tg-scenario-orb-circle { opacity: 1; filter: none; }
 .tg-back { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; color: var(--muted); transition: all .15s; }
 .tg-back:hover { background: var(--surface); color: var(--text); }
 .tg-topbar-title { flex: 1; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text); justify-content: center; }
@@ -2162,23 +2162,10 @@ const TG_CSS = `
 .tg-threat-name { font-size: clamp(11px, 2.6vw, 14px); font-weight: 500; color: var(--text); }
 .tg-picker-hint { color: var(--muted); font-size: 15px; text-align: center; margin: 0; max-width: 46ch; }
 
-/* Tiered reactor — three concentric depth rings (outer = surface, inner = deep).
-   Radii are CSS vars so each orb can pick its ring via an inline --r, and the
-   whole layout still scales fluidly to mobile. */
-.tg-reactor-tiered { --tg-r-outer: clamp(150px, 38vw, 290px); --tg-r-mid: clamp(112px, 27vw, 205px); --tg-r-inner: clamp(80px, 18vw, 134px); }
-.tg-tier-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); aspect-ratio: 1; border-radius: 50%; border: 1px dashed rgba(85,70,224,0.16); pointer-events: none; }
-.tg-tier-ring.tg-tier-surface { width: calc(var(--tg-r-outer) * 2); }
-.tg-tier-ring.tg-tier-hidden { width: calc(var(--tg-r-mid) * 2); border-color: rgba(85,70,224,0.13); }
-.tg-tier-ring.tg-tier-deep { width: calc(var(--tg-r-inner) * 2); border-color: rgba(220,38,38,0.2); }
-.tg-tier-ring-label { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); background: var(--bg); padding: 0 8px; font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-.tg-tier-ring.tg-tier-deep .tg-tier-ring-label { color: var(--red); }
-[data-theme="dark"] .tg-tier-ring-label { background: var(--bg); }
-
 /* Icon-only threat dots — names/numbers surface in the reactor core on hover. */
 .tg-threat-dot { width: auto; gap: 0; }
 .tg-threat-dot .tg-threat-orb { width: clamp(46px, 11vw, 64px); }
 .tg-threat-dot .tg-threat-icon { width: clamp(22px, 5.5vw, 30px); }
-.tg-threat-dot.tg-tier-deep .tg-threat-orb { border-color: color-mix(in oklab, var(--red) 55%, var(--border)); }
 .tg-reactor-title-sm { font-size: clamp(15px, 3.6vw, 19px); line-height: 1.18; padding: 0 14px; }
 
 /* Phase overlay */
@@ -2244,8 +2231,7 @@ const TG_CSS = `
   .tg-picker-hint { font-size: 13px; }
 }
 @media (max-width: 380px) {
-  /* Drop the radius floors so the disc still fits on the narrowest phones. */
+  /* Drop the radius floor so the disc still fits on the narrowest phones. */
   .tg-reactor { --tg-r: 30vw; }
-  .tg-reactor-tiered { --tg-r-outer: 40vw; --tg-r-mid: 29vw; --tg-r-inner: clamp(78px, 21vw, 110px); }
 }
 `;
