@@ -124,13 +124,13 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
    brand art stays legible on both themes. Per-logo `h` optically balances visual
    weight: dense / multi-line marks get more height, tall wordmarks get less. */
 const CLIENT_LOGOS: { src: string; name: string; h: number }[] = [
-  { src: logoAES, name: "Agent Economy Association", h: 42 },
-  { src: logoClinicBarcelona, name: "Clínic Barcelona · Universitat de Barcelona", h: 34 },
-  { src: logoGCRAI, name: "Global Council for Responsible AI", h: 40 },
-  { src: logoJFloor, name: "JFloor", h: 24 },
-  { src: logoNoeda, name: "Noéda", h: 30 },
-  { src: logoNvidiaInception, name: "NVIDIA Inception Program", h: 40 },
-  { src: logoRebels, name: "Rebels", h: 24 },
+  { src: logoAES, name: "Agent Economy Association", h: 60 },
+  { src: logoClinicBarcelona, name: "Clínic Barcelona · Universitat de Barcelona", h: 46 },
+  { src: logoGCRAI, name: "Global Council for Responsible AI", h: 56 },
+  { src: logoJFloor, name: "JFloor", h: 22 },
+  { src: logoNoeda, name: "Noéda", h: 34 },
+  { src: logoNvidiaInception, name: "NVIDIA Inception Program", h: 52 },
+  { src: logoRebels, name: "Rebels", h: 28 },
 ];
 
 function LogoStrip() {
@@ -187,7 +187,7 @@ function Hero() {
           </p>
           <div className="hero-actions">
             <button type="button" className="btn btn-primary" onClick={openDemo}>
-              Book a Free Scan
+              Reveal your Shadow AI
             </button>
           </div>
         </div>
@@ -231,9 +231,9 @@ function Scenarios() {
           <span className="tag">Beyond Shadow AI</span>
           <h2>Shadow AI is only the beginning.</h2>
           <p>
-            It&apos;s the easiest exposure to see — and the first of many. The same pipeline hides
-            prompt injection, data leakage, poisoning and model misuse. Pick a scenario and watch
-            each one play out, with Blindsight off and on.
+            The same pipeline can hide prompt injection, data leakage, poisoning and model misuse.
+            Pick
+            a scenario and watch each one play out, with Blindsight off and on.
           </p>
         </div>
         <div className="scenarios-demo reveal">
@@ -583,13 +583,6 @@ function Stages() {
           />
         </div>
 
-        <p className="cstack-lead reveal">
-          <strong>Modular by design</strong> — begin with{" "}
-          <span className="cstack-lead-key">Detect</span> to prove the value, then layer in{" "}
-          <span className="cstack-lead-key">Protect</span> and{" "}
-          <span className="cstack-lead-key">Govern</span> as you need them.
-        </p>
-
         <div className="cstack-flow reveal">
           <StageDiagram />
 
@@ -654,7 +647,7 @@ function Home() {
       <Iceberg
         id="why"
         eyebrow="Why Blindsight?"
-        segue="Now you've seen what hides beneath the surface. Want to go deeper? Watch each threat play out — and Blindsight shut it down — in the live demo below."
+        segue="Now you've seen what hides beneath the surface. Want to go deeper? Watch each threat play out — and Blindsight shut it down - in the threat modelling below."
       />
       <Scenarios />
       <Stages />
