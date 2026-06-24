@@ -330,21 +330,7 @@ h4 {
    over to fill the space (box-sizing: border-box makes max-width:0 fully
    collapse it; the negative margin cancels the nav-right gap). */
 .nav-cta {
-  max-width: 200px;
-  overflow: hidden;
   white-space: nowrap;
-  transition:
-    max-width 0.3s ease,
-    opacity 0.25s ease,
-    margin-left 0.3s ease,
-    visibility 0.3s ease;
-}
-.nav-cta.is-hidden {
-  max-width: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  margin-left: -24px;
 }
 
 @media (max-width: 768px) {

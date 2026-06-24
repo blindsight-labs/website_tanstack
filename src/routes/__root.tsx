@@ -132,42 +132,12 @@ function Nav() {
       return next;
     });
   };
-  // Hide the nav CTA while the hero is on screen (it duplicates the hero CTA).
-  // Initialise from the path (homepage has the hero) to avoid a load-time flash.
-  const [heroInView, setHeroInView] = useState(pathname === "/");
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  useEffect(() => {
-    let io: IntersectionObserver | null = null;
-    let raf = 0;
-    const attach = () => {
-      const hero = document.getElementById("hero");
-      if (!hero) {
-        // No hero on non-home routes; on "/" the route content may not have
-        // mounted yet, so keep trying until #hero appears.
-        if (pathname !== "/") {
-          setHeroInView(false);
-          return;
-        }
-        raf = requestAnimationFrame(attach);
-        return;
-      }
-      setHeroInView(true);
-      io = new IntersectionObserver(([e]) => setHeroInView(e.isIntersecting), {
-        threshold: 0,
-      });
-      io.observe(hero);
-    };
-    attach();
-    return () => {
-      if (raf) cancelAnimationFrame(raf);
-      io?.disconnect();
-    };
-  }, [pathname]);
   const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
@@ -186,7 +156,8 @@ function Nav() {
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        <Link to="/team" onClick={closeMenu}>Team</Link>
+        {/* Team hidden for now — route still exists, just not surfaced in nav yet.
+        <Link to="/team" onClick={closeMenu}>Team</Link> */}
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
@@ -202,7 +173,8 @@ function Nav() {
           {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
         <ul className="nav-links">
-          <li><Link to="/team">Team</Link></li>
+          {/* Team hidden for now — route still exists, just not surfaced in nav yet.
+          <li><Link to="/team">Team</Link></li> */}
           <li><Link to="/careers">Careers</Link></li>
           <li
             className="nav-dropdown"
@@ -261,7 +233,7 @@ function Nav() {
           </li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
-        <button type="button" className={`btn btn-primary nav-cta ${heroInView ? "is-hidden" : ""}`} onClick={openDemo}>Request a Demo</button>
+        <button type="button" className="btn btn-primary nav-cta" onClick={openDemo}>Request a Demo</button>
         <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
           {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>
