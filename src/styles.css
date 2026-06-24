@@ -3353,7 +3353,7 @@ footer {
   /* Copy-favoured split — gives the headline/lede room to breathe. The demo
      slot currently holds the placeholder icon, which centres comfortably in
      the narrower column. (Revisit if the wider Shadow AI animation returns.) */
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 56px;
   align-items: center;
 }
@@ -3394,23 +3394,267 @@ footer {
   width: 100%;
   min-width: 0;
 }
-/* Placeholder while the Shadow AI hero animation is parked — centred Blindsight
-   icon filling the demo slot. */
-.hero-placeholder {
+/* Static Shadow AI hero diagram (HeroShadowDemo). Illustrative content — keeps
+   the animation's traffic-light palette (indigo / red / purple), theme-aware via
+   these scoped vars; neutral surfaces use the global tokens. */
+.hsd {
+  width: 100%;
+  --ind: #5b3df5;
+  --ind-s: #efeaff;
+  --rd: #e5494d;
+  --rd-s: #fdeaea;
+  --rd-d: #bf2226;
+  --pur: #6d28d9;
+  --pur-s: #efe7fb;
+  --pur-d: #5b21b6;
+  --neutral: #cfcfcf;
+  --wire: #dadada;
+}
+[data-theme="dark"] .hsd {
+  --ind: #7c6cf5;
+  --ind-s: rgba(124, 108, 245, 0.16);
+  --rd: #f1656a;
+  --rd-s: rgba(241, 101, 106, 0.16);
+  --rd-d: #f1656a;
+  --pur: #a78bfa;
+  --pur-s: rgba(124, 77, 217, 0.22);
+  --pur-d: #a78bfa;
+  --neutral: var(--border-mid);
+  --wire: var(--border-mid);
+}
+.hsd-top {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hsd-kick {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ind);
+}
+.hsd-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hsd-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--rd-s);
+  color: var(--rd-d);
+  transition: 0.25s;
+}
+.hsd.on .hsd-badge {
+  background: var(--ind-s);
+  color: var(--ind);
+}
+.hsd-sw {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+  padding: 4px;
+  border-radius: 8px;
+}
+.hsd-sw-lbl {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+.hsd-sw-track {
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  background: var(--neutral);
+  position: relative;
+  transition: background 0.25s;
+}
+.hsd.on .hsd-sw-track {
+  background: var(--ind);
+}
+.hsd-sw-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.25s;
+}
+.hsd.on .hsd-sw-knob {
+  left: 23px;
+}
+.hsd-sw:focus-visible {
+  outline: 2px solid var(--ind);
+  outline-offset: 2px;
+}
+.hsd-arena {
+  position: relative;
+  height: 240px;
+  margin: 40px 0 36px;
+}
+.hsd-wire {
+  position: absolute;
+  left: 4%;
+  right: 16%;
+  height: 1px;
+  transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg, var(--wire) 0 5px, transparent 5px 11px);
+}
+.hsd-origin {
+  position: absolute;
+  left: 3%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neutral);
+  transform: translate(-50%, -50%);
+}
+.hsd-wall {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 92px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 340px;
+  gap: 6px;
+  color: var(--muted);
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    color 0.3s;
 }
-.hero-placeholder-icon {
-  width: clamp(140px, 18vw, 240px);
-  height: auto;
-  opacity: 0.9;
+.hsd.off .hsd-wall {
+  border-color: var(--rd);
+  background: var(--rd-s);
+  color: var(--rd-d);
 }
-/* The icon SVG is a solid black mark; flip it to white in dark mode. */
-[data-theme="dark"] .hero-placeholder-icon {
-  filter: brightness(0) invert(1);
+.hsd-wall svg {
+  width: 24px;
+  height: 24px;
+}
+.hsd-wall-l {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: center;
+}
+.hsd-proxy {
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  bottom: -6px;
+  width: 2px;
+  background: var(--neutral);
+  transform: translateX(-50%);
+  transition: background 0.3s;
+}
+.hsd.on .hsd-proxy {
+  background: var(--ind);
+}
+.hsd-orb {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--neutral);
+  transition: border-color 0.3s;
+}
+.hsd-orb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neutral);
+  transition: background 0.3s;
+}
+.hsd.on .hsd-orb {
+  border-color: var(--ind);
+}
+.hsd.on .hsd-orb::before {
+  background: var(--ind);
+}
+.hsd-ptag {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  color: var(--muted);
+  transition: color 0.3s;
+}
+.hsd.on .hsd-ptag {
+  color: var(--ind);
+}
+.hsd-pkt {
+  position: absolute;
+  transform: translateY(-50%);
+  transition: left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 2;
+}
+.hsd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 9px;
+  border-radius: 8px;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  transition:
+    background 0.25s,
+    color 0.25s,
+    border-color 0.25s;
+}
+.hsd-chip svg {
+  width: 13px;
+  height: 13px;
+}
+.hsd-chip.leak {
+  background: var(--rd);
+  border-color: var(--rd);
+  color: #fff;
+}
+.hsd-chip.redact {
+  background: var(--ind-s);
+  border-color: var(--ind);
+  color: var(--ind);
+}
+.hsd-chip.block {
+  background: var(--pur-s);
+  border-color: var(--pur);
+  color: var(--pur-d);
 }
 /* Scroll affordance beneath the clients banner — a gently bobbing chevron. */
 .hero-scroll-cue {

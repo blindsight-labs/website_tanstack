@@ -13,6 +13,7 @@ import {
 
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
+import { HeroShadowDemo } from "@/components/HeroShadowDemo";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill, type PillInfo } from "@/components/InfoPill";
 import { faqSchemaEntities } from "@/lib/faq-content";
@@ -193,13 +194,7 @@ function Hero() {
         </div>
 
         <div className="va-hero-demo reveal">
-          {/* Shadow AI animation parked for later — the component lives in
-              src/components/ShadowAiDemo.tsx (+ .css). To restore: re-add the
-              `ShadowAiDemo` import and the ShadowAiDemo.css head link, then swap
-              this placeholder back for <ShadowAiDemo />. */}
-          <div className="hero-placeholder">
-            <img src={iconBlindsight} alt="Blindsight" className="hero-placeholder-icon" />
-          </div>
+          <HeroShadowDemo />
         </div>
       </div>
 
