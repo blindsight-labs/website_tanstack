@@ -228,7 +228,7 @@ function Scenarios() {
           className="s-head reveal"
           style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
         >
-          <span className="tag">Beyond Shadow AI</span>
+          <span className="tag">Threat Surface</span>
           <h2>Shadow AI is only the beginning.</h2>
           <p>
             The same pipeline can hide prompt injection, data leakage, poisoning and model misuse.
