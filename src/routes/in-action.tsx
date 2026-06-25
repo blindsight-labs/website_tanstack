@@ -1211,9 +1211,7 @@ export function TopologyGraphDemo({
             </div>
 
             <div className="tg-stages-strip">
-              <span className="tg-stages-label">
-                Stage {String(stage + 1).padStart(2, "0")} / {String(stageCount).padStart(2, "0")}
-              </span>
+              <span className="tg-stages-label">Stage</span>
               <ol className="tg-stages-row">
                 {stages.map((s, i) => (
                   <li key={i} className={i === stage ? "is-current" : ""}>
@@ -1915,7 +1913,7 @@ const TG_CSS = `
 .tg-toolbar { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
 
 /* Switch */
-.tg-switch { display: inline-flex; align-items: center; gap: 12px; padding: 8px 16px 8px 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font: inherit; box-shadow: var(--shadow-sm); transition: all .2s; }
+.tg-switch { display: inline-flex; align-items: center; gap: 12px; padding: 8px 16px 8px 8px; background: transparent; border: 0; border-radius: 999px; cursor: pointer; font: inherit; transition: all .2s; }
 .tg-switch:hover { box-shadow: var(--shadow-md); }
 .tg-switch-track { position: relative; width: 44px; height: 24px; background: var(--bg-alt); border-radius: 999px; border: 1px solid var(--border); transition: background .25s; }
 .tg-switch-thumb { position: absolute; top: 1px; left: 1px; width: 20px; height: 20px; border-radius: 50%; background: var(--dim); transition: transform .25s, background .25s; }
@@ -2066,15 +2064,15 @@ const TG_CSS = `
 .dot-violet { background: var(--violet); }
 .tg-sep { color: var(--dim); }
 
-/* Stages strip (bottom) — compact, current expands */
-.tg-stages-strip { display: flex; align-items: center; gap: 14px; padding: 12px 22px; border-top: 1px solid var(--border); background: var(--bg-alt); overflow: hidden; }
+/* Stages strip (bottom) — compact pills, centered; current reveals its caption.
+   Background is transparent so it reads as part of the canvas, not a separate bar. */
+.tg-stages-strip { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 12px 22px; border-top: 1px solid var(--border); background: transparent; overflow: hidden; }
 .tg-stages-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
-.tg-stages-row { list-style: none; padding: 0; margin: 0; display: flex; gap: 6px; flex: 1; min-width: 0; align-items: center; }
+.tg-stages-row { list-style: none; padding: 0; margin: 0; display: flex; gap: 6px; flex: 0 1 auto; min-width: 0; align-items: center; justify-content: center; flex-wrap: wrap; }
 .tg-stages-row li { flex: 0 0 auto; min-width: 0; }
-.tg-stages-row li.is-current { flex: 1 1 auto; min-width: 0; }
 .tg-stage-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; background: transparent; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; font: inherit; font-size: 12.5px; color: var(--muted); transition: all .2s; text-align: left; max-width: 100%; }
 .tg-stage-pill:hover { background: var(--surface); color: var(--text); }
-.tg-stage-pill.is-on { background: var(--surface); border-color: var(--violet); color: var(--text); box-shadow: var(--shadow-sm); width: 100%; }
+.tg-stage-pill.is-on { background: var(--surface); border-color: var(--violet); color: var(--text); box-shadow: var(--shadow-sm); }
 .tg-stage-pill.is-done { color: var(--dim); border-color: color-mix(in oklab, var(--violet) 30%, var(--border)); }
 .tg-stage-pill.is-done .tg-stage-num { color: var(--violet); opacity: .8; }
 .tg-stage-num { font-family: var(--font-mono); font-size: 10px; color: var(--dim); flex-shrink: 0; }
