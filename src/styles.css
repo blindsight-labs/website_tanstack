@@ -3514,20 +3514,79 @@ footer {
 }
 .hsd-wire {
   position: absolute;
-  left: 4%;
+  left: 14%;
   right: 16%;
   height: 1px;
   transform: translateY(-50%);
   background: repeating-linear-gradient(90deg, var(--wire) 0 5px, transparent 5px 11px);
 }
-.hsd-origin {
+/* Source: the department/person streaming data toward the third-party AI. */
+.hsd-src {
   position: absolute;
-  left: 3%;
-  width: 8px;
-  height: 8px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 84px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--muted);
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    color 0.3s;
+}
+.hsd.off .hsd-src {
+  border-color: var(--rd);
+  background: var(--rd-s);
+  color: var(--rd-d);
+}
+.hsd.on .hsd-src {
+  border-color: var(--ind);
+  background: var(--ind-s);
+  color: var(--ind);
+}
+.hsd-src-ic {
+  position: relative;
+  display: inline-flex;
+}
+.hsd-src-ic svg {
+  width: 24px;
+  height: 24px;
+}
+/* emit pulse — a ring breathing out of the source as it "sends" */
+.hsd-src-ic::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
   border-radius: 50%;
-  background: var(--neutral);
-  transform: translate(-50%, -50%);
+  border: 1.5px solid currentColor;
+  opacity: 0;
+  animation: hsd-emit 2.9s ease-out infinite;
+}
+.hsd-src-l {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+@keyframes hsd-emit {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 .hsd-wall {
   position: absolute;
@@ -3623,9 +3682,69 @@ footer {
 }
 .hsd-pkt {
   position: absolute;
+  left: 15%;
   transform: translateY(-50%);
-  transition: left 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 2;
+}
+/* Off: packet streams the whole way out (PII leaks / attack lands). On: it's
+   stopped at the proxy (centre) and redacted/blocked. */
+.hsd.off .hsd-pkt {
+  animation: hsd-leak 2.9s linear infinite;
+}
+.hsd.on .hsd-pkt {
+  animation: hsd-stop 2.7s cubic-bezier(0.4, 0.6, 0.2, 1) infinite;
+}
+@keyframes hsd-leak {
+  0% {
+    left: 15%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    left: 79%;
+    opacity: 0;
+  }
+}
+@keyframes hsd-stop {
+  0% {
+    left: 15%;
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  58% {
+    left: 45%;
+    opacity: 1;
+  }
+  78% {
+    left: 45%;
+    opacity: 1;
+  }
+  100% {
+    left: 45%;
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hsd-pkt,
+  .hsd-src-ic::after {
+    animation: none !important;
+  }
+  .hsd-pkt {
+    opacity: 1;
+  }
+  .hsd.off .hsd-pkt {
+    left: 63%;
+  }
+  .hsd.on .hsd-pkt {
+    left: 42%;
+  }
 }
 .hsd-chip {
   display: inline-flex;
@@ -3664,6 +3783,245 @@ footer {
   border-color: var(--pur);
   color: var(--pur-d);
 }
+
+/* ── Hero window: bordered frame + macOS/Windows-style tab bar wrapping the two
+   demos. The active tab is driven by the parent so it stays coupled to the CTAs. */
+.hero-window {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 18px 44px -20px rgba(17, 17, 24, 0.28);
+  overflow: hidden;
+}
+.hero-window-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 86%, var(--bg));
+}
+.hero-window-dots {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+.hero-window-dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-mid);
+}
+.hero-window-tabs {
+  display: flex;
+  gap: 4px;
+}
+.hero-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.hero-tab svg {
+  width: 14px;
+  height: 14px;
+}
+.hero-tab:hover {
+  color: var(--text);
+}
+.hero-tab.active {
+  color: var(--violet);
+  background: var(--violet-soft);
+  border-color: color-mix(in oklab, var(--violet) 40%, transparent);
+}
+.hero-window-body {
+  padding: 18px 20px 20px;
+}
+
+/* ── Hero "AI Pipeline" demo — end-to-end protection wave (violet UI accent). */
+.hpp {
+  width: 100%;
+}
+.hpp-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hpp-kick {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+.hpp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--violet-soft);
+  color: var(--violet);
+}
+.hpp-badge svg {
+  width: 13px;
+  height: 13px;
+}
+.hpp-arena {
+  position: relative;
+  height: 240px;
+  margin: 40px 0 36px;
+}
+.hpp-track {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg, var(--border-mid) 0 5px, transparent 5px 11px);
+}
+.hpp-seg {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: var(--violet);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 1;
+}
+.hpp-seg.lit {
+  opacity: 1;
+}
+.hpp-pulse {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--violet);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 5px var(--violet-mid);
+  transition:
+    left 0.6s cubic-bezier(0.4, 0.6, 0.2, 1),
+    opacity 0.3s ease;
+  z-index: 2;
+}
+.hpp-node {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+.hpp-chip {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition:
+    border-color 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.hpp-chip svg {
+  width: 20px;
+  height: 20px;
+}
+.hpp-node.lit .hpp-chip {
+  border-color: var(--violet);
+  color: var(--violet);
+  box-shadow: 0 0 0 4px var(--violet-mid);
+}
+.hpp-check {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--violet);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+.hpp-node.lit .hpp-check {
+  opacity: 1;
+  transform: scale(1);
+}
+.hpp-nm {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 12px;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.35s ease;
+}
+.hpp-node.lit .hpp-nm {
+  color: var(--text);
+}
+.hpp-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hpp-stage {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+}
+.hpp-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  transition: color 0.3s ease;
+}
+.hpp-status.on {
+  color: var(--violet);
+}
+
 /* Scroll affordance beneath the clients banner — a gently bobbing chevron. */
 .hero-scroll-cue {
   align-self: center;

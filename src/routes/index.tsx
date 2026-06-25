@@ -13,7 +13,7 @@ import {
 
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
-import { HeroShadowDemo } from "@/components/HeroShadowDemo";
+import { HeroWindow, type HeroTab } from "@/components/HeroWindow";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill, type PillInfo } from "@/components/InfoPill";
 import { faqSchemaEntities } from "@/lib/faq-content";
@@ -175,9 +175,30 @@ function LogoStrip() {
   );
 }
 
-/* ── Hero — split: Shadow AI heading | scenario demo ── */
+/* ── Hero — split: copy + CTAs | tabbed window demo ──
+   The window's two tabs (Shadow AI / AI Pipeline) are coupled to the two CTAs:
+   the active tab's CTA is the emphasised (primary) one, hovering a CTA shows its
+   tab, and the tab auto-advances after 10s idle. Any manual tab click / CTA hover
+   resets that idle timer (the effect is keyed on tab + a nudge counter, so even
+   re-selecting the active tab restarts the countdown). */
 function Hero() {
   const { open } = useDemoModal();
+  const [tab, setTab] = useState<HeroTab>("shadow");
+  const [nudge, setNudge] = useState(0);
+
+  // Auto-advance to the other tab after 10s of no interaction. Re-runs (and so
+  // resets the timer) whenever the tab changes or a manual interaction nudges it.
+  useEffect(() => {
+    const t = setTimeout(() => setTab((p) => (p === "shadow" ? "pipeline" : "shadow")), 10000);
+    return () => clearTimeout(t);
+  }, [tab, nudge]);
+
+  // Manual tab selection (tab click or CTA hover): switch + reset the idle timer.
+  const pickTab = (t: HeroTab) => {
+    setNudge((n) => n + 1);
+    setTab(t);
+  };
+
   return (
     <header className="va-hero" id="hero">
       <div className="va-hero-inner">
@@ -198,10 +219,22 @@ function Hero() {
             integrity and performance?
           </p>
           <div className="hero-actions">
-            <button type="button" className="btn btn-primary" onClick={() => open("demo")}>
+            <button
+              type="button"
+              className={`btn ${tab === "pipeline" ? "btn-primary" : "btn-secondary"}`}
+              onMouseEnter={() => pickTab("pipeline")}
+              onFocus={() => pickTab("pipeline")}
+              onClick={() => open("demo")}
+            >
               Gain Visibility and Secure your Pipeline
             </button>
-            <button type="button" className="btn btn-secondary" onClick={() => open("download")}>
+            <button
+              type="button"
+              className={`btn ${tab === "shadow" ? "btn-primary" : "btn-secondary"}`}
+              onMouseEnter={() => pickTab("shadow")}
+              onFocus={() => pickTab("shadow")}
+              onClick={() => open("download")}
+            >
               Just reveal my Shadow AI
             </button>
           </div>
@@ -213,7 +246,7 @@ function Hero() {
         </div>
 
         <div className="va-hero-demo reveal">
-          <HeroShadowDemo />
+          <HeroWindow tab={tab} onTab={pickTab} />
         </div>
       </div>
 

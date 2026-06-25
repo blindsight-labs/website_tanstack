@@ -1,17 +1,19 @@
 import { useState } from "react";
-import { Ban, Cloud, Lock, TriangleAlert } from "lucide-react";
+import { Ban, Cloud, Lock, TriangleAlert, Users } from "lucide-react";
 
-/* Static hero diagram (a still of the parked Shadow AI animation). A toggle flips
- * Blindsight Off/On: Off shows employee data leaking past an offline proxy to a
- * third-party AI; On shows the same packets stopped at the proxy — sensitive data
- * redacted, attacks blocked. Illustrative content, so it keeps the animation's
- * traffic-light palette (indigo / red / purple) rather than the violet UI accent. */
+/* Hero "Shadow AI" tab. A department/person (left) streams sensitive data and
+ * attacks toward a third-party AI (right). Off: packets flow all the way out —
+ * PII/PHI leaks, injections land. On: the same packets are stopped at the
+ * Blindsight proxy (centre) — sensitive fields redacted, attacks blocked. The
+ * packet motion is CSS-animated (see .hsd-pkt); the toggle keeps it interactive.
+ * Illustrative content, so it keeps the traffic-light palette (indigo/red/purple)
+ * rather than the violet UI accent. */
 
 type Lane = { y: number; kind: "sensitive" | "inject" | "export"; off: string; on: string };
 
 const LANES: Lane[] = [
   { y: 16, kind: "sensitive", off: "IBAN", on: "IBAN ████" },
-  { y: 39, kind: "sensitive", off: "SSN", on: "SSN ███" },
+  { y: 39, kind: "sensitive", off: "PHI", on: "PHI ███" },
   { y: 62, kind: "inject", off: "inject", on: "Blocked" },
   { y: 85, kind: "export", off: "export", on: "Blocked" },
 ];
@@ -41,11 +43,15 @@ export function HeroShadowDemo() {
       </div>
 
       <div className="hsd-arena">
+        <div className="hsd-src" aria-hidden="true">
+          <span className="hsd-src-ic">
+            <Users />
+          </span>
+          <span className="hsd-src-l">Your team</span>
+        </div>
+
         {LANES.map((L, i) => (
           <span className="hsd-wire" style={{ top: `${L.y}%` }} key={`w${i}`} aria-hidden="true" />
-        ))}
-        {LANES.map((L, i) => (
-          <span className="hsd-origin" style={{ top: `${L.y}%` }} key={`o${i}`} aria-hidden="true" />
         ))}
 
         <div className="hsd-wall">
@@ -69,7 +75,7 @@ export function HeroShadowDemo() {
           return (
             <div
               className="hsd-pkt"
-              style={{ top: `${L.y}%`, left: on ? "42%" : "63%" }}
+              style={{ top: `${L.y}%`, animationDelay: `${i * 0.55}s` }}
               key={`p${i}`}
             >
               <span className={`hsd-chip ${cls}`}>
