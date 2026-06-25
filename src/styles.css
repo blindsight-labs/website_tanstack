@@ -4445,24 +4445,37 @@ footer {
   border-color: var(--violet);
   box-shadow: var(--shadow-sm);
 }
+/* Collapsed resting state: after the intro delay the rail hides every label
+   (active included) and shows only the dots. Hovering the rail re-reveals the
+   labels. Placed AFTER the active rule so it wins at equal specificity; the
+   :hover override below carries higher specificity and wins over both. */
+.section-rail.is-collapsed .section-rail-label {
+  opacity: 0;
+  transform: translateY(-50%) translateX(6px);
+  pointer-events: none;
+}
+.section-rail.is-collapsed:hover .section-rail-label {
+  opacity: 1;
+  transform: translateY(-50%);
+  pointer-events: auto;
+}
 @media (max-width: 980px) {
   .section-rail {
     display: none;
   }
 }
-/* Reserve a right-side lane so the fixed rail's always-visible labels never
-   overlap content. The rail (and its labels, which extend leftward via
-   `.section-rail-label { right: calc(100% + 18px) }`) is only shown above
-   980px, so the lane is applied only there. 232px clears the dot pill plus the
-   widest always-on label; it replaces the 48px right gutter on the centered
-   content wrappers (.va-hero and .section share max-width:1600 + 48px padding).
-   Full-bleed backgrounds stay edge-to-edge — only the inner content insets.
-   Scoped to .page-home because the rail is rendered only on the home route —
-   other pages keep their normal symmetric gutters. */
+/* Gutters on the home route (rail shown only above 980px). The rail's labels now
+   collapse to bare dots at rest (expanding only on hover, as a transient overlay),
+   so the resting state needs only enough right clearance for the dot pill — not the
+   old 232px label lane that skewed content to the left. We keep near-symmetric
+   gutters (a touch more on the right for the dot pill) so the content reads centered.
+   Full-bleed backgrounds stay edge-to-edge — only the inner content insets. Scoped
+   to .page-home because the rail is rendered only on the home route. */
 @media (min-width: 981px) {
   .page-home .va-hero,
   .page-home .section {
-    padding-right: 232px;
+    padding-left: 96px;
+    padding-right: 120px;
   }
 }
 

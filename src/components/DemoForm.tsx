@@ -1,10 +1,14 @@
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { submitDemoRequest } from "@/lib/demo.functions";
+import type { DemoVariant } from "./DemoModal";
 
-/** Shared demo-request form + success state. Used by the /demo page and the demo modal. */
-export function DemoForm() {
+/** Shared demo-request form + success state. Used by the /demo page and the demo modal.
+ *  `variant` switches between booking a demo and requesting the app download — same
+ *  fields, different submit label, source tag and confirmation copy. */
+export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
   const submit = useServerFn(submitDemoRequest);
+  const isDownload = variant === "download";
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -37,7 +41,7 @@ export function DemoForm() {
           useCase: "",
           message,
           consent,
-          source: "demo-form",
+          source: isDownload ? "download-app" : "demo-form",
         },
       });
       setDone(true);
@@ -53,10 +57,21 @@ export function DemoForm() {
       {done ? (
         <div className="demo-success">
           <span className="tag">Got it</span>
-          <h2>Thanks - we'll be in touch.</h2>
+          <h2>
+            {isDownload ? "Thanks — your download is on the way." : "Thanks - we'll be in touch."}
+          </h2>
           <p>
-            A founder will reply within one business day from{" "}
-            <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
+            {isDownload ? (
+              <>
+                We'll email your download link and setup guide within one business day from{" "}
+                <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
+              </>
+            ) : (
+              <>
+                A founder will reply within one business day from{" "}
+                <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
+              </>
+            )}
           </p>
         </div>
       ) : (
@@ -82,9 +97,13 @@ export function DemoForm() {
             <input name="consent" type="checkbox" defaultChecked />
             <span>I agree to be contacted by Blindsight about this request.</span>
           </label>
-          {error && <div className="demo-error" role="alert">{error}</div>}
+          {error && (
+            <div className="demo-error" role="alert">
+              {error}
+            </div>
+          )}
           <button type="submit" className="btn btn-primary" disabled={submitting}>
-            {submitting ? "Sending…" : "Request demo"}
+            {submitting ? "Sending…" : isDownload ? "Send my download link" : "Request demo"}
           </button>
         </form>
       )}

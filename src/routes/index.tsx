@@ -66,7 +66,7 @@ export const Route = createFileRoute("/")({
    eyebrow) and as the server-rendered placeholder before hydration.
    (The rail's appearance is styled in styles.css under ".section-rail".) */
 const SECTIONS: { id: string; label: string }[] = [
-  { id: "hero", label: "Shadow AI" },
+  { id: "hero", label: "Gain Visibility" },
   { id: "why", label: "Why Blindsight?" },
   { id: "scenarios", label: "Beyond Shadow AI" },
   { id: "stack", label: "Adopt in stages" },
@@ -75,6 +75,13 @@ const SECTIONS: { id: string; label: string }[] = [
 
 function SectionRail({ sections }: { sections: { id: string; label: string }[] }) {
   const [active, setActive] = useState<string>(sections[0]?.id ?? "");
+  // Show the rail fully (labels visible) on load, then collapse to bare dots after
+  // a few seconds. Hovering the rail re-expands it (pure CSS, see .section-rail).
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setCollapsed(true), 3200);
+    return () => clearTimeout(t);
+  }, []);
   // Labels stay in sync with the section titles automatically: we pull each
   // one from the section's eyebrow (`.s-head .tag`) and only fall back to the
   // configured `label` when a section has no eyebrow (e.g. the hero).
@@ -103,7 +110,7 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
   const go = (id: string) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   return (
-    <nav className="section-rail" aria-label="Page progress">
+    <nav className={`section-rail ${collapsed ? "is-collapsed" : ""}`} aria-label="Page progress">
       {sections.map((s) => (
         <button
           key={s.id}
@@ -170,7 +177,7 @@ function LogoStrip() {
 
 /* ── Hero — split: Shadow AI heading | scenario demo ── */
 function Hero() {
-  const { open: openDemo } = useDemoModal();
+  const { open } = useDemoModal();
   return (
     <header className="va-hero" id="hero">
       <div className="va-hero-inner">
@@ -186,23 +193,15 @@ function Hero() {
             Most AI security patches the symptom — the model acting up — and leaves the root cause
             sitting in the data it learned from. Blindsight gives you visibility and secures the
             whole pipeline: from training data to live output, we make sure your AI performs as
-            intended — and that you can prove it. If you can&apos;t even detect Shadow AI, how can you
-            trust your pipeline — let alone unscanned datasets that quietly degrade model integrity
-            and performance?
+            intended — and that you can prove it. If you can&apos;t even detect Shadow AI, how can
+            you trust your pipeline — let alone unscanned datasets that quietly degrade model
+            integrity and performance?
           </p>
           <div className="hero-actions">
-            <button type="button" className="btn btn-primary" onClick={openDemo}>
+            <button type="button" className="btn btn-primary" onClick={() => open("demo")}>
               Gain Visibility and Secure your Pipeline
             </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() =>
-                document
-                  .getElementById("scenarios")
-                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
-              }
-            >
+            <button type="button" className="btn btn-secondary" onClick={() => open("download")}>
               Just reveal my Shadow AI
             </button>
           </div>
@@ -247,8 +246,7 @@ function Scenarios() {
           <h2>Shadow AI is only the beginning.</h2>
           <p>
             The same pipeline can hide prompt injection, data leakage, poisoning and model misuse.
-            Pick
-            a scenario and watch each one play out, with Blindsight off and on.
+            Pick a scenario and watch each one play out, with Blindsight off and on.
           </p>
         </div>
         <div className="scenarios-demo reveal">

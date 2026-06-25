@@ -2,7 +2,26 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { X } from "lucide-react";
 import { DemoForm } from "./DemoForm";
 
-const DemoModalContext = createContext<{ open: () => void; close: () => void }>({
+/** "demo" = book a working session; "download" = get the app after sharing details. */
+export type DemoVariant = "demo" | "download";
+
+const VARIANT_COPY: Record<DemoVariant, { tag: string; title: string; sub: string }> = {
+  demo: {
+    tag: "Request a Demo",
+    title: "See Blindsight against your stack.",
+    sub: "30-minute working session with the founding team. Reply within one business day.",
+  },
+  download: {
+    tag: "Download Blindsight",
+    title: "Reveal your Shadow AI.",
+    sub: "Tell us where to send it — we'll email your download link and setup guide within one business day.",
+  },
+};
+
+const DemoModalContext = createContext<{
+  open: (variant?: DemoVariant) => void;
+  close: () => void;
+}>({
   open: () => {},
   close: () => {},
 });
@@ -14,8 +33,12 @@ export function useDemoModal() {
 
 export function DemoModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [variant, setVariant] = useState<DemoVariant>("demo");
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const open = () => setIsOpen(true);
+  const open = (v: DemoVariant = "demo") => {
+    setVariant(v);
+    setIsOpen(true);
+  };
   const close = () => setIsOpen(false);
 
   useEffect(() => {
@@ -52,13 +75,13 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
               <X size={18} aria-hidden="true" />
             </button>
             <div className="demo-compact-head">
-              <span className="tag">Request a Demo</span>
-              <h2 id="demo-modal-title" className="demo-title">See Blindsight against your stack.</h2>
-              <p className="demo-sub">
-                30-minute working session with the founding team. Reply within one business day.
-              </p>
+              <span className="tag">{VARIANT_COPY[variant].tag}</span>
+              <h2 id="demo-modal-title" className="demo-title">
+                {VARIANT_COPY[variant].title}
+              </h2>
+              <p className="demo-sub">{VARIANT_COPY[variant].sub}</p>
             </div>
-            <DemoForm />
+            <DemoForm variant={variant} />
           </div>
         </div>
       )}
