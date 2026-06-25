@@ -1,27 +1,62 @@
 import { useEffect, useState } from "react";
-import { Check, Cpu, Database, LogIn, LogOut, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, Cpu, Database, LogIn, LogOut } from "lucide-react";
 
-/* Lightweight end-to-end pipeline animation for the Hero "AI Pipeline" tab. A
- * protection wave rolls left→right across the four stages (Data → Input → Model →
- * Output): a pulse travels stage to stage, lighting each node + connecting segment
- * as it passes, then holds on a "secured end-to-end" beat before looping. Pure CSS
- * for the visuals; a single interval drives the step (only while this tab is
- * mounted). Reduced-motion users get the final secured state, static. */
+/* Hero "AI Pipeline" tab. Shows the whole pipeline (Data → Input → Model →
+ * Output) and the cost of leaving it unprotected:
+ *  - Toggle Blindsight off → "Exposed": each stage flags its threat count, the
+ *    metrics show the damage (PII leaked, poison undetected, breach dwell time).
+ *  - Toggle on → "Protected": a protection wave rolls across the stages, securing
+ *    each in turn; the metrics flip to the Blindsight outcome.
+ *  - Hover any stage → a succinct line on what it is + the vulnerabilities that
+ *    plague it. "Learn more" jumps to the threat-modelling demo (#scenarios).
+ * Pure CSS for the visuals; one interval (only while protected). */
 
-const NODES = [
-  { name: "Data", Icon: Database },
-  { name: "Input", Icon: LogIn },
-  { name: "Model", Icon: Cpu },
-  { name: "Output", Icon: LogOut },
+const LAYERS = [
+  {
+    name: "Data",
+    Icon: Database,
+    desc: "Training sets, RAG & knowledge bases your AI learns from.",
+    vulns: ["Data poisoning", "Mislabeled data", "Data leak (PII)", "RAG poisoning", "Backdoor"],
+  },
+  {
+    name: "Input",
+    Icon: LogIn,
+    desc: "Prompts, retrieved docs & tool outputs entering the model.",
+    vulns: ["Prompt injection", "Indirect injection", "Adversarial patch", "Shadow AI"],
+  },
+  {
+    name: "Model",
+    Icon: Cpu,
+    desc: "Inference — the model acts on whatever reached it.",
+    vulns: ["Adversarial patch", "Shortcut learning"],
+  },
+  {
+    name: "Output",
+    Icon: LogOut,
+    desc: "Responses, actions & data the model returns.",
+    vulns: ["Data leak (PII)", "Prompt injection", "Shadow AI", "Shortcut learning"],
+  },
 ] as const;
+
+const METRICS = [
+  { label: "PII exposed", bad: "100%", good: "1.2%" },
+  { label: "Poisoned data caught", bad: "0%", good: "98%" },
+  { label: "Time to detection", bad: "296 days", good: "Real-time" },
+];
 
 /* node x-centres (% of arena width) — even spread with edge padding */
 const X = [10, 36.67, 63.33, 90];
 
-export function HeroPipelineDemo() {
-  const [step, setStep] = useState(0);
+export function HeroPipelineDemo({ onInteract }: { onInteract?: () => void }) {
+  const [on, setOn] = useState(false); // Blindsight protection — default exposed
+  const [step, setStep] = useState(0); // protection wave (only while protected)
+  const [hover, setHover] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!on) {
+      setStep(0);
+      return;
+    }
     const reduce =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -31,21 +66,40 @@ export function HeroPipelineDemo() {
     }
     const id = setInterval(() => setStep((s) => (s + 1) % 5), 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [on]);
 
-  const complete = step === 4;
-  const nodesLit = complete ? NODES.length : step + 1; // nodes 0..nodesLit-1 secured
-  const segsLit = nodesLit - 1; // segments 0..segsLit-1 secured
-  const pulseStep = step <= 3 ? step : -1; // hidden on the hold beat
+  const complete = on && step === 4;
+  const nodesLit = on ? (complete ? LAYERS.length : step + 1) : 0;
+  const segsLit = nodesLit - 1;
+  const pulseStep = on && step <= 3 ? step : -1;
+  const detail = hover != null ? LAYERS[hover] : null;
+
+  const toggle = () => {
+    setOn((v) => !v);
+    onInteract?.();
+  };
+  const learnMore = () =>
+    document.getElementById("scenarios")?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <div className={`hpp ${complete ? "done" : ""}`}>
+    <div className={`hpp ${on ? "on" : "off"} ${complete ? "done" : ""}`}>
       <div className="hpp-top">
-        <span className="hpp-kick">// AI Pipeline · end-to-end</span>
-        <span className="hpp-badge">
-          <ShieldCheck size={13} aria-hidden="true" />
-          Protected
-        </span>
+        <span className="hpp-kick">// AI Pipeline · {on ? "end-to-end" : "exposed"}</span>
+        <div className="hpp-ctrl">
+          <span className="hpp-badge">{on ? "Protected" : "Exposed"}</span>
+          <button
+            type="button"
+            className="hpp-sw"
+            aria-pressed={on}
+            aria-label="Toggle Blindsight protection"
+            onClick={toggle}
+          >
+            <span className="hpp-sw-lbl">Blindsight</span>
+            <span className="hpp-sw-track">
+              <span className="hpp-sw-knob" />
+            </span>
+          </button>
+        </div>
       </div>
 
       <div className="hpp-arena">
@@ -61,32 +115,89 @@ export function HeroPipelineDemo() {
         {pulseStep >= 0 && (
           <span className="hpp-pulse" style={{ left: `${X[pulseStep]}%` }} aria-hidden="true" />
         )}
-        {NODES.map((n, i) => {
+        {LAYERS.map((n, i) => {
           const lit = i < nodesLit;
           const Icon = n.Icon;
+          const cls = [
+            "hpp-node",
+            lit ? "lit" : "",
+            on ? "" : "exposed",
+            hover === i ? "hot" : "",
+            hover != null && hover !== i ? "dim" : "",
+          ]
+            .filter(Boolean)
+            .join(" ");
           return (
-            <div
+            <button
+              type="button"
               key={n.name}
-              className={`hpp-node ${lit ? "lit" : ""}`}
+              className={cls}
               style={{ left: `${X[i]}%` }}
+              aria-label={`${n.name} stage`}
+              onMouseEnter={() => {
+                setHover(i);
+                onInteract?.();
+              }}
+              onFocus={() => {
+                setHover(i);
+                onInteract?.();
+              }}
+              onMouseLeave={() => setHover((h) => (h === i ? null : h))}
+              onBlur={() => setHover((h) => (h === i ? null : h))}
             >
               <span className="hpp-chip">
                 <Icon size={20} aria-hidden="true" />
                 <span className="hpp-check">
                   <Check size={11} strokeWidth={3} aria-hidden="true" />
                 </span>
+                {!on && <span className="hpp-alert">{n.vulns.length}</span>}
               </span>
               <span className="hpp-nm">{n.name}</span>
-            </div>
+            </button>
           );
         })}
       </div>
 
+      <div className="hpp-detail" aria-live="polite">
+        {detail ? (
+          <>
+            <div className="hpp-detail-head">
+              <span className="hpp-detail-nm">{detail.name}</span>
+              <span className="hpp-detail-desc">{detail.desc}</span>
+            </div>
+            <div className="hpp-vulns">
+              {detail.vulns.map((v) => (
+                <span className="hpp-vchip" key={v}>
+                  <i aria-hidden="true" />
+                  {v}
+                </span>
+              ))}
+            </div>
+          </>
+        ) : (
+          <span className="hpp-detail-hint">
+            Hover a stage to see the threats it faces — Blindsight covers all four.
+          </span>
+        )}
+      </div>
+
+      <div className="hpp-metrics">
+        {METRICS.map((m) => (
+          <div className={`hpp-metric ${on ? "good" : "bad"}`} key={m.label}>
+            <span className="hpp-metric-l">{m.label}</span>
+            <span className="hpp-metric-v">{on ? m.good : m.bad}</span>
+          </div>
+        ))}
+      </div>
+
       <div className="hpp-foot">
-        <span className="hpp-stage">DATA → INPUT → MODEL → OUTPUT</span>
-        <span className={`hpp-status ${complete ? "on" : ""}`}>
-          {complete ? "Secured end-to-end" : "Securing every stage…"}
+        <span className="hpp-stage">
+          {on ? "Secured end-to-end" : "Without Blindsight · exposed at every stage"}
         </span>
+        <button type="button" className="hpp-learn" onClick={learnMore}>
+          Learn more
+          <ArrowRight size={13} aria-hidden="true" />
+        </button>
       </div>
     </div>
   );

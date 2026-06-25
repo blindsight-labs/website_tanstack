@@ -18,7 +18,7 @@ const LANES: Lane[] = [
   { y: 85, kind: "export", off: "export", on: "Blocked" },
 ];
 
-export function HeroShadowDemo() {
+export function HeroShadowDemo({ onInteract }: { onInteract?: () => void }) {
   const [on, setOn] = useState(false);
 
   return (
@@ -32,7 +32,10 @@ export function HeroShadowDemo() {
             className="hsd-sw"
             aria-pressed={on}
             aria-label="Toggle Blindsight protection"
-            onClick={() => setOn((v) => !v)}
+            onClick={() => {
+              setOn((v) => !v);
+              onInteract?.();
+            }}
           >
             <span className="hsd-sw-lbl">Blindsight</span>
             <span className="hsd-sw-track">

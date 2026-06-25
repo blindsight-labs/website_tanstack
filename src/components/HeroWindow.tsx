@@ -6,8 +6,17 @@ export type HeroTab = "shadow" | "pipeline";
 
 /* Window-chrome frame wrapping the two Hero demos. The tab bar (macOS/Windows
  * style) switches the content; the active tab is controlled by the parent so it
- * can stay in sync with the CTAs (hover a CTA → its tab; 10s idle auto-advances). */
-export function HeroWindow({ tab, onTab }: { tab: HeroTab; onTab: (t: HeroTab) => void }) {
+ * can stay in sync with the CTAs (hover a CTA → its tab; 10s idle auto-advances).
+ * onInteract lets in-demo interactions (toggle, stage hover) reset that idle timer. */
+export function HeroWindow({
+  tab,
+  onTab,
+  onInteract,
+}: {
+  tab: HeroTab;
+  onTab: (t: HeroTab) => void;
+  onInteract?: () => void;
+}) {
   return (
     <div className="hero-window">
       <div className="hero-window-bar">
@@ -40,7 +49,11 @@ export function HeroWindow({ tab, onTab }: { tab: HeroTab; onTab: (t: HeroTab) =
         </div>
       </div>
       <div className="hero-window-body">
-        {tab === "shadow" ? <HeroShadowDemo /> : <HeroPipelineDemo />}
+        {tab === "shadow" ? (
+          <HeroShadowDemo onInteract={onInteract} />
+        ) : (
+          <HeroPipelineDemo onInteract={onInteract} />
+        )}
       </div>
     </div>
   );

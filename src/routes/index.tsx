@@ -183,7 +183,7 @@ function LogoStrip() {
    re-selecting the active tab restarts the countdown). */
 function Hero() {
   const { open } = useDemoModal();
-  const [tab, setTab] = useState<HeroTab>("shadow");
+  const [tab, setTab] = useState<HeroTab>("pipeline");
   const [nudge, setNudge] = useState(0);
 
   // Auto-advance to the other tab after 10s of no interaction. Re-runs (and so
@@ -193,9 +193,11 @@ function Hero() {
     return () => clearTimeout(t);
   }, [tab, nudge]);
 
-  // Manual tab selection (tab click or CTA hover): switch + reset the idle timer.
+  // Reset the idle timer on any in-Hero interaction (CTA hover, tab click, or an
+  // interaction inside the demo such as the toggle / stage hover).
+  const bumpIdle = () => setNudge((n) => n + 1);
   const pickTab = (t: HeroTab) => {
-    setNudge((n) => n + 1);
+    bumpIdle();
     setTab(t);
   };
 
@@ -246,7 +248,7 @@ function Hero() {
         </div>
 
         <div className="va-hero-demo reveal">
-          <HeroWindow tab={tab} onTab={pickTab} />
+          <HeroWindow tab={tab} onTab={pickTab} onInteract={bumpIdle} />
         </div>
       </div>
 

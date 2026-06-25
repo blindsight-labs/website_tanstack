@@ -3849,9 +3849,18 @@ footer {
   padding: 18px 20px 20px;
 }
 
-/* ── Hero "AI Pipeline" demo — end-to-end protection wave (violet UI accent). */
+/* ── Hero "AI Pipeline" demo — protection wave + exposure metrics. Violet =
+   Blindsight/secured; scoped red (--rd*) = exposed/threat (illustrative). */
 .hpp {
   width: 100%;
+  --rd: #e5494d;
+  --rd-s: rgba(229, 73, 77, 0.1);
+  --rd-d: #bf2226;
+}
+[data-theme="dark"] .hpp {
+  --rd: #f1656a;
+  --rd-s: rgba(241, 101, 106, 0.16);
+  --rd-d: #f1656a;
 }
 .hpp-top {
   display: flex;
@@ -3867,27 +3876,78 @@ footer {
   text-transform: uppercase;
   color: var(--violet);
 }
-.hpp-badge {
-  display: inline-flex;
+.hpp.off .hpp-kick {
+  color: var(--rd-d);
+}
+.hpp-ctrl {
+  display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
+}
+.hpp-badge {
   font-family: var(--font-mono);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.06em;
   padding: 4px 10px;
   border-radius: 6px;
+  transition: 0.25s;
+}
+.hpp.off .hpp-badge {
+  background: var(--rd-s);
+  color: var(--rd-d);
+}
+.hpp.on .hpp-badge {
   background: var(--violet-soft);
   color: var(--violet);
 }
-.hpp-badge svg {
-  width: 13px;
-  height: 13px;
+.hpp-sw {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  border: 0;
+  background: none;
+  padding: 4px;
+  border-radius: 8px;
+}
+.hpp-sw-lbl {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+.hpp-sw-track {
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  background: var(--border-mid);
+  position: relative;
+  transition: background 0.25s;
+}
+.hpp.on .hpp-sw-track {
+  background: var(--violet);
+}
+.hpp-sw-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.25s;
+}
+.hpp.on .hpp-sw-knob {
+  left: 23px;
+}
+.hpp-sw:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
 }
 .hpp-arena {
   position: relative;
-  height: 240px;
-  margin: 40px 0 36px;
+  height: 140px;
+  margin: 26px 0 14px;
 }
 .hpp-track {
   position: absolute;
@@ -3931,6 +3991,15 @@ footer {
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.hpp-node.dim {
+  opacity: 0.42;
 }
 .hpp-chip {
   position: relative;
@@ -3956,6 +4025,47 @@ footer {
   border-color: var(--violet);
   color: var(--violet);
   box-shadow: 0 0 0 4px var(--violet-mid);
+}
+.hpp-node.exposed .hpp-chip {
+  border-color: var(--rd);
+  color: var(--rd-d);
+}
+.hpp-node.hot .hpp-chip {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 4px var(--violet-mid);
+}
+.hpp-node.hot.exposed .hpp-chip {
+  border-color: var(--rd);
+  box-shadow: 0 0 0 4px var(--rd-s);
+}
+/* Exposed: each stage flags how many threats it faces. */
+.hpp-alert {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--rd);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 3px var(--surface);
+  animation: hpp-alertpulse 1.8s ease-in-out infinite;
+}
+@keyframes hpp-alertpulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.14);
+  }
 }
 .hpp-check {
   position: absolute;
@@ -3994,32 +4104,148 @@ footer {
   color: var(--muted);
   transition: color 0.35s ease;
 }
-.hpp-node.lit .hpp-nm {
+.hpp-node.lit .hpp-nm,
+.hpp-node.hot .hpp-nm {
   color: var(--text);
+}
+/* Hovered-stage detail: what the stage is + the threats it faces. Fixed min-height
+   so toggling between stages (with different threat counts) doesn't shift layout. */
+.hpp-detail {
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0 10px;
+  border-top: 1px solid var(--border);
+}
+.hpp-detail-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hpp-detail-nm {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.hpp-detail-desc {
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.hpp-detail-hint {
+  font-size: 11.5px;
+  color: var(--dim);
+}
+.hpp-vulns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.hpp-vchip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.hpp-vchip i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--rd);
+  flex: 0 0 auto;
+}
+.hpp-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.hpp-metric {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 8px 10px;
+  background: var(--surface);
+  transition:
+    border-color 0.25s,
+    background 0.25s;
+}
+.hpp-metric-l {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 5px;
+}
+.hpp-metric-v {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  transition: color 0.25s;
+}
+.hpp-metric.bad .hpp-metric-v {
+  color: var(--rd-d);
+}
+.hpp-metric.good .hpp-metric-v {
+  color: var(--violet);
 }
 .hpp-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  margin-top: 12px;
   flex-wrap: wrap;
 }
 .hpp-stage {
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--dim);
-}
-.hpp-status {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--muted);
+  color: var(--dim);
   transition: color 0.3s ease;
 }
-.hpp-status.on {
+.hpp.on .hpp-stage {
   color: var(--violet);
+}
+.hpp-learn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--violet);
+  background: none;
+  border: 0;
+  padding: 4px 2px;
+  cursor: pointer;
+}
+.hpp-learn svg {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.18s ease;
+}
+.hpp-learn:hover svg {
+  transform: translateX(3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hpp-alert {
+    animation: none;
+  }
 }
 
 /* Scroll affordance beneath the clients banner — a gently bobbing chevron. */
