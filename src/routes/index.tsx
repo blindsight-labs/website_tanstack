@@ -175,22 +175,42 @@ function Hero() {
     <header className="va-hero" id="hero">
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
+          <p className="hero-kicker">
+            AI security across the whole pipeline — training data, input, model, output
+          </p>
           <h1>
-            If you can&apos;t even <span className="accent">see</span> Shadow AI, how can you secure
-            or govern it?
+            <span className="hero-h1-pre">Stop blindly patching your AI&apos;s misbehaviour.</span>{" "}
+            Gain <span className="accent">visibility</span> into the root cause — and address it.
           </h1>
           <p className="lede">
-            Companies are deploying AI faster than they can secure it. AI leaks data and is an active
-            attack surface, shadow AI spreads unmonitored, and most teams cannot even see where and
-            how AI is being used. The tools that exist focus on just the prompts, leaving the rest of
-            the AI pipeline wide open. Any attacker who can compromise one component can compromise
-            the rest, often with no sign until the damage is done.
+            Most AI security patches the symptom — the model acting up — and leaves the root cause
+            sitting in the data it learned from. Blindsight gives you visibility and secures the
+            whole pipeline: from training data to live output, we make sure your AI performs as
+            intended — and that you can prove it. If you can&apos;t even detect Shadow AI, how can you
+            trust your pipeline — let alone unscanned datasets that quietly degrade model integrity
+            and performance?
           </p>
           <div className="hero-actions">
             <button type="button" className="btn btn-primary" onClick={openDemo}>
-              Reveal your Shadow AI
+              Gain Visibility and Secure your Pipeline
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() =>
+                document
+                  .getElementById("scenarios")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" })
+              }
+            >
+              Just reveal my Shadow AI
             </button>
           </div>
+          <p className="hero-trust">
+            In a regulated environment, can you really afford not to? Blindsight gives you the
+            visibility you need and keeps your AI performing as intended — so you can adopt the
+            technology without the drawbacks or the fear of liability.
+          </p>
         </div>
 
         <div className="va-hero-demo reveal">
