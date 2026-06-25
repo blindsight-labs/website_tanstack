@@ -65,7 +65,11 @@ export function HeroPipelineDemo() {
           const lit = i < nodesLit;
           const Icon = n.Icon;
           return (
-            <div key={n.name} className={`hpp-node ${lit ? "lit" : ""}`} style={{ left: `${X[i]}%` }}>
+            <div
+              key={n.name}
+              className={`hpp-node ${lit ? "lit" : ""}`}
+              style={{ left: `${X[i]}%` }}
+            >
               <span className="hpp-chip">
                 <Icon size={20} aria-hidden="true" />
                 <span className="hpp-check">
