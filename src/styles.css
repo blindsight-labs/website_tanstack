@@ -3400,9 +3400,69 @@ footer {
   line-height: 1.55;
   max-width: 540px;
 }
+.va-hero-copy .lede .accent {
+  color: var(--violet);
+  font-weight: 600;
+}
+.va-hero-copy .lede .nowrap {
+  white-space: nowrap;
+}
+.va-hero-copy .hero-trust {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 540px;
+  margin-top: 2px;
+}
 .va-hero-demo {
   width: 100%;
   min-width: 0;
+}
+/* Caption above the pipeline graphic (moved out of the headline stack). */
+.hero-demo-cap {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 12px;
+}
+/* Inline defined term (InfoTerm): dotted-underlined word that reveals a definition
+   on hover/tap, reusing the InfoPill tip/modal (.ipill-tip*, .ipill-modal*). */
+.iterm {
+  position: relative;
+  display: inline-block;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: help;
+  vertical-align: baseline;
+}
+.iterm-label {
+  border-bottom: 1.5px dotted var(--violet);
+  color: var(--violet-deep);
+  font-weight: 600;
+}
+/* The term is wrapped in a nowrap span (keeps it with its trailing period); reset
+   that here so the tip's definition wraps inside its box instead of overflowing. */
+.iterm .ipill-tip {
+  width: 280px;
+  white-space: normal;
+}
+.iterm:hover .ipill-tip,
+.iterm.active .ipill-tip,
+.iterm:focus-visible .ipill-tip {
+  opacity: 1;
+  visibility: visible;
+}
+@media (max-width: 640px) {
+  .iterm {
+    cursor: pointer;
+  }
 }
 /* Static Shadow AI hero diagram (HeroShadowDemo). Illustrative content — keeps
    the animation's traffic-light palette (indigo / red / purple), theme-aware via

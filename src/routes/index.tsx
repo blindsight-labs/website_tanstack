@@ -13,7 +13,8 @@ import {
 
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
-import { HeroWindow, type HeroTab } from "@/components/HeroWindow";
+import { HeroPipelineDemo } from "@/components/HeroPipelineDemo";
+import { InfoTerm } from "@/components/InfoTerm";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill, type PillInfo } from "@/components/InfoPill";
 import { faqSchemaEntities } from "@/lib/faq-content";
@@ -175,80 +176,56 @@ function LogoStrip() {
   );
 }
 
-/* ── Hero — split: copy + CTAs | tabbed window demo ──
-   The window's two tabs (Shadow AI / AI Pipeline) are coupled to the two CTAs:
-   the active tab's CTA is the emphasised (primary) one, hovering a CTA shows its
-   tab, and the tab auto-advances after 10s idle. Any manual tab click / CTA hover
-   resets that idle timer (the effect is keyed on tab + a nudge counter, so even
-   re-selecting the active tab restarts the countdown). */
+/* ── Hero — split: copy + CTAs | AI-pipeline demo ──
+   Primary CTA opens the demo modal; "Just reveal my Shadow AI" links to the
+   standalone Shadow AI landing page (shadowai.blindsight.io). */
 function Hero() {
   const { open } = useDemoModal();
-  const [tab, setTab] = useState<HeroTab>("pipeline");
-  const [nudge, setNudge] = useState(0);
-
-  // Auto-advance to the other tab after 10s of no interaction. Re-runs (and so
-  // resets the timer) whenever the tab changes or a manual interaction nudges it.
-  useEffect(() => {
-    const t = setTimeout(() => setTab((p) => (p === "shadow" ? "pipeline" : "shadow")), 10000);
-    return () => clearTimeout(t);
-  }, [tab, nudge]);
-
-  // Reset the idle timer on any in-Hero interaction (CTA hover, tab click, or an
-  // interaction inside the demo such as the toggle / stage hover).
-  const bumpIdle = () => setNudge((n) => n + 1);
-  const pickTab = (t: HeroTab) => {
-    bumpIdle();
-    setTab(t);
-  };
 
   return (
     <header className="va-hero" id="hero">
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
-          <p className="hero-kicker">
-            AI security across the whole pipeline — training data, input, model, output
-          </p>
-          <h1>
-            <span className="hero-h1-pre">Stop blindly patching your AI&apos;s misbehaviour.</span>{" "}
-            Gain <span className="accent">visibility</span> into the root cause — and address it.
-          </h1>
+          <h1>Stop blindly patching your AI&apos;s misbehaviour.</h1>
           <p className="lede">
-            Most AI security patches the symptom — the model acting up — and leaves the root cause
-            sitting in the data it learned from. Blindsight gives you visibility and secures the
-            whole pipeline: from training data to live output, we make sure your AI performs as
-            intended — and that you can prove it. If you can&apos;t even detect Shadow AI, how can
-            you trust your pipeline — let alone unscanned datasets that quietly degrade model
-            integrity and performance?
+            Gain <span className="accent">visibility</span> into the root cause — and address it.
+            The misbehaviour is only the symptom; the real risk is to your{" "}
+            <span className="nowrap">
+              <InfoTerm
+                term="AI integrity"
+                meta="What it is"
+                desc="Whether your AI can be trusted end to end — its training data, model and outputs sound, uncompromised and behaving as intended."
+              />
+              .
+            </span>{" "}
+            Blindsight gives you that visibility across the whole pipeline, so you can adopt AI fast
+            — without fearing what you can&apos;t see. If you&apos;re not ready for a full
+            deployment, you can start by revealing your Shadow AI — for free.
           </p>
           <div className="hero-actions">
-            <button
-              type="button"
-              className={`btn ${tab === "pipeline" ? "btn-primary" : "btn-secondary"}`}
-              onMouseEnter={() => pickTab("pipeline")}
-              onFocus={() => pickTab("pipeline")}
-              onClick={() => open("demo")}
-            >
+            <button type="button" className="btn btn-primary" onClick={() => open("demo")}>
               Gain Visibility and Secure your Pipeline
             </button>
-            <button
-              type="button"
-              className={`btn ${tab === "shadow" ? "btn-primary" : "btn-secondary"}`}
-              onMouseEnter={() => pickTab("shadow")}
-              onFocus={() => pickTab("shadow")}
-              onClick={() => open("download")}
-            >
+            <a className="btn btn-secondary" href="https://shadowai.blindsight.io">
               Just reveal my Shadow AI
-            </button>
+            </a>
           </div>
-          <p className="hero-trust">
-            In a regulated environment, can you really afford not to? Blindsight gives you the
-            visibility you need and keeps your AI performing as intended — so you can adopt the
-            technology without the drawbacks or the fear of liability.
-          </p>
+          <div className="hero-trust-block">
+            <p className="hero-trust-q">In a regulated environment, can you really afford not to?</p>
+            <p className="hero-trust">
+              Blindsight keeps your AI performing as intended and your company auditable: our
+              security enables adoption rather than restraining it.
+            </p>
+          </div>
         </div>
 
         <div className="va-hero-demo reveal">
-          <HeroWindow tab={tab} onTab={pickTab} onInteract={bumpIdle} />
+          <p className="hero-demo-cap">AI security across the whole pipeline</p>
+          <div className="hero-window">
+            <div className="hero-window-body">
+              <HeroPipelineDemo />
+            </div>
+          </div>
         </div>
       </div>
 
