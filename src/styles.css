@@ -782,20 +782,21 @@ h4 {
 /* ── Iceberg section ── */
 .iceberg-grid {
   display: grid;
-  /* The iceberg (2nd column) holds its size at every width; the label list
-     (1st column) is the part that compacts — smaller type, two-line names —
-     until it's dropped entirely at the mobile breakpoint. The iceberg is never
-     shrunk to make room. */
-  grid-template-columns: minmax(0, 1fr) clamp(440px, 44vw, 580px);
+  /* The iceberg (2nd column) holds ONE fixed size at every width; the label list
+     (1st column) is the part that compacts — the list narrows and names wrap —
+     until the list is dropped entirely at the 640px mobile breakpoint, where the
+     iceberg swaps to its full-width version. The iceberg is never scaled to make
+     room, so it reads identically from the widest desktop down to the phone swap. */
+  grid-template-columns: minmax(0, 1fr) 460px;
   gap: clamp(18px, 3vw, 72px);
   align-items: center;
   margin-top: 56px;
 }
 @media (max-width: 900px) {
-  /* Hand the iceberg the larger share so it keeps its height; the (now
-     compacted) list takes whatever's left. */
+  /* Keep the iceberg at its base size all the way down — only the gap tightens so
+     the list takes whatever's left. The iceberg holds until the 640px breakpoint
+     swaps in the full-width mobile version. */
   .iceberg-grid {
-    grid-template-columns: minmax(0, 1fr) clamp(440px, 56vw, 540px);
     gap: 14px;
   }
 }
@@ -845,7 +846,7 @@ h4 {
   border-bottom-color: transparent;
 }
 .threat-row .name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--text);
   white-space: nowrap;
@@ -929,12 +930,13 @@ h4 {
   line-height: 1.6;
   color: var(--muted);
 }
-/* As the iceberg holds its width and the label column narrows, compact the rows:
-   stack the meta tag under the name (so the name keeps the full column width and
-   wraps to ~2 lines instead of being squeezed beside the meta) and step the type
-   down. The ceiling is 1500px (not 1080) because the rail's right-side lane
-   squeezes the list column at every width it's shown — a single-line row needs
-   ~520px and the lane only frees that up beyond ~1500px. */
+/* As the iceberg holds its fixed width and the label column narrows, compact the
+   rows by LAYOUT only — keep the name at its 14px reading size and instead stack
+   the meta tag under the name so the name gets the full column width and wraps to
+   ~2 lines instead of being squeezed beside the meta. The ceiling is 1500px (not
+   1080) because the rail's right-side lane squeezes the list column at every width
+   it's shown — a single-line row needs ~520px and the lane only frees that up
+   beyond ~1500px. */
 @media (max-width: 1500px) {
   .threat-row {
     grid-template-columns: auto 1fr;
@@ -943,12 +945,12 @@ h4 {
   }
   .threat-row .name {
     white-space: normal;
-    font-size: 12.5px;
-    line-height: 1.25;
+    font-size: 14px;
+    line-height: 1.3;
   }
   .threat-row .meta {
     white-space: normal;
-    font-size: 8.5px;
+    font-size: 10px;
     grid-column: 2;
     justify-self: start;
     text-align: left;
@@ -959,10 +961,10 @@ h4 {
     padding: 9px 6px;
   }
   .threat-row .name {
-    font-size: 11.5px;
+    font-size: 14px;
   }
   .threat-row .meta {
-    font-size: 8px;
+    font-size: 9px;
     letter-spacing: 0.1em;
   }
 }
