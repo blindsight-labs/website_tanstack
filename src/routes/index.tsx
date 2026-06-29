@@ -158,7 +158,7 @@ function Hero() {
             </a>
           </div>
           <div className="hero-trust-block">
-            <p className="hero-trust-q">Running AI in a regulated environment?</p>
+            <p className="hero-trust-q">Want to deploy AI in a regulated environment?</p>
             <p className="hero-trust">
               Blindsight&apos;s runtime audit trail and policy enforcement turn compliance into a
               feature, not an obstacle, so your team can move fast without flying blind.
