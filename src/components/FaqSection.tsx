@@ -59,14 +59,17 @@ function FaqTableBlock({ themeId, table }: { themeId: string; table: FaqTable })
   );
 }
 
-export function FaqSection() {
-  const [themeId, setThemeId] = useState<string>(THEMES[0].id);
+export function FaqSection({ onlyTheme }: { onlyTheme?: string } = {}) {
+  const defaultId = onlyTheme ?? THEMES[0].id;
+  const [themeId, setThemeId] = useState<string>(defaultId);
   // Open accordion keys are theme-scoped (`themeId:index`) so every panel can
   // stay mounted and keep its own open state.
   const [open, setOpen] = useState<string[]>([]);
 
   const toggle = (key: string) =>
     setOpen((cur) => (cur.includes(key) ? cur.filter((k) => k !== key) : [...cur, key]));
+
+  const visibleThemes = onlyTheme ? THEMES.filter((t) => t.id === onlyTheme) : THEMES;
 
   return (
     <section className="section" id="faq">
@@ -79,31 +82,33 @@ export function FaqSection() {
           <h2>Questions, answered.</h2>
         </div>
 
-        <div className="faq-tabs reveal" role="tablist" aria-label="FAQ topics">
-          {THEMES.map((t) => (
-            <button
-              type="button"
-              key={t.id}
-              role="tab"
-              aria-selected={t.id === themeId}
-              aria-controls={`faq-panel-${t.id}`}
-              className={`faq-tab ${t.id === themeId ? "active" : ""}`}
-              onClick={() => setThemeId(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+        {!onlyTheme && (
+          <div className="faq-tabs reveal" role="tablist" aria-label="FAQ topics">
+            {THEMES.map((t) => (
+              <button
+                type="button"
+                key={t.id}
+                role="tab"
+                aria-selected={t.id === themeId}
+                aria-controls={`faq-panel-${t.id}`}
+                className={`faq-tab ${t.id === themeId ? "active" : ""}`}
+                onClick={() => setThemeId(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Every cluster stays in the DOM (hidden when inactive) so all Q&As are
             crawlable and the FAQPage schema matches the rendered page. */}
-        {THEMES.map((theme) => (
+        {visibleThemes.map((theme) => (
           <div
             className="faq-panel reveal"
             role="tabpanel"
             id={`faq-panel-${theme.id}`}
             key={theme.id}
-            hidden={theme.id !== themeId}
+            hidden={!onlyTheme && theme.id !== themeId}
           >
             <div className="faq-list">
               {theme.questions.map((item, i) => {

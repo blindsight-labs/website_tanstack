@@ -393,7 +393,7 @@ function ShadowPage() {
       <SectionRail sections={SECTIONS} />
       <Hero />
       <Deployment />
-      <FaqSection />
+      <FaqSection onlyTheme="shadow-ai" />
       <FinalCta />
     </main>
   );
