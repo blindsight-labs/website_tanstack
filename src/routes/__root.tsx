@@ -12,6 +12,35 @@ import { useEffect, useState } from "react";
 
 import { ArrowRight, BookOpen, ChevronDown, Code, Menu, Moon, Sun, X } from "lucide-react";
 
+/* Nav/footer link targeting an on-page section of /shadow. Scrolls in-page
+   when already on /shadow; navigates there with a hash from any other route. */
+function ShadowSectionNavLink({
+  id,
+  children,
+  onClick,
+}: {
+  id: string;
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  return (
+    <Link
+      to="/shadow"
+      hash={id}
+      onClick={(e) => {
+        if (pathname === "/shadow") {
+          e.preventDefault();
+          document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        onClick?.();
+      }}
+    >
+      {children}
+    </Link>
+  );
+}
+
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
 import { InActionModalProvider } from "@/components/InActionModal";
 import appCss from "../styles.css?url";
@@ -270,6 +299,97 @@ function Nav() {
   );
 }
 
+function ShadowNav() {
+  const { open: openDemo } = useDemoModal();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [ctaShown, setCtaShown] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+  useEffect(() => {
+    const t = document.documentElement.getAttribute("data-theme");
+    if (t === "dark" || t === "light") setTheme(t);
+  }, []);
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch { /* ignore */ }
+      return next;
+    });
+  };
+  useEffect(() => {
+    const update = () => {
+      setScrolled(window.scrollY > 40);
+      const hero = document.getElementById("hero");
+      setCtaShown(!!hero && hero.getBoundingClientRect().top < -window.innerHeight * 0.55);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [pathname]);
+  const closeMenu = () => setMenuOpen(false);
+  return (
+    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
+      <Link
+        to="/"
+        aria-label="Blindsight home"
+        onClick={closeMenu}
+      >
+        <img src={logo} alt="Blindsight" className="nav-logo" />
+      </Link>
+      <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
+        <ShadowSectionNavLink id="hero" onClick={closeMenu}>Top</ShadowSectionNavLink>
+        <ShadowSectionNavLink id="stack" onClick={closeMenu}>How it works</ShadowSectionNavLink>
+        <ShadowSectionNavLink id="faq" onClick={closeMenu}>FAQ</ShadowSectionNavLink>
+        <button type="button" onClick={() => { closeMenu(); openDemo("download"); }}>
+          See my Shadow AI
+        </button>
+      </div>
+      <div className="nav-right">
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+        </button>
+        <ul className="nav-links">
+          <li><ShadowSectionNavLink id="hero">Top</ShadowSectionNavLink></li>
+          <li><ShadowSectionNavLink id="stack">How it works</ShadowSectionNavLink></li>
+          <li><ShadowSectionNavLink id="faq">FAQ</ShadowSectionNavLink></li>
+        </ul>
+        <button
+          type="button"
+          className={`btn btn-primary nav-cta ${ctaShown ? "is-revealed" : ""}`}
+          aria-hidden={!ctaShown}
+          tabIndex={ctaShown ? undefined : -1}
+          onClick={() => openDemo("download")}
+        >
+          See my Shadow AI
+        </button>
+        <button
+          className={`nav-hamburger ${menuOpen ? "open" : ""}`}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        </button>
+      </div>
+    </nav>
+  );
+}
+
+function NavSwitch() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  return pathname === "/shadow" ? <ShadowNav /> : <Nav />;
+}
+
 function Footer() {
   return (
     <footer>
@@ -292,7 +412,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <DemoModalProvider>
         <InActionModalProvider>
-          <Nav />
+          <NavSwitch />
           <Outlet />
           <Footer />
         </InActionModalProvider>

@@ -19,6 +19,7 @@ import { FaqSection } from "@/components/FaqSection";
 import { LogoStrip } from "@/components/LogoStrip";
 import { ShadowAiDemo } from "@/components/ShadowAiDemo";
 import shadowDemoCss from "@/components/ShadowAiDemo.css?url";
+import shadowPageCss from "@/components/shadow-page.css?url";
 import { faqSchemaEntities } from "@/lib/faq-content";
 import iconBlindsight from "@/assets/ICON_Blindsight.svg";
 import logoBlindsight from "@/assets/LOGO_Blindsight.svg";
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/shadow")({
     links: [
       { rel: "canonical", href: "https://blindsight.io/shadow" },
       { rel: "stylesheet", href: shadowDemoCss },
+      { rel: "stylesheet", href: shadowPageCss },
     ],
     scripts: [
       {
