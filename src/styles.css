@@ -5200,11 +5200,6 @@ footer {
   filter: brightness(0) invert(1);
   opacity: 0.78;
 }
-@media (prefers-reduced-motion: reduce) {
-  .logostrip-track {
-    animation: none;
-  }
-}
 
 /* ── Platform showcase placeholder ── */
 .showcase-frame {
