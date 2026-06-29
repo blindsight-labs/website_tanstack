@@ -36,9 +36,6 @@ const HALF = Array.from({ length: REPS }, () => LOGOS).flat();
 export function LogoStrip() {
   return (
     <section className="logostrip-section section-alt" id="clients" aria-label="Trusted by">
-      <div className="logostrip-eyebrow">
-        <span className="tag">Trusted by teams securing AI</span>
-      </div>
       <div className="logostrip">
         <div className="logostrip-track">
           {/* Visible pass — readable by screen readers */}

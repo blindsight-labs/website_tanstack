@@ -157,7 +157,6 @@ function Hero() {
         </div>
 
         <div className="va-hero-demo reveal">
-          <p className="hero-demo-cap">Runtime Security · Full Protection, Modular Design</p>
           <div className="hero-window">
             <div className="hero-window-body">
               <HeroPipelineDemo />
@@ -550,7 +549,7 @@ function Home() {
       <Iceberg
         id="why"
         eyebrow="Why Blindsight?"
-        segue="Now you've seen what hides beneath the surface. Want to go deeper? Watch each threat play out, and Blindsight shut it down, in the threat modelling below."
+        segue="If you don't even have visibility over Shadow AI, how can you prevent the other more insidious vulnerabilities? See below how each threat plays out and how Blindsight shuts them down."
       />
       <Scenarios />
       <Stages />
