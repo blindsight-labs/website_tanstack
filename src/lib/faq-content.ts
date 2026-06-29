@@ -550,10 +550,20 @@ export const THEMES: Theme[] = [
         q: "What is AI data leakage, and how does it happen?",
         blocks: [
           {
-            p: "AI data leakage occurs when sensitive information — source code, customer records, contracts, internal strategy — enters an AI tool's input and ends up outside your control. The mechanism is usually mundane: an employee pastes a document into a chatbot to summarize it, or a coding assistant ingests a file to generate a diff. The data leaves your perimeter the moment the request is sent, regardless of the tool's data-retention policy.",
+            p: "AI data leakage is the exposure of sensitive information through interaction with an AI tool — most commonly when an employee pastes or uploads confidential content into a chatbot, assistant, or AI-powered feature, and that content leaves the organisation’s control. OWASP formalised this as LLM02:2025 Sensitive Information Disclosure in its 2025 Top 10 for LLM Applications. OWASP’s framing covers both directions: data flowing into a model (prompts, uploaded files, RAG context, system prompts) and data flowing out of it (a model that regurgitates training data, or surfaces one user’s information in another’s session).",
+            cites: [1],
           },
           {
-            p: "Unlike a traditional breach, AI data leakage is almost always voluntary and invisible. No alert fires. No DLP rule triggers. The user had legitimate access to the data and intended to use it — they just didn't intend to expose it. That gap between intent and outcome is why AI data leakage is consistently underreported and undercounted.",
+            p: "In practice, the dominant vector is mundane. Samsung’s 2023 incident — the most-cited real-world case — involved three separate leaks within roughly 20 days of employees gaining ChatGPT access: one engineer pasted semiconductor-equipment source code to debug it, another fed a recorded internal meeting transcript to generate minutes, and a third submitted code to optimise a chip-yield test sequence. Samsung banned generative AI on company devices shortly after. No system was hacked; the data left through a text box, by someone doing their job.",
+            cites: [2],
+          },
+          {
+            p: "A smaller class of leakage is platform-side. In March 2023 a Redis client bug in ChatGPT allowed some users to see other users’ conversation titles, and exposed name, billing address, card type, expiry date, and the last four digits of payment cards for approximately 1.2% of ChatGPT Plus subscribers active during a roughly nine-hour window. This is the rarer mechanism, but it illustrates that leakage is not only a user-behaviour problem — it also includes trusting a third party’s runtime.",
+            cites: [3],
+          },
+          {
+            caveat:
+              "“leakage” covers at least three distinct threat models: egress through prompts (a data-handling failure), vendor platform bugs (a third-party reliability failure), and model memorisation of training data (an AI-design failure). Most enterprise leakage is the first kind, which is a data-governance problem, not a uniquely AI-model problem. Conflating them tends to produce the wrong controls.",
           },
         ],
       },
@@ -561,10 +571,17 @@ export const THEMES: Theme[] = [
         q: "What types of data are most commonly exposed through AI tools?",
         blocks: [
           {
-            p: "Source code is the most-cited exposure in published incidents — developers route files through coding assistants to get suggestions, debug errors, or generate tests. Beyond code: contracts and deal terms, customer PII and account data, internal financial figures, HR records, and system credentials or API keys that appear inline in config files or logs. Anything an employee has access to and finds it useful to summarize or analyse is potential input.",
+            p: "The categories that recur across independent vendor telemetry are source code, customer and client data, internal-only business documents, credentials and API keys, and regulated personal data (PII, PHI, financial records). Cyberhaven, analysing traffic from 1.6 million workers, found the top confidential categories pasted into ChatGPT were sensitive or internal-only data (319 incidents per week per 100,000 employees), source code (278), and client data (260). Harmonic Security’s Q2 2025 study — analysing one million prompts, 20,000 files, and over 300 AI applications — independently surfaced the same categories, with credit-card data, customer profiles, and employee PII prominent.",
+            cites: [4, 5],
           },
           {
-            p: "The exposure is rarely deliberate. People paste what is in front of them, and AI tools make the entire file more useful to include for context. That behavioural pattern — more context produces better output — is exactly why the data categories at risk are broad and hard to predict from a policy standpoint.",
+            p: "The more important finding is that files are far more dangerous than prompts. Harmonic found roughly 22% of uploaded files contained sensitive data versus around 4.4% of prompt text, and files accounted for 79.7% of stored credit-card exposures, 75.3% of customer-profile leaks, and 68.8% of employee-PII incidents. People self-censor when typing but upload entire spreadsheets and documents without filtering. Most DLP and policy conversations over-index on prompt text and under-cover file uploads — which is where the majority of structured sensitive data actually moves.",
+            cites: [5],
+          },
+          {
+            caveat:
+              "every figure here is vendor telemetry from companies whose products detect AI data loss, drawn from their own customers’ traffic — not a neutral cross-industry sample. The categories are credible and corroborate across three independent vendors; the precise percentages should be treated as indicative rather than authoritative. There is no peer-reviewed, cross-industry baseline for AI data leakage prevalence.",
+            cites: [4, 5],
           },
         ],
       },
@@ -572,10 +589,20 @@ export const THEMES: Theme[] = [
         q: "How is AI data leakage different from what a traditional DLP tool catches?",
         blocks: [
           {
-            p: "Traditional data loss prevention watches for data moving to known destinations — an upload to a personal Dropbox, a file sent to a personal email address, a USB transfer — and matches it against patterns like credit-card numbers or social-security numbers. AI leakage breaks both assumptions: the destination (a chat API) looks like normal HTTPS traffic, and the content is often unstructured prose that contains nothing a regex rule would flag.",
+            p: "Traditional data loss prevention was designed around three chokepoints: email gateways, file storage, and endpoint file operations (USB transfers, downloads, attachments). Prompt leakage routes around all three. Pasting text into a browser-based AI tool produces no attachment, no recognisable file transfer, and no distinct network event — just encrypted HTTPS to a legitimate domain, indistinguishable at the perimeter from any other web request.",
+            cites: [6],
           },
           {
-            p: "AI tools also invert the timing. Classic DLP can inspect a file before it leaves. With an AI prompt, the content is embedded in a request payload that standard network inspection doesn't decode. Detecting AI data leakage requires understanding that a request is going to an AI endpoint, decrypting and parsing the prompt, and classifying what's inside — a fundamentally different inspection pipeline.",
+            p: "The browser is the specific blind spot. Endpoint DLP can sometimes detect a clipboard-copy event, but it captures the paste without destination context — it cannot tell whether the text went into a local document or into a chatbot prompt, which is exactly the context needed for a policy decision. Where AI applications use WebSocket connections or certificate pinning, as many native desktop and mobile clients do, even SSL-inspecting proxies fail to decrypt the traffic. Broadcom’s own product documentation for Symantec DLP explicitly describes gaps in detecting ChatGPT via WebSocket transport and in the Firefox browser.",
+            cites: [6],
+          },
+          {
+            p: "Effective detection requires understanding that a request is going to an AI endpoint, decrypting and parsing the prompt, classifying its content, and linking it to an identity — a fundamentally different pipeline from filtering file transfers or matching email bodies against regex patterns. Coarser signals tell you only that an AI service was reached, not what was sent. This is a different control surface — the prompt boundary — not a configuration problem on legacy DLP.",
+            cites: [7],
+          },
+          {
+            caveat:
+              "modern DLP suites (Purview, Forcepoint, Zscaler, Netskope, and others) have added AI-aware browser coverage, so the claim that DLP cannot see AI traffic is increasingly an oversimplification. The accurate statement is narrower: DLP configured the traditional way — for email, file, and endpoint — misses the prompt layer, and even AI-aware DLP degrades on pinned native apps, personal accounts on unmanaged devices, and WebSocket transport. Coverage is improving; completeness is not solved.",
           },
         ],
       },
@@ -583,10 +610,16 @@ export const THEMES: Theme[] = [
         q: "Can I stop sensitive data from reaching AI tools without blocking them entirely?",
         blocks: [
           {
-            p: "Yes. Policy can be applied at the prompt boundary rather than at the domain level. This means intercepting the AI request, classifying the content (PII, source code, credentials, health data), and either blocking the specific sensitive portion, redacting it before forwarding, or generating an alert for the security team — while allowing the rest of the prompt through. The user keeps the productivity of the tool; the sensitive content stays inside your perimeter.",
+            p: "Yes — and the prevailing security guidance is explicitly not to blanket-block. Blocking drives usage underground: when AI tools are prohibited, employees switch to personal accounts on personal devices, which makes the same activity invisible to corporate controls. LayerX’s enterprise telemetry found that a majority of workplace AI usage already runs through non-corporate accounts — precisely the unmanaged path that sits outside any policy enforcement. Prohibition reduces visibility without reducing the underlying demand.",
+            cites: [8],
           },
           {
-            p: "Domain-level blocking is a blunter instrument: it stops known AI services, but new services appear constantly, AI is increasingly embedded in tools you've already approved, and employees route around blocks on personal devices. Prompt-boundary policy is the defensible long-term posture because it acts on the data itself rather than on which service it's being sent to.",
+            p: "The mechanism that enables governed AI use is inspection and policy at the prompt boundary: classify the content of each prompt or file upload in real time, then redact the sensitive element, warn the user, require a business justification, or block the specific sensitive content — while allowing the remainder of the prompt through unaffected. A prompt containing a customer record gets the record stripped or flagged; the same prompt with no sensitive content passes freely. OWASP’s LLM02 mitigations point in the same direction: input sanitisation, tokenisation and redaction, and access controls — not prohibition.",
+            cites: [1],
+          },
+          {
+            caveat:
+              "prompt-boundary enforcement works on the managed surface — corporate devices, managed browsers, sanctioned accounts. It cannot reliably cover an employee’s home laptop using a personal AI account without also controlling the endpoint or having network reach there. Classification is also imperfect: false negatives let some sensitive content through, and over-aggressive filters train users to ignore warnings. Selective prompt-boundary policy materially reduces leakage and improves auditability; it does not eliminate risk from the unmanaged path.",
           },
         ],
       },
@@ -594,44 +627,121 @@ export const THEMES: Theme[] = [
         q: "How do I find out if sensitive data has already left through AI tools in my organization?",
         blocks: [
           {
-            p: "Retroactive discovery is harder than real-time monitoring, but not impossible. Start with network egress logs: look for sustained traffic to known AI API endpoints and consumer-tier AI services, then correlate with data-classification signals from endpoint or email systems. OAuth audit logs can show which AI applications employees have granted access to. Identity analytics can surface unusual access patterns — a user who read ten contracts in one hour and then made twenty requests to an external AI endpoint.",
+            p: "Retroactive discovery is hard, and you should be precise about what is actually knowable. The signals available after the fact are mostly circumstantial: DNS, firewall, and proxy logs show which AI domains were reached and at what volume; IdP and SSO logs show who authenticated to sanctioned AI applications; OAuth grant logs reveal which AI plug-ins employees have connected to your SaaS; CASB and SWG logs may show upload byte volumes. These tell you who used which AI tool and when — not what was inside the prompts, unless you were doing TLS-breaking content inspection at the time. Prompt content that was never captured cannot be reconstructed.",
+            cites: [7],
           },
           {
-            p: "The honest constraint is that without prompt-level visibility, you can see that data went somewhere, not what it contained. Log volume and egress bytes are useful proxies for prioritizing investigation, but they don't prove or disprove exposure. If you need evidential certainty — for a breach notification assessment or a compliance audit — you need a tool that captured and classified the prompt content at the time it was sent.",
+            p: "For sanctioned enterprise tiers you have a real audit source. ChatGPT Enterprise and Team retain interaction logs accessible to admins. Microsoft 365 Copilot interaction data flows through Purview Audit, eDiscovery, and Communication Compliance, which can be searched retroactively. For shadow and personal-account usage those records sit in OpenAI’s or Google’s account, not yours. Discovery there relies on the same signals used to surface shadow AI more broadly: email metadata from signup confirmations, endpoint browser history, EDR clipboard and process telemetry, and identity-source correlation.",
+            cites: [9, 10],
+          },
+          {
+            p: "In practice, you can build a reasonable inventory of exposure — which tools, which users, what volume — from logs you already hold, and audit content for sanctioned tools. What you generally cannot do retroactively is prove what sensitive content left through unsanctioned tools before purpose-built monitoring was in place. That data was never recorded. Forward-looking prompt-boundary inspection is what converts the answer from “we believe no significant leakage occurred” to “we can show it didn’t.”",
+          },
+          {
+            caveat:
+              "a clean DNS log or quiet Purview audit does not mean no leakage occurred — it means no leakage occurred through the channels you were watching. Personal accounts, BYOD, native pinned apps, and any period before monitoring was deployed are structural blind spots. The defensible statement to leadership or an auditor is: here is what we can see and here is what we structurally cannot — not that the absence of evidence is evidence of absence.",
           },
         ],
       },
     ],
     tables: [
       {
-        title: "Traditional DLP vs. AI prompt-boundary control",
-        head: ["", "Traditional DLP", "AI prompt-boundary"],
+        title: "Egress channel vs. what each control can see",
+        head: [
+          "Egress channel",
+          "Traditional DLP",
+          "Network proxy / CASB",
+          "Prompt-boundary control",
+        ],
         rows: [
-          ["What it inspects", "Files, emails, USB transfers", "AI prompt and response content"],
           [
-            "Detection method",
-            "Pattern matching (regex, fingerprints)",
-            "Semantic classification of unstructured text",
+            "Managed browser — prompt text",
+            "Misses (no file or attachment event)",
+            "Sees domain only — not prompt content",
+            "Catches and classifies",
           ],
           [
-            "Where it acts",
-            "Before data leaves the endpoint or network",
-            "At the AI request boundary, before the API call completes",
+            "Managed browser — file upload",
+            "Misses",
+            "Sees upload volume, not content",
+            "Catches and classifies file content",
           ],
           [
-            "Blind spot",
-            "Unstructured prose; AI API traffic",
-            "Offline or local AI models with no network egress",
+            "Personal account on BYOD",
+            "Misses (unmanaged device)",
+            "Misses (no network reach)",
+            "Misses (no endpoint reach)",
           ],
           [
-            "Response options",
-            "Block, alert, quarantine",
-            "Block, redact, allow with audit trail",
+            "Native desktop / mobile app (TLS pinning)",
+            "Misses",
+            "Misses (pinning blocks decryption)",
+            "Catches if inline; misses if network-only",
+          ],
+          [
+            "Sanctioned enterprise tier",
+            "Misses prompt content",
+            "Partial",
+            "Catches; complements admin audit logs",
           ],
         ],
+        note: {
+          text: "“Prompt-boundary control” means an inline proxy or endpoint agent that reads and classifies prompt text before it reaches the AI provider — not a domain firewall or email DLP rule.",
+        },
       },
     ],
-    sources: [],
+    sources: [
+      {
+        n: 1,
+        text: "OWASP, Top 10 for LLM Applications (2025) — LLM02:2025 Sensitive Information Disclosure.",
+        url: "https://genai.owasp.org/llmrisk/llm022025-sensitive-information-disclosure/",
+      },
+      {
+        n: 2,
+        text: "TechCrunch, “Samsung bans use of generative AI tools like ChatGPT after April data leak,” May 2023.",
+        url: "https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/",
+      },
+      {
+        n: 3,
+        text: "The Hacker News, “OpenAI reveals Redis bug behind ChatGPT user data exposure,” March 2023.",
+        url: "https://thehackernews.com/2023/03/openai-reveals-redis-bug-behind-chatgpt.html",
+      },
+      {
+        n: 4,
+        text: "Cyberhaven, “11% of data employees paste to ChatGPT is confidential” (vendor telemetry, 1.6M workers; methodology not externally audited).",
+        url: "https://www.cyberhaven.com/blog/4-2-of-workers-have-pasted-company-data-into-chatgpt",
+      },
+      {
+        n: 5,
+        text: "Harmonic Security, GenAI Data Exposure Report Q2 2025 (vendor telemetry — 1M prompts, 20K files, 300+ apps; methodology not externally audited).",
+        url: "https://www.harmonic.security/blog-posts/genai-data-exposure-report-fa6wt",
+      },
+      {
+        n: 6,
+        text: "Broadcom / Symantec, Knowledge Base article 261794: “Can DLP be used to monitor ChatGPT?” — describes WebSocket and Firefox detection gaps.",
+        url: "https://knowledge.broadcom.com/external/article/261794/can-dlp-be-used-to-monitor-chatgpt.html",
+      },
+      {
+        n: 7,
+        text: "DeepInspect, “Employee ChatGPT monitoring” — breakdown of which inspection points can and cannot see prompt content.",
+        url: "https://www.deepinspect.ai/blog/employee-chatgpt-monitoring",
+      },
+      {
+        n: 8,
+        text: "LayerX, enterprise GenAI usage report — personal account prevalence (vendor telemetry; verify exact figures before citing, as the primary report URL may change).",
+        url: "https://layerxsecurity.com/generative-ai/chatgpt-data-leak/",
+      },
+      {
+        n: 9,
+        text: "Microsoft Learn, “Microsoft 365 Copilot: data protection, architecture and auditing” — Purview Audit, eDiscovery, and Communication Compliance coverage.",
+        url: "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-architecture-data-protection-auditing",
+      },
+      {
+        n: 10,
+        text: "BetterCloud, “How to detect shadow AI in your organization” — discovery signals: email metadata, browser history, OAuth grants, EDR telemetry.",
+        url: "https://www.bettercloud.com/how-to-detect-shadow-ai/",
+      },
+    ],
   },
   {
     id: "agentic-security",
