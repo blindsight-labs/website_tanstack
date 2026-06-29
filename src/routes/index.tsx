@@ -137,8 +137,8 @@ function Hero() {
           <p className="lede">
             Blindsight monitors your entire AI runtime in real time, every{" "}
             <span className="accent">prompt</span>, response, tool call and data event, and enforces
-            your security policy before threats move downstream. Runtime Security gives you the full
-            picture across your stack, with{" "}
+            your security policy. Runtime Security gives you the full picture across your stack,
+            with{" "}
             <span className="nowrap">
               <InfoTerm
                 term="data integrity"
