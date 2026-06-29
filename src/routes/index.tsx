@@ -124,7 +124,9 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
 
 /* ── Hero — split: copy + CTAs | Runtime Security demo ──
    Primary CTA opens the demo modal (Runtime Security); secondary links to the
-   Shadow AI product at shadowai.blindsight.io. */
+   Shadow AI product at blindsight.io/shadow. On mobile the two CTAs split apart
+   (see the max-width:640px block in styles.css): the primary sits under the main
+   pitch and the secondary follows the free "reveal Shadow AI" sentence. */
 function Hero() {
   const { open } = useDemoModal();
 
@@ -155,7 +157,7 @@ function Hero() {
             >
               Secure your AI Runtime
             </button>
-            <a className="btn btn-secondary" href="https://shadowai.blindsight.io">
+            <a className="btn btn-secondary" href="https://blindsight.io/shadow">
               Reveal Shadow AI
             </a>
           </div>
