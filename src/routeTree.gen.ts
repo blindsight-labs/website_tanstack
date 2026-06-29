@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestTopologyRouteImport } from './routes/test-topology'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ShadowRouteImport } from './routes/shadow'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as InActionRouteImport } from './routes/in-action'
 import { Route as ImprintRouteImport } from './routes/imprint'
@@ -40,6 +41,11 @@ const TeamRoute = TeamRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShadowRoute = ShadowRouteImport.update({
+  id: '/shadow',
+  path: '/shadow',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
   '/privacy': typeof PrivacyRoute
+  '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
   '/privacy': typeof PrivacyRoute
+  '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
   '/privacy': typeof PrivacyRoute
+  '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
@@ -184,6 +193,7 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/in-action'
     | '/privacy'
+    | '/shadow'
     | '/sitemap.xml'
     | '/team'
     | '/test-topology'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/in-action'
     | '/privacy'
+    | '/shadow'
     | '/sitemap.xml'
     | '/team'
     | '/test-topology'
@@ -221,6 +232,7 @@ export interface FileRouteTypes {
     | '/imprint'
     | '/in-action'
     | '/privacy'
+    | '/shadow'
     | '/sitemap.xml'
     | '/team'
     | '/test-topology'
@@ -241,6 +253,7 @@ export interface RootRouteChildren {
   ImprintRoute: typeof ImprintRoute
   InActionRoute: typeof InActionRoute
   PrivacyRoute: typeof PrivacyRoute
+  ShadowRoute: typeof ShadowRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   TestTopologyRoute: typeof TestTopologyRoute
@@ -268,6 +281,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shadow': {
+      id: '/shadow'
+      path: '/shadow'
+      fullPath: '/shadow'
+      preLoaderRoute: typeof ShadowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -395,6 +415,7 @@ const rootRouteChildren: RootRouteChildren = {
   ImprintRoute: ImprintRoute,
   InActionRoute: InActionRoute,
   PrivacyRoute: PrivacyRoute,
+  ShadowRoute: ShadowRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   TestTopologyRoute: TestTopologyRoute,
