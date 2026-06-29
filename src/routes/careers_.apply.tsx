@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { z } from "zod";
 import { submitApplication } from "@/lib/careers.functions";
+import { friendlyFormError, isValidEmail } from "@/lib/form-error";
 
 const SearchSchema = z.object({
   role: z.string().trim().min(1).max(160).optional().catch(undefined),
@@ -55,6 +56,10 @@ function ApplyPage() {
       setError("Please confirm you agree to be contacted.");
       return;
     }
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
     if (file && file.size > 5 * 1024 * 1024) {
       setError("CV must be 5MB or smaller.");
       return;
@@ -82,7 +87,7 @@ function ApplyPage() {
       });
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(friendlyFormError(err));
     } finally {
       setSubmitting(false);
     }

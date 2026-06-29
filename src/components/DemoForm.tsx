@@ -1,6 +1,7 @@
 import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { submitDemoRequest } from "@/lib/demo.functions";
+import { friendlyFormError, isValidEmail } from "@/lib/form-error";
 import type { DemoVariant } from "./DemoModal";
 
 /** Shared demo-request form + success state. Used by the /demo page and the demo modal.
@@ -26,6 +27,10 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       setError("Please confirm you agree to be contacted.");
       return;
     }
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -46,7 +51,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       });
       setDone(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setError(friendlyFormError(err));
     } finally {
       setSubmitting(false);
     }
