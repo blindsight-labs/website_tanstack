@@ -14,7 +14,6 @@ import {
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
 import { HeroPipelineDemo } from "@/components/HeroPipelineDemo";
-import { InfoTerm } from "@/components/InfoTerm";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill } from "@/components/InfoPill";
 import { LogoStrip } from "@/components/LogoStrip";
@@ -133,21 +132,19 @@ function Hero() {
     <header className="va-hero" id="hero">
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
-          <h1>See what your AI does. Stop what it shouldn&apos;t.</h1>
+          <h1>
+            Leverage AI with <span className="accent">speed and confidence.</span>
+          </h1>
           <p className="lede">
-            Blindsight monitors your entire AI runtime in real time, every{" "}
-            <span className="accent">prompt</span>, response, tool call and data event, and enforces
-            your security policy. Runtime Security gives you the full picture across your stack,
-            with{" "}
-            <span className="nowrap">
-              <InfoTerm
-                term="data integrity"
-                meta="What it covers"
-                desc="Text and tabular engines run alongside runtime events, catching data drift and quality issues over time so model behaviour stays predictable."
-              />
-            </span>{" "}
-            built in. Not ready for a full deployment? Start by revealing every unsanctioned AI tool
-            in your organisation, for free.
+            Blindsight provides visibility and security to your AI at runtime: every{" "}
+            <span className="accent">prompt</span>, response, tool call and data event. Want to
+            deploy AI in a regulated environment? Blindsight&apos;s runtime audit trail and policy
+            enforcement turn compliance into a feature, not an obstacle, so your team can move fast
+            without flying blind.
+          </p>
+          <p className="lede">
+            Not ready for a full deployment? Start by revealing every unsanctioned AI tool in your
+            organisation, for free.
           </p>
           <div className="hero-actions">
             <button type="button" className="btn btn-primary" onClick={() => open("demo")}>
@@ -156,13 +153,6 @@ function Hero() {
             <a className="btn btn-secondary" href="https://shadowai.blindsight.io">
               Reveal Shadow AI
             </a>
-          </div>
-          <div className="hero-trust-block">
-            <p className="hero-trust-q">Want to deploy AI in a regulated environment?</p>
-            <p className="hero-trust">
-              Blindsight&apos;s runtime audit trail and policy enforcement turn compliance into a
-              feature, not an obstacle, so your team can move fast without flying blind.
-            </p>
           </div>
         </div>
 
