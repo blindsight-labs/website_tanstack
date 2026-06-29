@@ -373,15 +373,11 @@ function FinalCta() {
             Reveal every Shadow AI interaction across your organization — and secure it before
             sensitive data leaks. No rollout, no productivity tax.
           </p>
-        </div>
-
-        <div className="hero-actions reveal" style={{ justifyContent: "center", marginTop: 28 }}>
           <button type="button" className="btn btn-primary" onClick={() => open("download")}>
             See my Shadow AI
           </button>
+          <img src={logoBlindsight} alt="Blindsight" className="final-cta-logo" />
         </div>
-
-        <img src={logoBlindsight} alt="Blindsight" className="final-cta-logo reveal" />
       </div>
     </section>
   );
