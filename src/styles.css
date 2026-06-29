@@ -1841,9 +1841,11 @@ h4 {
     text-align: center;
     margin-bottom: 2px;
   }
-  .cstack-deploy .ipill-label {
-    padding-left: 12px;
-    padding-right: 12px;
+  /* Tighten the pills so all three deployment options fit on one row, even on
+     the narrowest phones. */
+  .cstack-deploy .ipill {
+    padding: 6px 9px;
+    font-size: 11px;
   }
 }
 
@@ -4367,6 +4369,13 @@ footer {
 }
 .hero-scroll-cue:hover {
   color: var(--violet);
+}
+/* On phones the scroll-cue arrow (between the logo bar and the Why section)
+   adds clutter, so hide it. */
+@media (max-width: 640px) {
+  .hero-scroll-cue {
+    display: none;
+  }
 }
 .hero-scroll-chevron {
   width: 39px;
