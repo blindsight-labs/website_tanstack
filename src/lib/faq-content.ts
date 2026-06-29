@@ -743,6 +743,7 @@ export const THEMES: Theme[] = [
       },
     ],
   },
+  /* hidden — agentic-security: restore by removing this comment wrapper
   {
     id: "agentic-security",
     label: "Agentic Security",
@@ -830,6 +831,7 @@ export const THEMES: Theme[] = [
     ],
     sources: [],
   },
+  */ // end hidden agentic-security
 ];
 
 /** FAQPage JSON-LD entities, generated from the same content the page renders so
