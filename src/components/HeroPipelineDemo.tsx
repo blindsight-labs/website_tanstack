@@ -13,35 +13,35 @@ import { ArrowRight, Check, Cpu, Database, LogIn, LogOut } from "lucide-react";
 
 const LAYERS = [
   {
-    name: "Data",
-    Icon: Database,
-    desc: "Training sets, RAG & knowledge bases your AI learns from.",
-    vulns: ["Data poisoning", "Mislabeled data", "Data leak (PII)", "RAG poisoning", "Backdoor"],
+    name: "Prompts",
+    Icon: LogIn,
+    desc: "User messages, API calls and instructions entering the runtime.",
+    vulns: ["Prompt injection", "Jailbreak", "Shadow AI", "Credential in prompt"],
   },
   {
-    name: "Input",
-    Icon: LogIn,
-    desc: "Prompts, retrieved docs & tool outputs entering the model.",
-    vulns: ["Prompt injection", "Indirect injection", "Adversarial patch", "Shadow AI"],
+    name: "Context",
+    Icon: Database,
+    desc: "RAG documents, tool outputs and retrieved data fed to the model.",
+    vulns: ["RAG poisoning", "Indirect injection", "Sensitive retrieval", "Data leak"],
   },
   {
     name: "Model",
     Icon: Cpu,
-    desc: "Inference — the model acts on whatever reached it.",
-    vulns: ["Adversarial patch", "Shortcut learning"],
+    desc: "The LLM processing inputs and producing responses.",
+    vulns: ["Policy bypass", "Model misuse", "Biased output", "Hallucination"],
   },
   {
-    name: "Output",
+    name: "Responses",
     Icon: LogOut,
-    desc: "Responses, actions & data the model returns.",
-    vulns: ["Data leak (PII)", "Prompt injection", "Shadow AI", "Shortcut learning"],
+    desc: "Completions, tool calls, actions and data the model returns.",
+    vulns: ["PII leakage", "Unauthorized action", "Data exfiltration", "Shortcut bias"],
   },
 ] as const;
 
 const METRICS = [
-  { label: "PII exposed", bad: "100%", good: "1.2%" },
-  { label: "Poisoned data caught", bad: "0%", good: "98%" },
-  { label: "Time to detection", bad: "296 days", good: "Real-time" },
+  { label: "Runtime threats blocked", bad: "0%", good: "99.3%" },
+  { label: "PII leakage prevented", bad: "0%", good: "100%" },
+  { label: "Time to detection", bad: "296 days", good: "< 50 ms" },
 ];
 
 /* node x-centres (% of arena width) — even spread with edge padding */
@@ -84,7 +84,7 @@ export function HeroPipelineDemo({ onInteract }: { onInteract?: () => void }) {
   return (
     <div className={`hpp ${on ? "on" : "off"} ${complete ? "done" : ""}`}>
       <div className="hpp-top">
-        <span className="hpp-kick">// AI Pipeline · {on ? "end-to-end" : "exposed"}</span>
+        <span className="hpp-kick">// Runtime Security · {on ? "monitoring" : "exposed"}</span>
         <div className="hpp-ctrl">
           <span className="hpp-badge">{on ? "Protected" : "Exposed"}</span>
           <button
@@ -176,7 +176,7 @@ export function HeroPipelineDemo({ onInteract }: { onInteract?: () => void }) {
           </>
         ) : (
           <span className="hpp-detail-hint">
-            Hover a stage to see the threats it faces — Blindsight covers all four.
+            Hover a stage to see the threats it faces. Blindsight covers all four.
           </span>
         )}
       </div>
@@ -192,7 +192,7 @@ export function HeroPipelineDemo({ onInteract }: { onInteract?: () => void }) {
 
       <div className="hpp-foot">
         <span className="hpp-stage">
-          {on ? "Secured end-to-end" : "Without Blindsight · exposed at every stage"}
+          {on ? "Runtime secured, full pipeline protected" : "Without Blindsight, threats pass undetected"}
         </span>
         <button type="button" className="hpp-learn" onClick={learnMore}>
           Learn more

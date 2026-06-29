@@ -14,7 +14,7 @@ const VARIANT_COPY: Record<DemoVariant, { tag: string; title: string; sub: strin
   download: {
     tag: "Download Blindsight",
     title: "Reveal your Shadow AI.",
-    sub: "Tell us where to send it — we'll email your download link and setup guide within one business day.",
+    sub: "Tell us where to send it, we'll email your download link and setup guide within one business day.",
   },
 };
 

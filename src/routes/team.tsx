@@ -6,7 +6,7 @@ export const Route = createFileRoute("/team")({
   head: () => ({
     meta: [
       { title: "Team · Blindsight" },
-      { name: "description", content: "Blindsight's founders attacked AI systems professionally before building the layer that defends them — dozens of CVEs to their name." },
+      { name: "description", content: "Blindsight's founders attacked AI systems professionally before building the layer that defends them, dozens of CVEs to their name." },
       { property: "og:title", content: "Team · Blindsight" },
       { property: "og:description", content: "Offensive security, turned to your defense. Meet the founders behind Blindsight." },
       { property: "og:url", content: "/team" },
@@ -78,7 +78,7 @@ function TeamPage() {
             <h1>Offensive security, turned to your defense</h1>
             <p>
               Blindsight's founders attacked AI systems professionally before building the layer
-              that defends them — between them, dozens of CVEs to their name. Detection is built
+              that defends them, between them, dozens of CVEs to their name. Detection is built
               from the attacks they find themselves. Tested on competitors' own public benchmarks,
               where it is hardest to win, Blindsight beats the leading runtime benchmarks and
               covers a wider spectrum of attacks.

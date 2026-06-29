@@ -161,7 +161,7 @@ function Nav() {
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
-        <button type="button" onClick={() => { closeMenu(); openDemo(); }}>Request a Demo</button>
+        <button type="button" onClick={() => { closeMenu(); openDemo(); }}>Book a Discovery Call</button>
       </div>
       <div className="nav-right">
         <button
@@ -233,7 +233,7 @@ function Nav() {
           </li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
-        <button type="button" className="btn btn-primary nav-cta" onClick={openDemo}>Request a Demo</button>
+        <button type="button" className="btn btn-primary nav-cta" onClick={openDemo}>Book a Discovery Call</button>
         <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
           {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>

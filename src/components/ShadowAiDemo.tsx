@@ -114,9 +114,9 @@ const IC = {
 };
 
 const SUB_ON =
-  "One runtime proxy guards everyone. Sensitive data is redacted, attacks are blocked — and you see all of it.";
+  "One runtime proxy guards everyone. Sensitive data is redacted, attacks are blocked, and you see all of it.";
 const SUB_OFF =
-  "Your team is sending requests to a third-party AI. Watch what gets through — then flip Blindsight on.";
+  "Your team is sending requests to a third-party AI. Watch what gets through, then flip Blindsight on.";
 
 /** Playback speed for the whole animation. 1 = original; 0.5 = half speed.
  *  Every duration (timers, packet-travel transitions, spawn cadence, fades)
@@ -430,7 +430,7 @@ export function ShadowAiDemo() {
       {/* Horizontal — default, shown above the 640px breakpoint */}
       <section
         className="sa2 off"
-        aria-label="Shadow AI runtime protection — interactive demonstration"
+        aria-label="Shadow AI runtime protection, interactive demonstration"
       >
         <h2 className="sr-only">
           Four employees send requests to a third-party AI. With Blindsight off, sensitive data and
@@ -501,7 +501,7 @@ export function ShadowAiDemo() {
       {/* Vertical — replaces horizontal at/below 640px */}
       <section
         className="sa3 off"
-        aria-label="Shadow AI runtime protection — interactive vertical demonstration"
+        aria-label="Shadow AI runtime protection, interactive vertical demonstration"
       >
         <h2 className="sr-only">
           Four employees at the top send requests downward to a third-party AI at the bottom. With

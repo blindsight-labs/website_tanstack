@@ -30,7 +30,7 @@ const THREATS: Threat[] = [
     visible: true,
     fx: 0.508,
     fy: 0.202,
-    desc: 'Direct attempts to talk the model out of its rules — "ignore your instructions and…". They’re the loudest, easiest attacks to catch, which is exactly why a serious adversary never stops here.',
+    desc: 'Direct attempts to talk the model out of its rules, "ignore your instructions and…". They’re the loudest, easiest attacks to catch, which is exactly why a serious adversary never stops here.',
   },
   {
     id: "jailbreak-strings",
@@ -39,7 +39,7 @@ const THREATS: Threat[] = [
     visible: true,
     fx: 0.385,
     fy: 0.336,
-    desc: "Catalogued tricks — DAN-style personas, role-play wrappers — that coax a model past its guardrails. Signature filters block the known ones; the trouble is new variants appear faster than any blocklist can grow.",
+    desc: "Catalogued tricks, DAN-style personas, role-play wrappers, that coax a model past its guardrails. Signature filters block the known ones; the trouble is new variants appear faster than any blocklist can grow.",
   },
   {
     id: "mislabelled-training",
@@ -48,7 +48,7 @@ const THREATS: Threat[] = [
     visible: false,
     fx: 0.575,
     fy: 0.44,
-    desc: "Sloppy or wrongly-tagged examples that slip through data prep — no attacker required, just human error at scale. The model treats the mistakes as ground truth, inheriting blind spots and biases straight from the data instead of from any prompt.",
+    desc: "Sloppy or wrongly-tagged examples that slip through data prep, no attacker required, just human error at scale. The model treats the mistakes as ground truth, inheriting blind spots and biases straight from the data instead of from any prompt.",
   },
   {
     id: "adversarial-rag",
@@ -66,7 +66,7 @@ const THREATS: Threat[] = [
     visible: false,
     fx: 0.67,
     fy: 0.586,
-    desc: "Small, deliberately crafted perturbations — a sticker on a sign, a few stray characters — that mean nothing to a human yet reliably steer the model to the wrong answer.",
+    desc: "Small, deliberately crafted perturbations, a sticker on a sign, a few stray characters, that mean nothing to a human yet reliably steer the model to the wrong answer.",
   },
   {
     id: "poisoned-training",
@@ -75,7 +75,7 @@ const THREATS: Threat[] = [
     visible: false,
     fx: 0.375,
     fy: 0.674,
-    desc: "Tainted examples slipped into training or fine-tuning data. The model learns the attacker’s intent as ground truth, so the flaw is baked into the weights — invisible to anything inspecting the prompt.",
+    desc: "Tainted examples slipped into training or fine-tuning data. The model learns the attacker’s intent as ground truth, so the flaw is baked into the weights, invisible to anything inspecting the prompt.",
   },
   {
     id: "demographic-shortcut",
@@ -84,7 +84,7 @@ const THREATS: Threat[] = [
     visible: false,
     fx: 0.565,
     fy: 0.762,
-    desc: "The model quietly keys off a proxy — a name, a postcode, a turn of phrase — instead of the real signal. Aggregate accuracy looks healthy while specific groups are judged on the wrong evidence.",
+    desc: "The model quietly keys off a proxy, a name, a postcode, a turn of phrase, instead of the real signal. Aggregate accuracy looks healthy while specific groups are judged on the wrong evidence.",
   },
   {
     id: "back-doors",
@@ -93,7 +93,7 @@ const THREATS: Threat[] = [
     visible: false,
     fx: 0.49,
     fy: 0.83,
-    desc: "A hidden trigger sewn into the model: it behaves perfectly until it meets the secret key — a rare token, a watermark — then switches to the attacker’s behaviour on cue.",
+    desc: "A hidden trigger sewn into the model: it behaves perfectly until it meets the secret key, a rare token, a watermark, then switches to the attacker’s behaviour on cue.",
   },
 ];
 

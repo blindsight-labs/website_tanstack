@@ -16,32 +16,26 @@ import { FaqSection } from "@/components/FaqSection";
 import { HeroPipelineDemo } from "@/components/HeroPipelineDemo";
 import { InfoTerm } from "@/components/InfoTerm";
 import { Iceberg } from "@/components/Iceberg";
-import { InfoPill, type PillInfo } from "@/components/InfoPill";
+import { InfoPill } from "@/components/InfoPill";
+import { LogoStrip } from "@/components/LogoStrip";
 import { faqSchemaEntities } from "@/lib/faq-content";
 import { TopologyGraphDemo } from "@/routes/in-action";
 import iconBlindsight from "@/assets/ICON_Blindsight.svg";
-import logoAES from "@/assets/LOGO_AES.svg";
-import logoClinicBarcelona from "@/assets/LOGO_ClinicBarcelona.svg";
-import logoGCRAI from "@/assets/LOGO_GCRAI.png";
-import logoJFloor from "@/assets/LOGO_JFloor.svg";
-import logoNoeda from "@/assets/LOGO_Noéda.svg";
-import logoNvidiaInception from "@/assets/LOGO_nvidiainception.svg";
-import logoRebels from "@/assets/LOGO_Rebels.svg";
 
 export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "Blindsight — Shadow AI Security" },
+      { title: "Blindsight, Runtime Security for AI" },
       {
         name: "description",
         content:
-          "Your team is already using AI tools you never approved. Blindsight surfaces every Shadow AI interaction — and secures it before sensitive data leaks.",
+          "Real-time visibility into every AI action, prompt, response and tool call. Blindsight monitors your runtime and stops threats before they move downstream.",
       },
-      { property: "og:title", content: "Blindsight — Shadow AI Security" },
+      { property: "og:title", content: "Blindsight, Runtime Security for AI" },
       {
         property: "og:description",
-        content: "Surface and secure every Shadow AI interaction across your organization.",
+        content: "See every AI action in real time. Stop every threat before it moves downstream.",
       },
       { property: "og:url", content: "https://blindsight.io/" },
     ],
@@ -128,57 +122,10 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
   );
 }
 
-/* ── Client / partner logo strip (marquee) ──
-   Logos are flattened to a single ink (see .logostrip-logo) so mixed-polarity
-   brand art stays legible on both themes. Per-logo `h` optically balances visual
-   weight: dense / multi-line marks get more height, tall wordmarks get less. */
-const CLIENT_LOGOS: { src: string; name: string; h: number }[] = [
-  { src: logoAES, name: "Agent Economy Association", h: 72 },
-  { src: logoClinicBarcelona, name: "Clínic Barcelona · Universitat de Barcelona", h: 58 },
-  { src: logoGCRAI, name: "Global Council for Responsible AI", h: 48 },
-  { src: logoJFloor, name: "JFloor", h: 20 },
-  { src: logoNoeda, name: "Noéda", h: 39 },
-  { src: logoNvidiaInception, name: "NVIDIA Inception Program", h: 59 },
-  { src: logoRebels, name: "Rebels", h: 35 },
-];
 
-function LogoStrip() {
-  // translateX(-50%) only loops seamlessly when one half of the track is at least
-  // as wide as the viewport — otherwise a gap shows at the loop. The strip is
-  // full-bleed (100vw), so each half repeats the set enough times (×4 ≈ 4000px) to
-  // clear even ultrawide / 4K screens; the two identical halves do the seamless loop.
-  const group = [...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS];
-  return (
-    <section className="logostrip-section section-alt" id="clients" aria-label="Trusted by">
-      <div className="logostrip-eyebrow">
-        <span className="tag">Trusted by teams securing AI</span>
-      </div>
-      <div className="logostrip">
-        <div className="logostrip-track">
-          {[0, 1].map((g) => (
-            <div className="logostrip-group" key={g} aria-hidden={g === 1}>
-              {group.map(({ src, name, h }, i) => (
-                <span className="logostrip-item" key={i}>
-                  <img
-                    src={src}
-                    alt={name}
-                    className="logostrip-logo"
-                    style={{ height: h }}
-                    loading="lazy"
-                  />
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── Hero — split: copy + CTAs | AI-pipeline demo ──
-   Primary CTA opens the demo modal; "Just reveal my Shadow AI" links to the
-   standalone Shadow AI landing page (shadowai.blindsight.io). */
+/* ── Hero — split: copy + CTAs | Runtime Security demo ──
+   Primary CTA opens the demo modal (Runtime Security); secondary links to the
+   Shadow AI product at shadowai.blindsight.io. */
 function Hero() {
   const { open } = useDemoModal();
 
@@ -186,41 +133,41 @@ function Hero() {
     <header className="va-hero" id="hero">
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
-          <h1>Stop blindly patching your AI&apos;s misbehaviour.</h1>
+          <h1>See what your AI does. Stop what it shouldn&apos;t.</h1>
           <p className="lede">
-            Gain <span className="accent">visibility</span> into the root cause — and address it.
-            The misbehaviour is only the symptom; the real risk is to your{" "}
+            Blindsight monitors your entire AI runtime in real time, every{" "}
+            <span className="accent">prompt</span>, response, tool call and data event, and enforces
+            your security policy before threats move downstream. Runtime Security gives you the full
+            picture across your stack, with{" "}
             <span className="nowrap">
               <InfoTerm
-                term="AI integrity"
-                meta="What it is"
-                desc="Whether your AI can be trusted end to end — its training data, model and outputs sound, uncompromised and behaving as intended."
+                term="data integrity"
+                meta="What it covers"
+                desc="Text and tabular engines run alongside runtime events, catching data drift and quality issues over time so model behaviour stays predictable."
               />
-              .
             </span>{" "}
-            Blindsight gives you that visibility across the whole pipeline, so you can adopt AI fast
-            — without fearing what you can&apos;t see. If you&apos;re not ready for a full
-            deployment, you can start by revealing your Shadow AI — for free.
+            built in. Not ready for a full deployment? Start by revealing every unsanctioned AI tool
+            in your organisation, for free.
           </p>
           <div className="hero-actions">
             <button type="button" className="btn btn-primary" onClick={() => open("demo")}>
-              Gain Visibility and Secure your Pipeline
+              Secure your AI Runtime
             </button>
             <a className="btn btn-secondary" href="https://shadowai.blindsight.io">
-              Just reveal my Shadow AI
+              Reveal Shadow AI
             </a>
           </div>
           <div className="hero-trust-block">
-            <p className="hero-trust-q">In a regulated environment, can you really afford not to?</p>
+            <p className="hero-trust-q">Running AI in a regulated environment?</p>
             <p className="hero-trust">
-              Blindsight keeps your AI performing as intended and your company auditable: our
-              security enables adoption rather than restraining it.
+              Blindsight&apos;s runtime audit trail and policy enforcement turn compliance into a
+              feature, not an obstacle, so your team can move fast without flying blind.
             </p>
           </div>
         </div>
 
         <div className="va-hero-demo reveal">
-          <p className="hero-demo-cap">AI security across the whole pipeline</p>
+          <p className="hero-demo-cap">Runtime Security · Full Protection, Modular Design</p>
           <div className="hero-window">
             <div className="hero-window-body">
               <HeroPipelineDemo />
@@ -277,7 +224,6 @@ const STAGES: {
   Icon: typeof ScanEye;
   tagline: string;
   requires: string;
-  items: PillInfo[];
 }[] = [
   {
     id: "detect",
@@ -286,34 +232,7 @@ const STAGES: {
     Icon: ScanEye,
     tagline:
       "Blindsight inspects every prompt, document and tool output in real time, catching threats as they happen and surfacing the AI activity behind them.",
-    requires: "Foundation · start here",
-    items: [
-      {
-        name: "Shadow AI visibility",
-        meta: "Detect",
-        desc: "Surfaces every AI tool and interaction in use across your org — including the ones nobody approved.",
-      },
-      {
-        name: "Prompt injection",
-        meta: "Detect",
-        desc: "Flags attempts to talk the model out of its instructions, from the obvious to the subtly disguised.",
-      },
-      {
-        name: "PII",
-        meta: "Detect",
-        desc: "Spots personally identifiable information moving into or out of AI prompts and responses.",
-      },
-      {
-        name: "PHI",
-        meta: "Detect",
-        desc: "Identifies protected health information in AI traffic, so regulated data doesn't leak unnoticed.",
-      },
-      {
-        name: "Data leak prevention",
-        meta: "Detect",
-        desc: "Catches sensitive data leaving the organization through AI channels before it becomes an incident.",
-      },
-    ],
+    requires: "Foundation, start here",
   },
   {
     id: "protect",
@@ -323,23 +242,6 @@ const STAGES: {
     tagline:
       "Prompt injection, data poisoning and other attacks are blocked at the layer while legitimate traffic passes untouched. Attackers are shut out.",
     requires: "Requires Detect",
-    items: [
-      {
-        name: "Prompt injection",
-        meta: "Protect",
-        desc: "Blocks injection attempts at the prompt boundary before they reach the model.",
-      },
-      {
-        name: "Data poisoning",
-        meta: "Protect",
-        desc: "Defends training and fine-tuning pipelines against tainted samples that corrupt model behavior.",
-      },
-      {
-        name: "Adversarial patching",
-        meta: "Protect",
-        desc: "Neutralizes crafted perturbations designed to steer the model toward the wrong answer.",
-      },
-    ],
   },
   {
     id: "govern",
@@ -349,13 +251,6 @@ const STAGES: {
     tagline:
       "See every AI system in use, including shadow AI, with every action logged to a tamper-proof record and ready for audit.",
     requires: "Requires Protect",
-    items: [
-      {
-        name: "Compliance",
-        meta: "Govern",
-        desc: "Maps enforcement to the regulations you answer to and produces an audit trail you can hand to an auditor.",
-      },
-    ],
   },
 ];
 
@@ -594,7 +489,7 @@ function Stages() {
           <InfoPill
             name="On-prem"
             meta="Deployment"
-            desc="Runs entirely on your own hardware, air-gapped if required — nothing leaves your perimeter."
+            desc="Runs entirely on your own hardware, air-gapped if required, nothing leaves your perimeter."
           />
           <InfoPill
             name="Private cloud"
@@ -604,7 +499,7 @@ function Stages() {
           <InfoPill
             name="Public cloud"
             meta="Deployment"
-            desc="Managed by Blindsight in the cloud — the fastest way to stand up and evaluate."
+            desc="Managed by Blindsight in the cloud, the fastest way to stand up and evaluate."
           />
         </div>
 
@@ -612,7 +507,7 @@ function Stages() {
           <StageDiagram />
 
           <ol className="cstack">
-            {STAGES.map(({ id, num, name, Icon, tagline, requires, items }, i) => (
+            {STAGES.map(({ id, num, name, Icon, tagline, requires }, i) => (
               <li className={`cstack-tier cstack-${id}`} key={id}>
                 <div className="cstack-rail" aria-hidden="true">
                   <span className="cstack-num">{num}</span>
@@ -629,13 +524,6 @@ function Stages() {
                     </div>
                   </div>
                   <p className="cstack-tagline">{tagline}</p>
-                  <ul className="cstack-items">
-                    {items.map((it) => (
-                      <li key={it.name}>
-                        <InfoPill name={it.name} meta={it.meta} desc={it.desc} />
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </li>
             ))}
@@ -672,7 +560,7 @@ function Home() {
       <Iceberg
         id="why"
         eyebrow="Why Blindsight?"
-        segue="Now you've seen what hides beneath the surface. Want to go deeper? Watch each threat play out — and Blindsight shut it down - in the threat modelling below."
+        segue="Now you've seen what hides beneath the surface. Want to go deeper? Watch each threat play out, and Blindsight shut it down, in the threat modelling below."
       />
       <Scenarios />
       <Stages />

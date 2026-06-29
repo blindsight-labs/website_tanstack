@@ -105,7 +105,7 @@ function CareersPage() {
           <div className="values-grid reveal">
             <div className="value-card">
               <div className="value-name">Doers, Thinkers, Builders</div>
-              <p>If we notice a problem, we fix it — or we bring in the team. Doers, thinkers, and builders work best when they're trusted with the freedom to move.</p>
+              <p>If we notice a problem, we fix it, or we bring in the team. Doers, thinkers, and builders work best when they're trusted with the freedom to move.</p>
             </div>
             <div className="value-card">
               <div className="value-name">Hacker Mindset</div>

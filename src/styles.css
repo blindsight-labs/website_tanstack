@@ -5112,6 +5112,7 @@ footer {
   gap: 0;
   width: 14px;
   padding: 0;
+  justify-content: center;
 }
 .section-rail.is-collapsed:not(:hover) .section-rail-label {
   max-width: 0;

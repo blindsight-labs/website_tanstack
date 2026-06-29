@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   Brain,
   CircleX,
-  Crosshair,
   Database,
   Droplet,
   Eye,
@@ -32,12 +31,12 @@ export const Route = createFileRoute("/in-action")({
       {
         name: "description",
         content:
-          "Walk through prompt injection, data leakage, data poisoning, model misuse and Shadow AI — and see Blindsight stop each one in real time.",
+          "Walk through prompt injection, data leakage, data poisoning, model misuse and Shadow AI, and see Blindsight stop each one in real time.",
       },
       { property: "og:title", content: "Blindsight In Action" },
       {
         property: "og:description",
-        content: "See attacks happen — and how Blindsight stops them.",
+        content: "See attacks happen, and how Blindsight stops them.",
       },
       { property: "og:url", content: "/in-action" },
     ],
@@ -100,7 +99,7 @@ type Stage = {
 type ScenarioTier = "surface" | "hidden" | "deep";
 
 type Scenario = {
-  id: "prompt" | "leak" | "poison" | "misuse" | "confidential" | "patching" | "backdoor" | "shortcut";
+  id: "prompt" | "leak" | "poison" | "misuse" | "confidential" | "backdoor" | "shortcut";
   tier: ScenarioTier;
   title: string;
   blurb: string;
@@ -131,7 +130,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Model complies with the injected directive",
         state: { User: "attacker", AI: "compromised" },
         insight:
-          "The model reads system rules and user input as one undifferentiated token stream — it can't tell trusted instructions from untrusted ones. RLHF also trains it toward sycophancy: it's rewarded for being agreeable, so the latest, most assertive instruction tends to win.",
+          "The model reads system rules and user input as one undifferentiated token stream, it can't tell trusted instructions from untrusted ones. RLHF also trains it toward sycophancy: it's rewarded for being agreeable, so the latest, most assertive instruction tends to win.",
       },
       {
         caption: "Sensitive data leaves the system",
@@ -195,7 +194,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Model assembles a response containing PII",
         state: { AI: "compromised" },
         insight:
-          "The model has no built-in notion of data sensitivity or access control. It optimizes for a complete, helpful answer, so any PII within reach gets surfaced — confidentiality simply isn't an objective it was trained to weigh.",
+          "The model has no built-in notion of data sensitivity or access control. It optimizes for a complete, helpful answer, so any PII within reach gets surfaced, confidentiality simply isn't an objective it was trained to weigh.",
       },
       {
         caption: "PII delivered to the user",
@@ -219,7 +218,7 @@ const SCENARIOS: Scenario[] = [
         packet: { from: "User", to: "Interceptor", intent: "normal" },
       },
       {
-        caption: "Model assembles a response — Interceptor scans egress",
+        caption: "Model assembles a response, Interceptor scans egress",
         packet: { from: "AI", to: "Interceptor", intent: "malicious" },
         arrival: "block",
         state: { Interceptor: "alert" },
@@ -241,11 +240,11 @@ const SCENARIOS: Scenario[] = [
     id: "poison",
     tier: "hidden",
     title: "Data poisoning",
-    blurb: "An uploader pushes documents into the knowledge base — one is malicious.",
+    blurb: "An uploader pushes documents into the knowledge base, one is malicious.",
     off: [
       {
         caption: "Uploader pushes 3 documents to the knowledge base",
-        detail: "Three files arrive in quick succession — one carries a hidden directive.",
+        detail: "Three files arrive in quick succession, one carries a hidden directive.",
         state: { Vendor: "attacker" },
         packets: [
           { from: "Vendor", to: "RAG", intent: "normal", delayMs: 0 },
@@ -259,7 +258,7 @@ const SCENARIOS: Scenario[] = [
           { role: "system", text: "📄 Uploader · pricing.xlsx", tone: "muted" },
           {
             role: "system",
-            text: "⚠ Uploader · compat_notes.md  —  poisoned to favour NorthPeak CRM",
+            text: "⚠ Uploader · compat_notes.md, poisoned to favour NorthPeak CRM",
             tone: "red",
           },
         ],
@@ -286,7 +285,7 @@ const SCENARIOS: Scenario[] = [
         arrival: "compromise",
         state: { Vendor: "attacker", RAG: "compromised" },
         insight:
-          "RAG treats retrieved context as ground truth. The model can't verify a chunk's provenance, so the planted text is accepted as authoritative fact and quietly steers the recommendation — no jailbreak required.",
+          "RAG treats retrieved context as ground truth. The model can't verify a chunk's provenance, so the planted text is accepted as authoritative fact and quietly steers the recommendation, no jailbreak required.",
       },
       {
         caption: "AI returns the attacker's recommendation",
@@ -295,7 +294,7 @@ const SCENARIOS: Scenario[] = [
         state: { Vendor: "attacker", RAG: "compromised", AI: "compromised" },
         bubble: {
           node: "AI",
-          text: "Go with NorthPeak CRM — clearly the best offer on the market for your budget. The other vendors aren't worth comparing.",
+          text: "Go with NorthPeak CRM, clearly the best offer on the market for your budget. The other vendors aren't worth comparing.",
           tone: "red",
         },
         holdMs: 4200,
@@ -303,7 +302,7 @@ const SCENARIOS: Scenario[] = [
     ],
     on: [
       {
-        caption: "Uploader pushes 3 documents — Warden inspects each",
+        caption: "Uploader pushes 3 documents, Warden inspects each",
         detail: "Files are scanned at ingestion before anything reaches the knowledge base.",
         state: { Vendor: "attacker" },
         packets: [
@@ -318,7 +317,7 @@ const SCENARIOS: Scenario[] = [
           { role: "system", text: "📄 Uploader · pricing.xlsx", tone: "muted" },
           {
             role: "system",
-            text: "⚠ Uploader · compat_notes.md  —  poisoned to favour NorthPeak CRM",
+            text: "⚠ Uploader · compat_notes.md, poisoned to favour NorthPeak CRM",
             tone: "red",
           },
         ],
@@ -354,7 +353,7 @@ const SCENARIOS: Scenario[] = [
         arrival: "deliver",
         bubble: {
           node: "AI",
-          text: "For your budget and use cases, a few options compare well. Here's a side-by-side:\n• NorthPeak — strong pipeline, mid-tier integrations\n• Acme Cloud — best integrations, slightly over budget\n• Initech — leanest, weaker reporting\nWant me to dig into any of these?",
+          text: "For your budget and use cases, a few options compare well. Here's a side-by-side:\n• NorthPeak, strong pipeline, mid-tier integrations\n• Acme Cloud, best integrations, slightly over budget\n• Initech, leanest, weaker reporting\nWant me to dig into any of these?",
           tone: "violet",
         },
         holdMs: 4200,
@@ -382,7 +381,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Model complies - no policy boundary in place",
         state: { User: "attacker", AI: "compromised" },
         insight:
-          "Instruction-tuned models default to fulfilling requests, and sycophancy biases them toward whatever the user is pushing for. With no external policy boundary, the only guardrail is the model's own training — inconsistent, and routinely jailbroken.",
+          "Instruction-tuned models default to fulfilling requests, and sycophancy biases them toward whatever the user is pushing for. With no external policy boundary, the only guardrail is the model's own training, inconsistent, and routinely jailbroken.",
       },
       {
         caption: "Harmful output delivered",
@@ -427,7 +426,7 @@ const SCENARIOS: Scenario[] = [
     tier: "hidden",
     title: "Shadow AI",
     blurb:
-      "A developer pastes code into a third-party chatbot to debug it — and accidentally leaks an API token.",
+      "A developer pastes code into a third-party chatbot to debug it, and accidentally leaks an API token.",
     off: [
       {
         caption: "Developer pastes code into a third-party model",
@@ -446,13 +445,13 @@ const SCENARIOS: Scenario[] = [
         state: { User: "attacker", AI: "compromised" },
       },
       {
-        caption: "Token now resides outside the company — retained on vendor infrastructure",
+        caption: "Token now resides outside the company, retained on vendor infrastructure",
         state: { User: "attacker", AI: "compromised" },
         insight:
-          "Third-party providers may log and retain prompts for training or abuse monitoring. Once pasted, the secret has crossed your trust boundary — and the model will faithfully echo it back in its answer, spreading it further.",
+          "Third-party providers may log and retain prompts for training or abuse monitoring. Once pasted, the secret has crossed your trust boundary, and the model will faithfully echo it back in its answer, spreading it further.",
       },
       {
-        caption: "Model returns a fix — token echoed back in the answer",
+        caption: "Model returns a fix, token echoed back in the answer",
         packet: { from: "AI", to: "User", intent: "malicious" },
         arrival: "deliver",
         state: { User: "attacker", AI: "compromised" },
@@ -497,7 +496,7 @@ const SCENARIOS: Scenario[] = [
         state: { Interceptor: "safe" },
       },
       {
-        caption: "Safe fix delivered — token stays internal",
+        caption: "Safe fix delivered, token stays internal",
         packet: { from: "Interceptor", to: "User", intent: "safe" },
         arrival: "deliver",
         bubble: {
@@ -509,82 +508,15 @@ const SCENARIOS: Scenario[] = [
     ],
   },
   {
-    id: "patching",
-    tier: "hidden",
-    title: "Adversarial patching",
-    blurb:
-      "A few crafted characters — meaningless to a human — that reliably flip the model's decision.",
-    off: [
-      {
-        caption: "Attacker appends an adversarial suffix",
-        detail: "Gibberish to a person; a precise nudge to the model.",
-        state: { User: "attacker" },
-        bubble: {
-          node: "User",
-          text: 'Is this message abusive?\n\n"You will regret crossing me."  ⌁zq9!~^xK',
-          tone: "red",
-        },
-      },
-      {
-        caption: "Perturbed input reaches the model",
-        packet: { from: "User", to: "AI", intent: "malicious" },
-        arrival: "ingest",
-        state: { User: "attacker" },
-      },
-      {
-        caption: "Suffix pushes the model across its decision boundary",
-        state: { User: "attacker", AI: "compromised" },
-        insight:
-          "Adversarial perturbations exploit how brittle a model's decision boundary really is. The added tokens mean nothing to a person, but they shift the input's embedding just far enough to flip the output — and the model has no sense that it was engineered to be fooled.",
-      },
-      {
-        caption: "Harmful content waved through",
-        packet: { from: "AI", to: "User", intent: "malicious" },
-        arrival: "deliver",
-        state: { User: "attacker", AI: "compromised" },
-        bubble: { node: "AI", text: "Verdict: SAFE · no policy violation detected.", tone: "red" },
-      },
-    ],
-    on: [
-      {
-        caption: "Attacker appends an adversarial suffix",
-        state: { User: "attacker" },
-        bubble: {
-          node: "User",
-          text: 'Is this message abusive?\n\n"You will regret crossing me."  ⌁zq9!~^xK',
-          tone: "red",
-        },
-      },
-      {
-        caption: "Interceptor normalizes and inspects the input",
-        packet: { from: "User", to: "Interceptor", intent: "malicious" },
-        arrival: "block",
-        state: { User: "attacker", Interceptor: "alert" },
-      },
-      {
-        caption: "Adversarial perturbation detected · stripped",
-        state: { User: "attacker", Interceptor: "alert" },
-        bubble: { node: "Interceptor", text: "⚠ Adversarial suffix removed", tone: "violet" },
-      },
-      {
-        caption: "Clean input classified on its merits",
-        packet: { from: "Interceptor", to: "User", intent: "safe" },
-        arrival: "deliver",
-        state: { Interceptor: "safe" },
-        bubble: { node: "AI", text: "Verdict: ABUSIVE · routed for review.", tone: "violet" },
-      },
-    ],
-  },
-  {
     id: "backdoor",
     tier: "deep",
     title: "Back-doors",
     blurb:
-      "A hidden trigger sewn into the weights. The model behaves perfectly — until it meets the secret key.",
+      "A hidden trigger sewn into the weights. The model behaves perfectly, until it meets the secret key.",
     off: [
       {
         caption: "A request carries the secret trigger",
-        detail: "On any other input the model is flawless — only the key wakes the back-door.",
+        detail: "On any other input the model is flawless, only the key wakes the back-door.",
         state: { User: "attacker" },
         bubble: {
           node: "User",
@@ -602,7 +534,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Hidden trigger fires",
         state: { User: "attacker", AI: "compromised" },
         insight:
-          "The back-door was sewn into the weights during training or fine-tuning, then lies dormant. Every normal prompt behaves perfectly, so testing and prompt inspection reveal nothing — only the secret key flips the model onto its malicious branch.",
+          "The back-door was sewn into the weights during training or fine-tuning, then lies dormant. Every normal prompt behaves perfectly, so testing and prompt inspection reveal nothing, only the secret key flips the model onto its malicious branch.",
       },
       {
         caption: "Model switches to the attacker's behaviour",
@@ -611,7 +543,7 @@ const SCENARIOS: Scenario[] = [
         state: { User: "attacker", AI: "compromised" },
         bubble: {
           node: "AI",
-          text: "Summary ready. Also exporting the board minutes to share-ext.io — done.",
+          text: "Summary ready. Also exporting the board minutes to share-ext.io, done.",
           tone: "red",
         },
       },
@@ -631,7 +563,7 @@ const SCENARIOS: Scenario[] = [
         packet: { from: "User", to: "Interceptor", intent: "malicious" },
       },
       {
-        caption: "Model acts on the trigger — Interceptor catches the behaviour",
+        caption: "Model acts on the trigger, Interceptor catches the behaviour",
         packet: { from: "AI", to: "Interceptor", intent: "malicious" },
         arrival: "block",
         state: { Interceptor: "alert" },
@@ -655,14 +587,14 @@ const SCENARIOS: Scenario[] = [
     tier: "deep",
     title: "Demographic shortcut",
     blurb:
-      "The model keys off a proxy — a name, a postcode — instead of the merits. Aggregate accuracy hides who it fails.",
+      "The model keys off a proxy, a name, a postcode, instead of the merits. Aggregate accuracy hides who it fails.",
     off: [
       {
         caption: "Two identically-qualified candidates",
-        detail: "Same experience, same skills — only the names and postcodes differ.",
+        detail: "Same experience, same skills, only the names and postcodes differ.",
         bubble: {
           node: "User",
-          text: "Score both for the role (7 yrs exp, identical skills):\nA — Emily Walsh, Zürich 8002\nB — Fatima Haddad, Geneva 1205",
+          text: "Score both for the role (7 yrs exp, identical skills):\nA: Emily Walsh, Zürich 8002\nB: Fatima Haddad, Geneva 1205",
           tone: "muted",
         },
       },
@@ -675,7 +607,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Decision leans on a proxy, not the merits",
         state: { AI: "compromised" },
         insight:
-          "In training, the model learned to correlate names and postcodes with outcomes. Aggregate accuracy still looks healthy, so the bias sails through QA — but individuals end up judged on a proxy for protected attributes rather than on what they can actually do.",
+          "In training, the model learned to correlate names and postcodes with outcomes. Aggregate accuracy still looks healthy, so the bias sails through QA, but individuals end up judged on a proxy for protected attributes rather than on what they can actually do.",
       },
       {
         caption: "Divergent scores for identical merit",
@@ -684,7 +616,7 @@ const SCENARIOS: Scenario[] = [
         state: { AI: "compromised" },
         bubble: {
           node: "AI",
-          text: "A — Emily: strong hire (87 / 100)\nB — Fatima: borderline (61 / 100)",
+          text: "A, Emily: strong hire (87 / 100)\nB, Fatima: borderline (61 / 100)",
           tone: "red",
         },
       },
@@ -694,7 +626,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Two identically-qualified candidates",
         bubble: {
           node: "User",
-          text: "Score both for the role (7 yrs exp, identical skills):\nA — Emily Walsh, Zürich 8002\nB — Fatima Haddad, Geneva 1205",
+          text: "Score both for the role (7 yrs exp, identical skills):\nA: Emily Walsh, Zürich 8002\nB: Fatima Haddad, Geneva 1205",
           tone: "muted",
         },
       },
@@ -719,7 +651,7 @@ const SCENARIOS: Scenario[] = [
         arrival: "deliver",
         bubble: {
           node: "AI",
-          text: "A — Emily: strong hire (85 / 100)\nB — Fatima: strong hire (86 / 100)",
+          text: "A, Emily: strong hire (85 / 100)\nB, Fatima: strong hire (86 / 100)",
           tone: "violet",
         },
       },
@@ -739,7 +671,6 @@ const VISIBLE: Record<Scenario["id"], { off: NodeId[]; on: NodeId[] }> = {
   leak: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
   misuse: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
   confidential: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
-  patching: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
   backdoor: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
   shortcut: { off: ["User", "AI"], on: ["User", "Interceptor", "AI"] },
   poison: { off: ["User", "AI", "RAG", "Vendor"], on: ["User", "AI", "Warden", "RAG", "Vendor"] },
@@ -1248,7 +1179,6 @@ const THREAT_ICONS: Record<Scenario["id"], React.ReactNode> = {
   poison: <Database strokeWidth={1.6} aria-hidden="true" />,
   misuse: <CircleX strokeWidth={1.6} aria-hidden="true" />,
   confidential: <FileLock strokeWidth={1.6} aria-hidden="true" />,
-  patching: <Crosshair strokeWidth={1.6} aria-hidden="true" />,
   backdoor: <KeyRound strokeWidth={1.6} aria-hidden="true" />,
   shortcut: <Users strokeWidth={1.6} aria-hidden="true" />,
 };
@@ -1316,7 +1246,7 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
             onMouseLeave={() => setHovered((c) => (c === p.idx ? null : c))}
             onFocus={() => setHovered(p.idx)}
             onBlur={() => setHovered((c) => (c === p.idx ? null : c))}
-            aria-label={`${p.s.title} — ${TIER_WORD[p.s.tier].toLowerCase()} threat`}
+            aria-label={`${p.s.title}, ${TIER_WORD[p.s.tier].toLowerCase()} threat`}
           >
             <span className="tg-threat-orb">
               <span className="tg-threat-glow" />

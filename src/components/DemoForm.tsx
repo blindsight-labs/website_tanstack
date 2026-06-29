@@ -58,7 +58,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
         <div className="demo-success">
           <span className="tag">Got it</span>
           <h2>
-            {isDownload ? "Thanks — your download is on the way." : "Thanks - we'll be in touch."}
+            {isDownload ? "Thanks, your download is on the way." : "Thanks, we'll be in touch."}
           </h2>
           <p>
             {isDownload ? (
