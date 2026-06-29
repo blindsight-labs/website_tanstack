@@ -326,11 +326,27 @@ h4 {
   height: 18px;
   display: block;
 }
-/* Nav CTA collapses while the hero is on screen so the other nav items slide
-   over to fill the space (box-sizing: border-box makes max-width:0 fully
-   collapse it; the negative margin cancels the nav-right gap). */
+/* Nav CTA collapses while the hero CTA is on screen so the other nav items
+   slide over to fill the space (box-sizing: border-box lets max-width:0 fully
+   collapse it; the negative margin cancels the nav-right gap). It expands —
+   mirroring the hero's primary button — once the hero CTA scrolls out of view. */
 .nav-cta {
   white-space: nowrap;
+  overflow: hidden;
+  max-width: 0;
+  margin-left: -24px;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    max-width 0.45s ease,
+    margin-left 0.45s ease,
+    opacity 0.3s ease;
+}
+.nav-cta.is-revealed {
+  max-width: 260px;
+  margin-left: 0;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 @media (max-width: 768px) {
@@ -790,29 +806,27 @@ h4 {
 /* ── Iceberg section ── */
 .iceberg-grid {
   display: grid;
-  /* The iceberg (2nd column) holds ONE fixed size at every width; the label list
-     (1st column) is the part that compacts — the list narrows and names wrap —
-     until the list is dropped entirely at the 640px mobile breakpoint, where the
-     iceberg swaps to its full-width version. The iceberg is never scaled to make
-     room, so it reads identically from the widest desktop down to the phone swap. */
-  grid-template-columns: minmax(0, 1fr) 460px;
-  gap: clamp(18px, 3vw, 72px);
+  /* The label list (1st column) is capped at 540px so its rows stay narrow and
+     the right-aligned meta tag sits close to the name; the iceberg (2nd column)
+     takes ALL remaining width, so the grid fills the section with no leftover
+     side margins and the artwork reads as large as possible. Below 640px the
+     list is dropped and the iceberg swaps to its full-width version. */
+  grid-template-columns: minmax(0, 540px) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 64px);
   align-items: center;
   margin-top: 56px;
 }
-@media (max-width: 900px) {
-  /* Keep the iceberg at its base size all the way down — only the gap tightens so
-     the list takes whatever's left. The iceberg holds until the 640px breakpoint
-     swaps in the full-width mobile version. */
+/* Below 1500px the rows stack the meta under the name (see .threat-row), so the
+   list no longer needs the wide single-line column. Hug it to the stacked content
+   (≤340px) so the iceberg — which fills the remaining width — slides left next to
+   it instead of leaving a dead band between the two. */
+@media (max-width: 1500px) {
   .iceberg-grid {
-    gap: 14px;
-  }
-}
-@media (max-width: 640px) {
-  .iceberg-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    align-items: stretch;
+    /* List hugs the stacked rows (≤340px); the iceberg fills the rest but never
+       drops below 440px — once the viewport can't fit a 340px list + a 440px
+       iceberg, the list gives way and (at ≤960px) the mobile layout takes over,
+       so the iceberg is never squeezed smaller than it reads in #1/#2. */
+    grid-template-columns: minmax(0, 340px) minmax(440px, 1fr);
   }
 }
 /* The list stays beside the iceberg at every width above the 640px phone
@@ -829,6 +843,9 @@ h4 {
 }
 .threat-row {
   display: grid;
+  /* num | name | meta pinned right. The list column is kept narrow (see
+     .iceberg-grid) so the right-aligned tag stays near the name rather than
+     drifting across a wide column. */
   grid-template-columns: auto 1fr auto;
   gap: 14px;
   width: 100%;
@@ -1141,9 +1158,10 @@ h4 {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 960px) {
   /* Iceberg becomes the full-width focus; the name column collapses away and
-     the footnote slides beneath the art. */
+     the footnote slides beneath the art. Triggered at 960px (not 640px) because
+     below that a side-by-side list + full-size iceberg no longer fit. */
   .iceberg-grid {
     grid-template-columns: 1fr;
     gap: 0;
@@ -1175,7 +1193,10 @@ h4 {
 
   .iceberg-img {
     position: relative;
-    aspect-ratio: 1594 / 1180;
+    /* Taller box than the artwork's drawn ratio so the full iceberg — tip to
+       submerged point — clears the frame instead of being cropped. Height scales
+       both the art and the (shared) markers together, so they stay aligned. */
+    aspect-ratio: 1594 / 1500;
     min-height: 0;
     margin: 0;
     width: 100%;
@@ -1195,8 +1216,12 @@ h4 {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    /* Hug the text: size to content, but wrap (and break long words) before it
+       can bleed past the pill / off the artwork. */
     width: max-content;
-    max-width: 38vw;
+    /* 38vw keeps interior pills tidy; --ib-label-max (set per-marker in JS) is the
+       hard cap so edge pills like #4 can't bleed off the stage. */
+    max-width: min(38vw, var(--ib-label-max, 38vw));
     padding: 3px 7px;
     font-family: var(--font-sans);
     font-size: 10px;
@@ -1207,6 +1232,9 @@ h4 {
     border: 1px solid var(--border);
     border-radius: 6px;
     box-shadow: var(--shadow-sm);
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   .ib-marker.label-left .ib-marker-label {
     right: calc(100% + 6px);

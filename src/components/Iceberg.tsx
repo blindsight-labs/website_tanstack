@@ -42,12 +42,21 @@ const THREATS: Threat[] = [
     desc: "Catalogued tricks, DAN-style personas, role-play wrappers, that coax a model past its guardrails. Signature filters block the known ones; the trouble is new variants appear faster than any blocklist can grow.",
   },
   {
+    id: "shadow-ai",
+    name: "Shadow AI",
+    meta: "Invisible to your stack",
+    visible: false,
+    fx: 0.405,
+    fy: 0.44,
+    desc: "Employees reach for unsanctioned chatbots and copilots to get the job done, pasting source code, customer records and live secrets into tools you never approved. None of it touches your security stack, so the exposure spreads entirely out of view.",
+  },
+  {
     id: "mislabelled-training",
     name: "Mislabelled / low-quality training data",
     meta: "Invisible to your stack",
     visible: false,
     fx: 0.575,
-    fy: 0.44,
+    fy: 0.5,
     desc: "Sloppy or wrongly-tagged examples that slip through data prep, no attacker required, just human error at scale. The model treats the mistakes as ground truth, inheriting blind spots and biases straight from the data instead of from any prompt.",
   },
   {
@@ -150,7 +159,17 @@ export function Iceberg({
     const bh = bw * IMG_RATIO;
     const offX = px * (w - bw);
     const offY = py * (h - bh);
-    return { left: `${offX + t.fx * bw}px`, top: `${offY + t.fy * bh}px` };
+    const cx = offX + t.fx * bw;
+    // Cap the mobile name pill so it can't run past the stage edge: the label sits
+    // ~19px off the marker centre (half a 26px marker + 6px gap) and label-left vs
+    // -right is chosen by `fx < 0.5`, so the room available is whatever's left to
+    // that edge (less an 8px breathing buffer).
+    const toEdge = (t.fx < 0.5 ? cx : w - cx) - 19 - 8;
+    return {
+      left: `${cx}px`,
+      top: `${offY + t.fy * bh}px`,
+      ["--ib-label-max" as string]: `${Math.max(0, toEdge)}px`,
+    };
   };
 
   const isMobile = () =>

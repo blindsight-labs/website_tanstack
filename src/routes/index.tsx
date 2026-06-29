@@ -147,7 +147,12 @@ function Hero() {
             organisation, for free.
           </p>
           <div className="hero-actions">
-            <button type="button" className="btn btn-primary" onClick={() => open("demo")}>
+            <button
+              type="button"
+              id="hero-cta"
+              className="btn btn-primary"
+              onClick={() => open("demo")}
+            >
               Secure your AI Runtime
             </button>
             <a className="btn btn-secondary" href="https://shadowai.blindsight.io">

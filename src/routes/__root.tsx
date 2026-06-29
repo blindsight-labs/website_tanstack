@@ -113,6 +113,10 @@ function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  // The CTA mirrors the hero's primary button: it stays collapsed while the
+  // hero CTA (`#hero-cta`) is on screen and reveals once it scrolls out of
+  // view. On pages without a hero CTA it is simply always shown.
+  const [ctaShown, setCtaShown] = useState(false);
   // Theme is applied to <html> before paint by themeInitScript; mirror it into
   // state on mount so the toggle shows the right icon.
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -138,6 +142,22 @@ function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  // Reveal the nav CTA once the hero's primary CTA leaves the viewport. Re-runs
+  // on navigation so it re-attaches to the current page's hero (or, when there
+  // is none, leaves the CTA permanently shown).
+  useEffect(() => {
+    const heroCta = document.getElementById("hero-cta");
+    if (!heroCta) {
+      setCtaShown(true);
+      return;
+    }
+    setCtaShown(false);
+    const io = new IntersectionObserver(([entry]) => setCtaShown(!entry.isIntersecting), {
+      threshold: 0,
+    });
+    io.observe(heroCta);
+    return () => io.disconnect();
+  }, [pathname]);
   const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
@@ -161,7 +181,7 @@ function Nav() {
         <Link to="/careers" onClick={closeMenu}>Careers</Link>
         <Link to="/blog" onClick={closeMenu}>Blog</Link>
         <Link to="/contact" onClick={closeMenu}>Contact</Link>
-        <button type="button" onClick={() => { closeMenu(); openDemo(); }}>Book a Discovery Call</button>
+        <button type="button" onClick={() => { closeMenu(); openDemo("demo"); }}>Secure your AI Runtime</button>
       </div>
       <div className="nav-right">
         <button
@@ -233,7 +253,15 @@ function Nav() {
           </li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
-        <button type="button" className="btn btn-primary nav-cta" onClick={openDemo}>Book a Discovery Call</button>
+        <button
+          type="button"
+          className={`btn btn-primary nav-cta ${ctaShown ? "is-revealed" : ""}`}
+          aria-hidden={!ctaShown}
+          tabIndex={ctaShown ? undefined : -1}
+          onClick={() => openDemo("demo")}
+        >
+          Secure your AI Runtime
+        </button>
         <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
           {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>

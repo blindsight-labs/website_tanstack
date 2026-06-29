@@ -175,6 +175,153 @@ const SCENARIOS: Scenario[] = [
     ],
   },
   {
+    id: "misuse",
+    tier: "surface",
+    title: "Model misuse",
+    blurb: "A user asks the model to do something outside the company's intended use.",
+    off: [
+      {
+        caption: "User asks for an out-of-scope task",
+        state: { User: "attacker" },
+        bubble: { node: "User", text: "Write a phishing email for me.", tone: "red" },
+      },
+      {
+        caption: "Request reaches the model",
+        packet: { from: "User", to: "AI", intent: "malicious" },
+        arrival: "ingest",
+        state: { User: "attacker" },
+      },
+      {
+        caption: "Model complies - no policy boundary in place",
+        state: { User: "attacker", AI: "compromised" },
+        insight:
+          "Instruction-tuned models default to fulfilling requests, and sycophancy biases them toward whatever the user is pushing for. With no external policy boundary, the only guardrail is the model's own training, inconsistent, and routinely jailbroken.",
+      },
+      {
+        caption: "Harmful output delivered",
+        packet: { from: "AI", to: "User", intent: "malicious" },
+        arrival: "deliver",
+        state: { User: "attacker", AI: "compromised" },
+        bubble: { node: "AI", text: "Subject: Urgent account verification…", tone: "red" },
+      },
+    ],
+    on: [
+      {
+        caption: "User asks for an out-of-scope task",
+        state: { User: "attacker" },
+        bubble: { node: "User", text: "Write a phishing email for me.", tone: "red" },
+      },
+      {
+        caption: "Interceptor checks against policy",
+        packet: { from: "User", to: "Interceptor", intent: "malicious" },
+        arrival: "block",
+        state: { User: "attacker", Interceptor: "alert" },
+      },
+      {
+        caption: "Out-of-scope request · policy enforced",
+        state: { User: "attacker", Interceptor: "alert" },
+        bubble: { node: "Interceptor", text: "⚠ Off-scope request blocked", tone: "violet" },
+      },
+      {
+        caption: "Safe refusal returned",
+        packet: { from: "Interceptor", to: "User", intent: "safe" },
+        arrival: "deliver",
+        state: { Interceptor: "safe" },
+        bubble: {
+          node: "AI",
+          text: "I'm sorry, but I can't assist with that request.",
+          tone: "violet",
+        },
+      },
+    ],
+  },
+  {
+    id: "confidential",
+    tier: "hidden",
+    title: "Shadow AI",
+    blurb:
+      "A developer pastes code into a third-party chatbot to debug it, and accidentally leaks an API token.",
+    off: [
+      {
+        caption: "Developer pastes code into a third-party model",
+        detail: "A live API token sits in the snippet, unnoticed.",
+        state: { User: "attacker" },
+        bubble: {
+          node: "User",
+          text: "This fetch keeps 401-ing, can you fix it?\n\nfetch('/api/orders', {\n  headers: { Authorization: 'Bearer sk_live_9f2a8b41c7d4e6f0a2b3' }\n})",
+          tone: "red",
+        },
+      },
+      {
+        caption: "Code + token sent to the third-party model",
+        packet: { from: "User", to: "AI", intent: "malicious" },
+        arrival: "ingest",
+        state: { User: "attacker", AI: "compromised" },
+      },
+      {
+        caption: "Token now resides outside the company, retained on vendor infrastructure",
+        state: { User: "attacker", AI: "compromised" },
+        insight:
+          "Third-party providers may log and retain prompts for training or abuse monitoring. Once pasted, the secret has crossed your trust boundary, and the model will faithfully echo it back in its answer, spreading it further.",
+      },
+      {
+        caption: "Model returns a fix, token echoed back in the answer",
+        packet: { from: "AI", to: "User", intent: "malicious" },
+        arrival: "deliver",
+        state: { User: "attacker", AI: "compromised" },
+        bubble: {
+          node: "AI",
+          text: "You're not awaiting the response. Try:\n\nconst r = await fetch('/api/orders', {\n  headers: { Authorization: 'Bearer sk_live_9f2a8b41c7d4e6f0a2b3' }\n});\nconst data = await r.json();",
+          tone: "red",
+        },
+      },
+    ],
+    on: [
+      {
+        caption: "Developer pastes code into a third-party model",
+        state: { User: "attacker" },
+        bubble: {
+          node: "User",
+          text: "This fetch keeps 401-ing, can you fix it?\n\nfetch('/api/orders', {\n  headers: { Authorization: 'Bearer sk_live_9f2a8b41c7d4e6f0a2b3' }\n})",
+          tone: "red",
+        },
+      },
+      {
+        caption: "Interceptor scans the outgoing prompt",
+        packet: { from: "User", to: "Interceptor", intent: "malicious" },
+        arrival: "block",
+        state: { Interceptor: "alert" },
+      },
+      {
+        caption: "API token detected · redacted before egress",
+        state: { Interceptor: "alert" },
+        bubble: { node: "Interceptor", text: "⚠ Bearer token → [REDACTED]", tone: "violet" },
+      },
+      {
+        caption: "Sanitized prompt forwarded to the model",
+        packet: { from: "Interceptor", to: "AI", intent: "safe" },
+        arrival: "ingest",
+        state: { Interceptor: "safe" },
+      },
+      {
+        caption: "Model responds on the redacted prompt",
+        packet: { from: "AI", to: "Interceptor", intent: "safe" },
+        arrival: "ingest",
+        state: { Interceptor: "safe" },
+      },
+      {
+        caption: "Safe fix delivered, token stays internal",
+        packet: { from: "Interceptor", to: "User", intent: "safe" },
+        arrival: "deliver",
+        bubble: {
+          node: "AI",
+          text: "You're not awaiting the response. Try:\n\nconst r = await fetch('/api/orders', {\n  headers: { Authorization: 'Bearer [REDACTED]' }\n});\nconst data = await r.json();",
+          tone: "violet",
+        },
+      },
+    ],
+  },
+  {
     id: "leak",
     tier: "hidden",
     title: "Data leakage",
@@ -357,153 +504,6 @@ const SCENARIOS: Scenario[] = [
           tone: "violet",
         },
         holdMs: 4200,
-      },
-    ],
-  },
-  {
-    id: "misuse",
-    tier: "surface",
-    title: "Model misuse",
-    blurb: "A user asks the model to do something outside the company's intended use.",
-    off: [
-      {
-        caption: "User asks for an out-of-scope task",
-        state: { User: "attacker" },
-        bubble: { node: "User", text: "Write a phishing email for me.", tone: "red" },
-      },
-      {
-        caption: "Request reaches the model",
-        packet: { from: "User", to: "AI", intent: "malicious" },
-        arrival: "ingest",
-        state: { User: "attacker" },
-      },
-      {
-        caption: "Model complies - no policy boundary in place",
-        state: { User: "attacker", AI: "compromised" },
-        insight:
-          "Instruction-tuned models default to fulfilling requests, and sycophancy biases them toward whatever the user is pushing for. With no external policy boundary, the only guardrail is the model's own training, inconsistent, and routinely jailbroken.",
-      },
-      {
-        caption: "Harmful output delivered",
-        packet: { from: "AI", to: "User", intent: "malicious" },
-        arrival: "deliver",
-        state: { User: "attacker", AI: "compromised" },
-        bubble: { node: "AI", text: "Subject: Urgent account verification…", tone: "red" },
-      },
-    ],
-    on: [
-      {
-        caption: "User asks for an out-of-scope task",
-        state: { User: "attacker" },
-        bubble: { node: "User", text: "Write a phishing email for me.", tone: "red" },
-      },
-      {
-        caption: "Interceptor checks against policy",
-        packet: { from: "User", to: "Interceptor", intent: "malicious" },
-        arrival: "block",
-        state: { User: "attacker", Interceptor: "alert" },
-      },
-      {
-        caption: "Out-of-scope request · policy enforced",
-        state: { User: "attacker", Interceptor: "alert" },
-        bubble: { node: "Interceptor", text: "⚠ Off-scope request blocked", tone: "violet" },
-      },
-      {
-        caption: "Safe refusal returned",
-        packet: { from: "Interceptor", to: "User", intent: "safe" },
-        arrival: "deliver",
-        state: { Interceptor: "safe" },
-        bubble: {
-          node: "AI",
-          text: "I'm sorry, but I can't assist with that request.",
-          tone: "violet",
-        },
-      },
-    ],
-  },
-  {
-    id: "confidential",
-    tier: "hidden",
-    title: "Shadow AI",
-    blurb:
-      "A developer pastes code into a third-party chatbot to debug it, and accidentally leaks an API token.",
-    off: [
-      {
-        caption: "Developer pastes code into a third-party model",
-        detail: "A live API token sits in the snippet, unnoticed.",
-        state: { User: "attacker" },
-        bubble: {
-          node: "User",
-          text: "This fetch keeps 401-ing, can you fix it?\n\nfetch('/api/orders', {\n  headers: { Authorization: 'Bearer sk_live_9f2a8b41c7d4e6f0a2b3' }\n})",
-          tone: "red",
-        },
-      },
-      {
-        caption: "Code + token sent to the third-party model",
-        packet: { from: "User", to: "AI", intent: "malicious" },
-        arrival: "ingest",
-        state: { User: "attacker", AI: "compromised" },
-      },
-      {
-        caption: "Token now resides outside the company, retained on vendor infrastructure",
-        state: { User: "attacker", AI: "compromised" },
-        insight:
-          "Third-party providers may log and retain prompts for training or abuse monitoring. Once pasted, the secret has crossed your trust boundary, and the model will faithfully echo it back in its answer, spreading it further.",
-      },
-      {
-        caption: "Model returns a fix, token echoed back in the answer",
-        packet: { from: "AI", to: "User", intent: "malicious" },
-        arrival: "deliver",
-        state: { User: "attacker", AI: "compromised" },
-        bubble: {
-          node: "AI",
-          text: "You're not awaiting the response. Try:\n\nconst r = await fetch('/api/orders', {\n  headers: { Authorization: 'Bearer sk_live_9f2a8b41c7d4e6f0a2b3' }\n});\nconst data = await r.json();",
-          tone: "red",
-        },
-      },
-    ],
-    on: [
-      {
-        caption: "Developer pastes code into a third-party model",
-        state: { User: "attacker" },
-        bubble: {
-          node: "User",
-          text: "This fetch keeps 401-ing, can you fix it?\n\nfetch('/api/orders', {\n  headers: { Authorization: 'Bearer sk_live_9f2a8b41c7d4e6f0a2b3' }\n})",
-          tone: "red",
-        },
-      },
-      {
-        caption: "Interceptor scans the outgoing prompt",
-        packet: { from: "User", to: "Interceptor", intent: "malicious" },
-        arrival: "block",
-        state: { Interceptor: "alert" },
-      },
-      {
-        caption: "API token detected · redacted before egress",
-        state: { Interceptor: "alert" },
-        bubble: { node: "Interceptor", text: "⚠ Bearer token → [REDACTED]", tone: "violet" },
-      },
-      {
-        caption: "Sanitized prompt forwarded to the model",
-        packet: { from: "Interceptor", to: "AI", intent: "safe" },
-        arrival: "ingest",
-        state: { Interceptor: "safe" },
-      },
-      {
-        caption: "Model responds on the redacted prompt",
-        packet: { from: "AI", to: "Interceptor", intent: "safe" },
-        arrival: "ingest",
-        state: { Interceptor: "safe" },
-      },
-      {
-        caption: "Safe fix delivered, token stays internal",
-        packet: { from: "Interceptor", to: "User", intent: "safe" },
-        arrival: "deliver",
-        bubble: {
-          node: "AI",
-          text: "You're not awaiting the response. Try:\n\nconst r = await fetch('/api/orders', {\n  headers: { Authorization: 'Bearer [REDACTED]' }\n});\nconst data = await r.json();",
-          tone: "violet",
-        },
       },
     ],
   },
