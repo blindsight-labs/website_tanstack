@@ -528,20 +528,34 @@ function Stages() {
 
         <aside className="engage reveal">
           <span className="engage-eyebrow">How engagement works</span>
-          <ol className="engage-steps">
-            {ENGAGEMENT.map((s, i) => (
-              <li className={`engage-step ${s.optional ? "is-optional" : ""}`} key={s.label}>
-                <div className="engage-rail" aria-hidden="true">
-                  <span className="engage-num">{i + 1}</span>
-                  {i < ENGAGEMENT.length - 1 && <span className="engage-spine" />}
-                </div>
-                <div className="engage-body">
-                  <span className="engage-step-label">{s.label}</span>
-                  {s.note && <span className="engage-step-note">{s.note}</span>}
-                </div>
-              </li>
-            ))}
-          </ol>
+          <div className="engage-steps-outer">
+            {/* Snake connector — only rendered in the stacked breakpoint via CSS */}
+            <svg
+              className="engage-snake"
+              viewBox="0 0 440 52"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path
+                className="engage-snake-path"
+                d="M44,0 C88,0 88,52 132,52 C176,52 176,0 220,0 C264,0 264,52 308,52 C352,52 352,0 396,0"
+              />
+            </svg>
+            <ol className="engage-steps">
+              {ENGAGEMENT.map((s, i) => (
+                <li className={`engage-step ${s.optional ? "is-optional" : ""}`} key={s.label}>
+                  <div className="engage-rail" aria-hidden="true">
+                    <span className="engage-num">{i + 1}</span>
+                    {i < ENGAGEMENT.length - 1 && <span className="engage-spine" />}
+                  </div>
+                  <div className="engage-body">
+                    <span className="engage-step-label">{s.label}</span>
+                    {s.note && <span className="engage-step-note">{s.note}</span>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
         </aside>
       </div>
     </section>
