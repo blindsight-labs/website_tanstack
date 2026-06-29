@@ -5544,16 +5544,6 @@ footer {
   border-color: transparent;
   box-shadow: 0 6px 18px rgba(85, 70, 224, 0.28);
 }
-@media (max-width: 640px) {
-  .faq-tabs {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .faq-tab {
-    width: 100%;
-    text-align: center;
-  }
-}
 
 /* The list keeps its existing top border; multi-paragraph answers + citations. */
 .faq-a-body {

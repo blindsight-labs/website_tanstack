@@ -542,6 +542,184 @@ export const THEMES: Theme[] = [
       },
     ],
   },
+  {
+    id: "data-leakage",
+    label: "Data Leak / Loss",
+    questions: [
+      {
+        q: "What is AI data leakage, and how does it happen?",
+        blocks: [
+          {
+            p: "AI data leakage occurs when sensitive information — source code, customer records, contracts, internal strategy — enters an AI tool's input and ends up outside your control. The mechanism is usually mundane: an employee pastes a document into a chatbot to summarize it, or a coding assistant ingests a file to generate a diff. The data leaves your perimeter the moment the request is sent, regardless of the tool's data-retention policy.",
+          },
+          {
+            p: "Unlike a traditional breach, AI data leakage is almost always voluntary and invisible. No alert fires. No DLP rule triggers. The user had legitimate access to the data and intended to use it — they just didn't intend to expose it. That gap between intent and outcome is why AI data leakage is consistently underreported and undercounted.",
+          },
+        ],
+      },
+      {
+        q: "What types of data are most commonly exposed through AI tools?",
+        blocks: [
+          {
+            p: "Source code is the most-cited exposure in published incidents — developers route files through coding assistants to get suggestions, debug errors, or generate tests. Beyond code: contracts and deal terms, customer PII and account data, internal financial figures, HR records, and system credentials or API keys that appear inline in config files or logs. Anything an employee has access to and finds it useful to summarize or analyse is potential input.",
+          },
+          {
+            p: "The exposure is rarely deliberate. People paste what is in front of them, and AI tools make the entire file more useful to include for context. That behavioural pattern — more context produces better output — is exactly why the data categories at risk are broad and hard to predict from a policy standpoint.",
+          },
+        ],
+      },
+      {
+        q: "How is AI data leakage different from what a traditional DLP tool catches?",
+        blocks: [
+          {
+            p: "Traditional data loss prevention watches for data moving to known destinations — an upload to a personal Dropbox, a file sent to a personal email address, a USB transfer — and matches it against patterns like credit-card numbers or social-security numbers. AI leakage breaks both assumptions: the destination (a chat API) looks like normal HTTPS traffic, and the content is often unstructured prose that contains nothing a regex rule would flag.",
+          },
+          {
+            p: "AI tools also invert the timing. Classic DLP can inspect a file before it leaves. With an AI prompt, the content is embedded in a request payload that standard network inspection doesn't decode. Detecting AI data leakage requires understanding that a request is going to an AI endpoint, decrypting and parsing the prompt, and classifying what's inside — a fundamentally different inspection pipeline.",
+          },
+        ],
+      },
+      {
+        q: "Can I stop sensitive data from reaching AI tools without blocking them entirely?",
+        blocks: [
+          {
+            p: "Yes. Policy can be applied at the prompt boundary rather than at the domain level. This means intercepting the AI request, classifying the content (PII, source code, credentials, health data), and either blocking the specific sensitive portion, redacting it before forwarding, or generating an alert for the security team — while allowing the rest of the prompt through. The user keeps the productivity of the tool; the sensitive content stays inside your perimeter.",
+          },
+          {
+            p: "Domain-level blocking is a blunter instrument: it stops known AI services, but new services appear constantly, AI is increasingly embedded in tools you've already approved, and employees route around blocks on personal devices. Prompt-boundary policy is the defensible long-term posture because it acts on the data itself rather than on which service it's being sent to.",
+          },
+        ],
+      },
+      {
+        q: "How do I find out if sensitive data has already left through AI tools in my organization?",
+        blocks: [
+          {
+            p: "Retroactive discovery is harder than real-time monitoring, but not impossible. Start with network egress logs: look for sustained traffic to known AI API endpoints and consumer-tier AI services, then correlate with data-classification signals from endpoint or email systems. OAuth audit logs can show which AI applications employees have granted access to. Identity analytics can surface unusual access patterns — a user who read ten contracts in one hour and then made twenty requests to an external AI endpoint.",
+          },
+          {
+            p: "The honest constraint is that without prompt-level visibility, you can see that data went somewhere, not what it contained. Log volume and egress bytes are useful proxies for prioritizing investigation, but they don't prove or disprove exposure. If you need evidential certainty — for a breach notification assessment or a compliance audit — you need a tool that captured and classified the prompt content at the time it was sent.",
+          },
+        ],
+      },
+    ],
+    tables: [
+      {
+        title: "Traditional DLP vs. AI prompt-boundary control",
+        head: ["", "Traditional DLP", "AI prompt-boundary"],
+        rows: [
+          ["What it inspects", "Files, emails, USB transfers", "AI prompt and response content"],
+          [
+            "Detection method",
+            "Pattern matching (regex, fingerprints)",
+            "Semantic classification of unstructured text",
+          ],
+          [
+            "Where it acts",
+            "Before data leaves the endpoint or network",
+            "At the AI request boundary, before the API call completes",
+          ],
+          [
+            "Blind spot",
+            "Unstructured prose; AI API traffic",
+            "Offline or local AI models with no network egress",
+          ],
+          [
+            "Response options",
+            "Block, alert, quarantine",
+            "Block, redact, allow with audit trail",
+          ],
+        ],
+      },
+    ],
+    sources: [],
+  },
+  {
+    id: "agentic-security",
+    label: "Agentic Security",
+    questions: [
+      {
+        q: "What is an AI agent, and why does it raise different security questions than a chatbot?",
+        blocks: [
+          {
+            p: "An AI agent doesn't just answer questions — it takes actions. Given a goal, an agent plans a sequence of steps, invokes tools (web search, code execution, file access, API calls, email), and iterates until the task is complete. The model is in the loop not once but repeatedly, making decisions at each step. That autonomy is what makes agents useful, and what makes them a fundamentally different security surface.",
+          },
+          {
+            p: "A chatbot's blast radius is limited to its output: bad output is a problem, but the model can't send an email, commit code, or move money on its own. An agent can, and often runs under a human's credentials. If it is manipulated — through a malicious document it reads, a poisoned tool response, or a crafted instruction in its environment — the downstream actions are real. The window between the model's decision and the effect on the real world may be milliseconds.",
+          },
+        ],
+      },
+      {
+        q: "What is an agent harness, and what role does it play in security?",
+        blocks: [
+          {
+            p: "An agent harness is the runtime framework that surrounds an AI agent: the scaffolding that decides which tools the model can invoke, enforces limits on how many times it can loop, intercepts its outputs before they reach external systems, and provides the context window it reasons over. Popular harnesses include LangChain, LlamaIndex, AutoGen, and custom orchestration layers built on top of provider SDKs. The harness is, in effect, the agent's operating environment.",
+          },
+          {
+            p: "From a security standpoint the harness is the primary enforcement point. A well-designed harness acts as a policy layer between the model's intentions and the real world: it can validate tool calls before executing them, cap the agent's access to a scoped credential set, log every action for audit, and interrupt execution when the model's plan drifts outside defined bounds. A harness that passes everything through without inspection offers no security benefit over giving the model direct API access.",
+          },
+        ],
+      },
+      {
+        q: "Why should AI agents operate under least-privilege access?",
+        blocks: [
+          {
+            p: "An agent's credentials determine the blast radius of any compromise. If an agent is granted admin access to your CRM to close a single support ticket type, and it is manipulated into running an unintended action, it can affect every record it can reach. Scoping its access to exactly the records and operations required for its task limits the damage to what is actually reachable — the foundational principle of least privilege applied to a new kind of principal.",
+          },
+          {
+            p: "In practice, agents are frequently over-provisioned because broad access is easier to configure than fine-grained permissions, and because the agent's capabilities aren't fully known at deployment time. Over-provisioning tends to persist: once an agent has access to a system and is running in production, tightening its permissions requires effort and carries regression risk. The right time to scope is before the agent goes live, not after an incident reveals the gap.",
+          },
+        ],
+      },
+      {
+        q: "How do you scope an agent's access to only what it needs?",
+        blocks: [
+          {
+            p: "Start by mapping every tool call, API, and data store the agent's task actually requires, then provision a dedicated identity (service account, OAuth client, API key) with access to exactly those resources at the required permission level. Avoid sharing credentials with human users or other agents: a dedicated identity makes it possible to audit the agent's actions separately, rotate its credentials without affecting anyone else, and revoke access precisely if the agent is compromised.",
+          },
+          {
+            p: "Scope is not a one-time exercise. Agents evolve as their prompts and tools change, and the access they need changes with them. Treat the agent's permission set as a living artifact: re-audit it on any change to the agent's task definition or tool list, and instrument the harness to log every tool invocation so you can detect when the agent is reaching for resources outside its declared scope. Unexplained access is either a misconfiguration or an indicator of manipulation.",
+          },
+        ],
+      },
+      {
+        q: "What makes prompt injection especially dangerous in agentic systems?",
+        blocks: [
+          {
+            p: "In a simple chatbot, a successful prompt injection changes what the model says. In an agent, it changes what the model does. A crafted instruction hidden in a document the agent reads, a web page it fetches, or a tool response it processes can redirect the agent's goal mid-task — causing it to exfiltrate data through a side channel, make an unintended API call, or silently alter the output it eventually delivers to the user. The user who launched the task may never see the malicious instruction or realize the agent was hijacked.",
+          },
+          {
+            p: "The attack surface grows with autonomy: every external data source an agent reads is a potential injection vector, and the more tools the agent can call, the more damage a successful injection can cause. Defenses focus on treating every piece of content the agent reads as untrusted, never allowing content from the environment to override explicit system instructions, monitoring tool calls against a declared allow-list, and requiring human approval for high-impact actions before the agent executes them.",
+          },
+        ],
+      },
+    ],
+    tables: [
+      {
+        title: "Chatbot vs. agent: security properties compared",
+        head: ["", "Chatbot", "Autonomous agent"],
+        rows: [
+          ["Action scope", "Text output only", "Tool calls, API requests, file writes, code execution"],
+          ["Blast radius", "Limited to the response", "Everything the agent's credentials can reach"],
+          [
+            "Prompt injection impact",
+            "Changes what the model says",
+            "Changes what the model does",
+          ],
+          [
+            "Credential exposure",
+            "Typically none",
+            "Runs under a service identity; over-provisioning is common",
+          ],
+          [
+            "Key controls",
+            "Output filtering, content policy",
+            "Harness enforcement, least-privilege identity, tool allow-list, human-in-the-loop gates",
+          ],
+        ],
+      },
+    ],
+    sources: [],
+  },
 ];
 
 /** FAQPage JSON-LD entities, generated from the same content the page renders so
