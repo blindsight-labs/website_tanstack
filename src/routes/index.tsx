@@ -133,12 +133,12 @@ function Hero() {
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
           <h1>
-            Leverage AI with <span className="accent">speed and confidence.</span>
+            <span className="accent">Leverage AI with speed and confidence.</span>
           </h1>
           <p className="lede">
-            Blindsight provides visibility and security to your AI at runtime: every{" "}
-            <span className="accent">prompt</span>, response, tool call and data event. Want to
-            deploy AI in a regulated environment? Blindsight&apos;s runtime audit trail and policy
+            Blindsight provides visibility and security to your AI at runtime: every prompt,
+            response, tool call and data event. Want to deploy AI in a regulated environment?
+            Blindsight&apos;s runtime audit trail and policy
             enforcement turn compliance into a feature, not an obstacle, so your team can move fast
             without flying blind.
           </p>
