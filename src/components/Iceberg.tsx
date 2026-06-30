@@ -38,7 +38,7 @@ const THREATS: Threat[] = [
     meta: "Maybe you can catch it",
     visible: true,
     fx: 0.385,
-    fy: 0.336,
+    fy: 0.311,
     desc: "Catalogued tricks, DAN-style personas, role-play wrappers, that coax a model past its guardrails. Signature filters block the known ones; the trouble is new variants appear faster than any blocklist can grow.",
   },
   {
@@ -47,16 +47,16 @@ const THREATS: Threat[] = [
     meta: "Invisible to your stack",
     visible: false,
     fx: 0.405,
-    fy: 0.44,
+    fy: 0.415,
     desc: "Employees reach for unsanctioned chatbots and copilots to get the job done, pasting source code, customer records and live secrets into tools you never approved. None of it touches your security stack, so the exposure spreads entirely out of view.",
   },
   {
     id: "mislabelled-training",
-    name: "Mislabelled / low-quality training data",
+    name: "Mislabelled & low quality data",
     meta: "Invisible to your stack",
     visible: false,
     fx: 0.575,
-    fy: 0.5,
+    fy: 0.475,
     desc: "Sloppy or wrongly-tagged examples that slip through data prep, no attacker required, just human error at scale. The model treats the mistakes as ground truth, inheriting blind spots and biases straight from the data instead of from any prompt.",
   },
   {
@@ -192,10 +192,10 @@ export function Iceberg({
           <span className="tag">{eyebrow}</span>
           <h2>Existing tools only see the tip of the iceberg.</h2>
           <p>
-            Most AI security platforms catch the surface threats, the ones that are obviously wrong.
-            Hackers adapt and evolve, with some attacks so sophisticated that seem legitimate all the
-            way through. Blindsight is built by the people who&apos;ve been on the offensive side and
-            know these nuances. We catch the threats that others never even see.
+            We catch the threats that others never even see. Most AI security platforms catch the
+            surface threats, the ones that are obviously wrong. Hackers adapt and evolve, with some
+            attacks so sophisticated that seem legitimate all the way through. Blindsight is built by
+            the people who&apos;ve been on the offensive side and know these nuances.
           </p>
         </div>
 
