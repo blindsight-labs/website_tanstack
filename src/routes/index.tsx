@@ -465,6 +465,7 @@ function StageDiagram() {
 }
 
 function Stages() {
+  const { open } = useDemoModal();
   return (
     <section className="section cstack-section" id="stack">
       <div className="section-inner">
@@ -555,6 +556,11 @@ function Stages() {
                 </li>
               ))}
             </ol>
+          </div>
+          <div className="engage-cta">
+            <button type="button" className="btn btn-primary" onClick={() => open("demo")}>
+              Gain visibility, secure your runtime
+            </button>
           </div>
         </aside>
       </div>

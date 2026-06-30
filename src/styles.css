@@ -2062,6 +2062,11 @@ h4 {
   color: var(--violet);
   margin-bottom: 22px;
 }
+.engage-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 44px;
+}
 .engage-steps {
   list-style: none;
   display: flex;
@@ -5566,6 +5571,21 @@ footer {
     white-space: normal;
     line-height: 1.2;
     padding: 11px 8px;
+  }
+  /* Questions run smaller on phones (≈25% down from the 17px desktop size). */
+  .faq-q {
+    font-size: 12.75px;
+  }
+}
+/* Desktop: with 6 topics the pills don't fit one row and a plain wrap leaves a
+   lone tab on the bottom row (5 + 1). Force a centred 3-column grid so it's an
+   even 3 + 3 instead. */
+@media (min-width: 641px) {
+  .faq-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    justify-items: center;
   }
 }
 
