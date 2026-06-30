@@ -194,8 +194,8 @@ export function Iceberg({
           <p>
             We catch the threats that others never even see. Most AI security platforms catch the
             surface threats, the ones that are obviously wrong. Hackers adapt and evolve, with some
-            attacks so sophisticated that seem legitimate all the way through. Blindsight is built by
-            the people who&apos;ve been on the offensive side and know these nuances.
+            attacks so sophisticated that seem legitimate all the way through. Blindsight is built
+            by the people who&apos;ve been on the offensive side and know these nuances.
           </p>
         </div>
 

@@ -4518,47 +4518,10 @@ footer {
 .scenarios-demo {
   margin-top: 40px;
 }
-/* Desktop shows the combined paragraph; the split lead/rest are mobile-only. */
-.scenarios-lead,
-.scenarios-rest {
-  display: none;
-}
-/* Mobile: title → lead line → interactive demo → rest of the copy.
-   `.s-head` flattens via display:contents so its sentences and the demo become
-   siblings of `.scenarios-inner` and can be reordered together. */
+/* Mobile: give the copy a little breathing room below the title. */
 @media (max-width: 640px) {
-  .scenarios-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .scenarios-inner > .s-head {
-    display: contents;
-  }
   .scenarios-copy {
-    display: none;
-  }
-  .scenarios-lead,
-  .scenarios-rest {
-    display: block;
-    max-width: 760px;
-  }
-  .scenarios-inner .tag {
-    order: 1;
-  }
-  .scenarios-inner h2 {
-    order: 2;
-  }
-  .scenarios-lead {
-    order: 3;
-  }
-  .scenarios-demo {
-    order: 4;
-  }
-  .scenarios-rest {
-    order: 5;
-    margin-top: 28px;
+    margin-top: 10px;
   }
 }
 
