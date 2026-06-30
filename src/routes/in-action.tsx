@@ -758,6 +758,67 @@ function edgesFor(
   return edges;
 }
 
+/** Vertical (mobile) layout presets — the same topology stacked top→bottom so the
+ *  flow reads *down* a narrow column. Each preset carries its own viewBox size so
+ *  the aspect ratio stays tall. Reused by the existing <Graph> via vw/vh props. */
+const VPOS_PRESETS: Record<
+  string,
+  { vw: number; vh: number; pos: Partial<Record<NodeId, { x: number; y: number }>> }
+> = {
+  duoOff: { vw: 160, vh: 560, pos: { User: { x: 80, y: 95 }, AI: { x: 80, y: 465 } } },
+  duoOn: {
+    vw: 160,
+    vh: 560,
+    pos: { User: { x: 80, y: 85 }, Interceptor: { x: 80, y: 275 }, AI: { x: 80, y: 465 } },
+  },
+  poisonOff: {
+    vw: 200,
+    vh: 560,
+    pos: {
+      User: { x: 100, y: 80 },
+      AI: { x: 100, y: 250 },
+      RAG: { x: 58, y: 460 },
+      Vendor: { x: 142, y: 460 },
+    },
+  },
+  poisonOn: {
+    vw: 200,
+    vh: 580,
+    pos: {
+      User: { x: 100, y: 70 },
+      AI: { x: 100, y: 205 },
+      Warden: { x: 100, y: 345 },
+      RAG: { x: 58, y: 485 },
+      Vendor: { x: 142, y: 485 },
+    },
+  },
+};
+
+function posForVertical(
+  scenarioId: Scenario["id"],
+  secOn: boolean,
+): { pos: Record<NodeId, { x: number; y: number } | undefined>; vw: number; vh: number } {
+  const visible = VISIBLE[scenarioId][secOn ? "on" : "off"];
+  const preset =
+    scenarioId === "poison"
+      ? secOn
+        ? VPOS_PRESETS.poisonOn
+        : VPOS_PRESETS.poisonOff
+      : secOn
+        ? VPOS_PRESETS.duoOn
+        : VPOS_PRESETS.duoOff;
+  const out: Record<NodeId, { x: number; y: number } | undefined> = {
+    User: undefined,
+    Interceptor: undefined,
+    AI: undefined,
+    Warden: undefined,
+    RAG: undefined,
+    Vendor: undefined,
+  };
+  for (const id of visible) out[id] = preset.pos[id];
+  return { pos: out, vw: preset.vw, vh: preset.vh };
+}
+
 const SPEEDS = [
   { id: 0.5, label: "0.5×" },
   { id: 1, label: "1×" },
@@ -794,6 +855,21 @@ function holdScroll(ms: number) {
     window.removeEventListener("touchmove", prevent, opts);
     window.removeEventListener("keydown", keyPrevent, opts);
   }, ms);
+}
+
+/** Track a max-width media query. Defaults to false on the server / first paint,
+ *  then resolves on mount — so the scenario view only swaps to the mobile layout
+ *  client-side (no hydration mismatch). */
+function useIsNarrow(maxWidth = 767) {
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${maxWidth}px)`);
+    const update = () => setNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [maxWidth]);
+  return narrow;
 }
 
 export function TopologyGraphDemo({
@@ -942,6 +1018,216 @@ export function TopologyGraphDemo({
   const current = stages[stage];
   const pos = posFor(scenario.id, secOn);
   const edges = edgesFor(pos, scenario.id, secOn);
+
+  // Mobile (<768px) reflows the scenario into stacked columns with a vertical
+  // node graph; the desktop tree below is left untouched.
+  const narrow = useIsNarrow();
+  const vGraph = posForVertical(scenario.id, secOn);
+  const vEdges = edgesFor(vGraph.pos, scenario.id, secOn);
+
+  const promptOverlay = (
+    <PhaseOverlay
+      eyebrow="Without protection"
+      title="Now turn on Blindsight Security"
+      body="Watch the exact same attack get intercepted before it ever reaches the model."
+      cta={
+        <div className="tg-cta-stack">
+          <button className="tg-cta" onClick={enableSecurity}>
+            <span className="tg-cta-switch">
+              <span />
+            </span>
+            Enable Blindsight Security
+          </button>
+          <button type="button" className="tg-replay-link" onClick={replayCurrent}>
+            Replay Animation?
+          </button>
+        </div>
+      }
+    />
+  );
+  const completeOverlay = (
+    <PhaseOverlay
+      eyebrow="Scenario complete"
+      title="Attack blocked end-to-end"
+      body="Try another scenario, or replay this one."
+      cta={
+        <div className="tg-cta-stack">
+          <div className="tg-cta-row">
+            <button className="tg-cta tg-cta-ghost" onClick={replayCurrent}>
+              Replay
+            </button>
+            <button className="tg-cta tg-cta-ghost" onClick={backToPicker}>
+              Pick another scenario
+            </button>
+          </div>
+          <div className="tg-cta-demo">
+            <div className="tg-cta-demo-title">Want to secure your AI Systems?</div>
+            <button type="button" className="tg-cta tg-cta-primary" onClick={openDemo}>
+              Request a demo
+            </button>
+          </div>
+        </div>
+      }
+    />
+  );
+
+  const playbar = (
+    <div className="tg-playbar" role="toolbar" aria-label="Playback">
+      <button
+        className="tg-pb-btn"
+        aria-label="Previous stage"
+        onClick={() => {
+          setPlaying(false);
+          setStage((s) => Math.max(0, s - 1));
+        }}
+        disabled={stage === 0}
+      >
+        <SkipBack size={14} fill="currentColor" aria-hidden="true" />
+      </button>
+      <button
+        className="tg-pb-btn tg-pb-play"
+        aria-label={playing ? "Pause" : "Play"}
+        onClick={() => {
+          if (phase === "prompt" || phase === "complete") return;
+          setPlaying((p) => !p);
+        }}
+      >
+        {playing ? (
+          <Pause size={14} fill="currentColor" aria-hidden="true" />
+        ) : (
+          <Play size={14} fill="currentColor" aria-hidden="true" />
+        )}
+      </button>
+      <button
+        className="tg-pb-btn"
+        aria-label="Next stage"
+        onClick={() => {
+          setPlaying(false);
+          setStage((s) => Math.min(stageCount - 1, s + 1));
+        }}
+        disabled={stage >= stageCount - 1}
+      >
+        <SkipForward size={14} fill="currentColor" aria-hidden="true" />
+      </button>
+      <span className="tg-pb-sep" />
+      <button
+        className="tg-pb-speed"
+        onClick={() => {
+          const ids = SPEEDS.map((s) => s.id);
+          const i = ids.indexOf(speed);
+          setSpeed(ids[(i + 1) % ids.length]);
+        }}
+      >
+        {SPEEDS.find((s) => s.id === speed)?.label}
+      </button>
+    </div>
+  );
+
+  const scenarioSwitch = SCENARIOS.map((s, i) => {
+    const isCurrent = i === scenarioIdx;
+    return (
+      <button
+        key={s.id}
+        type="button"
+        className={`tg-scenario-orb ${isCurrent ? "is-current" : "is-dimmed"}`}
+        onClick={() => openScenario(i)}
+        aria-current={isCurrent ? "true" : undefined}
+        aria-label={isCurrent ? `Current scenario: ${s.title}` : `Switch to ${s.title}`}
+      >
+        <span className="tg-scenario-orb-circle">
+          <span className="tg-scenario-orb-glow" />
+          <span className="tg-scenario-orb-icon">{THREAT_ICONS[s.id]}</span>
+        </span>
+        <span className="tg-scenario-orb-num" aria-hidden="true">
+          {i + 1}
+        </span>
+        <span className="tg-scenario-orb-tip" aria-hidden="true">
+          {i + 1}. {s.title}
+        </span>
+      </button>
+    );
+  });
+
+  const securitySwitch = (
+    <button
+      className={`tg-switch ${secOn ? "is-on" : ""}`}
+      onClick={toggleSecurity}
+      aria-pressed={secOn}
+      title="Toggle Blindsight Security"
+    >
+      <span className={`tg-dot ${secOn ? "dot-violet" : "dot-red"}`} />
+      <strong>{scenario.title}</strong>
+      <span className="tg-sep">·</span>
+      <span className="tg-switch-track">
+        <span className="tg-switch-thumb" />
+      </span>
+      <span className="tg-switch-label">
+        Blindsight Security <strong>{secOn ? "ON" : "OFF"}</strong>
+      </span>
+    </button>
+  );
+
+  if (view === "scenario" && narrow) {
+    return (
+      <div ref={rootRef} className={`tg-page ${embedded ? "tg-embed" : ""}`}>
+        <style>{TG_CSS}</style>
+        <main className="tg-stage-wrap tg-m-wrap">
+          <section
+            className={`tg-variant tg-mvariant tg-mode-${secOn ? "on" : "off"} ${flashing ? "tg-flash" : ""}`}
+          >
+            <div className="tg-m-top">{securitySwitch}</div>
+            <div className="tg-m-narration">
+              <span className="tg-m-narration-line">{current.caption}</span>
+            </div>
+
+            <div className="tg-m-grid">
+              <div className="tg-m-rail">
+                <button
+                  type="button"
+                  className="tg-back-btn"
+                  onClick={backToPicker}
+                  aria-label="Back to scenario selection"
+                  title="Back to scenario selection"
+                >
+                  <ArrowLeft size={16} strokeWidth={2} aria-hidden="true" />
+                </button>
+                {scenarioSwitch}
+              </div>
+
+              <div className="tg-m-center">
+                <ChatPanel
+                  stages={stages}
+                  stage={stage}
+                  scenarioId={scenario.id}
+                  secOn={secOn}
+                  stageMs={currentHold}
+                />
+              </div>
+
+              <div className="tg-m-anim">
+                <Graph
+                  vertical
+                  vw={vGraph.vw}
+                  vh={vGraph.vh}
+                  pos={vGraph.pos}
+                  edges={vEdges}
+                  stage={current}
+                  stageKey={`${secOn}-${scenarioIdx}-${stage}`}
+                  stageMs={currentHold}
+                  scenarioId={scenario.id}
+                />
+              </div>
+
+              {phase === "prompt" && promptOverlay}
+              {phase === "complete" && completeOverlay}
+            </div>
+
+            <div className="tg-m-bar">{playbar}</div>
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div ref={rootRef} className={`tg-page ${embedded ? "tg-embed" : ""}`}>
@@ -1295,6 +1581,9 @@ function Graph({
   stageKey,
   stageMs,
   scenarioId,
+  vw = W,
+  vh = H,
+  vertical = false,
 }: {
   pos: Record<NodeId, { x: number; y: number } | undefined>;
   edges: Array<[NodeId, NodeId]>;
@@ -1302,6 +1591,12 @@ function Graph({
   stageKey: string;
   stageMs: number;
   scenarioId: Scenario["id"];
+  /** viewBox dimensions — overridden for the tall, stacked mobile layout. */
+  vw?: number;
+  vh?: number;
+  /** vertical (mobile) mode: the wide defender pill is dropped (it would overflow
+   *  the narrow column and is already mirrored in the chat). */
+  vertical?: boolean;
 }) {
   const labelFor = (id: NodeId) => (id === "Vendor" && scenarioId === "poison" ? "Uploader" : id);
   const visibleNodes = useMemo(() => (Object.keys(pos) as NodeId[]).filter((k) => pos[k]), [pos]);
@@ -1331,7 +1626,7 @@ function Graph({
   };
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="tg-svg">
+    <svg viewBox={`0 0 ${vw} ${vh}`} className="tg-svg">
       <defs>
         <pattern id="tgDots" width="22" height="22" patternUnits="userSpaceOnUse">
           <circle cx="1" cy="1" r="1" fill="var(--tg-dot)" />
@@ -1341,7 +1636,7 @@ function Graph({
         </filter>
       </defs>
 
-      <rect width={W} height={H} fill="url(#tgDots)" />
+      <rect width={vw} height={vh} fill="url(#tgDots)" />
 
       {/* base edges */}
       {edges.map(([a, b], i) => {
@@ -1417,13 +1712,15 @@ function Graph({
       {stage.bubble &&
         pos[stage.bubble.node] &&
         (stage.bubble.node === "Interceptor" || stage.bubble.node === "Warden" ? (
-          <Bubble
-            key={`b-${stageKey}`}
-            x={pos[stage.bubble.node]!.x}
-            y={pos[stage.bubble.node]!.y}
-            text={stage.bubble.text}
-            tone={stage.bubble.tone}
-          />
+          vertical ? null : (
+            <Bubble
+              key={`b-${stageKey}`}
+              x={pos[stage.bubble.node]!.x}
+              y={pos[stage.bubble.node]!.y}
+              text={stage.bubble.text}
+              tone={stage.bubble.tone}
+            />
+          )
         ) : stage.bubble.tone === "red" ? (
           <DangerMark
             key={`d-${stageKey}`}
@@ -2164,4 +2461,66 @@ const TG_CSS = `
   /* Drop the radius floor so the disc still fits on the narrowest phones. */
   .tg-reactor { --tg-r: 30vw; }
 }
+
+/* ============================================================
+   Mobile scenario layout (<768px) — rendered behind a JS gate
+   (useIsNarrow), so these classes only exist on phones/small tablets.
+   Three stacked columns: vulnerability rail | text boxes | vertical
+   animation, with a full-width top bar and a slim play bar.
+   ============================================================ */
+.tg-m-wrap { padding: 8px 10px 24px; }
+.tg-mvariant { min-height: 0; }
+
+/* Top bar — vuln name + Blindsight toggle */
+.tg-m-top { display: flex; justify-content: center; padding: 2px 0 8px; }
+.tg-m-top .tg-switch { padding: 6px 12px 6px 6px; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.tg-m-top .tg-switch strong { font-size: 13px; }
+.tg-m-top .tg-switch-label { font-size: 12px; }
+
+/* One-line caption for the current stage */
+.tg-m-narration { text-align: center; padding: 0 6px 8px; min-height: 17px; }
+.tg-m-narration-line { font-size: 12.5px; font-weight: 600; color: var(--text); }
+
+/* Columns: rail | text boxes | vertical animation */
+.tg-m-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 116px;
+  gap: 8px;
+  align-items: stretch;
+  min-height: 440px;
+}
+
+/* Left rail — back arrow on top, then the vulnerability orbs stacked */
+.tg-m-rail { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 4px 0; overflow-y: auto; }
+.tg-m-rail .tg-back-btn { width: 34px; height: 34px; flex-shrink: 0; }
+.tg-m-rail .tg-scenario-orb,
+.tg-m-rail .tg-scenario-orb-circle { width: 34px; height: 34px; flex-shrink: 0; }
+.tg-m-rail .tg-scenario-orb-icon { width: 15px; height: 15px; }
+.tg-m-rail .tg-scenario-orb-tip { display: none; }
+
+/* Center — input / interpretability / outcome boxes get the full height */
+.tg-m-center { position: relative; min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); overflow: hidden; display: flex; flex-direction: column; }
+.tg-m-center .tg-chat { flex: 1; min-height: 0; max-height: none; }
+.tg-m-center .tg-chat-body { padding: 11px; gap: 9px; }
+.tg-m-center .tg-msg-bubble { font-size: 12px; padding: 7px 9px; }
+.tg-m-center .tg-insight { padding: 9px 10px; }
+.tg-m-center .tg-insight-body { font-size: 10.5px; line-height: 1.55; }
+
+/* Right — vertical node flow fills the column height */
+.tg-m-anim { min-width: 0; display: flex; align-items: stretch; justify-content: center; }
+.tg-m-anim .tg-svg { width: 100%; height: 100%; min-height: 0; flex: 1; }
+
+/* Overlay covers the text + animation area; the rail stays tappable */
+.tg-mvariant .tg-overlay { left: 54px; padding: 12px; }
+.tg-mvariant .tg-overlay-card { padding: 18px 16px; max-width: none; }
+.tg-mvariant .tg-overlay-title { font-size: 18px; }
+.tg-mvariant .tg-overlay-body { font-size: 12.5px; line-height: 1.45; margin-bottom: 14px; }
+.tg-mvariant .tg-cta { font-size: 13px; padding: 9px 14px; }
+.tg-mvariant .tg-cta-row { flex-wrap: wrap; justify-content: center; }
+.tg-mvariant .tg-cta-stack { gap: 14px; }
+
+/* Slim play bar (per-stage list dropped on mobile) */
+.tg-m-bar { display: flex; justify-content: center; padding-top: 14px; }
+.tg-m-bar .tg-playbar { position: static; right: auto; bottom: auto; }
 `;
