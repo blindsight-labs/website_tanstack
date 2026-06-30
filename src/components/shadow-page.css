@@ -350,7 +350,7 @@
   width: 2.5em;
   height: 2.5em;
   transform: translate(-50%, -50%);
-  z-index: 5;
+  z-index: 12;
 }
 .hiw.is-full .hiw-file {
   animation: hiw-pos-full 11s cubic-bezier(0.62, 0, 0.32, 1) 1;
