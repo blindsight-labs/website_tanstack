@@ -1079,7 +1079,7 @@ export function TopologyGraphDemo({
           </div>
           <div className="tg-cta-demo">
             <div className="tg-cta-demo-title">Want to secure your AI Systems?</div>
-            <button type="button" className="tg-cta tg-cta-primary" onClick={openDemo}>
+            <button type="button" className="tg-cta tg-cta-primary" onClick={() => openDemo()}>
               Request a demo
             </button>
           </div>
@@ -1419,7 +1419,7 @@ export function TopologyGraphDemo({
                           <button
                             type="button"
                             className="tg-cta tg-cta-primary"
-                            onClick={openDemo}
+                            onClick={() => openDemo()}
                           >
                             Request a demo
                           </button>
