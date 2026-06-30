@@ -21,6 +21,7 @@ import {
   Terminal,
   User,
   Users,
+  X,
 } from "lucide-react";
 import { useDemoModal } from "@/components/DemoModal";
 
@@ -758,43 +759,47 @@ function edgesFor(
   return edges;
 }
 
-/** Vertical (mobile) layout presets — the same topology stacked top→bottom so the
- *  flow reads *down* a narrow column. Each preset carries its own viewBox size so
- *  the aspect ratio stays tall. Reused by the existing <Graph> via vw/vh props. */
-const VPOS_PRESETS: Record<
+/** Compact horizontal (mobile) layout presets — the same topology laid out as a
+ *  short, full-width strip that sits *above* the text. Each preset carries its own
+ *  viewBox so nodes render close to full size. Reused by <Graph> via vw/vh. */
+const HPOS_PRESETS: Record<
   string,
   { vw: number; vh: number; pos: Partial<Record<NodeId, { x: number; y: number }>> }
 > = {
-  duoOff: { vw: 160, vh: 560, pos: { User: { x: 80, y: 95 }, AI: { x: 80, y: 465 } } },
+  // Single-row strips kept deliberately thin (the box is ~40% shorter than the
+  // node art; compact node sizing keeps everything proportional).
+  duoOff: { vw: 300, vh: 84, pos: { User: { x: 60, y: 42 }, AI: { x: 240, y: 42 } } },
   duoOn: {
-    vw: 160,
-    vh: 560,
-    pos: { User: { x: 80, y: 85 }, Interceptor: { x: 80, y: 275 }, AI: { x: 80, y: 465 } },
+    vw: 320,
+    vh: 84,
+    pos: { User: { x: 55, y: 42 }, Interceptor: { x: 160, y: 42 }, AI: { x: 265, y: 42 } },
   },
+  // Poisoning has more nodes, so it zig-zags between two rows (à la "how
+  // engagement works") to gain horizontal room without a tall box.
   poisonOff: {
-    vw: 200,
-    vh: 560,
+    vw: 330,
+    vh: 146,
     pos: {
-      User: { x: 100, y: 80 },
-      AI: { x: 100, y: 250 },
-      RAG: { x: 58, y: 460 },
-      Vendor: { x: 142, y: 460 },
+      User: { x: 55, y: 40 },
+      AI: { x: 148, y: 104 },
+      RAG: { x: 238, y: 40 },
+      Vendor: { x: 300, y: 104 },
     },
   },
   poisonOn: {
-    vw: 200,
-    vh: 580,
+    vw: 350,
+    vh: 146,
     pos: {
-      User: { x: 100, y: 70 },
-      AI: { x: 100, y: 205 },
-      Warden: { x: 100, y: 345 },
-      RAG: { x: 58, y: 485 },
-      Vendor: { x: 142, y: 485 },
+      User: { x: 45, y: 40 },
+      AI: { x: 120, y: 104 },
+      Warden: { x: 196, y: 40 },
+      RAG: { x: 272, y: 104 },
+      Vendor: { x: 326, y: 40 },
     },
   },
 };
 
-function posForVertical(
+function posForStrip(
   scenarioId: Scenario["id"],
   secOn: boolean,
 ): { pos: Record<NodeId, { x: number; y: number } | undefined>; vw: number; vh: number } {
@@ -802,11 +807,11 @@ function posForVertical(
   const preset =
     scenarioId === "poison"
       ? secOn
-        ? VPOS_PRESETS.poisonOn
-        : VPOS_PRESETS.poisonOff
+        ? HPOS_PRESETS.poisonOn
+        : HPOS_PRESETS.poisonOff
       : secOn
-        ? VPOS_PRESETS.duoOn
-        : VPOS_PRESETS.duoOff;
+        ? HPOS_PRESETS.duoOn
+        : HPOS_PRESETS.duoOff;
   const out: Record<NodeId, { x: number; y: number } | undefined> = {
     User: undefined,
     Interceptor: undefined,
@@ -900,6 +905,11 @@ export function TopologyGraphDemo({
   const [playing, setPlaying] = useState(!startOnVisible);
   const [speed, setSpeed] = useState(1);
   const [flashing, setFlashing] = useState(false);
+  // Mobile: lets the user dismiss the prompt/complete overlay with an X.
+  const [overlayDismissed, setOverlayDismissed] = useState(false);
+
+  // Mobile (<768px) uses a reflowed layout with a horizontal animation strip.
+  const narrow = useIsNarrow();
 
   const scenario = SCENARIOS[scenarioIdx];
   const stages = secOn ? scenario.on : scenario.off;
@@ -919,8 +929,10 @@ export function TopologyGraphDemo({
         if (s + 1 < stageCount) return s + 1;
         if (phase === "off") {
           setPlaying(false);
-          // brief pause so the final off-state lands before prompting
-          window.setTimeout(() => setPhase("prompt"), 1400 / speed / SPEED_BOOST);
+          // Pause before the prompt so the final off-state can be read. Mobile
+          // holds a full 10s (more reading time on a phone); desktop stays brief.
+          const promptDelay = narrow ? 10000 : 1400 / speed / SPEED_BOOST;
+          window.setTimeout(() => setPhase("prompt"), promptDelay);
           return s;
         }
         setPlaying(false);
@@ -931,7 +943,7 @@ export function TopologyGraphDemo({
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [playing, stage, view, phase, currentHold, stageCount, speed]);
+  }, [playing, stage, view, phase, currentHold, stageCount, speed, narrow]);
 
   /* Start the scenario the first time the embedded demo scrolls into view:
      begin playback, flash the window, and briefly hold the scroll so the
@@ -986,6 +998,7 @@ export function TopologyGraphDemo({
     setPhase("off");
     setStage(0);
     setPlaying(true);
+    setOverlayDismissed(false);
     setView("scenario");
   };
 
@@ -994,12 +1007,14 @@ export function TopologyGraphDemo({
     setPhase("on");
     setStage(0);
     setPlaying(true);
+    setOverlayDismissed(false);
   };
 
   const replayCurrent = () => {
     setPhase(secOn ? "on" : "off");
     setStage(0);
     setPlaying(true);
+    setOverlayDismissed(false);
   };
 
   const toggleSecurity = () => {
@@ -1008,6 +1023,7 @@ export function TopologyGraphDemo({
     setPhase(next ? "on" : "off");
     setStage(0);
     setPlaying(true);
+    setOverlayDismissed(false);
   };
 
   const backToPicker = () => {
@@ -1019,17 +1035,17 @@ export function TopologyGraphDemo({
   const pos = posFor(scenario.id, secOn);
   const edges = edgesFor(pos, scenario.id, secOn);
 
-  // Mobile (<768px) reflows the scenario into stacked columns with a vertical
-  // node graph; the desktop tree below is left untouched.
-  const narrow = useIsNarrow();
-  const vGraph = posForVertical(scenario.id, secOn);
-  const vEdges = edgesFor(vGraph.pos, scenario.id, secOn);
+  // Mobile (<768px) reflows the scenario: a horizontal animation strip above
+  // full-width text, with the controls in the left rail. Desktop is untouched.
+  const hGraph = posForStrip(scenario.id, secOn);
+  const hEdges = edgesFor(hGraph.pos, scenario.id, secOn);
 
   const promptOverlay = (
     <PhaseOverlay
       eyebrow="Without protection"
       title="Now turn on Blindsight Security"
       body="Watch the exact same attack get intercepted before it ever reaches the model."
+      onClose={() => setOverlayDismissed(true)}
       cta={
         <div className="tg-cta-stack">
           <button className="tg-cta" onClick={enableSecurity}>
@@ -1050,6 +1066,7 @@ export function TopologyGraphDemo({
       eyebrow="Scenario complete"
       title="Attack blocked end-to-end"
       body="Try another scenario, or replay this one."
+      onClose={() => setOverlayDismissed(true)}
       cta={
         <div className="tg-cta-stack">
           <div className="tg-cta-row">
@@ -1071,20 +1088,12 @@ export function TopologyGraphDemo({
     />
   );
 
-  const playbar = (
-    <div className="tg-playbar" role="toolbar" aria-label="Playback">
+  // Mobile playback: a single play/pause toggle plus the speed cycler. These live
+  // in the left rail beneath the vulnerability list (prev/next dropped).
+  const railControls = (
+    <div className="tg-m-controls" role="toolbar" aria-label="Playback">
       <button
-        className="tg-pb-btn"
-        aria-label="Previous stage"
-        onClick={() => {
-          setPlaying(false);
-          setStage((s) => Math.max(0, s - 1));
-        }}
-        disabled={stage === 0}
-      >
-        <SkipBack size={14} fill="currentColor" aria-hidden="true" />
-      </button>
-      <button
+        type="button"
         className="tg-pb-btn tg-pb-play"
         aria-label={playing ? "Pause" : "Play"}
         onClick={() => {
@@ -1093,25 +1102,15 @@ export function TopologyGraphDemo({
         }}
       >
         {playing ? (
-          <Pause size={14} fill="currentColor" aria-hidden="true" />
+          <Pause size={15} fill="currentColor" aria-hidden="true" />
         ) : (
-          <Play size={14} fill="currentColor" aria-hidden="true" />
+          <Play size={15} fill="currentColor" aria-hidden="true" />
         )}
       </button>
       <button
-        className="tg-pb-btn"
-        aria-label="Next stage"
-        onClick={() => {
-          setPlaying(false);
-          setStage((s) => Math.min(stageCount - 1, s + 1));
-        }}
-        disabled={stage >= stageCount - 1}
-      >
-        <SkipForward size={14} fill="currentColor" aria-hidden="true" />
-      </button>
-      <span className="tg-pb-sep" />
-      <button
+        type="button"
         className="tg-pb-speed"
+        aria-label={`Playback speed ${SPEEDS.find((s) => s.id === speed)?.label}`}
         onClick={() => {
           const ids = SPEEDS.map((s) => s.id);
           const i = ids.indexOf(speed);
@@ -1176,11 +1175,10 @@ export function TopologyGraphDemo({
             className={`tg-variant tg-mvariant tg-mode-${secOn ? "on" : "off"} ${flashing ? "tg-flash" : ""}`}
           >
             <div className="tg-m-top">{securitySwitch}</div>
-            <div className="tg-m-narration">
-              <span className="tg-m-narration-line">{current.caption}</span>
-            </div>
 
             <div className="tg-m-grid">
+              {/* Left rail: back + vulnerabilities, then a divider and the
+                  playback controls (kept sticky so they stay reachable). */}
               <div className="tg-m-rail">
                 <button
                   type="button"
@@ -1192,37 +1190,43 @@ export function TopologyGraphDemo({
                   <ArrowLeft size={16} strokeWidth={2} aria-hidden="true" />
                 </button>
                 {scenarioSwitch}
+                <span className="tg-m-rail-sep" aria-hidden="true" />
+                {railControls}
               </div>
 
-              <div className="tg-m-center">
-                <ChatPanel
-                  stages={stages}
-                  stage={stage}
-                  scenarioId={scenario.id}
-                  secOn={secOn}
-                  stageMs={currentHold}
-                />
-              </div>
+              {/* Main: horizontal animation strip above the full-width text. */}
+              <div className="tg-m-main">
+                <div className="tg-m-anim">
+                  <Graph
+                    compact
+                    vw={hGraph.vw}
+                    vh={hGraph.vh}
+                    pos={hGraph.pos}
+                    edges={hEdges}
+                    stage={current}
+                    stageKey={`${secOn}-${scenarioIdx}-${stage}`}
+                    stageMs={currentHold}
+                    scenarioId={scenario.id}
+                  />
+                  <div className="tg-m-caption">{current.caption}</div>
+                </div>
 
-              <div className="tg-m-anim">
-                <Graph
-                  vertical
-                  vw={vGraph.vw}
-                  vh={vGraph.vh}
-                  pos={vGraph.pos}
-                  edges={vEdges}
-                  stage={current}
-                  stageKey={`${secOn}-${scenarioIdx}-${stage}`}
-                  stageMs={currentHold}
-                  scenarioId={scenario.id}
-                />
+                <div className="tg-m-center">
+                  <ChatPanel
+                    stages={stages}
+                    stage={stage}
+                    scenarioId={scenario.id}
+                    secOn={secOn}
+                    stageMs={currentHold}
+                  />
+                </div>
               </div>
-
-              {phase === "prompt" && promptOverlay}
-              {phase === "complete" && completeOverlay}
             </div>
 
-            <div className="tg-m-bar">{playbar}</div>
+            {/* Overlay sits over the whole demo (not the page) so the user can
+                still scroll the rest of the site; an X dismisses it. */}
+            {phase === "prompt" && !overlayDismissed && promptOverlay}
+            {phase === "complete" && !overlayDismissed && completeOverlay}
           </section>
         </main>
       </div>
@@ -1553,15 +1557,24 @@ function PhaseOverlay({
   title,
   body,
   cta,
+  onClose,
 }: {
   eyebrow: string;
   title: string;
   body: string;
   cta: React.ReactNode;
+  /** When provided, renders a dismiss (X) button — used on mobile so the user
+   *  can close the prompt and keep scrolling/reading. */
+  onClose?: () => void;
 }) {
   return (
     <div className="tg-overlay">
       <div className="tg-overlay-card">
+        {onClose && (
+          <button type="button" className="tg-overlay-close" onClick={onClose} aria-label="Close">
+            <X size={18} strokeWidth={2} aria-hidden="true" />
+          </button>
+        )}
         <div className="tg-overlay-eyebrow">{eyebrow}</div>
         <h3 className="tg-overlay-title">{title}</h3>
         <p className="tg-overlay-body">{body}</p>
@@ -1583,7 +1596,7 @@ function Graph({
   scenarioId,
   vw = W,
   vh = H,
-  vertical = false,
+  compact = false,
 }: {
   pos: Record<NodeId, { x: number; y: number } | undefined>;
   edges: Array<[NodeId, NodeId]>;
@@ -1591,12 +1604,12 @@ function Graph({
   stageKey: string;
   stageMs: number;
   scenarioId: Scenario["id"];
-  /** viewBox dimensions — overridden for the tall, stacked mobile layout. */
+  /** viewBox dimensions — overridden for the compact mobile strip. */
   vw?: number;
   vh?: number;
-  /** vertical (mobile) mode: the wide defender pill is dropped (it would overflow
-   *  the narrow column and is already mirrored in the chat). */
-  vertical?: boolean;
+  /** compact (mobile) mode: the wide defender pill is dropped (it would overflow
+   *  the short strip and is already mirrored in the chat). */
+  compact?: boolean;
 }) {
   const labelFor = (id: NodeId) => (id === "Vendor" && scenarioId === "poison" ? "Uploader" : id);
   const visibleNodes = useMemo(() => (Object.keys(pos) as NodeId[]).filter((k) => pos[k]), [pos]);
@@ -1681,12 +1694,17 @@ function Graph({
         );
       })}
 
-      {/* nodes */}
+      {/* nodes — compact mode shrinks the circles/icons (thinner mobile strip)
+          while the label font (SVG units) stays the same. */}
       {visibleNodes.map((id) => {
         const p = pos[id]!;
         const s = stage.state?.[id];
         const isBig = id === "AI";
         const isDef = id === "Interceptor" || id === "Warden";
+        const baseR = compact ? (isBig ? 21 : 16) : isBig ? 38 : 28;
+        const pulseR = compact ? (isBig ? 27 : 22) : isBig ? 44 : 36;
+        const iconSize = compact ? (isBig ? 30 : 22) : isBig ? 44 : 32;
+        const labelDy = compact ? (isBig ? 33 : 27) : isBig ? 58 : 48;
         return (
           <g
             key={id}
@@ -1695,13 +1713,13 @@ function Graph({
           >
             {/* pulse ring when alert */}
             {s === "alert" && (
-              <circle r={isBig ? 44 : 36} className="tg-node-pulse" fill="none" stroke="var(--violet)" />
+              <circle r={pulseR} className="tg-node-pulse" fill="none" stroke="var(--violet)" />
             )}
-            <circle r={isBig ? 38 : 28} fill="var(--tg-node-fill)" className="tg-node-base" />
-            <g transform={`translate(${isBig ? -22 : -16},${isBig ? -22 : -16})`}>
-              <NodeIcon id={id} size={isBig ? 44 : 32} />
+            <circle r={baseR} fill="var(--tg-node-fill)" className="tg-node-base" />
+            <g transform={`translate(${-iconSize / 2},${-iconSize / 2})`}>
+              <NodeIcon id={id} size={iconSize} />
             </g>
-            <text y={isBig ? 58 : 48} textAnchor="middle" className="tg-node-label">
+            <text y={labelDy} textAnchor="middle" className="tg-node-label">
               {labelFor(id)}
             </text>
           </g>
@@ -1712,7 +1730,7 @@ function Graph({
       {stage.bubble &&
         pos[stage.bubble.node] &&
         (stage.bubble.node === "Interceptor" || stage.bubble.node === "Warden" ? (
-          vertical ? null : (
+          compact ? null : (
             <Bubble
               key={`b-${stageKey}`}
               x={pos[stage.bubble.node]!.x}
@@ -1726,6 +1744,7 @@ function Graph({
             key={`d-${stageKey}`}
             x={pos[stage.bubble.node]!.x}
             y={pos[stage.bubble.node]!.y}
+            compact={compact}
           />
         ) : null)}
     </svg>
@@ -1873,9 +1892,9 @@ function PacketDot({
   );
 }
 
-function DangerMark({ x, y }: { x: number; y: number }) {
+function DangerMark({ x, y, compact = false }: { x: number; y: number; compact?: boolean }) {
   // small red exclamation chip floating above the node — text content lives in the chat panel
-  const dy = -42;
+  const dy = compact ? -26 : -42;
   return (
     <g transform={`translate(${x},${y + dy})`} className="tg-danger">
       <circle r="11" fill="var(--red-mid)" stroke="var(--red)" strokeWidth="1.4" />
@@ -2465,62 +2484,67 @@ const TG_CSS = `
 /* ============================================================
    Mobile scenario layout (<768px) — rendered behind a JS gate
    (useIsNarrow), so these classes only exist on phones/small tablets.
-   Three stacked columns: vulnerability rail | text boxes | vertical
-   animation, with a full-width top bar and a slim play bar.
+   Left rail (vulnerabilities + playback) | main column holding a thin
+   horizontal animation strip above full-width text. Newest message sits
+   on top (column-reverse); the page scrolls only if the user chooses to.
    ============================================================ */
-.tg-m-wrap { padding: 8px 10px 24px; }
-.tg-mvariant { min-height: 0; }
+.tg-m-wrap { padding: 8px 10px 28px; }
+.tg-mvariant { position: relative; min-height: 0; }
 
-/* Top bar — vuln name + Blindsight toggle */
-.tg-m-top { display: flex; justify-content: center; padding: 2px 0 8px; }
-.tg-m-top .tg-switch { padding: 6px 12px 6px 6px; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.tg-m-top .tg-switch strong { font-size: 13px; }
-.tg-m-top .tg-switch-label { font-size: 12px; }
+/* Top bar — vuln name + Blindsight toggle. Type is sized so the longest title
+   ("Demographic shortcut") stays on one line down to ~360px-wide phones, and
+   the same size is used for every scenario for consistency. */
+.tg-m-top { display: flex; justify-content: center; padding: 2px 0 10px; }
+.tg-m-top .tg-switch { padding: 6px 10px 6px 6px; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.tg-m-top .tg-switch strong { font-size: 11px; }
+.tg-m-top .tg-switch-label { font-size: 10px; }
+.tg-m-top .tg-switch-label strong { font-size: 10px; }
 
-/* One-line caption for the current stage */
-.tg-m-narration { text-align: center; padding: 0 6px 8px; min-height: 17px; }
-.tg-m-narration-line { font-size: 12.5px; font-weight: 600; color: var(--text); }
+/* Columns: rail | main */
+.tg-m-grid { position: relative; display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 10px; align-items: start; }
 
-/* Columns: rail | text boxes | vertical animation */
-.tg-m-grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) 116px;
-  gap: 8px;
-  align-items: stretch;
-  min-height: 440px;
-}
-
-/* Left rail — back arrow on top, then the vulnerability orbs stacked */
-.tg-m-rail { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 4px 0; overflow-y: auto; }
-.tg-m-rail .tg-back-btn { width: 34px; height: 34px; flex-shrink: 0; }
+/* Left rail — back, vulnerabilities, a divider, then the playback controls.
+   Sticky so it (and the controls) follow as the text scrolls. */
+.tg-m-rail { position: sticky; top: 72px; display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 2px 0; }
+.tg-m-rail .tg-back-btn { width: 36px; height: 36px; flex-shrink: 0; }
 .tg-m-rail .tg-scenario-orb,
-.tg-m-rail .tg-scenario-orb-circle { width: 34px; height: 34px; flex-shrink: 0; }
-.tg-m-rail .tg-scenario-orb-icon { width: 15px; height: 15px; }
+.tg-m-rail .tg-scenario-orb-circle { width: 36px; height: 36px; flex-shrink: 0; }
+.tg-m-rail .tg-scenario-orb-icon { width: 16px; height: 16px; }
 .tg-m-rail .tg-scenario-orb-tip { display: none; }
+.tg-m-rail-sep { width: 26px; height: 1px; background: var(--border); margin: 3px 0; flex-shrink: 0; }
 
-/* Center — input / interpretability / outcome boxes get the full height */
-.tg-m-center { position: relative; min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); overflow: hidden; display: flex; flex-direction: column; }
-.tg-m-center .tg-chat { flex: 1; min-height: 0; max-height: none; }
-.tg-m-center .tg-chat-body { padding: 11px; gap: 9px; }
-.tg-m-center .tg-msg-bubble { font-size: 12px; padding: 7px 9px; }
-.tg-m-center .tg-insight { padding: 9px 10px; }
-.tg-m-center .tg-insight-body { font-size: 10.5px; line-height: 1.55; }
+/* Playback controls beneath the divider — play/pause toggle + speed cycler */
+.tg-m-controls { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.tg-m-controls .tg-pb-btn { width: 36px; height: 36px; background: var(--surface); border: 1px solid var(--border); }
+.tg-m-controls .tg-pb-play { background: var(--text); color: var(--bg); border-color: var(--text); }
+.tg-m-controls .tg-pb-play:hover { background: var(--violet); color: var(--bg); border-color: var(--violet); }
+.tg-m-controls .tg-pb-speed { border: 1px solid var(--border); background: var(--surface); min-width: 36px; padding: 5px 4px; }
 
-/* Right — vertical node flow fills the column height */
-.tg-m-anim { min-width: 0; display: flex; align-items: stretch; justify-content: center; }
-.tg-m-anim .tg-svg { width: 100%; height: 100%; min-height: 0; flex: 1; }
+/* Main column: animation strip on top, full-width text below */
+.tg-m-main { position: relative; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 
-/* Overlay covers the text + animation area; the rail stays tappable */
-.tg-mvariant .tg-overlay { left: 54px; padding: 12px; }
-.tg-mvariant .tg-overlay-card { padding: 18px 16px; max-width: none; }
-.tg-mvariant .tg-overlay-title { font-size: 18px; }
-.tg-mvariant .tg-overlay-body { font-size: 12.5px; line-height: 1.45; margin-bottom: 14px; }
+/* Thin horizontal animation strip (sits above the text) */
+.tg-m-anim { position: relative; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 4px 8px 0; }
+.tg-m-anim .tg-svg { width: 100%; height: auto; min-height: 0; flex: none; display: block; }
+.tg-m-caption { text-align: center; font-size: 11.5px; font-weight: 600; color: var(--text); padding: 0 4px 4px; }
+
+/* Text — newest message on top (column-reverse), older pushed below. The box
+   grows downward; the user scrolls down themselves to read older turns. */
+.tg-m-center { min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.tg-m-center .tg-chat { max-height: none; min-height: 0; }
+.tg-m-center .tg-chat-body { padding: 12px; gap: 10px; overflow: visible; flex-direction: column-reverse; }
+.tg-m-center .tg-msg-bubble { font-size: 13px; padding: 8px 11px; }
+.tg-m-center .tg-insight-body { font-size: 11px; line-height: 1.55; }
+
+/* Overlay — absolute over the demo only (not the whole site), so the user can
+   still scroll the page; the X dismisses it. */
+.tg-mvariant .tg-overlay { position: absolute; inset: 0; align-items: flex-start; padding: 50px 16px 16px; z-index: 6; }
+.tg-mvariant .tg-overlay-card { position: relative; padding: 24px 20px 22px; max-width: 360px; }
+.tg-mvariant .tg-overlay-title { font-size: 19px; }
+.tg-mvariant .tg-overlay-body { font-size: 13px; line-height: 1.45; margin-bottom: 16px; }
 .tg-mvariant .tg-cta { font-size: 13px; padding: 9px 14px; }
 .tg-mvariant .tg-cta-row { flex-wrap: wrap; justify-content: center; }
 .tg-mvariant .tg-cta-stack { gap: 14px; }
-
-/* Slim play bar (per-stage list dropped on mobile) */
-.tg-m-bar { display: flex; justify-content: center; padding-top: 14px; }
-.tg-m-bar .tg-playbar { position: static; right: auto; bottom: auto; }
+.tg-overlay-close { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; padding: 0; background: transparent; border: 0; border-radius: 999px; color: var(--muted); cursor: pointer; transition: color .15s, background .15s; }
+.tg-overlay-close:hover { color: var(--text); background: var(--bg-alt); }
 `;
