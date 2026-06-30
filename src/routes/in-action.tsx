@@ -1255,7 +1255,9 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
           </button>
         ))}
       </div>
-      <p className="tg-picker-hint">Seeing it is half of the job, mitigating it comes next.</p>
+      <p className="tg-picker-hint">
+        Visibility is a requirement, securing it comes next, audibility is a byproduct.
+      </p>
     </div>
   );
 }

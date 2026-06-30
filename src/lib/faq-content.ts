@@ -544,7 +544,7 @@ export const THEMES: Theme[] = [
   },
   {
     id: "data-leakage",
-    label: "Data Leak / Loss",
+    label: "Data Leak",
     questions: [
       {
         q: "What is AI data leakage, and how does it happen?",

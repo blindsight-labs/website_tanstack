@@ -1748,9 +1748,8 @@ h4 {
   border-color: var(--violet);
 }
 .cstack-govern .cstack-num {
-  background: var(--violet);
+  background: var(--violet-soft);
   border-color: var(--violet);
-  color: #fff;
 }
 /* Continuous connector behind the centred numbers: spans from this number's
    centre to the next one's (card width + the 24px grid gap). */
@@ -4519,6 +4518,49 @@ footer {
 .scenarios-demo {
   margin-top: 40px;
 }
+/* Desktop shows the combined paragraph; the split lead/rest are mobile-only. */
+.scenarios-lead,
+.scenarios-rest {
+  display: none;
+}
+/* Mobile: title → lead line → interactive demo → rest of the copy.
+   `.s-head` flattens via display:contents so its sentences and the demo become
+   siblings of `.scenarios-inner` and can be reordered together. */
+@media (max-width: 640px) {
+  .scenarios-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .scenarios-inner > .s-head {
+    display: contents;
+  }
+  .scenarios-copy {
+    display: none;
+  }
+  .scenarios-lead,
+  .scenarios-rest {
+    display: block;
+    max-width: 760px;
+  }
+  .scenarios-inner .tag {
+    order: 1;
+  }
+  .scenarios-inner h2 {
+    order: 2;
+  }
+  .scenarios-lead {
+    order: 3;
+  }
+  .scenarios-demo {
+    order: 4;
+  }
+  .scenarios-rest {
+    order: 5;
+    margin-top: 28px;
+  }
+}
 
 /* ── Why Blindsight — founder photo placeholders ── */
 .founders-grid {
@@ -5543,6 +5585,25 @@ footer {
   color: #fff;
   border-color: transparent;
   box-shadow: 0 6px 18px rgba(85, 70, 224, 0.28);
+}
+/* Phone: lay the topic pills out as a tidy 3-per-row grid instead of a ragged
+   wrap. Boxes are equal width and may wrap to two lines (e.g. "Governance &
+   compliance"). */
+@media (max-width: 640px) {
+  .faq-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .faq-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
+    padding: 11px 8px;
+  }
 }
 
 /* The list keeps its existing top border; multi-paragraph answers + citations. */

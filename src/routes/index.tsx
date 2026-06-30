@@ -192,16 +192,25 @@ function Hero() {
 function Scenarios() {
   return (
     <section className="section" id="scenarios">
-      <div className="section-inner">
+      <div className="section-inner scenarios-inner">
         <div
           className="s-head reveal"
           style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
         >
           <span className="tag">Threat Surface</span>
           <h2>Shadow AI is only the beginning.</h2>
-          <p>
+          {/* Desktop: both sentences as one block. On mobile the demo slots
+              between them, so the two sentences are also rendered split below
+              (CSS swaps which set is visible per breakpoint). */}
+          <p className="scenarios-copy">
             The same pipeline can hide prompt injection, data leakage, poisoning and model misuse.
             Pick a scenario and watch each one play out, with Blindsight off and on.
+          </p>
+          <p className="scenarios-lead">
+            Pick a scenario and watch each one play out, with Blindsight off and on.
+          </p>
+          <p className="scenarios-rest">
+            The same pipeline can hide prompt injection, data leakage, poisoning and model misuse.
           </p>
         </div>
         <div className="scenarios-demo reveal">
