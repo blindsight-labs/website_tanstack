@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-rout
 import { ArrowLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { authorSlugFor } from "@/lib/authors";
 import { getAllPosts, getPost } from "@/lib/blog-content";
 
 const BASE = "https://blindsight.io";
@@ -14,7 +15,10 @@ function PostNotFound() {
           <span className="tag">404</span>
           <h1>Post not found.</h1>
           <p className="lede">That entry doesn't exist — yet.</p>
-          <Link to="/blog" className="btn btn-secondary"><ArrowLeft size={16} aria-hidden="true" />Back to blog</Link>
+          <Link to="/blog" className="btn btn-secondary">
+            <ArrowLeft size={16} aria-hidden="true" />
+            Back to blog
+          </Link>
         </div>
       </section>
     </main>
@@ -31,10 +35,20 @@ function BlogPostError({ error, reset }: { error: Error; reset: () => void }) {
           <h1>Couldn't load this post.</h1>
           <p className="lede">{error.message}</p>
           <div className="hero-actions">
-            <button type="button" className="btn btn-primary" onClick={() => { router.invalidate(); reset(); }}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => {
+                router.invalidate();
+                reset();
+              }}
+            >
               Try again
             </button>
-            <Link to="/blog" className="btn btn-secondary"><ArrowLeft size={16} aria-hidden="true" />Back to blog</Link>
+            <Link to="/blog" className="btn btn-secondary">
+              <ArrowLeft size={16} aria-hidden="true" />
+              Back to blog
+            </Link>
           </div>
         </div>
       </section>
@@ -53,21 +67,45 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ params, loaderData }) => {
     const post = getPost(loaderData?.slug ?? params.slug);
     const title = post ? (post.seoTitle ?? `${post.title} | Blindsight Blog`) : "Blog | Blindsight";
-    const description = post ? (post.seoDescription ?? post.excerpt) : "Notes from the Blindsight team on LLM security and AI threat detection.";
+    const description = post
+      ? (post.seoDescription ?? post.excerpt)
+      : "Notes from the Blindsight team on LLM security and AI threat detection.";
     const url = `${BASE}/blog/${params.slug}`;
 
     const ldScripts: { type: string; children: string }[] = [];
     if (post) {
+      const authorSlug = authorSlugFor(post.author);
+      const author = authorSlug
+        ? { "@type": "Person", name: post.author, url: `${BASE}/authors/${authorSlug}` }
+        : { "@type": "Organization", name: "Blindsight" };
+
       ldScripts.push({
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "Article",
+          "@type": "BlogPosting",
           headline: post.title,
           description: post.excerpt,
           datePublished: post.date,
-          author: { "@type": "Organization", name: post.author },
-          publisher: { "@type": "Organization", name: "Blindsight Technologies" },
+          author,
+          publisher: {
+            "@type": "Organization",
+            name: "Blindsight",
+            logo: { "@type": "ImageObject", url: "https://blindsight.io/favicon.png" },
+          },
+          mainEntityOfPage: url,
+        }),
+      });
+      ldScripts.push({
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${BASE}/` },
+            { "@type": "ListItem", position: 2, name: "Blog", item: `${BASE}/blog` },
+            { "@type": "ListItem", position: 3, name: post.title, item: url },
+          ],
         }),
       });
       if (post.faq && post.faq.length > 0) {
@@ -130,14 +168,23 @@ function BlogPostPage() {
     <main>
       <article className="post-article">
         <header className="post-article-head reveal">
-          <Link to="/blog" className="post-back"><ArrowLeft size={14} aria-hidden="true" />All posts</Link>
+          <Link to="/blog" className="post-back">
+            <ArrowLeft size={14} aria-hidden="true" />
+            All posts
+          </Link>
           <span className="post-cat">{post.category}</span>
           <h1>{post.title}</h1>
           <p className="lede">{post.excerpt}</p>
           <div className="post-meta">
             <span>{post.dateLabel}</span>
             <span>{post.read}</span>
-            <span>{post.author}</span>
+            {authorSlugFor(post.author) ? (
+              <Link to="/authors/$slug" params={{ slug: authorSlugFor(post.author)! }}>
+                {post.author}
+              </Link>
+            ) : (
+              <span>{post.author}</span>
+            )}
           </div>
         </header>
 
@@ -152,7 +199,9 @@ function BlogPostPage() {
               {post.references.map((r) => (
                 <li key={r.label}>
                   {r.href ? (
-                    <a href={r.href} target="_blank" rel="noreferrer noopener">{r.label}</a>
+                    <a href={r.href} target="_blank" rel="noreferrer noopener">
+                      {r.label}
+                    </a>
                   ) : (
                     r.label
                   )}

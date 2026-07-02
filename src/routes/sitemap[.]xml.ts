@@ -15,6 +15,7 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
+          { path: "/shadow", changefreq: "weekly", priority: "0.9" },
           { path: "/blog", changefreq: "weekly", priority: "0.9" },
           { path: "/blog/security-in-ai-introduction", changefreq: "weekly", priority: "0.9" },
           { path: "/blog/ai-threat-detection", changefreq: "weekly", priority: "0.9" },
@@ -23,7 +24,9 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/blog/prompt-injection", changefreq: "monthly", priority: "0.7" },
           { path: "/blog/data-poisoning", changefreq: "monthly", priority: "0.7" },
           { path: "/in-action", changefreq: "monthly", priority: "0.8" },
-          
+          { path: "/authors/guilherme-santos", changefreq: "monthly", priority: "0.4" },
+          { path: "/authors/filipe-azevedo", changefreq: "monthly", priority: "0.4" },
+          { path: "/authors/filipa-barros", changefreq: "monthly", priority: "0.4" },
           { path: "/demo", changefreq: "monthly", priority: "0.7" },
           { path: "/contact", changefreq: "monthly", priority: "0.5" },
           { path: "/careers", changefreq: "weekly", priority: "0.6" },

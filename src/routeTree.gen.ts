@@ -14,6 +14,7 @@ import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShadowRouteImport } from './routes/shadow'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as InActionRouteImport } from './routes/in-action'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as HowToSecureLlmsRouteImport } from './routes/how-to-secure-llms'
@@ -27,6 +28,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as CareersApplyRouteImport } from './routes/careers_.apply'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 
 const TestTopologyRoute = TestTopologyRouteImport.update({
   id: '/test-topology',
@@ -51,6 +53,11 @@ const ShadowRoute = ShadowRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InActionRoute = InActionRouteImport.update({
@@ -118,6 +125,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
+  id: '/authors/$slug',
+  path: '/authors/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -130,11 +142,13 @@ export interface FileRoutesByFullPath {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/apply': typeof CareersApplyRoute
   '/blog/': typeof BlogIndexRoute
@@ -149,11 +163,13 @@ export interface FileRoutesByTo {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/apply': typeof CareersApplyRoute
   '/blog': typeof BlogIndexRoute
@@ -170,11 +186,13 @@ export interface FileRoutesById {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/in-action': typeof InActionRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
   '/test-topology': typeof TestTopologyRoute
+  '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers_/apply': typeof CareersApplyRoute
   '/blog/': typeof BlogIndexRoute
@@ -192,11 +210,13 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/in-action'
+    | '/llms.txt'
     | '/privacy'
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
     | '/test-topology'
+    | '/authors/$slug'
     | '/blog/$slug'
     | '/careers/apply'
     | '/blog/'
@@ -211,11 +231,13 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/in-action'
+    | '/llms.txt'
     | '/privacy'
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
     | '/test-topology'
+    | '/authors/$slug'
     | '/blog/$slug'
     | '/careers/apply'
     | '/blog'
@@ -231,11 +253,13 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/in-action'
+    | '/llms.txt'
     | '/privacy'
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
     | '/test-topology'
+    | '/authors/$slug'
     | '/blog/$slug'
     | '/careers_/apply'
     | '/blog/'
@@ -252,11 +276,13 @@ export interface RootRouteChildren {
   HowToSecureLlmsRoute: typeof HowToSecureLlmsRoute
   ImprintRoute: typeof ImprintRoute
   InActionRoute: typeof InActionRoute
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
   ShadowRoute: typeof ShadowRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
   TestTopologyRoute: typeof TestTopologyRoute
+  AuthorsSlugRoute: typeof AuthorsSlugRoute
   CareersApplyRoute: typeof CareersApplyRoute
 }
 
@@ -295,6 +321,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/in-action': {
@@ -388,6 +421,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/authors/$slug': {
+      id: '/authors/$slug'
+      path: '/authors/$slug'
+      fullPath: '/authors/$slug'
+      preLoaderRoute: typeof AuthorsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -414,11 +454,13 @@ const rootRouteChildren: RootRouteChildren = {
   HowToSecureLlmsRoute: HowToSecureLlmsRoute,
   ImprintRoute: ImprintRoute,
   InActionRoute: InActionRoute,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
   ShadowRoute: ShadowRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
   TestTopologyRoute: TestTopologyRoute,
+  AuthorsSlugRoute: AuthorsSlugRoute,
   CareersApplyRoute: CareersApplyRoute,
 }
 export const routeTree = rootRouteImport

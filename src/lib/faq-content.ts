@@ -798,9 +798,12 @@ export const THEMES: Theme[] = [
 /** FAQPage JSON-LD entities, generated from the same content the page renders so
  *  the structured data always matches the visible answers. The answer text joins
  *  each question's paragraphs (and caveat); citation markers aren't part of the
- *  prose, so they're correctly excluded. */
-export function faqSchemaEntities() {
-  return THEMES.flatMap((theme) =>
+ *  prose, so they're correctly excluded. Pass `themeId` to scope this to a single
+ *  theme — required on pages that render `<FaqSection onlyTheme="...">`, since
+ *  those pages only put that theme's questions in the DOM. */
+export function faqSchemaEntities(themeId?: string) {
+  const themes = themeId ? THEMES.filter((t) => t.id === themeId) : THEMES;
+  return themes.flatMap((theme) =>
     theme.questions.map((qa) => ({
       "@type": "Question",
       name: qa.q,

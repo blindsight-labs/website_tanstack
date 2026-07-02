@@ -37,8 +37,7 @@ export const Route = createFileRoute("/shadow")({
       { property: "og:title", content: "Blindsight — Shadow AI Security" },
       {
         property: "og:description",
-        content:
-          "Surface and secure every Shadow AI interaction across your organization.",
+        content: "Surface and secure every Shadow AI interaction across your organization.",
       },
       { property: "og:url", content: "https://blindsight.io/shadow" },
     ],
@@ -53,7 +52,23 @@ export const Route = createFileRoute("/shadow")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "FAQPage",
-          mainEntity: faqSchemaEntities(),
+          mainEntity: faqSchemaEntities("shadow-ai"),
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://blindsight.io/" },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Shadow AI",
+              item: "https://blindsight.io/shadow",
+            },
+          ],
         }),
       },
     ],

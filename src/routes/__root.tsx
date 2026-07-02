@@ -52,7 +52,9 @@ function NotFoundComponent() {
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold">404</h1>
         <p className="mt-4 text-muted">This page doesn't exist.</p>
-        <Link to="/" className="btn btn-primary mt-6 inline-flex">Go home</Link>
+        <Link to="/" className="btn btn-primary mt-6 inline-flex">
+          Go home
+        </Link>
       </div>
     </div>
   );
@@ -65,7 +67,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold">Something went wrong</h1>
         <p className="mt-2 text-sm text-muted">{error.message}</p>
-        <button onClick={() => { router.invalidate(); reset(); }} className="btn btn-primary mt-6">Try again</button>
+        <button
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          className="btn btn-primary mt-6"
+        >
+          Try again
+        </button>
       </div>
     </div>
   );
@@ -77,20 +87,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Blindsight - Securing AI" },
-      { name: "description", content: "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform." },
+      {
+        name: "description",
+        content:
+          "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform.",
+      },
       { property: "og:title", content: "Blindsight - Securing AI" },
-      { property: "og:description", content: "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform." },
+      {
+        property: "og:description",
+        content:
+          "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Blindsight - Securing AI" },
-      { name: "twitter:description", content: "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform." },
+      {
+        name: "twitter:description",
+        content:
+          "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform.",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap",
+      },
     ],
     scripts: [
       // Google Analytics (gtag.js) — GA4 property G-06PKBPMVBJ
@@ -104,10 +129,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "Blindsight Technologies AG",
-          alternateName: "Blindsight",
+          name: "Blindsight",
+          legalName: "Blindsight Technologies AG",
           url: "https://blindsight.io",
-          description: "LLM security and AI threat detection for regulated enterprises.",
+          logo: "https://blindsight.io/favicon.png",
+          description:
+            "Runtime security for AI. Blindsight provides real-time visibility and threat protection for every AI prompt, response, and tool call, plus Shadow AI discovery for security and compliance teams deploying AI in regulated environments.",
           address: {
             "@type": "PostalAddress",
             streetAddress: "Rennweg 57",
@@ -116,6 +143,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             addressCountry: "CH",
           },
           email: "info@blindsight.io",
+          sameAs: ["https://www.linkedin.com/showcase/blndsght/"],
+          knowsAbout: [
+            "AI runtime security",
+            "prompt injection",
+            "shadow AI",
+            "data poisoning",
+            "model poisoning",
+            "LLM security",
+            "EU AI Act compliance",
+          ],
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "customer support",
+            email: "info@blindsight.io",
+          },
         }),
       },
     ],
@@ -137,7 +179,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
       </head>
-      <body>{children}<Scripts /></body>
+      <body>
+        {children}
+        <Scripts />
+      </body>
     </html>
   );
 }
@@ -213,10 +258,24 @@ function Nav() {
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
         {/* Team hidden for now — route still exists, just not surfaced in nav yet.
         <Link to="/team" onClick={closeMenu}>Team</Link> */}
-        <Link to="/careers" onClick={closeMenu}>Careers</Link>
-        <Link to="/blog" onClick={closeMenu}>Blog</Link>
-        <Link to="/contact" onClick={closeMenu}>Contact</Link>
-        <button type="button" onClick={() => { closeMenu(); openDemo("demo"); }}>Secure your AI Runtime</button>
+        <Link to="/careers" onClick={closeMenu}>
+          Careers
+        </Link>
+        <Link to="/blog" onClick={closeMenu}>
+          Blog
+        </Link>
+        <Link to="/contact" onClick={closeMenu}>
+          Contact
+        </Link>
+        <button
+          type="button"
+          onClick={() => {
+            closeMenu();
+            openDemo("demo");
+          }}
+        >
+          Secure your AI Runtime
+        </button>
       </div>
       <div className="nav-right">
         <button
@@ -230,7 +289,9 @@ function Nav() {
         <ul className="nav-links">
           {/* Team hidden for now — route still exists, just not surfaced in nav yet.
           <li><Link to="/team">Team</Link></li> */}
-          <li><Link to="/careers">Careers</Link></li>
+          <li>
+            <Link to="/careers">Careers</Link>
+          </li>
           <li
             className="nav-dropdown"
             onMouseEnter={() => setResourcesOpen(true)}
@@ -250,14 +311,24 @@ function Nav() {
               <div className="nav-mega-stack">
                 <div className="nav-mega-col">
                   <div className="nav-mega-label">Resources</div>
-                  <Link to="/blog" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
+                  <Link
+                    to="/blog"
+                    className="nav-mega-item"
+                    onClick={() => setResourcesOpen(false)}
+                  >
                     <BookOpen className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
                     <span>Blog</span>
                   </Link>
                 </div>
                 <div className="nav-mega-col">
                   <div className="nav-mega-label">Developers</div>
-                  <a href="https://docs.blindsight.io" target="_blank" rel="noopener noreferrer" className="nav-mega-item" onClick={() => setResourcesOpen(false)}>
+                  <a
+                    href="https://docs.blindsight.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="nav-mega-item"
+                    onClick={() => setResourcesOpen(false)}
+                  >
                     <Code className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
                     <span>Documentation</span>
                   </a>
@@ -265,28 +336,55 @@ function Nav() {
               </div>
               <div className="nav-mega-col nav-mega-col-wide">
                 <div className="nav-mega-label">AI Security Guides</div>
-                <Link to="/blog/$slug" params={{ slug: "security-in-ai-introduction" }} className="nav-mega-card" onClick={() => setResourcesOpen(false)}>
+                <Link
+                  to="/blog/$slug"
+                  params={{ slug: "security-in-ai-introduction" }}
+                  className="nav-mega-card"
+                  onClick={() => setResourcesOpen(false)}
+                >
                   <div className="nav-mega-card-body">
                     <div className="nav-mega-card-title">Security in AI: An Introduction</div>
-                    <div className="nav-mega-card-cta">Read primer <ArrowRight size={13} aria-hidden="true" /></div>
+                    <div className="nav-mega-card-cta">
+                      Read primer <ArrowRight size={13} aria-hidden="true" />
+                    </div>
                   </div>
                 </Link>
-                <Link to="/blog/$slug" params={{ slug: "ai-threat-detection" }} className="nav-mega-card" onClick={() => setResourcesOpen(false)}>
+                <Link
+                  to="/blog/$slug"
+                  params={{ slug: "ai-threat-detection" }}
+                  className="nav-mega-card"
+                  onClick={() => setResourcesOpen(false)}
+                >
                   <div className="nav-mega-card-body">
-                    <div className="nav-mega-card-title">AI Threat Detection - Runtime Defense for Enterprise AI</div>
-                    <div className="nav-mega-card-cta">Read guide <ArrowRight size={13} aria-hidden="true" /></div>
+                    <div className="nav-mega-card-title">
+                      AI Threat Detection - Runtime Defense for Enterprise AI
+                    </div>
+                    <div className="nav-mega-card-cta">
+                      Read guide <ArrowRight size={13} aria-hidden="true" />
+                    </div>
                   </div>
                 </Link>
-                <Link to="/blog/$slug" params={{ slug: "how-to-secure-llms" }} className="nav-mega-card" onClick={() => setResourcesOpen(false)}>
+                <Link
+                  to="/blog/$slug"
+                  params={{ slug: "how-to-secure-llms" }}
+                  className="nav-mega-card"
+                  onClick={() => setResourcesOpen(false)}
+                >
                   <div className="nav-mega-card-body">
-                    <div className="nav-mega-card-title">How to Secure LLMs: A Step-by-Step Playbook</div>
-                    <div className="nav-mega-card-cta">Read guide <ArrowRight size={13} aria-hidden="true" /></div>
+                    <div className="nav-mega-card-title">
+                      How to Secure LLMs: A Step-by-Step Playbook
+                    </div>
+                    <div className="nav-mega-card-cta">
+                      Read guide <ArrowRight size={13} aria-hidden="true" />
+                    </div>
                   </div>
                 </Link>
               </div>
             </div>
           </li>
-          <li><Link to="/contact">Contact</Link></li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
         </ul>
         <button
           type="button"
@@ -297,7 +395,11 @@ function Nav() {
         >
           Secure your AI Runtime
         </button>
-        <button className={`nav-hamburger ${menuOpen ? "open" : ""}`} aria-label={menuOpen ? "Close menu" : "Open menu"} onClick={() => setMenuOpen(o => !o)}>
+        <button
+          className={`nav-hamburger ${menuOpen ? "open" : ""}`}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
           {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>
       </div>
@@ -320,7 +422,11 @@ function ShadowNav() {
     setTheme((prev) => {
       const next = prev === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
-      try { localStorage.setItem("theme", next); } catch { /* ignore */ }
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* ignore */
+      }
       return next;
     });
   };
@@ -341,18 +447,26 @@ function ShadowNav() {
   const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <Link
-        to="/"
-        aria-label="Blindsight home"
-        onClick={closeMenu}
-      >
+      <Link to="/" aria-label="Blindsight home" onClick={closeMenu}>
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        <ShadowSectionNavLink id="hero" onClick={closeMenu}>Top</ShadowSectionNavLink>
-        <ShadowSectionNavLink id="stack" onClick={closeMenu}>How it works</ShadowSectionNavLink>
-        <ShadowSectionNavLink id="faq" onClick={closeMenu}>FAQ</ShadowSectionNavLink>
-        <button type="button" onClick={() => { closeMenu(); openDemo("download"); }}>
+        <ShadowSectionNavLink id="hero" onClick={closeMenu}>
+          Top
+        </ShadowSectionNavLink>
+        <ShadowSectionNavLink id="stack" onClick={closeMenu}>
+          How it works
+        </ShadowSectionNavLink>
+        <ShadowSectionNavLink id="faq" onClick={closeMenu}>
+          FAQ
+        </ShadowSectionNavLink>
+        <button
+          type="button"
+          onClick={() => {
+            closeMenu();
+            openDemo("download");
+          }}
+        >
           See my Shadow AI
         </button>
       </div>
@@ -366,9 +480,15 @@ function ShadowNav() {
           {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
         <ul className="nav-links">
-          <li><ShadowSectionNavLink id="hero">Top</ShadowSectionNavLink></li>
-          <li><ShadowSectionNavLink id="stack">How it works</ShadowSectionNavLink></li>
-          <li><ShadowSectionNavLink id="faq">FAQ</ShadowSectionNavLink></li>
+          <li>
+            <ShadowSectionNavLink id="hero">Top</ShadowSectionNavLink>
+          </li>
+          <li>
+            <ShadowSectionNavLink id="stack">How it works</ShadowSectionNavLink>
+          </li>
+          <li>
+            <ShadowSectionNavLink id="faq">FAQ</ShadowSectionNavLink>
+          </li>
         </ul>
         <button
           type="button"
@@ -400,7 +520,7 @@ function Footer() {
   return (
     <footer>
       <div className="footer-inner">
-        <div className="footer-copy">© 2026 Blindsight AG · Zurich, CH</div>
+        <div className="footer-copy">© 2026 Blindsight Technologies AG · Zurich, CH</div>
         <div className="footer-links">
           <Link to="/contact">Contact</Link>
           <Link to="/imprint">Imprint</Link>
