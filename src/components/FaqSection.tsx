@@ -110,6 +110,10 @@ export function FaqSection({ onlyTheme }: { onlyTheme?: string } = {}) {
             key={theme.id}
             hidden={!onlyTheme && theme.id !== themeId}
           >
+            {theme.tables.map((table, i) => (
+              <FaqTableBlock key={i} themeId={theme.id} table={table} />
+            ))}
+
             <div className="faq-list">
               {theme.questions.map((item, i) => {
                 const key = `${theme.id}:${i}`;
@@ -149,10 +153,6 @@ export function FaqSection({ onlyTheme }: { onlyTheme?: string } = {}) {
                 );
               })}
             </div>
-
-            {theme.tables.map((table, i) => (
-              <FaqTableBlock key={i} themeId={theme.id} table={table} />
-            ))}
 
             {theme.sources.length > 0 && (
               <div className="faq-sources">
