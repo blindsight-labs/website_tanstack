@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Check, Cpu, Database, LogIn, LogOut } from "lucide-react";
+import { ArrowDown, Check, Cpu, Database, LogIn, LogOut } from "lucide-react";
 
 /* Hero "AI Pipeline" tab. Shows the whole pipeline (Data → Input → Model →
  * Output) and the cost of leaving it unprotected:
@@ -196,7 +196,7 @@ export function HeroPipelineDemo({ onInteract }: { onInteract?: () => void }) {
         </span>
         <button type="button" className="hpp-learn" onClick={learnMore}>
           Learn more
-          <ArrowRight size={13} aria-hidden="true" />
+          <ArrowDown size={13} aria-hidden="true" />
         </button>
       </div>
     </div>

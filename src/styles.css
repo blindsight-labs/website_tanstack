@@ -4439,7 +4439,7 @@ footer {
   transition: transform 0.18s ease;
 }
 .hpp-learn:hover svg {
-  transform: translateX(3px);
+  transform: translateY(3px);
 }
 @media (prefers-reduced-motion: reduce) {
   .hpp-alert {
