@@ -164,11 +164,7 @@ function Hero() {
         </div>
 
         <div className="va-hero-demo reveal">
-          <div className="hero-window">
-            <div className="hero-window-body">
-              <HeroPipelineDemo />
-            </div>
-          </div>
+          <HeroPipelineDemo />
         </div>
       </div>
 

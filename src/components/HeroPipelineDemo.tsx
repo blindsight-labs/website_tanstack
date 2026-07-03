@@ -150,7 +150,7 @@ export function HeroPipelineDemo({ onInteract }: { onInteract?: () => void }) {
                 <span className="hpp-check">
                   <Check size={11} strokeWidth={3} aria-hidden="true" />
                 </span>
-                {!on && <span className="hpp-alert">{n.vulns.length}</span>}
+                {!on && <span className="hpp-alert">{i + 1}</span>}
               </span>
               <span className="hpp-nm">{n.name}</span>
             </button>

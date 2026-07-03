@@ -4040,6 +4040,9 @@ footer {
    Blindsight/secured; scoped red (--rd*) = exposed/threat (illustrative). */
 .hpp {
   width: 100%;
+  /* .hpp-detail's min-height below is tuned per real rendered width, not the
+     viewport — see the @container rule near .hpp-detail. */
+  container-type: inline-size;
   --rd: #e5494d;
   --rd-s: rgba(229, 73, 77, 0.1);
   --rd-d: #bf2226;
@@ -4134,7 +4137,7 @@ footer {
 .hpp-arena {
   position: relative;
   height: 140px;
-  margin: 26px 0 14px;
+  margin: 34px 0 22px;
 }
 .hpp-track {
   position: absolute;
@@ -4225,7 +4228,7 @@ footer {
   border-color: var(--rd);
   box-shadow: 0 0 0 4px var(--rd-s);
 }
-/* Exposed: each stage flags how many threats it faces. */
+/* Exposed: each stage flags its position in the pipeline (1-4). */
 .hpp-alert {
   position: absolute;
   top: -7px;
@@ -4296,15 +4299,24 @@ footer {
   color: var(--text);
 }
 /* Hovered-stage detail: what the stage is + the threats it faces. Fixed min-height
-   so toggling between stages (with different threat counts) doesn't shift layout. */
+   so toggling between stages (with different threat counts) doesn't shift layout —
+   sized to the tallest real state (desc + wrapped vuln chips), not just the resting
+   hint, otherwise switching stages snaps the metrics/footer below it around. */
 .hpp-detail {
-  min-height: 52px;
+  min-height: 92px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 6px;
-  padding: 8px 0 10px;
+  gap: 8px;
+  padding: 14px 0 16px;
   border-top: 1px solid var(--border);
+}
+/* Below ~480px of actual rendered width the 4 vuln chips wrap to 2 lines instead of
+   1, which needs a taller floor to stay snap-free — measured empirically, not guessed. */
+@container (max-width: 480px) {
+  .hpp-detail {
+    min-height: 160px;
+  }
 }
 .hpp-detail-head {
   display: flex;
@@ -4356,8 +4368,8 @@ footer {
 .hpp-metrics {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 4px;
+  gap: 10px;
+  margin-top: 16px;
 }
 .hpp-metric {
   border: 1px solid var(--border);
@@ -4395,7 +4407,7 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 20px;
   flex-wrap: wrap;
 }
 .hpp-stage {
