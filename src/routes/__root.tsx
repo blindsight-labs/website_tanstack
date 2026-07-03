@@ -226,17 +226,42 @@ function Nav() {
   // on navigation so it re-attaches to the current page's hero (or, when there
   // is none, leaves the CTA permanently shown).
   useEffect(() => {
+    let io: IntersectionObserver | null = null;
+    let mo: MutationObserver | null = null;
+
+    const attach = (heroCta: Element) => {
+      setCtaShown(false);
+      io = new IntersectionObserver(([entry]) => setCtaShown(!entry.isIntersecting), {
+        threshold: 0,
+      });
+      io.observe(heroCta);
+    };
+
     const heroCta = document.getElementById("hero-cta");
-    if (!heroCta) {
+    if (heroCta) {
+      attach(heroCta);
+    } else {
+      // The target route's code-split chunk may still be loading, so its hero
+      // (and #hero-cta) isn't in the DOM yet even though `pathname` already
+      // points there. Default to shown, but keep watching — if the hero mounts
+      // a beat later, this effect won't re-run (pathname is unchanged), so
+      // without this the CTA would get stuck visible over the hero forever.
       setCtaShown(true);
-      return;
+      mo = new MutationObserver(() => {
+        const el = document.getElementById("hero-cta");
+        if (el) {
+          mo?.disconnect();
+          mo = null;
+          attach(el);
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
     }
-    setCtaShown(false);
-    const io = new IntersectionObserver(([entry]) => setCtaShown(!entry.isIntersecting), {
-      threshold: 0,
-    });
-    io.observe(heroCta);
-    return () => io.disconnect();
+
+    return () => {
+      io?.disconnect();
+      mo?.disconnect();
+    };
   }, [pathname]);
   const closeMenu = () => setMenuOpen(false);
   return (
@@ -275,7 +300,7 @@ function Nav() {
             openDemo("demo");
           }}
         >
-          Secure your AI Runtime
+          Secure your AI
         </button>
       </div>
       <div className="nav-right">
@@ -395,7 +420,7 @@ function Nav() {
           tabIndex={ctaShown ? undefined : -1}
           onClick={() => openDemo("demo")}
         >
-          Secure your AI Runtime
+          Secure your AI
         </button>
         <button
           className={`nav-hamburger ${menuOpen ? "open" : ""}`}

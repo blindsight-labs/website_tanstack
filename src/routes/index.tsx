@@ -155,7 +155,7 @@ function Hero() {
               className="btn btn-primary"
               onClick={() => open("demo")}
             >
-              Secure your AI Runtime
+              Secure your AI
             </button>
             <a className="btn btn-secondary" href="/shadow">
               Reveal Shadow AI
