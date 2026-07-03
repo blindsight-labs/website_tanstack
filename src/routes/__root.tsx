@@ -256,8 +256,9 @@ function Nav() {
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        {/* Team hidden for now — route still exists, just not surfaced in nav yet.
-        <Link to="/team" onClick={closeMenu}>Team</Link> */}
+        <Link to="/team" onClick={closeMenu}>
+          Team
+        </Link>
         <Link to="/careers" onClick={closeMenu}>
           Careers
         </Link>
@@ -287,8 +288,9 @@ function Nav() {
           {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
         <ul className="nav-links">
-          {/* Team hidden for now — route still exists, just not surfaced in nav yet.
-          <li><Link to="/team">Team</Link></li> */}
+          <li>
+            <Link to="/team">Team</Link>
+          </li>
           <li>
             <Link to="/careers">Careers</Link>
           </li>

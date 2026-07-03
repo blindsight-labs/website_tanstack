@@ -15,19 +15,27 @@ export const Route = createFileRoute("/team")({
   }),
 });
 
-type Person = { role: string; label: string; bio: string };
+type Person = { role: string; name: string; label: string; bio: string; highlights: string[] };
 
 // The two founders carry the security story told in the section intro.
 const FOUNDERS: Person[] = [
   {
     role: "CEO",
+    name: "Guilherme Santos",
     label: "CEO photo",
     bio: "Top global ethical hacker and former Kühne+Nagel security architect.",
+    highlights: [
+      "Ranked among the world's top ethical hackers",
+      "Former security architect, Kühne+Nagel",
+      "CVE credits in AI/ML security research",
+    ],
   },
   {
     role: "CTO",
+    name: "Filipe Azevedo",
     label: "CTO photo",
     bio: "Former Checkmarx security lead.",
+    highlights: ["Former security lead, Checkmarx", "CVE credits in AI/ML security research"],
   },
 ];
 
@@ -35,31 +43,43 @@ const FOUNDERS: Person[] = [
 const LEADERSHIP: Person[] = [
   {
     role: "COO",
+    name: "Mário Portocarrero",
     label: "COO photo",
     bio: "Scales operations and delivery as Blindsight grows.",
+    highlights: ["Leads operations & delivery", "Scaling Blindsight through growth"],
   },
   {
     role: "CFO",
+    name: "Maurits J. de Knecht",
     label: "CFO photo",
     bio: "Runs finance and fundraising for a venture-backed company.",
+    highlights: ["Leads finance & fundraising", "Venture-backed company experience"],
   },
   {
     role: "Head of Research",
+    name: "Filipa Barros",
     label: "Head of Research photo",
     bio: "Directs Blindsight's research agenda and detection science.",
+    highlights: ["Leads Blindsight's research agenda", "Focus: detection science"],
   },
 ];
 
-function PersonCard({ role, label, bio }: Person) {
+function PersonCard({ role, name, label, bio, highlights }: Person) {
   return (
-    <figure className="founder-card">
+    <figure className="founder-card" tabIndex={0}>
       <div className="founder-photo" role="img" aria-label={`Placeholder for ${role} photo`}>
         <UserRound className="founder-photo-icon" strokeWidth={1.5} aria-hidden="true" />
         <span className="founder-photo-label">{label}</span>
       </div>
       <figcaption className="founder-info">
         <span className="founder-role">{role}</span>
+        <span className="founder-name">{name}</span>
         <p className="founder-bio">{bio}</p>
+        <ul className="founder-highlights">
+          {highlights.map((h) => (
+            <li key={h}>{h}</li>
+          ))}
+        </ul>
       </figcaption>
     </figure>
   );
