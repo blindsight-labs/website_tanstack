@@ -65,13 +65,22 @@ const LEADERSHIP: Person[] = [
 ];
 
 function PersonCard({ role, name, label, bio, highlights }: Person) {
+  // Drives the name/title font-size formula in styles.css (.founder-info --name-size):
+  // sizing is derived from each string's own length so a long name or a long title
+  // (e.g. "Head of Research") is scaled down just enough to stay on a single line,
+  // rather than one fixed size wrapping or overflowing on the longer ones.
+  const fitVars = {
+    "--name-chars": name.length,
+    "--role-chars": role.length,
+  } as React.CSSProperties;
+
   return (
     <figure className="founder-card" tabIndex={0}>
       <div className="founder-photo" role="img" aria-label={`Placeholder for ${role} photo`}>
         <UserRound className="founder-photo-icon" strokeWidth={1.5} aria-hidden="true" />
         <span className="founder-photo-label">{label}</span>
       </div>
-      <figcaption className="founder-info">
+      <figcaption className="founder-info" style={fitVars}>
         <span className="founder-role">{role}</span>
         <span className="founder-name">{name}</span>
         <p className="founder-bio">{bio}</p>
