@@ -82,8 +82,8 @@ function CareersPage() {
           <p className="lede">
             We're a small team in Zürich securing the AI systems that teams depend on.
             Right now, the people deploying AI are flying blind on security. They move
-            fast because they have to. We exist so they can move fast and safely, and
-            to provide them with the trust that speed usually cannot afford.
+            fast because they have to. We exist so they can move fast and safely - with
+            the trust that speed usually can't afford.
           </p>
           <div className="hero-actions">
             <a href="mailto:careers@blindsight.io" className="btn btn-primary">Email the founders</a>
@@ -109,7 +109,7 @@ function CareersPage() {
             </div>
             <div className="value-card">
               <div className="value-name">Hacker Mindset</div>
-              <p>Security is a creative discipline built on a deep understanding of the tech by people who refuse to take "that's just how it works" as a final answer.</p>
+              <p>Security is a creative discipline. It's built on a deep understanding of the tech, by people who refuse to take "that's just how it works" as a final answer.</p>
             </div>
             <div className="value-card">
               <div className="value-name">Concerned Optimists</div>
@@ -117,7 +117,7 @@ function CareersPage() {
             </div>
             <div className="value-card">
               <div className="value-name">Lifelong Learners</div>
-              <p>The field of cybersecurity is always moving and changing. We are always learning. Curious by default. Uncomfortable staying still and stagnating.</p>
+              <p>Cybersecurity never stops moving. Neither do we. Curious by default. Uncomfortable standing still.</p>
             </div>
           </div>
         </div>

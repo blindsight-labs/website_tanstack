@@ -131,7 +131,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Model complies with the injected directive",
         state: { User: "attacker", AI: "compromised" },
         insight:
-          "The model reads system rules and user input as one undifferentiated token stream, it can't tell trusted instructions from untrusted ones. RLHF also trains it toward sycophancy: it's rewarded for being agreeable, so the latest, most assertive instruction tends to win.",
+          "The model reads system rules and user input as one undifferentiated token stream. It can't tell trusted instructions from untrusted ones. RLHF also trains it toward sycophancy: it's rewarded for being agreeable, so the latest, most assertive instruction tends to win.",
       },
       {
         caption: "Sensitive data leaves the system",
@@ -196,7 +196,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Model complies - no policy boundary in place",
         state: { User: "attacker", AI: "compromised" },
         insight:
-          "Instruction-tuned models default to fulfilling requests, and sycophancy biases them toward whatever the user is pushing for. With no external policy boundary, the only guardrail is the model's own training, inconsistent, and routinely jailbroken.",
+          "Instruction-tuned models default to fulfilling requests, and sycophancy biases them toward whatever the user is pushing for. With no external policy boundary, the only guardrail is the model's own training: inconsistent and routinely jailbroken.",
       },
       {
         caption: "Harmful output delivered",
@@ -305,7 +305,7 @@ const SCENARIOS: Scenario[] = [
         state: { Interceptor: "safe" },
       },
       {
-        caption: "Model responds on the redacted prompt",
+        caption: "Model responds to the redacted prompt",
         packet: { from: "AI", to: "Interceptor", intent: "safe" },
         arrival: "ingest",
         state: { Interceptor: "safe" },
@@ -342,7 +342,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Model assembles a response containing PII",
         state: { AI: "compromised" },
         insight:
-          "The model has no built-in notion of data sensitivity or access control. It optimizes for a complete, helpful answer, so any PII within reach gets surfaced, confidentiality simply isn't an objective it was trained to weigh.",
+          "The model has no built-in notion of data sensitivity or access control. It optimizes for a complete, helpful answer, so any PII within reach gets surfaced. Confidentiality simply isn't an objective it was trained to weigh.",
       },
       {
         caption: "PII delivered to the user",
@@ -535,7 +535,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Hidden trigger fires",
         state: { User: "attacker", AI: "compromised" },
         insight:
-          "The back-door was sewn into the weights during training or fine-tuning, then lies dormant. Every normal prompt behaves perfectly, so testing and prompt inspection reveal nothing, only the secret key flips the model onto its malicious branch.",
+          "The back-door was sewn into the weights during training or fine-tuning, then lies dormant. Every normal prompt behaves perfectly, so testing and prompt inspection reveal nothing. Only the secret key flips the model onto its malicious branch.",
       },
       {
         caption: "Model switches to the attacker's behaviour",
@@ -608,7 +608,7 @@ const SCENARIOS: Scenario[] = [
         caption: "Decision leans on a proxy, not the merits",
         state: { AI: "compromised" },
         insight:
-          "In training, the model learned to correlate names and postcodes with outcomes. Aggregate accuracy still looks healthy, so the bias sails through QA, but individuals end up judged on a proxy for protected attributes rather than on what they can actually do.",
+          "In training, the model learned to correlate names and postcodes with outcomes. Aggregate accuracy still looks healthy, so the bias sails through QA. But individuals end up judged on a proxy for protected attributes, not on what they can actually do.",
       },
       {
         caption: "Divergent scores for identical merit",
@@ -1546,7 +1546,7 @@ function ReactorPicker({ onPick }: { onPick: (i: number) => void }) {
         ))}
       </div>
       <p className="tg-picker-hint">
-        Visibility is a requirement, securing it comes next, audibility is a byproduct.
+        Visibility is the requirement. Securing it comes next. Auditability is the byproduct.
       </p>
     </div>
   );

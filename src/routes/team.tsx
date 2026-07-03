@@ -107,10 +107,10 @@ function TeamPage() {
             <h1>Offensive security, turned to your defense</h1>
             <p>
               Blindsight's founders attacked AI systems professionally before building the layer
-              that defends them, between them, dozens of CVEs to their name. Detection is built
-              from the attacks they find themselves. Tested on competitors' own public benchmarks,
-              where it is hardest to win, Blindsight beats the leading runtime benchmarks and
-              covers a wider spectrum of attacks.
+              that defends them. Between them, dozens of CVEs. Detection is built from the attacks
+              they find themselves. Tested on competitors' own public benchmarks, where it is
+              hardest to win, Blindsight beats the leading runtime scores and covers a wider
+              spectrum of attacks.
             </p>
             <p>In security, the cost of being second best is the breach you did not stop.</p>
           </div>

@@ -42,7 +42,7 @@ function ContactPage() {
             <span className="tag">Where to find us</span>
             <h2>Zürich, Switzerland.</h2>
             <p>
-              HQ in Zürich. We work with regulated enterprises across the EU, UK, and Switzerland.
+              From our Zürich HQ, we work with regulated enterprises across the EU, UK, and Switzerland.
             </p>
           </div>
           <div className="values-grid reveal">

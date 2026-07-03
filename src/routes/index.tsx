@@ -138,15 +138,14 @@ function Hero() {
             <span className="accent">Leverage AI with speed and confidence.</span>
           </h1>
           <p className="lede">
-            Blindsight provides visibility and security to your AI at runtime: every prompt,
-            response, tool call and data event. Want to deploy AI in a regulated environment?
-            Blindsight&apos;s runtime audit trail and policy
-            enforcement turn compliance into a feature, not an obstacle, so your team can move fast
-            without flying blind.
+            Blindsight brings visibility and security to your AI at runtime: every prompt,
+            response, tool call and data event. Deploying in a regulated environment? Its
+            runtime audit trail and policy enforcement turn compliance into a feature, not an
+            obstacle, so your team moves fast without flying blind.
           </p>
           <p className="lede">
             Not ready for a full deployment? Start by revealing every unsanctioned AI tool in your
-            organisation, for free.
+            organization, for free.
           </p>
           <div className="hero-actions">
             <button
@@ -197,7 +196,7 @@ function Scenarios() {
           <h2>Shadow AI is only the beginning.</h2>
           <p className="scenarios-copy">
             The same pipeline can hide multiple vulnerabilities. Pick a scenario and watch each one
-            play out, with Blindsight off and on.
+            play out, with Blindsight off, then on.
           </p>
         </div>
         <div className="scenarios-demo reveal">
@@ -241,7 +240,7 @@ const STAGES: {
     name: "Govern",
     Icon: Scale,
     tagline:
-      "See every AI system in use, including shadow AI, with every action logged to a tamper-proof record and ready for audit.",
+      "See every AI system in use, including Shadow AI, with every action logged to a tamper-proof record and ready for audit.",
     requires: "Requires Protect",
   },
 ];
@@ -472,7 +471,7 @@ function Stages() {
           <span className="tag">Adopt in stages</span>
           <h2>See it. Stop it. Prove it.</h2>
           <p>
-            The three layers stack in order — protection builds on what Detect can see, governance
+            The three layers stack in order: protection builds on what Detect can see, governance
             on what Protect enforces. What you turn on inside each layer is scoped to you.
           </p>
         </div>
@@ -572,7 +571,7 @@ function Home() {
       <Iceberg
         id="why"
         eyebrow="Why Blindsight?"
-        segue="If you don't even have visibility over Shadow AI, how can you prevent the other more insidious vulnerabilities? See below how each threat plays out and how Blindsight shuts them down."
+        segue="If you don't even have visibility over Shadow AI, how can you catch the more insidious vulnerabilities behind it? See how each one plays out, and how Blindsight shuts it down."
       />
       <Scenarios />
       <Stages />
