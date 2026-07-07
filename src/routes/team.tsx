@@ -39,11 +39,12 @@ const FOUNDERS: Person[] = [
     name: "Guilherme Santos",
     label: "CEO photo",
     photo: photoGuilherme,
-    bio: "Top global ethical hacker and former Kühne+Nagel security architect.",
+    bio: "AI & Cybersecurity Expert",
     highlights: [
-      "Ranked among the world's top ethical hackers",
-      "Former security architect, Kühne+Nagel",
-      "CVE credits in AI/ML security research",
+      "Ex-Kühne+Nagel Security Architect",
+      "Ethical Hacker: Top 30 Global Leaderboard, Rank #1 Portugal",
+      "+20 zero-day vulnerability disclosures",
+      "Global Council for Responsible AI: President of Germany chapter & Global Ambassador",
     ],
   },
   {
@@ -51,8 +52,11 @@ const FOUNDERS: Person[] = [
     name: "Filipe Azevedo",
     label: "CTO photo",
     photo: photoFilipe,
-    bio: "Former Checkmarx security lead.",
-    highlights: ["Former security lead, Checkmarx", "CVE credits in AI/ML security research"],
+    bio: "Adversarial Machine Learning & Security R&D",
+    highlights: [
+      "Ex-Checkmarx, Principal-level Engineer leading Fortune 500 security projects",
+      "Global expert in code-reading and vulnerability triage for enterprise systems",
+    ],
   },
 ];
 
@@ -63,17 +67,24 @@ const LEADERSHIP: Person[] = [
     name: "Mário Portocarrero",
     label: "COO photo",
     photo: photoMario,
-    bio: "Scales operations and delivery as Blindsight grows.",
-    highlights: ["Leads operations & delivery", "Scaling Blindsight through growth"],
+    bio: "Operations & Branding",
+    highlights: [
+      "Product designer & developer of AI, Agentic & VR systems",
+      "Informatics Engineering and Digital Media background",
+    ],
   },
   {
-    role: "CFO",
+    role: "CCO",
     name: "Maurits J. de Knecht",
-    label: "CFO photo",
+    label: "CCO photo",
     photo: photoMaurits,
     photoPosition: "42% top",
-    bio: "Runs finance and fundraising for a venture-backed company.",
-    highlights: ["Leads finance & fundraising", "Venture-backed company experience"],
+    bio: "Commercialization & GTM",
+    highlights: [
+      "Business development & GTM initiatives, market-entry with multi-exit founders in AI and DeepTech",
+      "Ex-VC & startup advisor: G Squared, Mountain Partners, Co-GP of Conny & Co. II SCSp (1st investor in Destinus)",
+      "Ex-Founder & CEO in FMCG",
+    ],
   },
   {
     role: "Head of Research",
@@ -81,8 +92,13 @@ const LEADERSHIP: Person[] = [
     label: "Head of Research photo",
     photo: photoFilipa,
     photoZoom: 1.35,
-    bio: "Directs Blindsight's research agenda and detection science.",
-    highlights: ["Leads Blindsight's research agenda", "Focus: detection science"],
+    bio: "PhD in Computer Science (FCUP/LIACC)",
+    highlights: [
+      "Published researcher in Adversarial Anomaly Detection and ML",
+      "Co-supervised MSc thesis on Adversarial ML and Computer Vision",
+      "Co-PI of SIOS-funded research project",
+      "Peer-reviewed publications across EAAI, IAC, and ESANN",
+    ],
   },
 ];
 
