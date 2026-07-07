@@ -4630,18 +4630,24 @@ footer {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, var(--violet-soft) 0%, var(--surface) 100%);
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--violet);
   transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.founder-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  /* B&W treatment applied as a filter so source photos stay untouched originals. */
+  filter: grayscale(1);
+  transition: filter 0.4s ease;
 }
 .founder-card:hover .founder-photo {
   transform: scale(1.05);
+}
+.founder-card:hover .founder-photo-img,
+.founder-card:focus-within .founder-photo-img {
+  /* Softens the photo under the expanded scrim/highlight list so the overlaid text stays readable. */
+  filter: grayscale(1) blur(3px);
 }
 @media (prefers-reduced-motion: reduce) {
   .founder-photo {
@@ -4650,17 +4656,6 @@ footer {
   .founder-card:hover .founder-photo {
     transform: none;
   }
-}
-.founder-photo-icon {
-  width: 30px;
-  height: 30px;
-}
-.founder-photo-label {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
 }
 /* Fixed-height scrim — covers at most the bottom quarter of the photo, keeps text readable.
    Expands to cover the full card on hover/focus so the highlight list can show; stays
