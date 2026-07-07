@@ -281,8 +281,9 @@ function Nav() {
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        {/* Team hidden again until real names/bios/photos replace the card placeholders.
-        <Link to="/team" onClick={closeMenu}>Team</Link> */}
+        <Link to="/team" onClick={closeMenu}>
+          Team
+        </Link>
         <Link to="/careers" onClick={closeMenu}>
           Careers
         </Link>
@@ -312,8 +313,9 @@ function Nav() {
           {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
         <ul className="nav-links">
-          {/* Team hidden again until real names/bios/photos replace the card placeholders.
-          <li><Link to="/team">Team</Link></li> */}
+          <li>
+            <Link to="/team">Team</Link>
+          </li>
           <li>
             <Link to="/careers">Careers</Link>
           </li>
