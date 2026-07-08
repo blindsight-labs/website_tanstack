@@ -15,6 +15,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [startupNoteAnnouncement, setStartupNoteAnnouncement] = useState("");
   const messageRef = useRef<HTMLTextAreaElement>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -64,11 +65,13 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
     const el = messageRef.current;
     if (!el) return;
     if (!el.value.includes(STARTUP_NOTE)) {
-      el.value = el.value.length > 0 ? `${el.value}\n${STARTUP_NOTE}` : STARTUP_NOTE;
+      const combined = el.value.length > 0 ? `${el.value}\n${STARTUP_NOTE}` : STARTUP_NOTE;
+      el.value = el.maxLength > 0 ? combined.slice(0, el.maxLength) : combined;
     }
     el.focus();
     const end = el.value.length;
     el.setSelectionRange(end, end);
+    setStartupNoteAnnouncement("Added a note about startup pricing to your message.");
   }
 
   return (
@@ -124,6 +127,9 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
             </button>{" "}
             — we'll follow up with startup-friendly pricing.
           </p>
+          <span role="status" aria-live="polite" className="sr-only">
+            {startupNoteAnnouncement}
+          </span>
           {error && (
             <div className="demo-error" role="alert">
               {error}
