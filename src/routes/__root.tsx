@@ -99,9 +99,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://blindsight.io/favicon.png" },
-      { property: "og:image:width", content: "501" },
-      { property: "og:image:height", content: "501" },
+      { property: "og:image", content: "https://blindsight.io/og-image.png" },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Blindsight - Securing AI" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Blindsight - Securing AI" },
       {
@@ -109,7 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform.",
       },
-      { name: "twitter:image", content: "https://blindsight.io/favicon.png" },
+      { name: "twitter:image", content: "https://blindsight.io/og-image.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
