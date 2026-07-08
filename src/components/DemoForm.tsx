@@ -1,8 +1,10 @@
 import { useServerFn } from "@tanstack/react-start";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { submitDemoRequest } from "@/lib/demo.functions";
 import { friendlyFormError, isValidEmail } from "@/lib/form-error";
 import type { DemoVariant } from "./DemoModal";
+
+const STARTUP_NOTE = "We're a startup (≤10 people) — interested in startup pricing.";
 
 /** Shared demo-request form + success state. Used by the /demo page and the demo modal.
  *  `variant` switches between booking a demo and requesting the app download — same
@@ -13,6 +15,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,6 +60,17 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
     }
   }
 
+  function handleStartupNoteClick() {
+    const el = messageRef.current;
+    if (!el) return;
+    if (!el.value.includes(STARTUP_NOTE)) {
+      el.value = el.value.length > 0 ? `${el.value}\n${STARTUP_NOTE}` : STARTUP_NOTE;
+    }
+    el.focus();
+    const end = el.value.length;
+    el.setSelectionRange(end, end);
+  }
+
   return (
     <div className="demo-form-wrap reveal">
       {done ? (
@@ -92,6 +106,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
           <label className="demo-field">
             <span>Tell us anything relevant about you, your needs, your use case</span>
             <textarea
+              ref={messageRef}
               name="message"
               rows={4}
               maxLength={2000}
@@ -102,6 +117,13 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
             <input name="consent" type="checkbox" defaultChecked />
             <span>I agree to be contacted by Blindsight about this request.</span>
           </label>
+          <p className="demo-startup-note">
+            Team of 10 or fewer?{" "}
+            <button type="button" className="demo-startup-link" onClick={handleStartupNoteClick}>
+              Let us know
+            </button>{" "}
+            — we'll follow up with startup-friendly pricing.
+          </p>
           {error && (
             <div className="demo-error" role="alert">
               {error}
