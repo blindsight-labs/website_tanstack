@@ -45,6 +45,7 @@ const FOUNDERS: Person[] = [
       "Ethical Hacker: Top 30 Global Leaderboard, Rank #1 Portugal",
       "+20 zero-day vulnerability disclosures",
       "Global Council for Responsible AI: President of Germany chapter & Global Ambassador",
+      "International keynote speaker on AI security and cybersecurity strategy",
     ],
   },
   {
@@ -79,11 +80,11 @@ const LEADERSHIP: Person[] = [
     label: "CCO photo",
     photo: photoMaurits,
     photoPosition: "42% top",
-    bio: "Commercialization & GTM",
+    bio: "Leads Go-to-Market strategy and partnerships at Blindsight",
     highlights: [
-      "Business development & GTM initiatives, market-entry with multi-exit founders in AI and DeepTech",
-      "Ex-VC & startup advisor: G Squared, Mountain Partners, Co-GP of Conny & Co. II SCSp (1st investor in Destinus)",
-      "Ex-Founder & CEO in FMCG",
+      "VC operator background in security, deep tech, and AI; co-launched Conny & Co. early-stage fund part of a global house of funds (first investor in Destinus)",
+      "Former Founder and CEO of an FMCG and E-Commerce business",
+      "Advised technology companies on market entry of complex products and internationalization strategy",
     ],
   },
   {
