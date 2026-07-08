@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TestTopologyRouteImport } from './routes/test-topology'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShadowRouteImport } from './routes/shadow'
@@ -30,11 +29,6 @@ import { Route as CareersApplyRouteImport } from './routes/careers_.apply'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
 
-const TestTopologyRoute = TestTopologyRouteImport.update({
-  id: '/test-topology',
-  path: '/test-topology',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TeamRoute = TeamRouteImport.update({
   id: '/team',
   path: '/team',
@@ -147,7 +141,6 @@ export interface FileRoutesByFullPath {
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
-  '/test-topology': typeof TestTopologyRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/apply': typeof CareersApplyRoute
@@ -168,7 +161,6 @@ export interface FileRoutesByTo {
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
-  '/test-topology': typeof TestTopologyRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers/apply': typeof CareersApplyRoute
@@ -191,7 +183,6 @@ export interface FileRoutesById {
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
-  '/test-topology': typeof TestTopologyRoute
   '/authors/$slug': typeof AuthorsSlugRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/careers_/apply': typeof CareersApplyRoute
@@ -215,7 +206,6 @@ export interface FileRouteTypes {
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
-    | '/test-topology'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/careers/apply'
@@ -236,7 +226,6 @@ export interface FileRouteTypes {
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
-    | '/test-topology'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/careers/apply'
@@ -258,7 +247,6 @@ export interface FileRouteTypes {
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
-    | '/test-topology'
     | '/authors/$slug'
     | '/blog/$slug'
     | '/careers_/apply'
@@ -281,20 +269,12 @@ export interface RootRouteChildren {
   ShadowRoute: typeof ShadowRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
-  TestTopologyRoute: typeof TestTopologyRoute
   AuthorsSlugRoute: typeof AuthorsSlugRoute
   CareersApplyRoute: typeof CareersApplyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/test-topology': {
-      id: '/test-topology'
-      path: '/test-topology'
-      fullPath: '/test-topology'
-      preLoaderRoute: typeof TestTopologyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/team': {
       id: '/team'
       path: '/team'
@@ -459,7 +439,6 @@ const rootRouteChildren: RootRouteChildren = {
   ShadowRoute: ShadowRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
-  TestTopologyRoute: TestTopologyRoute,
   AuthorsSlugRoute: AuthorsSlugRoute,
   CareersApplyRoute: CareersApplyRoute,
 }

@@ -50,7 +50,7 @@ Tailwind CSS v4 with a custom design token layer defined in `src/styles.css`. De
 
 ### UI components
 
-`src/components/ui/` contains shadcn/ui components. The project config for shadcn is in `components.json`.
+All UI components are hand-rolled under `src/components/` — no shadcn/ui primitives are currently wired up. `components.json` is kept as config for scaffolding shadcn components in the future (`npx shadcn add <component>`); components added this way land in `src/components/ui/`.
 
 ### Deployment
 
