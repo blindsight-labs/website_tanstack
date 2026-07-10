@@ -16,7 +16,7 @@ type Lane = { ini: string; nm: string; rl: string; x?: number; y?: number; seq: 
 const LANES_H: Lane[] = [
   {
     ini: "MS",
-    nm: "Marta",
+    nm: "Michael",
     rl: "Finance",
     y: 14,
     seq: [
@@ -25,8 +25,8 @@ const LANES_H: Lane[] = [
     ],
   },
   {
-    ini: "PA",
-    nm: "Pedro",
+    ini: "JA",
+    nm: "James",
     rl: "Support",
     y: 38,
     seq: [
@@ -35,8 +35,8 @@ const LANES_H: Lane[] = [
     ],
   },
   {
-    ini: "SB",
-    nm: "Sofia",
+    ini: "MB",
+    nm: "Mary",
     rl: "ML team",
     y: 62,
     seq: [
@@ -46,7 +46,7 @@ const LANES_H: Lane[] = [
   },
   {
     ini: "AC",
-    nm: "Ana",
+    nm: "Anna",
     rl: "Sales",
     y: 86,
     seq: [
@@ -59,7 +59,7 @@ const LANES_H: Lane[] = [
 const LANES_V: Lane[] = [
   {
     ini: "MS",
-    nm: "Marta",
+    nm: "Michael",
     rl: "Finance",
     x: 12.5,
     seq: [
@@ -68,8 +68,8 @@ const LANES_V: Lane[] = [
     ],
   },
   {
-    ini: "PA",
-    nm: "Pedro",
+    ini: "JA",
+    nm: "James",
     rl: "Support",
     x: 37.5,
     seq: [
@@ -78,8 +78,8 @@ const LANES_V: Lane[] = [
     ],
   },
   {
-    ini: "SB",
-    nm: "Sofia",
+    ini: "MB",
+    nm: "Mary",
     rl: "ML team",
     x: 62.5,
     seq: [
@@ -89,7 +89,7 @@ const LANES_V: Lane[] = [
   },
   {
     ini: "AC",
-    nm: "Ana",
+    nm: "Anna",
     rl: "Sales",
     x: 87.5,
     seq: [
