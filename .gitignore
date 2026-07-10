@@ -36,3 +36,8 @@ dist-ssr
 .env.*.local
 
 package-lock.json
+
+# AI assistant local state (not part of the site)
+.claude/settings.local.json
+.remember/
+.superpowers/
