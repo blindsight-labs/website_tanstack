@@ -480,17 +480,20 @@ function ShadowNav() {
   const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <a
-        href="/shadow"
+      <Link
+        to="/shadow"
         aria-label="Blindsight home"
         onClick={(e) => {
-          e.preventDefault();
+          // Already on /shadow → scroll back to the top instead of a no-op navigation.
+          if (pathname === "/shadow") {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
           closeMenu();
-          window.location.assign("/shadow");
         }}
       >
         <img src={logo} alt="Blindsight" className="nav-logo" />
-      </a>
+      </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
         <ShadowSectionNavLink id="hero" onClick={closeMenu}>
           Top
