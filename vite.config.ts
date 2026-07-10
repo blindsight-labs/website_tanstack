@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [
     tsConfigPaths(),
     tailwindcss(),
-    tanstackStart({ customViteReactPlugin: true }),
+    tanstackStart(),
     viteReact(),
     netlify(),
   ],
