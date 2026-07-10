@@ -101,26 +101,30 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
         <form className="demo-form" onSubmit={onSubmit} noValidate>
           <div className="demo-path-toggle" hidden={path !== null}>
             <p className="demo-path-heading">Which best describes you?</p>
-            <div className="demo-row">
+            <div className="demo-path-row">
               <button
                 type="button"
-                className={path === "startup" ? "demo-path-card is-selected" : "demo-path-card"}
+                className={path === "startup" ? "demo-path-pill is-selected" : "demo-path-pill"}
                 aria-pressed={path === "startup"}
                 onClick={() => setPath("startup")}
               >
-                <Rocket size={20} aria-hidden="true" />
-                <span className="demo-path-card-title">Startup</span>
-                <span className="demo-path-card-meta">≤10 people</span>
-                <span className="demo-path-card-caption">Startup-friendly pricing</span>
+                <span className="demo-path-pill-row">
+                  <Rocket size={18} aria-hidden="true" />
+                  <span className="demo-path-pill-title">Startup</span>
+                </span>
+                <span className="demo-path-pill-meta">≤10 people</span>
               </button>
               <button
                 type="button"
-                className={path === "team" ? "demo-path-card is-selected" : "demo-path-card"}
+                className={path === "team" ? "demo-path-pill is-selected" : "demo-path-pill"}
                 aria-pressed={path === "team"}
                 onClick={() => setPath("team")}
               >
-                <Building2 size={20} aria-hidden="true" />
-                <span className="demo-path-card-title">Larger team</span>
+                <span className="demo-path-pill-row">
+                  <Building2 size={18} aria-hidden="true" />
+                  <span className="demo-path-pill-title">Larger team</span>
+                </span>
+                <span className="demo-path-pill-meta">11+ people</span>
               </button>
             </div>
           </div>
@@ -128,7 +132,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
           {path !== null && (
             <div className="demo-path-confirm">
               <Check size={16} aria-hidden="true" />
-              <span>{path === "startup" ? "Startup (≤10 people)" : "Larger team"}</span>
+              <span>{path === "startup" ? "Startup (≤10 people)" : "Larger team (11+ people)"}</span>
               <button type="button" className="demo-startup-link" onClick={() => setPath(null)}>
                 Change
               </button>
