@@ -4215,10 +4215,82 @@ footer {
 .demo-consent input {
   margin-top: 3px;
 }
-.demo-startup-note {
+.demo-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.demo-path-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.demo-path-heading {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.demo-path-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.demo-path-card svg {
+  color: var(--violet);
+}
+.demo-path-card:hover,
+.demo-path-card:focus-visible {
+  outline: none;
+  border-color: var(--violet);
+  background: color-mix(in oklab, var(--violet) 6%, var(--bg));
+}
+.demo-path-card.is-selected {
+  border-color: var(--violet);
+  background: color-mix(in oklab, var(--violet) 10%, var(--bg));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--violet) 18%, transparent);
+}
+.demo-path-card-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+.demo-path-card-meta {
   font-size: 13px;
   color: var(--muted);
-  line-height: 1.5;
+}
+.demo-path-card-caption {
+  font-size: 12.5px;
+  color: var(--violet-deep);
+}
+.demo-path-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text);
+}
+.demo-path-confirm svg {
+  flex-shrink: 0;
+  color: var(--violet);
+}
+.demo-path-confirm .demo-startup-link {
+  margin-left: auto;
 }
 .demo-startup-link {
   background: none;
