@@ -1,0 +1,16 @@
+# Normalize line endings to LF regardless of a checkout's core.autocrlf
+# setting, so Prettier's default endOfLine:"lf" always matches what's on
+# disk. Without this, a Windows checkout with core.autocrlf=true converts
+# every tracked text file to CRLF, and every line trips prettier/prettier.
+* text=auto eol=lf
+
+# Explicit safety net on top of the text=auto heuristic — never touch these.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
