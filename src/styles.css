@@ -47,6 +47,24 @@
   --shadow-md: 0 6px 20px rgba(17, 17, 24, 0.08), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --shadow-lg: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
   --radius-pill: 999px;
+  /* ═══ Design-system tokens: grid & layout (reference constants, not @theme) ═══ */
+  /* Four-tier breakpoints — each token is the min-width where that tier begins. */
+  --breakpoint-mobile: 0px;
+  --breakpoint-tablet: 640px;
+  --breakpoint-laptop: 1024px;
+  --breakpoint-desktop: 1440px;
+  --grid-columns-mobile: 4;
+  --grid-columns-tablet: 8;
+  --grid-columns-laptop: 12;
+  --grid-columns-desktop: 12;
+  --grid-gutter-mobile: 16px;
+  --grid-gutter-tablet: 20px;
+  --grid-gutter-laptop: 24px;
+  --grid-gutter-desktop: 32px;
+  --container-sm: 640px;
+  --container-md: 1024px;
+  --container-lg: 1280px;
+  --container-xl: 1600px;
   /* ═══ Design-system tokens: spacing (base-4) ═══ */
   --space-1: 2px;
   --space-2: 4px;
