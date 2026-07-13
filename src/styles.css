@@ -16,6 +16,83 @@
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  /* Breakpoints: Tailwind compiles these into literal @media rules at build
+     time, so they MUST be literal values here (a var() reference compiles to
+     invalid CSS like `@media (width >= var(--x))` — confirmed empirically).
+     Values are intentionally duplicated from the :root reference constants
+     below; keep both in sync if either changes. No "mobile" entry — the
+     unprefixed utility already serves as the base/mobile-first tier. */
+  --breakpoint-tablet: 640px;
+  --breakpoint-laptop: 1024px;
+  --breakpoint-desktop: 1440px;
+  /* Color roles: each entry references itself by the same name. This looks
+     circular but isn't — Tailwind's own compiled :root export for this name
+     is emitted early (right after the tailwindcss import), and our real
+     literal value below (in :root / [data-theme="dark"]) comes later in the
+     compiled file and wins the cascade (confirmed empirically). This means
+     utilities like bg-primary-500 correctly pick up the real value AND still
+     respond to the [data-theme="dark"] override, with zero renaming needed. */
+  --color-neutral-0: var(--color-neutral-0);
+  --color-neutral-50: var(--color-neutral-50);
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-200: var(--color-neutral-200);
+  --color-neutral-300: var(--color-neutral-300);
+  --color-neutral-400: var(--color-neutral-400);
+  --color-neutral-500: var(--color-neutral-500);
+  --color-neutral-600: var(--color-neutral-600);
+  --color-neutral-700: var(--color-neutral-700);
+  --color-neutral-800: var(--color-neutral-800);
+  --color-neutral-900: var(--color-neutral-900);
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
+  --color-secondary-50: var(--color-secondary-50);
+  --color-secondary-100: var(--color-secondary-100);
+  --color-secondary-200: var(--color-secondary-200);
+  --color-secondary-300: var(--color-secondary-300);
+  --color-secondary-400: var(--color-secondary-400);
+  --color-secondary-500: var(--color-secondary-500);
+  --color-secondary-600: var(--color-secondary-600);
+  --color-secondary-700: var(--color-secondary-700);
+  --color-secondary-800: var(--color-secondary-800);
+  --color-secondary-900: var(--color-secondary-900);
+  --color-success-50: var(--color-success-50);
+  --color-success-100: var(--color-success-100);
+  --color-success-200: var(--color-success-200);
+  --color-success-300: var(--color-success-300);
+  --color-success-400: var(--color-success-400);
+  --color-success-500: var(--color-success-500);
+  --color-success-600: var(--color-success-600);
+  --color-success-700: var(--color-success-700);
+  --color-success-800: var(--color-success-800);
+  --color-success-900: var(--color-success-900);
+  --color-warning-50: var(--color-warning-50);
+  --color-warning-100: var(--color-warning-100);
+  --color-warning-200: var(--color-warning-200);
+  --color-warning-300: var(--color-warning-300);
+  --color-warning-400: var(--color-warning-400);
+  --color-warning-500: var(--color-warning-500);
+  --color-warning-600: var(--color-warning-600);
+  --color-warning-700: var(--color-warning-700);
+  --color-warning-800: var(--color-warning-800);
+  --color-warning-900: var(--color-warning-900);
+  --color-error-50: var(--color-error-50);
+  --color-error-100: var(--color-error-100);
+  --color-error-200: var(--color-error-200);
+  --color-error-300: var(--color-error-300);
+  --color-error-400: var(--color-error-400);
+  --color-error-500: var(--color-error-500);
+  --color-error-600: var(--color-error-600);
+  --color-error-700: var(--color-error-700);
+  --color-error-800: var(--color-error-800);
+  --color-error-900: var(--color-error-900);
 }
 
 :root {
@@ -53,14 +130,14 @@
   --duration-slow: 400ms;
   --easing-standard: ease;
   --easing-entrance: cubic-bezier(0.2, 0.75, 0.2, 1);
-  /* ═══ Design-system tokens: radius / blur / opacity ═══ */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 999px;
-  --radius-circle: 50%;
+  /* ═══ Design-system tokens: blur / opacity ═══ */
+  /* Radius scale removed — deferred to Tailwind's own --radius-* defaults
+     (rounded-sm/md/lg/xl/etc.) rather than maintaining a competing custom
+     scale that can't be wired into Tailwind's reserved --radius-* namespace
+     without silently overriding those defaults everywhere they're already
+     used (rounded-sm/md/lg are live in styles.css, in-action.tsx, __root.tsx,
+     shadow-page.css). --radius-pill above is unrelated production code,
+     unaffected. */
   /* blur-subtle: spec range 3–4px (modal backdrop scrim); anchored at 4px. */
   --blur-subtle: 4px;
   --blur-heavy: 14px;
@@ -75,8 +152,14 @@
   --elevation-2: 0 6px 20px rgba(17, 17, 24, 0.08), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --elevation-3: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
   --elevation-4: 0 24px 64px rgba(17, 17, 24, 0.14), 0 0 0 1px rgba(17, 17, 24, 0.06);
-  /* ═══ Design-system tokens: grid & layout (reference constants, not @theme) ═══ */
-  /* Four-tier breakpoints — each token is the min-width where that tier begins. */
+  /* ═══ Design-system tokens: grid & layout ═══ */
+  /* Four-tier breakpoints — each token is the min-width where that tier
+     begins. tablet/laptop/desktop are now ALSO wired into @theme inline
+     above (literal duplicates, required — see comment there) to drive real
+     tablet:/laptop:/desktop: Tailwind variants. mobile/columns/gutters/
+     containers remain plain reference constants (not usable in @media
+     conditions via var(), so not wireable into Tailwind at all — see the
+     grid.columns/gutter spec section for their intended usage). */
   --breakpoint-mobile: 0px;
   --breakpoint-tablet: 640px;
   --breakpoint-laptop: 1024px;
@@ -93,26 +176,6 @@
   --container-md: 1024px;
   --container-lg: 1280px;
   --container-xl: 1600px;
-  /* ═══ Design-system tokens: spacing (base-4) ═══ */
-  --space-1: 2px;
-  --space-2: 4px;
-  --space-3: 6px;
-  --space-4: 8px;
-  --space-5: 10px;
-  --space-6: 12px;
-  --space-7: 14px;
-  --space-8: 16px;
-  --space-9: 20px;
-  --space-10: 24px;
-  --space-11: 28px;
-  --space-12: 32px;
-  --space-13: 40px;
-  --space-14: 48px;
-  --space-15: 56px;
-  --space-16: 64px;
-  --space-17: 80px;
-  --space-18: 96px;
-  --space-19: 120px;
   /* ═══ Design-system tokens: typography ═══ */
   /* Families alias the existing --font-* tokens (display and sans intentionally share a face today). */
   --font-family-display: var(--font-display);
@@ -122,26 +185,15 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --font-size-xs: 10px;
-  --font-size-sm: 11px;
-  --font-size-base: 12px;
-  --font-size-md: 13px;
-  --font-size-lg: 14px;
-  --font-size-xl: 15px;
-  --font-size-2xl: 16px;
-  --font-size-3xl: 18px;
-  --font-size-4xl: 20px;
-  --font-size-5xl: 24px;
-  --font-size-6xl: 28px;
-  --font-size-7xl: 32px;
-  --font-size-8xl: 40px;
-  --font-size-9xl: 48px;
-  --font-size-10xl: 56px;
-  --font-size-11xl: 64px;
-  --font-size-12xl: 72px;
-  /* Fluid hero tiers — deliberately responsive, kept separate from the fixed scale. */
-  --font-size-display-sm: clamp(40px, 5.4vw, 72px);
-  --font-size-display-lg: clamp(44px, 6.4vw, 86px);
+  /* Fixed font-size scale removed — deferred to Tailwind's own --text-*
+     defaults (text-sm/base/lg/etc.) rather than a competing custom scale;
+     --font-size-* was never a real Tailwind namespace to begin with (only
+     --text-* generates size utilities), and renaming to --text-* would have
+     collided with Tailwind's own defaults, already live in styles.css,
+     in-action.tsx, __root.tsx, and shadow-page.css. The fluid hero clamp()
+     sizes (display-sm/lg) had no Tailwind-native equivalent and are also
+     removed for now — nothing in the codebase consumed them yet; revisit if
+     hero typography needs a token later. */
   /* line-height-tight: spec range 1.0–1.08 (scales with heading size); anchored at 1.0. */
   --line-height-tight: 1.0;
   --line-height-snug: 1.3;
