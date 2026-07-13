@@ -43,3 +43,11 @@ CLAUDE.md
 .remember/
 .superpowers/
 .worktrees/
+
+# Internal-only docs (this repo is public — see docs/brand/README.md).
+# Ignored so a local working copy dropped here for dev convenience is
+# never accidentally committed; the real source of truth lives in the
+# internal GITHUB workspace root, not in this repo.
+docs/brand/content-strategy.md
+docs/brand/copywriting-voice-guide.md
+docs/design-system/
