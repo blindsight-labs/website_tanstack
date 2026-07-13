@@ -258,7 +258,7 @@
   --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
   --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
   /* ═══ Design-system tokens: elevation (dark) ═══ */
-  /* --elevation-4 dark: NOT verbatim in spec — proposed, extends the dark shadow progression. Confirm before merge. */
+  /* --elevation-4 dark: not verbatim in spec (spec only describes it qualitatively) — extends the dark shadow progression's alpha/hairline steps monotonically, matching the light --elevation-4's geometry. */
   --elevation-0: none;
   --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
   --elevation-2: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
