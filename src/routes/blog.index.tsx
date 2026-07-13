@@ -1,6 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useRef, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import { getAllPosts } from "@/lib/blog-content";
 
 export const Route = createFileRoute("/blog/")({
@@ -8,9 +13,16 @@ export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       { title: "AI Security Research & Insights | Blindsight Blog" },
-      { name: "description", content: "Research notes, attack walkthroughs, and field reports on LLM security, AI threat detection, prompt injection, jailbreaks, and back-doors from the Blindsight team." },
+      {
+        name: "description",
+        content:
+          "Research notes, attack walkthroughs, and field reports on LLM security, AI threat detection, prompt injection, jailbreaks, and back-doors from the Blindsight team.",
+      },
       { property: "og:title", content: "AI Security Research & Insights" },
-      { property: "og:description", content: "Research notes and field reports on LLM security and AI threat detection." },
+      {
+        property: "og:description",
+        content: "Research notes and field reports on LLM security and AI threat detection.",
+      },
       { property: "og:url", content: "https://blindsight.io/blog" },
     ],
     links: [{ rel: "canonical", href: "https://blindsight.io/blog" }],
@@ -84,8 +96,7 @@ function BlogPage() {
               Notes from the <span className="accent">field.</span>
             </h1>
             <p className="lede">
-              Attack walkthroughs, research deep-dives, and lessons from securing AI in
-              production.
+              Attack walkthroughs, research deep-dives, and lessons from securing AI in production.
             </p>
           </div>
 

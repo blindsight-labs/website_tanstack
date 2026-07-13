@@ -10,13 +10,7 @@ import tsConfigPaths from "vite-tsconfig-paths";
 // Publish dir is `dist/client` (see netlify.toml). VITE_* env vars are inlined
 // at build time via Vite's default env handling — no extra config needed.
 export default defineConfig({
-  plugins: [
-    tsConfigPaths(),
-    tailwindcss(),
-    tanstackStart(),
-    viteReact(),
-    netlify(),
-  ],
+  plugins: [tsConfigPaths(), tailwindcss(), tanstackStart(), viteReact(), netlify()],
   // Pre-bundle these in the FIRST optimize pass. Otherwise Vite discovers them
   // mid-load ("new dependencies optimized … reloading") and the in-flight client
   // entry import 504s — breaking hydration so no buttons work until a reload.

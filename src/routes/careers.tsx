@@ -6,7 +6,11 @@ export const Route = createFileRoute("/careers")({
   head: () => ({
     meta: [
       { title: "Careers · Blindsight" },
-      { name: "description", content: "Join Blindsight. We're hiring engineers, researchers, and operators to secure the next generation of AI systems." },
+      {
+        name: "description",
+        content:
+          "Join Blindsight. We're hiring engineers, researchers, and operators to secure the next generation of AI systems.",
+      },
       { property: "og:title", content: "Careers · Blindsight" },
       { property: "og:description", content: "Help us secure the next generation of AI systems." },
       { property: "og:url", content: "/careers" },
@@ -67,7 +71,6 @@ const ROLES: Role[] = [
   },
 ];
 
-
 function CareersPage() {
   return (
     <main>
@@ -80,14 +83,18 @@ function CareersPage() {
             <span className="accent">AI runs on.</span>
           </h1>
           <p className="lede">
-            We're a small team in Zürich securing the AI systems that teams depend on.
-            Right now, the people deploying AI are flying blind on security. They move
-            fast because they have to. We exist so they can move fast and safely - with
-            the trust that speed usually can't afford.
+            We're a small team in Zürich securing the AI systems that teams depend on. Right now,
+            the people deploying AI are flying blind on security. They move fast because they have
+            to. We exist so they can move fast and safely - with the trust that speed usually can't
+            afford.
           </p>
           <div className="hero-actions">
-            <a href="mailto:careers@blindsight.io" className="btn btn-primary">Email the founders</a>
-            <a href="#roles" className="btn btn-secondary">See open roles <ArrowDown size={16} aria-hidden="true" /></a>
+            <a href="mailto:careers@blindsight.io" className="btn btn-primary">
+              Email the founders
+            </a>
+            <a href="#roles" className="btn btn-secondary">
+              See open roles <ArrowDown size={16} aria-hidden="true" />
+            </a>
           </div>
         </div>
       </header>
@@ -98,26 +105,38 @@ function CareersPage() {
             <span className="tag">What we value</span>
             <h2>How we show up.</h2>
             <p>
-              We give people freedom and expect them to use it. Long-term, we want to help
-              solve AI alignment and build AI that's actually safe and trustworthy.
+              We give people freedom and expect them to use it. Long-term, we want to help solve AI
+              alignment and build AI that's actually safe and trustworthy.
             </p>
           </div>
           <div className="values-grid reveal">
             <div className="value-card">
               <div className="value-name">Doers, Thinkers, Builders</div>
-              <p>If we notice a problem, we fix it, or we bring in the team. Doers, thinkers, and builders work best when they're trusted with the freedom to move.</p>
+              <p>
+                If we notice a problem, we fix it, or we bring in the team. Doers, thinkers, and
+                builders work best when they're trusted with the freedom to move.
+              </p>
             </div>
             <div className="value-card">
               <div className="value-name">Hacker Mindset</div>
-              <p>Security is a creative discipline. It's built on a deep understanding of the tech, by people who refuse to take "that's just how it works" as a final answer.</p>
+              <p>
+                Security is a creative discipline. It's built on a deep understanding of the tech,
+                by people who refuse to take "that's just how it works" as a final answer.
+              </p>
             </div>
             <div className="value-card">
               <div className="value-name">Concerned Optimists</div>
-              <p>We're passionate about where AI is going and its potential. But AGI and AI alignment won't happen safely without securing AI systems and their foundations first.</p>
+              <p>
+                We're passionate about where AI is going and its potential. But AGI and AI alignment
+                won't happen safely without securing AI systems and their foundations first.
+              </p>
             </div>
             <div className="value-card">
               <div className="value-name">Lifelong Learners</div>
-              <p>Cybersecurity never stops moving. Neither do we. Curious by default. Uncomfortable standing still.</p>
+              <p>
+                Cybersecurity never stops moving. Neither do we. Curious by default. Uncomfortable
+                standing still.
+              </p>
             </div>
           </div>
         </div>

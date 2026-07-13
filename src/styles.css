@@ -16,6 +16,83 @@
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  /* Breakpoints: Tailwind compiles these into literal @media rules at build
+     time, so they MUST be literal values here (a var() reference compiles to
+     invalid CSS like `@media (width >= var(--x))` — confirmed empirically).
+     Values are intentionally duplicated from the :root reference constants
+     below; keep both in sync if either changes. No "mobile" entry — the
+     unprefixed utility already serves as the base/mobile-first tier. */
+  --breakpoint-tablet: 640px;
+  --breakpoint-laptop: 1024px;
+  --breakpoint-desktop: 1440px;
+  /* Color roles: each entry references itself by the same name. This looks
+     circular but isn't — Tailwind's own compiled :root export for this name
+     is emitted early (right after the tailwindcss import), and our real
+     literal value below (in :root / [data-theme="dark"]) comes later in the
+     compiled file and wins the cascade (confirmed empirically). This means
+     utilities like bg-primary-500 correctly pick up the real value AND still
+     respond to the [data-theme="dark"] override, with zero renaming needed. */
+  --color-neutral-0: var(--color-neutral-0);
+  --color-neutral-50: var(--color-neutral-50);
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-200: var(--color-neutral-200);
+  --color-neutral-300: var(--color-neutral-300);
+  --color-neutral-400: var(--color-neutral-400);
+  --color-neutral-500: var(--color-neutral-500);
+  --color-neutral-600: var(--color-neutral-600);
+  --color-neutral-700: var(--color-neutral-700);
+  --color-neutral-800: var(--color-neutral-800);
+  --color-neutral-900: var(--color-neutral-900);
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
+  --color-secondary-50: var(--color-secondary-50);
+  --color-secondary-100: var(--color-secondary-100);
+  --color-secondary-200: var(--color-secondary-200);
+  --color-secondary-300: var(--color-secondary-300);
+  --color-secondary-400: var(--color-secondary-400);
+  --color-secondary-500: var(--color-secondary-500);
+  --color-secondary-600: var(--color-secondary-600);
+  --color-secondary-700: var(--color-secondary-700);
+  --color-secondary-800: var(--color-secondary-800);
+  --color-secondary-900: var(--color-secondary-900);
+  --color-success-50: var(--color-success-50);
+  --color-success-100: var(--color-success-100);
+  --color-success-200: var(--color-success-200);
+  --color-success-300: var(--color-success-300);
+  --color-success-400: var(--color-success-400);
+  --color-success-500: var(--color-success-500);
+  --color-success-600: var(--color-success-600);
+  --color-success-700: var(--color-success-700);
+  --color-success-800: var(--color-success-800);
+  --color-success-900: var(--color-success-900);
+  --color-warning-50: var(--color-warning-50);
+  --color-warning-100: var(--color-warning-100);
+  --color-warning-200: var(--color-warning-200);
+  --color-warning-300: var(--color-warning-300);
+  --color-warning-400: var(--color-warning-400);
+  --color-warning-500: var(--color-warning-500);
+  --color-warning-600: var(--color-warning-600);
+  --color-warning-700: var(--color-warning-700);
+  --color-warning-800: var(--color-warning-800);
+  --color-warning-900: var(--color-warning-900);
+  --color-error-50: var(--color-error-50);
+  --color-error-100: var(--color-error-100);
+  --color-error-200: var(--color-error-200);
+  --color-error-300: var(--color-error-300);
+  --color-error-400: var(--color-error-400);
+  --color-error-500: var(--color-error-500);
+  --color-error-600: var(--color-error-600);
+  --color-error-700: var(--color-error-700);
+  --color-error-800: var(--color-error-800);
+  --color-error-900: var(--color-error-900);
 }
 
 :root {
@@ -47,6 +124,155 @@
   --shadow-md: 0 6px 20px rgba(17, 17, 24, 0.08), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --shadow-lg: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
   --radius-pill: 999px;
+  /* ═══ Design-system tokens: motion (duration / easing) ═══ */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --easing-standard: ease;
+  --easing-entrance: cubic-bezier(0.2, 0.75, 0.2, 1);
+  /* ═══ Design-system tokens: blur / opacity ═══ */
+  /* Radius scale removed — deferred to Tailwind's own --radius-* defaults
+     (rounded-sm/md/lg/xl/etc.) rather than maintaining a competing custom
+     scale that can't be wired into Tailwind's reserved --radius-* namespace
+     without silently overriding those defaults everywhere they're already
+     used (rounded-sm/md/lg are live in styles.css, in-action.tsx, __root.tsx,
+     shadow-page.css). --radius-pill above is unrelated production code,
+     unaffected. */
+  /* blur-subtle: spec range 3–4px (modal backdrop scrim); anchored at 4px. */
+  --blur-subtle: 4px;
+  --blur-heavy: 14px;
+  /* opacity-surface-1: spec range 0.72–0.78 (nav resting); anchored at 0.72. */
+  --opacity-surface-1: 0.72;
+  /* opacity-surface-2: spec range 0.90–0.97 (nav scrolled / mobile menu); anchored at 0.9. */
+  --opacity-surface-2: 0.9;
+  --opacity-scrim: 0.5;
+  /* ═══ Design-system tokens: elevation (light) ═══ */
+  --elevation-0: none;
+  --elevation-1: 0 1px 3px rgba(17, 17, 24, 0.06), 0 0 0 1px rgba(17, 17, 24, 0.04);
+  --elevation-2: 0 6px 20px rgba(17, 17, 24, 0.08), 0 0 0 1px rgba(17, 17, 24, 0.04);
+  --elevation-3: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
+  --elevation-4: 0 24px 64px rgba(17, 17, 24, 0.14), 0 0 0 1px rgba(17, 17, 24, 0.06);
+  /* ═══ Design-system tokens: grid & layout ═══ */
+  /* Four-tier breakpoints — each token is the min-width where that tier
+     begins. tablet/laptop/desktop are now ALSO wired into @theme inline
+     above (literal duplicates, required — see comment there) to drive real
+     tablet:/laptop:/desktop: Tailwind variants. mobile/columns/gutters/
+     containers remain plain reference constants (not usable in @media
+     conditions via var(), so not wireable into Tailwind at all — see the
+     grid.columns/gutter spec section for their intended usage). */
+  --breakpoint-mobile: 0px;
+  --breakpoint-tablet: 640px;
+  --breakpoint-laptop: 1024px;
+  --breakpoint-desktop: 1440px;
+  --grid-columns-mobile: 4;
+  --grid-columns-tablet: 8;
+  --grid-columns-laptop: 12;
+  --grid-columns-desktop: 12;
+  --grid-gutter-mobile: 16px;
+  --grid-gutter-tablet: 20px;
+  --grid-gutter-laptop: 24px;
+  --grid-gutter-desktop: 32px;
+  --container-sm: 640px;
+  --container-md: 1024px;
+  --container-lg: 1280px;
+  --container-xl: 1600px;
+  /* ═══ Design-system tokens: typography ═══ */
+  /* Families alias the existing --font-* tokens (display and sans intentionally share a face today). */
+  --font-family-display: var(--font-display);
+  --font-family-sans: var(--font-sans);
+  --font-family-mono: var(--font-mono);
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  /* Fixed font-size scale removed — deferred to Tailwind's own --text-*
+     defaults (text-sm/base/lg/etc.) rather than a competing custom scale;
+     --font-size-* was never a real Tailwind namespace to begin with (only
+     --text-* generates size utilities), and renaming to --text-* would have
+     collided with Tailwind's own defaults, already live in styles.css,
+     in-action.tsx, __root.tsx, and shadow-page.css. The fluid hero clamp()
+     sizes (display-sm/lg) had no Tailwind-native equivalent and are also
+     removed for now — nothing in the codebase consumed them yet; revisit if
+     hero typography needs a token later. */
+  /* line-height-tight: spec range 1.0–1.08 (scales with heading size); anchored at 1.0. */
+  --line-height-tight: 1.0;
+  --line-height-snug: 1.3;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+  /* letter-spacing-tight: spec range -0.02 to -0.04em (matches production h1–h4). */
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  /* letter-spacing-wide: spec range +0.06 to +0.22em (matches production .tag). */
+  --letter-spacing-wide: 0.22em;
+  /* ═══ Design-system tokens: neutral ramp (light) ═══ */
+  /* Warm cast in light steps, cool violet cast in dark steps — intentional, do not flatten to pure gray. */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #fafaf8;
+  --color-neutral-100: #f4f4f1;
+  --color-neutral-200: #e8e8e4;
+  --color-neutral-300: #d4d4ce;
+  --color-neutral-400: #afaeaa;
+  --color-neutral-500: #848494;
+  --color-neutral-600: #50505f;
+  --color-neutral-700: #393944;
+  --color-neutral-800: #25252f;
+  --color-neutral-900: #111118;
+  /* ═══ Design-system tokens: color role ramps (light) ═══ */
+  /* primary — violet, anchored on --violet */
+  --color-primary-50: #eef4ff;
+  --color-primary-100: #dee6ff;
+  --color-primary-200: #c7cfff;
+  --color-primary-300: #a8aeff;
+  --color-primary-400: #8889ff;
+  --color-primary-500: #5546e0;
+  --color-primary-600: #3c1eb7;
+  --color-primary-700: #28008b;
+  --color-primary-800: #16005b;
+  --color-primary-900: #0f0045;
+  /* secondary — blue, arch-diagram "model" accent */
+  --color-secondary-50: #ebf8ff;
+  --color-secondary-100: #d9ecff;
+  --color-secondary-200: #bedaff;
+  --color-secondary-300: #99bffe;
+  --color-secondary-400: #759ee6;
+  --color-secondary-500: #4a74be;
+  --color-secondary-600: #2d5498;
+  --color-secondary-700: #173874;
+  --color-secondary-800: #061f4d;
+  --color-secondary-900: #010f2f;
+  /* success — green, upload-status "indexed" green */
+  --color-success-50: #e0ffe7;
+  --color-success-100: #c6fbd2;
+  --color-success-200: #9eefb3;
+  --color-success-300: #67d98b;
+  --color-success-400: #22bc64;
+  --color-success-500: #2dd573;
+  --color-success-600: #00b054;
+  --color-success-700: #008e3d;
+  --color-success-800: #006c2d;
+  --color-success-900: #004e21;
+  /* warning — amber, anchored on --amber */
+  --color-warning-50: #fff1dd;
+  --color-warning-100: #ffe2c2;
+  --color-warning-200: #ffca9b;
+  --color-warning-300: #faa967;
+  --color-warning-400: #e08533;
+  --color-warning-500: #d97706;
+  --color-warning-600: #b25600;
+  --color-warning-700: #8c3d00;
+  --color-warning-800: #652700;
+  --color-warning-900: #421600;
+  /* error — red, anchored on --red */
+  --color-error-50: #ffeae3;
+  --color-error-100: #ffd6cc;
+  --color-error-200: #ffb7aa;
+  --color-error-300: #ff8d7f;
+  --color-error-400: #ff6156;
+  --color-error-500: #dc2626;
+  --color-error-600: #b20000;
+  --color-error-700: #880000;
+  --color-error-800: #5c0000;
+  --color-error-900: #360000;
 }
 
 /* ── Dark theme ─────────────────────────────────────────────────────────────
@@ -83,6 +309,20 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
   --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  /* ═══ Design-system tokens: elevation (dark) ═══ */
+  /* --elevation-4 dark: not verbatim in spec (spec only describes it qualitatively) — extends the dark shadow progression's alpha/hairline steps monotonically, matching the light --elevation-4's geometry. */
+  --elevation-0: none;
+  --elevation-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --elevation-2: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --elevation-3: 0 18px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --elevation-4: 0 24px 64px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.07);
+  /* ═══ Design-system tokens: dark-mode color 500 anchors ═══ */
+  /* Each role's 500 re-derived brighter for legibility on near-black. */
+  --color-primary-500: #7c6cf5;
+  --color-secondary-500: #6793df;
+  --color-success-500: #5bf792;
+  --color-warning-500: #f59e0b;
+  --color-error-500: #ef4444;
 }
 
 /* Chrome surfaces that hardcode a light background need an explicit dark value. */

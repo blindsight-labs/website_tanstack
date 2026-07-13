@@ -285,16 +285,19 @@ function startEngine(root: HTMLElement, cfg: EngineConfig): () => void {
     spawnTimers.length = 0;
     cfg.lanes.forEach((L, i) => {
       let idx = 0;
-      const kickoff = window.setTimeout(() => {
-        fly(L, L.seq[idx % L.seq.length]);
-        idx++;
-        const iv = window.setInterval(() => {
+      const kickoff = window.setTimeout(
+        () => {
           fly(L, L.seq[idx % L.seq.length]);
           idx++;
-        }, d(3300));
-        spawnTimers.push(iv);
-        timers.push(iv);
-      }, d(500 + i * 820));
+          const iv = window.setInterval(() => {
+            fly(L, L.seq[idx % L.seq.length]);
+            idx++;
+          }, d(3300));
+          spawnTimers.push(iv);
+          timers.push(iv);
+        },
+        d(500 + i * 820),
+      );
       spawnTimers.push(kickoff);
       timers.push(kickoff);
     });

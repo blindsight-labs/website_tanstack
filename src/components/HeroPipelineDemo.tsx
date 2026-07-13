@@ -192,7 +192,9 @@ export function HeroPipelineDemo({ onInteract }: { onInteract?: () => void }) {
 
       <div className="hpp-foot">
         <span className="hpp-stage">
-          {on ? "Runtime secured, full pipeline protected" : "Without Blindsight, threats pass undetected"}
+          {on
+            ? "Runtime secured, full pipeline protected"
+            : "Without Blindsight, threats pass undetected"}
         </span>
         <button type="button" className="hpp-learn" onClick={learnMore}>
           Learn more
