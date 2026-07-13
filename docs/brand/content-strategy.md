@@ -1,4 +1,4 @@
-# Brand Persona and Tone of Voice
+# Content Strategy
 
 **Objective**
 We want to design a scalable system, idea-to-content that allows us to capture research and transform it into multi-layered content that we can distribute across platforms while keeping tone consistent and clear purpose.
@@ -9,13 +9,13 @@ These brands are interlocked/synergetic
 |  | Blindsight | Sky (Personal) |
 | ---| ---| --- |
 
-| Purpose | Build trust in AI systems. “Protect AI so it can protect us.” | Build trust in people’s understanding of AI. “Teach through curiosity and clarity.” |
+| Purpose | Build trust in AI systems. "Protect AI so it can protect us." | Build trust in people's understanding of AI. "Teach through curiosity and clarity." |
 | ---| ---| --- |
 
-| Voice | Confident, structured, visionary. “We see what others don’t.” | Approachable hacker. Witty, candid, deeply human. |
+| Voice | Confident, structured, visionary. "We see what others don't." | Approachable hacker. Witty, candid, deeply human. |
 | ---| ---| --- |
 
-| Tone baseline | Call to Action, not panic.<br>“Understand deeply, act decisively” | Call to Curiosity. “Let’s explore this before it breaks.” |
+| Tone baseline | Call to Action, not panic.<br>"Understand deeply, act decisively" | Call to Curiosity. "Let's explore this before it breaks." |
 | ---| ---| --- |
 
 | Personality | Bold, idealistic, world-changing. | Techno-Philosophical, curious, empathic. |
@@ -71,28 +71,8 @@ There's a more indepth/complex diagram in miro but, for now:
 Long Post → Shorter Post → One Liners/paragraphs → PR blurb
 
 ### Tone and Voice
-Analytical, Bold, Human.
-"The calm, collected Veteran/leader leading through example amidst the chaos of war" (maybe too much but you get the idea)
 
-**Clarity**/Clear-sighted - We see what others miss, see the unseen, complex into simple
-**Analytical** - Data and Evidence, not trends hype, fear or intererest$
-**Purposeful** - We communicate to drive Action/Change, Policy at company and Governmental level
-**Bold** - We don't beat around the bush, we state things as they are. We challenge the convention and act with confidence.
-**Humanistic** - We are for "the people" or for humanity, we exist to perserve agency and alignment, ensure that technology is here for us.
-
-We can be **clear**, **empathetic** for the public, being open to dialogue and teaching.
-We can be **inclusive** and **mentoring**, inciting **curiosity** for the community.
-We can be **restrained** and **precise** for whitepapers, leading with facts
-We can be **pressuring** and **purposeful** for industry, helping them understand the stakes and their roles.
-We can be **challenging** but **constructive** for leaders, asking tough questions but guiding the path foward.
-
-Throughout our audiences and "communication adaptation", we remain **Trustworthy**.
-
-#### Style
-*   Structure short, declarative sentnces for impact - with occsaional breaks.
-*   Vocabulary can range from "leyman's" to operational, usually alongside plain metaphors&analogies
-*   Alternate between facts/data and perspective (either ethical or strategic)
-*   Call to Action should always be empowering: "Act now, you can make a difference" -- rather "panic now and move or it'll be too late"
+See [`copywriting-voice-guide.md`](./copywriting-voice-guide.md) for the actionable voice guide (Analytical/Bold/Human triad, audience registers, style rules) — this doc's older draft of the same material was superseded by that distillation.
 
 ### Themes & Content Pillars
 
