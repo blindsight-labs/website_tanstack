@@ -47,6 +47,12 @@
   --shadow-md: 0 6px 20px rgba(17, 17, 24, 0.08), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --shadow-lg: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
   --radius-pill: 999px;
+  /* ═══ Design-system tokens: motion (duration / easing) ═══ */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --easing-standard: ease;
+  --easing-entrance: cubic-bezier(0.2, 0.75, 0.2, 1);
   /* ═══ Design-system tokens: radius / blur / opacity ═══ */
   --radius-xs: 4px;
   --radius-sm: 6px;
