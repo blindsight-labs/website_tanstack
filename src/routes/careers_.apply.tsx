@@ -16,7 +16,10 @@ export const Route = createFileRoute("/careers_/apply")({
   head: () => ({
     meta: [
       { title: "Apply · Blindsight Careers" },
-      { name: "description", content: "Apply to join Blindsight. Send us your CV and we'll be in touch." },
+      {
+        name: "description",
+        content: "Apply to join Blindsight. Send us your CV and we'll be in touch.",
+      },
     ],
     links: [{ rel: "canonical", href: "/careers/apply" }],
   }),
@@ -101,7 +104,8 @@ function ApplyPage() {
             <span className="tag">Apply{role ? ` · ${role}` : ""}</span>
             <h1 className="demo-title">Join the team.</h1>
             <p className="demo-sub">
-              Send your CV and a short note. We read every application and reply within a few business days.
+              Send your CV and a short note. We read every application and reply within a few
+              business days.
             </p>
           </div>
 
@@ -115,7 +119,10 @@ function ApplyPage() {
                   <a href="mailto:careers@blindsight.io">careers@blindsight.io</a>.
                 </p>
                 <p style={{ marginTop: 18 }}>
-                  <Link to="/careers" className="btn btn-secondary"><ArrowLeft size={16} aria-hidden="true" />Back to careers</Link>
+                  <Link to="/careers" className="btn btn-secondary">
+                    <ArrowLeft size={16} aria-hidden="true" />
+                    Back to careers
+                  </Link>
                 </p>
               </div>
             ) : (
@@ -130,7 +137,11 @@ function ApplyPage() {
                 </label>
                 <label className="demo-field">
                   <span>CV (PDF, DOC, DOCX or TXT · max 5MB)</span>
-                  <input name="cv" type="file" accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" />
+                  <input
+                    name="cv"
+                    type="file"
+                    accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                  />
                 </label>
                 <label className="demo-field">
                   <span>Anything you'd like us to know</span>
@@ -145,7 +156,11 @@ function ApplyPage() {
                   <input name="consent" type="checkbox" defaultChecked />
                   <span>I agree to be contacted by Blindsight about this application.</span>
                 </label>
-                {error && <div className="demo-error" role="alert">{error}</div>}
+                {error && (
+                  <div className="demo-error" role="alert">
+                    {error}
+                  </div>
+                )}
                 <button type="submit" className="btn btn-primary" disabled={submitting}>
                   {submitting ? "Sending…" : "Submit application"}
                 </button>

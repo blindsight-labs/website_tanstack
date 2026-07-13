@@ -18,13 +18,13 @@ type LogoEntry = {
 };
 
 const LOGOS: LogoEntry[] = [
-  { src: logoAES,             name: "Agent Economy Association",         h: 72 },
-  { src: logoClinicBarcelona, name: "Clínic Barcelona",                  h: 58 },
-  { src: logoGCRAI,           name: "Global Council for Responsible AI", h: 48 },
-  { src: logoJFloor,          name: "JFloor",                            h: 20 },
-  { src: logoNoeda,           name: "Noéda",                             h: 39 },
-  { src: logoNvidiaInception, name: "NVIDIA Inception Program",          h: 59 },
-  { src: logoRebels,          name: "Rebels",                            h: 35 },
+  { src: logoAES, name: "Agent Economy Association", h: 72 },
+  { src: logoClinicBarcelona, name: "Clínic Barcelona", h: 58 },
+  { src: logoGCRAI, name: "Global Council for Responsible AI", h: 48 },
+  { src: logoJFloor, name: "JFloor", h: 20 },
+  { src: logoNoeda, name: "Noéda", h: 39 },
+  { src: logoNvidiaInception, name: "NVIDIA Inception Program", h: 59 },
+  { src: logoRebels, name: "Rebels", h: 35 },
 ];
 
 // Repeat the set 4× so a single pass fills even ultrawide screens (~4 000 px),

@@ -69,7 +69,9 @@ export function escapeHtml(value: string): string {
 }
 
 // Renders a labelled list of fields. Skips empty values.
-export function renderFields(rows: Array<[label: string, value: string | null | undefined]>): string {
+export function renderFields(
+  rows: Array<[label: string, value: string | null | undefined]>,
+): string {
   const items = rows
     .filter(([, v]) => v != null && v !== "")
     .map(

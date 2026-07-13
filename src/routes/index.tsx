@@ -121,7 +121,6 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
   );
 }
 
-
 /* ── Hero — split: copy + CTAs | Runtime Security demo ──
    Primary CTA opens the demo modal (Runtime Security); secondary links to the
    Shadow AI product at /shadow. On mobile the two CTAs split apart
@@ -138,10 +137,10 @@ function Hero() {
             <span className="accent">Leverage AI with speed and confidence.</span>
           </h1>
           <p className="lede">
-            Blindsight brings visibility and security to your AI at runtime: every prompt,
-            response, tool call and data event. Deploying in a regulated environment? Its
-            runtime audit trail and policy enforcement turn compliance into a feature, not an
-            obstacle, so your team moves fast without flying blind.
+            Blindsight brings visibility and security to your AI at runtime: every prompt, response,
+            tool call and data event. Deploying in a regulated environment? Its runtime audit trail
+            and policy enforcement turn compliance into a feature, not an obstacle, so your team
+            moves fast without flying blind.
           </p>
           <p className="lede">
             Not ready for a full deployment? Start by revealing every unsanctioned AI tool in your
@@ -471,8 +470,8 @@ function Stages() {
           <span className="tag">Adopt in stages</span>
           <h2>See it. Stop it. Prove it.</h2>
           <p>
-            The three layers stack in order: protection builds on what Detect can see, governance
-            on what Protect enforces. What you turn on inside each layer is scoped to you.
+            The three layers stack in order: protection builds on what Detect can see, governance on
+            what Protect enforces. What you turn on inside each layer is scoped to you.
           </p>
         </div>
 

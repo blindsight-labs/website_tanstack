@@ -132,7 +132,9 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
           {path !== null && (
             <div className="demo-path-confirm">
               <Check size={16} aria-hidden="true" />
-              <span>{path === "startup" ? "Startup (≤10 people)" : "Larger team (11+ people)"}</span>
+              <span>
+                {path === "startup" ? "Startup (≤10 people)" : "Larger team (11+ people)"}
+              </span>
               <button type="button" className="demo-startup-link" onClick={() => setPath(null)}>
                 Change
               </button>
