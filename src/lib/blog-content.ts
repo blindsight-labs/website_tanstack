@@ -1,10 +1,10 @@
 import yaml from "js-yaml";
 
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
-function matter(raw: string): { data: any; content: string } {
+function matter(raw: string): { data: Record<string, unknown>; content: string } {
   const m = raw.match(FRONTMATTER_RE);
   if (!m) return { data: {}, content: raw };
-  const data = (yaml.load(m[1]) as any) ?? {};
+  const data = (yaml.load(m[1]) as Record<string, unknown>) ?? {};
   return { data, content: m[2] };
 }
 
@@ -57,19 +57,19 @@ function parsePost(path: string, raw: string): BlogPost {
   const date = (data.date as string) ?? "1970-01-01";
   return {
     slug,
-    title: data.title ?? slug,
-    category: data.category ?? "Post",
+    title: (data.title as string) ?? slug,
+    category: (data.category as string) ?? "Post",
     date,
     dateLabel: formatDate(date),
-    read: data.read ?? "5 min",
-    author: data.author ?? "Blindsight",
-    excerpt: data.excerpt ?? "",
+    read: (data.read as string) ?? "5 min",
+    author: (data.author as string) ?? "Blindsight",
+    excerpt: (data.excerpt as string) ?? "",
     body: content.trim(),
-    references: data.references,
-    seoTitle: data.seoTitle,
-    seoDescription: data.seoDescription,
-    faq: data.faq,
-    howToSteps: data.howToSteps,
+    references: data.references as Reference[] | undefined,
+    seoTitle: data.seoTitle as string | undefined,
+    seoDescription: data.seoDescription as string | undefined,
+    faq: data.faq as FAQItem[] | undefined,
+    howToSteps: data.howToSteps as HowToStep[] | undefined,
   };
 }
 

@@ -49,7 +49,7 @@ export const submitApplication = createServerFn({ method: "POST" })
       if (bytes.byteLength > MAX_CV_BYTES) {
         throw new Error("CV file is too large (max 5MB).");
       }
-      const safeName = data.cv.filename.replace(/[^\w.\-]+/g, "_").slice(0, 120);
+      const safeName = data.cv.filename.replace(/[^\w.-]+/g, "_").slice(0, 120);
       attachment = { filename: safeName, content: bytes };
     }
 
