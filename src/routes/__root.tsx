@@ -193,16 +193,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Nav() {
-  const { open: openDemo } = useDemoModal();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+// Shared chrome for both nav variants: scroll shadow, hamburger menu state,
+// and theme toggle. Each nav keeps its own CTA-reveal logic — the two pages
+// trigger it differently (IntersectionObserver on #hero-cta vs. a scroll
+// check against #hero) and forcing those to converge isn't worth it.
+function useNavChrome() {
   const [scrolled, setScrolled] = useState(false);
-  const [resourcesOpen, setResourcesOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  // The CTA mirrors the hero's primary button: it stays collapsed while the
-  // hero CTA (`#hero-cta`) is on screen and reveals once it scrolls out of
-  // view. On pages without a hero CTA it is simply always shown.
-  const [ctaShown, setCtaShown] = useState(false);
   // Theme is applied to <html> before paint by themeInitScript; mirror it into
   // state on mount so the toggle shows the right icon.
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -228,6 +225,25 @@ function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  return {
+    scrolled,
+    menuOpen,
+    setMenuOpen,
+    closeMenu: () => setMenuOpen(false),
+    theme,
+    toggleTheme,
+  };
+}
+
+function Nav() {
+  const { open: openDemo } = useDemoModal();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { scrolled, menuOpen, setMenuOpen, closeMenu, theme, toggleTheme } = useNavChrome();
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  // The CTA mirrors the hero's primary button: it stays collapsed while the
+  // hero CTA (`#hero-cta`) is on screen and reveals once it scrolls out of
+  // view. On pages without a hero CTA it is simply always shown.
+  const [ctaShown, setCtaShown] = useState(false);
   // Reveal the nav CTA once the hero's primary CTA leaves the viewport. Re-runs
   // on navigation so it re-attaches to the current page's hero (or, when there
   // is none, leaves the CTA permanently shown).
@@ -269,7 +285,6 @@ function Nav() {
       mo?.disconnect();
     };
   }, [pathname]);
-  const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <Link
@@ -443,29 +458,10 @@ function Nav() {
 function ShadowNav() {
   const { open: openDemo } = useDemoModal();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { scrolled, menuOpen, setMenuOpen, closeMenu, theme, toggleTheme } = useNavChrome();
   const [ctaShown, setCtaShown] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-  useEffect(() => {
-    const t = document.documentElement.getAttribute("data-theme");
-    if (t === "dark" || t === "light") setTheme(t);
-  }, []);
-  const toggleTheme = () => {
-    setTheme((prev) => {
-      const next = prev === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", next);
-      try {
-        localStorage.setItem("theme", next);
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  };
   useEffect(() => {
     const update = () => {
-      setScrolled(window.scrollY > 40);
       const hero = document.getElementById("hero");
       setCtaShown(!!hero && hero.getBoundingClientRect().top < -window.innerHeight * 0.55);
     };
@@ -477,7 +473,6 @@ function ShadowNav() {
       window.removeEventListener("resize", update);
     };
   }, [pathname]);
-  const closeMenu = () => setMenuOpen(false);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
       <Link

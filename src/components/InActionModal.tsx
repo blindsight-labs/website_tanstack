@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useRef, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
+import { useModalDialog } from "@/hooks/useModalDialog";
 import { TopologyGraphDemo } from "@/routes/in-action";
 
 const InActionModalContext = createContext<{ open: () => void; close: () => void }>({
@@ -18,20 +19,7 @@ export function InActionModalProvider({ children }: { children: ReactNode }) {
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    cardRef.current?.focus();
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [isOpen]);
+  useModalDialog(isOpen, close, cardRef);
 
   return (
     <InActionModalContext.Provider value={{ open, close }}>

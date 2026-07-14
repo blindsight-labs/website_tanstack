@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useRef, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
+import { useModalDialog } from "@/hooks/useModalDialog";
 import { DemoForm } from "./DemoForm";
 
 /** "demo" = book a working session; "download" = get the app after sharing details. */
@@ -41,21 +42,7 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
   };
   const close = () => setIsOpen(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    // Move focus into the dialog for keyboard/screen-reader users.
-    cardRef.current?.focus();
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [isOpen]);
+  useModalDialog(isOpen, close, cardRef);
 
   return (
     <DemoModalContext.Provider value={{ open, close }}>
