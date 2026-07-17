@@ -207,7 +207,7 @@
      --font-size-* was never a real Tailwind namespace to begin with (only
      --text-* generates size utilities), and renaming to --text-* would have
      collided with Tailwind's own defaults, already live in styles.css,
-     in-action.tsx, __root.tsx, and shadow-page.css. The fluid hero clamp()
+     TopologyGraphDemo.tsx, __root.tsx, and shadow-page.css. The fluid hero clamp()
      sizes (display-sm/lg) had no Tailwind-native equivalent and are also
      removed for now — nothing in the codebase consumed them yet; revisit if
      hero typography needs a token later. */
@@ -2647,7 +2647,7 @@ footer {
   transform: translateX(3px);
 }
 
-/* Chat window (used standalone by in-action.tsx) */
+/* Chat window (used standalone by TopologyGraphDemo.tsx) */
 .chat-window {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -4493,12 +4493,8 @@ footer {
 }
 .demo-path-row {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-}
-@media (max-width: 380px) {
-  .demo-path-row {
-    flex-direction: column;
-  }
 }
 .demo-path-pill {
   display: flex;
@@ -4506,8 +4502,6 @@ footer {
   align-items: center;
   justify-content: center;
   gap: 2px;
-  flex: 1 1 0;
-  min-height: 52px;
   background: var(--bg);
   border: 1px solid var(--border-mid);
   border-radius: var(--radius-pill);
@@ -4521,6 +4515,23 @@ footer {
     background-color 0.15s ease,
     box-shadow 0.15s ease,
     color 0.15s ease;
+}
+.demo-path-pill-primary {
+  min-height: 64px;
+  padding: 14px 16px;
+}
+.demo-path-pill-primary .demo-path-pill-title {
+  font-size: 17px;
+}
+.demo-path-pill-secondary {
+  min-height: 40px;
+  padding: 6px 16px;
+}
+.demo-path-pill-secondary .demo-path-pill-title {
+  font-size: 13px;
+}
+.demo-path-pill-secondary .demo-path-pill-meta {
+  font-size: 11px;
 }
 .demo-path-pill-row {
   display: flex;
@@ -5319,17 +5330,9 @@ footer {
   padding: 0;
   box-shadow: none;
 }
-/* Large modal — used for the in-action demo. */
-.modal-card-lg {
-  max-width: 1080px;
-  padding: 20px;
-}
 @media (max-width: 540px) {
   .modal-card {
     padding: 28px 22px;
-  }
-  .modal-card-lg {
-    padding: 16px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

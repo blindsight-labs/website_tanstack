@@ -19,6 +19,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/shadow", changefreq: "weekly", priority: "0.9" },
           { path: "/blog", changefreq: "weekly", priority: "0.9" },
+          { path: "/team", changefreq: "monthly", priority: "0.5" },
           // ponytail: uniform priority for every post — the old hand-tiered
           // per-post priorities weren't derivable from post data. Add a
           // `sitemapPriority` frontmatter field later if per-post tiering
@@ -28,16 +29,16 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "monthly" as const,
             priority: "0.8",
           })),
-          { path: "/in-action", changefreq: "monthly", priority: "0.8" },
           ...AUTHORS.map((a) => ({
             path: `/authors/${a.slug}`,
             changefreq: "monthly" as const,
             priority: "0.4",
           })),
-          { path: "/demo", changefreq: "monthly", priority: "0.7" },
           { path: "/contact", changefreq: "monthly", priority: "0.5" },
           { path: "/careers", changefreq: "weekly", priority: "0.6" },
+          { path: "/careers/apply", changefreq: "monthly", priority: "0.4" },
           { path: "/imprint", changefreq: "yearly", priority: "0.3" },
+          { path: "/privacy", changefreq: "yearly", priority: "0.3" },
         ];
 
         const urls = entries.map((e) =>

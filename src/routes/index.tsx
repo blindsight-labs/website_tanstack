@@ -18,7 +18,7 @@ import { Iceberg } from "@/components/Iceberg";
 import { InfoPill } from "@/components/InfoPill";
 import { LogoStrip } from "@/components/LogoStrip";
 import { faqSchemaEntities } from "@/lib/faq-content";
-import { TopologyGraphDemo } from "@/routes/in-action";
+import { TopologyGraphDemo } from "@/components/TopologyGraphDemo";
 import iconBlindsight from "@/assets/ICON_Blindsight.svg";
 
 export const Route = createFileRoute("/")({

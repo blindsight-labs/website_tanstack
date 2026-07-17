@@ -14,11 +14,9 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShadowRouteImport } from './routes/shadow'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
-import { Route as InActionRouteImport } from './routes/in-action'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as HowToSecureLlmsRouteImport } from './routes/how-to-secure-llms'
 import { Route as DocsRouteImport } from './routes/docs'
-import { Route as DemoRouteImport } from './routes/demo'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as BlogRouteImport } from './routes/blog'
@@ -54,11 +52,6 @@ const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
   path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
-const InActionRoute = InActionRouteImport.update({
-  id: '/in-action',
-  path: '/in-action',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ImprintRoute = ImprintRouteImport.update({
   id: '/imprint',
   path: '/imprint',
@@ -72,11 +65,6 @@ const HowToSecureLlmsRoute = HowToSecureLlmsRouteImport.update({
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
   path: '/docs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -131,11 +119,9 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
-  '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
-  '/in-action': typeof InActionRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/shadow': typeof ShadowRoute
@@ -151,11 +137,9 @@ export interface FileRoutesByTo {
   '/ai-threat-detection': typeof AiThreatDetectionRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
-  '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
-  '/in-action': typeof InActionRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/shadow': typeof ShadowRoute
@@ -173,11 +157,9 @@ export interface FileRoutesById {
   '/blog': typeof BlogRouteWithChildren
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
-  '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
-  '/in-action': typeof InActionRoute
   '/llms.txt': typeof LlmsDottxtRoute
   '/privacy': typeof PrivacyRoute
   '/shadow': typeof ShadowRoute
@@ -196,11 +178,9 @@ export interface FileRouteTypes {
     | '/blog'
     | '/careers'
     | '/contact'
-    | '/demo'
     | '/docs'
     | '/how-to-secure-llms'
     | '/imprint'
-    | '/in-action'
     | '/llms.txt'
     | '/privacy'
     | '/shadow'
@@ -216,11 +196,9 @@ export interface FileRouteTypes {
     | '/ai-threat-detection'
     | '/careers'
     | '/contact'
-    | '/demo'
     | '/docs'
     | '/how-to-secure-llms'
     | '/imprint'
-    | '/in-action'
     | '/llms.txt'
     | '/privacy'
     | '/shadow'
@@ -237,11 +215,9 @@ export interface FileRouteTypes {
     | '/blog'
     | '/careers'
     | '/contact'
-    | '/demo'
     | '/docs'
     | '/how-to-secure-llms'
     | '/imprint'
-    | '/in-action'
     | '/llms.txt'
     | '/privacy'
     | '/shadow'
@@ -259,11 +235,9 @@ export interface RootRouteChildren {
   BlogRoute: typeof BlogRouteWithChildren
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
-  DemoRoute: typeof DemoRoute
   DocsRoute: typeof DocsRoute
   HowToSecureLlmsRoute: typeof HowToSecureLlmsRoute
   ImprintRoute: typeof ImprintRoute
-  InActionRoute: typeof InActionRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   PrivacyRoute: typeof PrivacyRoute
   ShadowRoute: typeof ShadowRoute
@@ -310,13 +284,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/in-action': {
-      id: '/in-action'
-      path: '/in-action'
-      fullPath: '/in-action'
-      preLoaderRoute: typeof InActionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/imprint': {
       id: '/imprint'
       path: '/imprint'
@@ -336,13 +303,6 @@ declare module '@tanstack/react-router' {
       path: '/docs'
       fullPath: '/docs'
       preLoaderRoute: typeof DocsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -429,11 +389,9 @@ const rootRouteChildren: RootRouteChildren = {
   BlogRoute: BlogRouteWithChildren,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
-  DemoRoute: DemoRoute,
   DocsRoute: DocsRoute,
   HowToSecureLlmsRoute: HowToSecureLlmsRoute,
   ImprintRoute: ImprintRoute,
-  InActionRoute: InActionRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
   PrivacyRoute: PrivacyRoute,
   ShadowRoute: ShadowRoute,
