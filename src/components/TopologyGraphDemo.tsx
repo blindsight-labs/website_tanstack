@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
@@ -24,27 +23,6 @@ import {
   X,
 } from "lucide-react";
 import { useDemoModal } from "@/components/DemoModal";
-
-export const Route = createFileRoute("/in-action")({
-  head: () => ({
-    meta: [
-      { title: "Blindsight In Action - See how attacks happen" },
-      {
-        name: "description",
-        content:
-          "Walk through prompt injection, data leakage, data poisoning, model misuse and Shadow AI, and see Blindsight stop each one in real time.",
-      },
-      { property: "og:title", content: "Blindsight In Action" },
-      {
-        property: "og:description",
-        content: "See attacks happen, and how Blindsight stops them.",
-      },
-      { property: "og:url", content: "/in-action" },
-    ],
-    links: [{ rel: "canonical", href: "/in-action" }],
-  }),
-  component: TopologyGraphDemo,
-});
 
 /* ============================================================
    Scenarios + stages

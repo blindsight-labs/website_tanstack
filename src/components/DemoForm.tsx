@@ -7,7 +7,7 @@ import type { DemoVariant } from "./DemoModal";
 
 type Path = "startup" | "team" | null;
 
-/** Shared demo-request form + success state. Used by the /demo page and the demo modal.
+/** Shared demo-request form + success state. Used by the demo modal.
  *  `variant` switches between booking a demo and requesting the app download — same
  *  fields, different submit label, source tag and confirmation copy.
  *  The first choice (startup vs. larger team) determines which fields render below it. */
@@ -104,27 +104,35 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
             <div className="demo-path-row">
               <button
                 type="button"
-                className={path === "startup" ? "demo-path-pill is-selected" : "demo-path-pill"}
-                aria-pressed={path === "startup"}
-                onClick={() => setPath("startup")}
-              >
-                <span className="demo-path-pill-row">
-                  <Rocket size={18} aria-hidden="true" />
-                  <span className="demo-path-pill-title">Startup</span>
-                </span>
-                <span className="demo-path-pill-meta">≤10 people</span>
-              </button>
-              <button
-                type="button"
-                className={path === "team" ? "demo-path-pill is-selected" : "demo-path-pill"}
+                className={
+                  path === "team"
+                    ? "demo-path-pill demo-path-pill-primary is-selected"
+                    : "demo-path-pill demo-path-pill-primary"
+                }
                 aria-pressed={path === "team"}
                 onClick={() => setPath("team")}
               >
                 <span className="demo-path-pill-row">
-                  <Building2 size={18} aria-hidden="true" />
+                  <Building2 size={22} aria-hidden="true" />
                   <span className="demo-path-pill-title">Larger team</span>
                 </span>
-                <span className="demo-path-pill-meta">11+ people</span>
+                <span className="demo-path-pill-meta">Security &amp; compliance for your org</span>
+              </button>
+              <button
+                type="button"
+                className={
+                  path === "startup"
+                    ? "demo-path-pill demo-path-pill-secondary is-selected"
+                    : "demo-path-pill demo-path-pill-secondary"
+                }
+                aria-pressed={path === "startup"}
+                onClick={() => setPath("startup")}
+              >
+                <span className="demo-path-pill-row">
+                  <Rocket size={15} aria-hidden="true" />
+                  <span className="demo-path-pill-title">Startup</span>
+                </span>
+                <span className="demo-path-pill-meta">Quick self-serve setup</span>
               </button>
             </div>
           </div>
@@ -132,9 +140,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
           {path !== null && (
             <div className="demo-path-confirm">
               <Check size={16} aria-hidden="true" />
-              <span>
-                {path === "startup" ? "Startup (≤10 people)" : "Larger team (11+ people)"}
-              </span>
+              <span>{path === "startup" ? "Startup" : "Larger team"}</span>
               <button type="button" className="demo-startup-link" onClick={() => setPath(null)}>
                 Change
               </button>
@@ -181,9 +187,9 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                       <option value="" disabled hidden>
                         Select…
                       </option>
-                      <option value="11–50">11–50</option>
-                      <option value="51–200">51–200</option>
-                      <option value="200+">200+</option>
+                      <option value="50–200">50–200</option>
+                      <option value="200–1,000">200–1,000</option>
+                      <option value="1,000+">1,000+</option>
                     </select>
                   </label>
                   <label className="demo-field">

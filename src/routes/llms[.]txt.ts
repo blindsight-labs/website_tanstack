@@ -8,7 +8,6 @@ const BODY = `# Blindsight
 ## Product
 - [Runtime security platform](https://blindsight.io/): real-time visibility and threat protection for every AI prompt, response, and tool call.
 - [Shadow AI discovery](https://blindsight.io/shadow): finds unsanctioned AI tool use across an organization before sensitive data leaks.
-- [Blindsight in action](https://blindsight.io/in-action): a live walkthrough of the runtime security platform.
 
 ## Key guides
 - [Security in AI: An Introduction](https://blindsight.io/blog/security-in-ai-introduction): how AI models are compromised, and a map of the attack surface.

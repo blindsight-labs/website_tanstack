@@ -42,7 +42,6 @@ function ShadowSectionNavLink({
 }
 
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
-import { InActionModalProvider } from "@/components/InActionModal";
 import appCss from "../styles.css?url";
 import logo from "@/assets/LOGO_Blindsight.svg";
 
@@ -475,18 +474,7 @@ function ShadowNav() {
   }, [pathname]);
   return (
     <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
-      <Link
-        to="/shadow"
-        aria-label="Blindsight home"
-        onClick={(e) => {
-          // Already on /shadow → scroll back to the top instead of a no-op navigation.
-          if (pathname === "/shadow") {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
-          closeMenu();
-        }}
-      >
+      <Link to="/" aria-label="Blindsight home" onClick={closeMenu}>
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
@@ -576,11 +564,9 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <DemoModalProvider>
-        <InActionModalProvider>
-          <NavSwitch />
-          <Outlet />
-          <Footer />
-        </InActionModalProvider>
+        <NavSwitch />
+        <Outlet />
+        <Footer />
       </DemoModalProvider>
     </QueryClientProvider>
   );
