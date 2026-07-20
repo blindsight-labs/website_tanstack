@@ -16,7 +16,6 @@ references:
   - label: "An Early Categorization of Prompt Injection Attacks on Large Language Models"
     href: "https://arxiv.org/abs/2402.00898"
   - label: "Data Exfiltration from Slack AI via indirect prompt injection"
-    href: "https://promptarmor.substack.com/p/data-exfiltration-from-slack-ai-via"
   - label: "Hacking Google Bard - From Prompt Injection to Data Exfiltration"
     href: "https://embracethered.com/blog/posts/2023/google-bard-data-exfiltration/"
   - label: "Adversarial Machine Learning: A Taxonomy and Terminology of Attacks and Mitigations"
