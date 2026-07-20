@@ -155,7 +155,6 @@ export const THEMES: Theme[] = [
       {
         n: 4,
         text: "Microsoft Learn. Shadow AI discovery in Microsoft Entra Global Secure Access.",
-        url: "https://learn.microsoft.com/en-us/entra/global-secure-access/concept-shadow-ai-discovery",
       },
     ],
   },
@@ -670,37 +669,30 @@ export const THEMES: Theme[] = [
       {
         n: 4,
         text: "Cyberhaven, “11% of data employees paste to ChatGPT is confidential” (vendor telemetry, 1.6M workers; methodology not externally audited).",
-        url: "https://www.cyberhaven.com/blog/4-2-of-workers-have-pasted-company-data-into-chatgpt",
       },
       {
         n: 5,
         text: "Harmonic Security, GenAI Data Exposure Report Q2 2025 (vendor telemetry: 1M prompts, 20K files, 300+ apps; methodology not externally audited).",
-        url: "https://www.harmonic.security/blog-posts/genai-data-exposure-report-fa6wt",
       },
       {
         n: 6,
         text: "Broadcom / Symantec, Knowledge Base article 261794: “Can DLP be used to monitor ChatGPT?” Describes WebSocket and Firefox detection gaps.",
-        url: "https://knowledge.broadcom.com/external/article/261794/can-dlp-be-used-to-monitor-chatgpt.html",
       },
       {
         n: 7,
         text: "DeepInspect, “Employee ChatGPT monitoring.” Breakdown of which inspection points can and cannot see prompt content.",
-        url: "https://www.deepinspect.ai/blog/employee-chatgpt-monitoring",
       },
       {
         n: 8,
         text: "LayerX, enterprise GenAI usage report, personal account prevalence (vendor telemetry; verify exact figures before citing, as the primary report URL may change).",
-        url: "https://layerxsecurity.com/generative-ai/chatgpt-data-leak/",
       },
       {
         n: 9,
         text: "Microsoft Learn, “Microsoft 365 Copilot: data protection, architecture and auditing.” Purview Audit, eDiscovery, and Communication Compliance coverage.",
-        url: "https://learn.microsoft.com/en-us/microsoft-365/copilot/microsoft-365-copilot-architecture-data-protection-auditing",
       },
       {
         n: 10,
         text: "BetterCloud, “How to detect shadow AI in your organization.” Discovery signals: email metadata, browser history, OAuth grants, EDR telemetry.",
-        url: "https://www.bettercloud.com/how-to-detect-shadow-ai/",
       },
     ],
   },
