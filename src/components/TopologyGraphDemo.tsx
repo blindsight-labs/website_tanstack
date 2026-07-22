@@ -2045,7 +2045,7 @@ function IconUser({ size = 32 }: { size?: number }) {
   return <User width={size} height={size} strokeWidth={1.6} />;
 }
 function IconBrain({ size = 44 }: { size?: number }) {
-  return <Brain width={size} height={size} strokeWidth={1.5} />;
+  return <Brain width={size} height={size} strokeWidth={1.6} />;
 }
 function IconShield({ size = 32 }: { size?: number }) {
   return <Shield width={size} height={size} strokeWidth={1.6} />;

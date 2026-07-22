@@ -56,7 +56,7 @@ function AuthorPage() {
   return (
     <main className="legal-page">
       <div className="author-avatar" aria-hidden="true">
-        <UserRound strokeWidth={1.5} />
+        <UserRound strokeWidth={1.6} />
       </div>
       <span className="tag">{author.role ?? "Author at Blindsight"}</span>
       <h1>{author.name}</h1>
