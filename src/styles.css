@@ -152,13 +152,13 @@
   --shadow-sm: 0 1px 3px rgba(17, 17, 24, 0.06), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --shadow-md: 0 6px 20px rgba(17, 17, 24, 0.08), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --shadow-lg: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
-  --radius-pill: 999px;
   /* ═══ Design-system tokens: motion (duration / easing) ═══ */
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --duration-slow: 400ms;
   --easing-standard: ease;
   --easing-entrance: cubic-bezier(0.2, 0.75, 0.2, 1);
+  --easing-loop: cubic-bezier(0.4, 0.6, 0.2, 1);
   /* ═══ Design-system tokens: blur / opacity ═══ */
   /* Radius scale and elevation scale moved to the plain theme block */
   /* blur-subtle: spec range 3–4px (modal backdrop scrim); anchored at 4px. */
@@ -478,7 +478,7 @@ h4 {
   text-decoration: none;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 0.18s ease;
+  transition: all var(--duration-fast) ease;
 }
 /* Primary CTA — violet filled */
 .btn-primary {
@@ -515,8 +515,8 @@ h4 {
   backdrop-filter: blur(14px);
   border-bottom: 1px solid transparent;
   transition:
-    border-color 0.25s,
-    background 0.25s;
+    border-color var(--duration-normal),
+    background var(--duration-normal);
 }
 .nav.scrolled {
   border-bottom-color: var(--border);
@@ -544,7 +544,7 @@ h4 {
   color: var(--muted);
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.15s;
+  transition: color var(--duration-fast);
   line-height: 1;
 }
 .nav-links a:hover,
@@ -570,9 +570,9 @@ h4 {
   color: var(--muted);
   cursor: pointer;
   transition:
-    color 0.15s,
-    background 0.15s,
-    border-color 0.15s;
+    color var(--duration-fast),
+    background var(--duration-fast),
+    border-color var(--duration-fast);
 }
 .theme-toggle:hover {
   color: var(--text);
@@ -596,9 +596,9 @@ h4 {
   opacity: 0;
   pointer-events: none;
   transition:
-    max-width 0.45s ease,
-    margin-left 0.45s ease,
-    opacity 0.3s ease;
+    max-width var(--duration-slow) ease,
+    margin-left var(--duration-slow) ease,
+    opacity var(--duration-normal) ease;
 }
 .nav-cta.is-revealed {
   max-width: 260px;
@@ -664,8 +664,8 @@ h4 {
   transform: translateY(-6px);
   pointer-events: none;
   transition:
-    opacity 0.22s ease,
-    transform 0.22s ease;
+    opacity var(--duration-normal) ease,
+    transform var(--duration-normal) ease;
 }
 .nav-mobile-menu.open {
   opacity: 1;
@@ -689,9 +689,9 @@ h4 {
   opacity: 0;
   transform: translateY(-4px);
   transition:
-    opacity 0.18s ease,
-    transform 0.18s ease,
-    color 0.15s;
+    opacity var(--duration-fast) ease,
+    transform var(--duration-fast) ease,
+    color var(--duration-fast);
 }
 .nav-mobile-menu.open a,
 .nav-mobile-menu.open button {
@@ -928,7 +928,7 @@ h4 {
   transform: scale(1.02);
 }
 .emblem-img {
-  transition: transform 0.35s ease;
+  transition: transform var(--duration-slow) ease;
 }
 
 .emblem-labels {
@@ -951,8 +951,8 @@ h4 {
   opacity: 0;
   transform: translateY(6px);
   transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
+    opacity var(--duration-slow) ease,
+    transform var(--duration-slow) ease;
   box-shadow: var(--shadow-sm);
 }
 .emblem-shell.open .emblem-label {
@@ -1087,8 +1087,8 @@ h4 {
   border-radius: var(--radius-md);
   align-items: center;
   transition:
-    background 0.18s ease,
-    border-color 0.18s ease;
+    background var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
 }
 .threat-row:last-child {
   border-bottom: none;
@@ -1133,8 +1133,8 @@ h4 {
   border: 1px solid var(--border-mid);
   color: var(--muted);
   transition:
-    box-shadow 0.18s ease,
-    border-color 0.18s ease;
+    box-shadow var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
 }
 .threat-row.hidden-row .threat-num {
   background: var(--violet-deep);
@@ -1292,8 +1292,8 @@ h4 {
   cursor: pointer;
   z-index: 2;
   transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+    transform var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
 }
 .ib-marker.is-visible {
   background: rgba(255, 255, 255, 0.94);
@@ -1330,8 +1330,8 @@ h4 {
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 0.16s ease,
-    visibility 0.16s ease;
+    opacity var(--duration-fast) ease,
+    visibility var(--duration-fast) ease;
 }
 .ib-marker:hover .ib-tip,
 .ib-marker.active .ib-tip {
@@ -1493,7 +1493,7 @@ h4 {
     padding: 24px;
     background: rgba(17, 17, 24, 0.5);
     backdrop-filter: blur(3px);
-    animation: ib-modal-in 0.18s ease-out;
+    animation: ib-modal-in var(--duration-fast) ease-out;
   }
   .ib-modal-card {
     position: relative;
@@ -1504,7 +1504,7 @@ h4 {
     border-radius: var(--radius-xl);
     padding: 22px 22px 24px;
     box-shadow: var(--shadow-lg);
-    animation: ib-modal-card-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: ib-modal-card-in var(--duration-normal) var(--easing-entrance);
   }
   .ib-modal-card .ib-tip-name {
     font-size: 17px;
@@ -1569,8 +1569,8 @@ h4 {
   pointer-events: none;
   z-index: 20;
   transition:
-    opacity 0.16s ease,
-    visibility 0.16s ease;
+    opacity var(--duration-fast) ease,
+    visibility var(--duration-fast) ease;
 }
 .ipill:hover .ipill-tip,
 .ipill.active .ipill-tip {
@@ -1634,7 +1634,7 @@ h4 {
     padding: 24px;
     background: rgba(17, 17, 24, 0.5);
     backdrop-filter: blur(3px);
-    animation: ib-modal-in 0.18s ease-out;
+    animation: ib-modal-in var(--duration-fast) ease-out;
   }
   .ipill-modal-card {
     position: relative;
@@ -1645,7 +1645,7 @@ h4 {
     border-radius: var(--radius-xl);
     padding: 22px 22px 24px;
     box-shadow: var(--shadow-lg);
-    animation: ib-modal-card-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: ib-modal-card-in var(--duration-normal) var(--easing-entrance);
   }
   .ipill-modal-card .ipill-tip-name {
     font-size: 17px;
@@ -1731,8 +1731,8 @@ h4 {
   stroke: var(--border-mid);
   stroke-width: 1.25;
   transition:
-    stroke 0.2s,
-    filter 0.2s;
+    stroke var(--duration-normal),
+    filter var(--duration-normal);
 }
 .arch-box.violet rect {
   fill: var(--violet-soft);
@@ -1862,7 +1862,7 @@ h4 {
   align-items: flex-end;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--duration-normal) ease;
   margin-bottom: -14px;
 }
 .product-reveal.open {
@@ -2498,7 +2498,7 @@ footer {
   border: 1px solid var(--border-mid);
   text-decoration: none;
   color: var(--text);
-  transition: all 0.2s;
+  transition: all var(--duration-normal);
   cursor: pointer;
   margin-top: 24px;
   box-shadow: var(--shadow-sm);
@@ -2540,7 +2540,7 @@ footer {
   background: var(--violet);
   color: #fff;
   font-size: 16px;
-  transition: transform 0.2s;
+  transition: transform var(--duration-normal);
 }
 .headline-logo-trigger:hover .arrow {
   transform: translateX(4px);
@@ -2589,7 +2589,7 @@ footer {
   border-radius: var(--radius-lg);
   padding: 22px 22px 22px 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--duration-normal) ease;
   box-shadow: var(--shadow-sm);
   font-family: var(--font-sans);
 }
@@ -2639,8 +2639,8 @@ footer {
   justify-content: center;
   font-size: 15px;
   transition:
-    transform 0.2s,
-    background 0.2s;
+    transform var(--duration-normal),
+    background var(--duration-normal);
 }
 .threat-card:hover .threat-card-arrow {
   background: var(--violet);
@@ -2726,7 +2726,7 @@ footer {
   border-radius: var(--radius-lg);
   font-size: 12.5px;
   line-height: 1.5;
-  animation: chat-in 0.25s ease;
+  animation: chat-in var(--duration-normal) ease;
 }
 .chat-msg.user .chat-bubble {
   background: var(--text);
@@ -2927,7 +2927,7 @@ footer {
 .nav-dropdown-trigger .nav-caret {
   font-size: 10px;
   opacity: 0.7;
-  transition: transform 0.2s ease;
+  transition: transform var(--duration-normal) ease;
   display: inline-block;
 }
 .nav-dropdown[aria-expanded="true"] .nav-caret,
@@ -2948,9 +2948,9 @@ footer {
   visibility: hidden;
   transform: translateY(-4px);
   transition:
-    opacity 0.15s ease,
-    transform 0.15s ease,
-    visibility 0.15s;
+    opacity var(--duration-fast) ease,
+    transform var(--duration-fast) ease,
+    visibility var(--duration-fast);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -3021,8 +3021,8 @@ footer {
   text-decoration: none;
   color: inherit;
   transition:
-    background 0.15s ease,
-    padding 0.15s ease;
+    background var(--duration-fast) ease,
+    padding var(--duration-fast) ease;
 }
 .role-row:hover {
   background: var(--surface);
@@ -3105,9 +3105,9 @@ footer {
   text-decoration: none;
   color: inherit;
   transition:
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color var(--duration-normal) ease,
+    transform var(--duration-normal) ease,
+    box-shadow var(--duration-normal) ease;
 }
 .featured-card:hover {
   border-color: var(--border-mid);
@@ -3195,9 +3195,9 @@ footer {
   text-decoration: none;
   color: inherit;
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+    transform var(--duration-normal) ease,
+    box-shadow var(--duration-normal) ease,
+    border-color var(--duration-normal) ease;
 }
 .post-card:hover {
   transform: translateY(-2px);
@@ -3369,7 +3369,7 @@ footer {
   letter-spacing: 0.06em;
   padding: 4px 10px;
   border-radius: var(--radius-sm);
-  transition: 0.25s;
+  transition: var(--duration-normal);
 }
 .hpp.off .hpp-badge {
   background: var(--rd-s);
@@ -3400,7 +3400,7 @@ footer {
   border-radius: var(--radius-lg);
   background: var(--border-mid);
   position: relative;
-  transition: background 0.25s;
+  transition: background var(--duration-normal);
 }
 .hpp.on .hpp-sw-track {
   background: var(--violet);
@@ -3413,7 +3413,7 @@ footer {
   height: 20px;
   border-radius: var(--radius-circle);
   background: #fff;
-  transition: left 0.25s;
+  transition: left var(--duration-normal);
 }
 .hpp.on .hpp-sw-knob {
   left: 23px;
@@ -3444,7 +3444,7 @@ footer {
   background: var(--violet);
   border-radius: var(--radius-xs);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity var(--duration-slow) ease;
   z-index: 1;
 }
 .hpp-seg.lit {
@@ -3460,8 +3460,8 @@ footer {
   transform: translate(-50%, -50%);
   box-shadow: 0 0 0 5px var(--violet-mid);
   transition:
-    left 0.6s cubic-bezier(0.4, 0.6, 0.2, 1),
-    opacity 0.3s ease;
+    left var(--duration-slow) var(--easing-loop),
+    opacity var(--duration-normal) ease;
   z-index: 2;
 }
 .hpp-node {
@@ -3474,7 +3474,7 @@ footer {
   padding: 0;
   font: inherit;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--duration-normal) ease;
 }
 .hpp-node.dim {
   opacity: 0.42;
@@ -3491,9 +3491,9 @@ footer {
   justify-content: center;
   color: var(--muted);
   transition:
-    border-color 0.35s ease,
-    color 0.35s ease,
-    box-shadow 0.35s ease;
+    border-color var(--duration-slow) ease,
+    color var(--duration-slow) ease,
+    box-shadow var(--duration-slow) ease;
 }
 .hpp-chip svg {
   width: 20px;
@@ -3560,8 +3560,8 @@ footer {
   opacity: 0;
   transform: scale(0.4);
   transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    opacity var(--duration-normal) ease,
+    transform var(--duration-normal) ease;
 }
 .hpp-node.lit .hpp-check {
   opacity: 1;
@@ -3580,7 +3580,7 @@ footer {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
-  transition: color 0.35s ease;
+  transition: color var(--duration-slow) ease;
 }
 .hpp-node.lit .hpp-nm,
 .hpp-node.hot .hpp-nm {
@@ -3665,8 +3665,8 @@ footer {
   padding: 8px 10px;
   background: var(--surface);
   transition:
-    border-color 0.25s,
-    background 0.25s;
+    border-color var(--duration-normal),
+    background var(--duration-normal);
 }
 .hpp-metric-l {
   display: block;
@@ -3682,7 +3682,7 @@ footer {
   font-weight: 700;
   font-size: 17px;
   letter-spacing: -0.01em;
-  transition: color 0.25s;
+  transition: color var(--duration-normal);
 }
 .hpp-metric.bad .hpp-metric-v {
   color: var(--rd-d);
@@ -3703,7 +3703,7 @@ footer {
   font-size: 11px;
   letter-spacing: 0.04em;
   color: var(--dim);
-  transition: color 0.3s ease;
+  transition: color var(--duration-normal) ease;
 }
 .hpp.on .hpp-stage {
   color: var(--violet);
@@ -3724,7 +3724,7 @@ footer {
 .hpp-learn svg {
   width: 13px;
   height: 13px;
-  transition: transform 0.18s ease;
+  transition: transform var(--duration-fast) ease;
 }
 .hpp-learn:hover svg {
   transform: translateY(3px);
@@ -3749,7 +3749,7 @@ footer {
   padding: 0;
   cursor: pointer;
   color: var(--muted);
-  transition: color 0.2s;
+  transition: color var(--duration-normal);
 }
 .hero-scroll-cue:hover {
   color: var(--violet);
@@ -3918,7 +3918,7 @@ footer {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, var(--violet-soft) 0%, var(--surface) 100%);
-  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: transform var(--duration-slow) var(--easing-entrance);
 }
 .founder-photo-img {
   width: 100%;
@@ -3927,7 +3927,7 @@ footer {
   object-position: top center;
   /* B&W treatment applied as a filter so source photos stay untouched originals. */
   filter: grayscale(1);
-  transition: filter 0.4s ease;
+  transition: filter var(--duration-slow) ease;
 }
 .founder-card:hover .founder-photo {
   transform: scale(1.05);
@@ -3964,8 +3964,8 @@ footer {
     rgba(8, 6, 16, 0) 100%
   );
   transition:
-    height 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
-    background 0.4s ease;
+    height var(--duration-slow) var(--easing-entrance),
+    background var(--duration-slow) ease;
 }
 .founder-card:hover::after,
 .founder-card:focus-within::after {
@@ -3996,7 +3996,7 @@ footer {
   padding: 16px 20px;
   text-align: left;
   overflow: hidden;
-  transition: height 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition: height var(--duration-slow) var(--easing-entrance);
 }
 .founder-card:hover .founder-info,
 .founder-card:focus-within .founder-info {
@@ -4016,9 +4016,9 @@ footer {
   opacity: 0;
   transform: translateY(6px);
   transition:
-    max-height 0.4s ease,
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    max-height var(--duration-slow) ease,
+    opacity var(--duration-normal) ease,
+    transform var(--duration-normal) ease;
 }
 .founder-card:hover .founder-highlights,
 .founder-card:focus-within .founder-highlights {
@@ -4126,9 +4126,9 @@ footer {
   opacity: 0;
   transform: translateY(6px);
   transition:
-    max-height 0.35s ease,
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    max-height var(--duration-slow) ease,
+    opacity var(--duration-normal) ease,
+    transform var(--duration-normal) ease;
 }
 .founder-card:hover .founder-bio,
 .founder-card:focus-within .founder-bio {
@@ -4272,9 +4272,9 @@ footer {
   visibility: hidden;
   transform: translateY(-6px);
   transition:
-    opacity 0.18s ease,
-    transform 0.18s ease,
-    visibility 0.18s;
+    opacity var(--duration-fast) ease,
+    transform var(--duration-fast) ease,
+    visibility var(--duration-fast);
   z-index: 60;
 }
 .nav-mega.open {
@@ -4311,7 +4311,7 @@ footer {
   font-size: 14px;
   color: var(--text);
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition: background var(--duration-fast) ease;
 }
 .nav-mega-item:hover {
   background: var(--surface-2);
@@ -4331,8 +4331,8 @@ footer {
   border-radius: var(--radius-md);
   background: var(--bg);
   transition:
-    border-color 0.15s ease,
-    transform 0.15s ease;
+    border-color var(--duration-fast) ease,
+    transform var(--duration-fast) ease;
 }
 .nav-mega-card:hover {
   border-color: var(--violet);
@@ -4447,8 +4447,8 @@ footer {
   font-size: 14.5px;
   color: var(--text);
   transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+    border-color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease;
 }
 .demo-field textarea {
   resize: vertical;
@@ -4504,17 +4504,17 @@ footer {
   gap: 2px;
   background: var(--bg);
   border: 1px solid var(--border-mid);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   padding: 8px 16px;
   font: inherit;
   color: var(--text);
   text-align: center;
   cursor: pointer;
   transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease,
-    box-shadow 0.15s ease,
-    color 0.15s ease;
+    border-color var(--duration-fast) ease,
+    background-color var(--duration-fast) ease,
+    box-shadow var(--duration-fast) ease,
+    color var(--duration-fast) ease;
 }
 .demo-path-pill-primary {
   min-height: 64px;
@@ -4542,7 +4542,7 @@ footer {
 .demo-path-pill-row svg {
   color: var(--violet);
   flex-shrink: 0;
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 .demo-path-pill-title {
   font-weight: 600;
@@ -4551,7 +4551,7 @@ footer {
 .demo-path-pill-meta {
   font-size: 12px;
   color: var(--muted);
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 .demo-path-pill:hover,
 .demo-path-pill:focus-visible {
@@ -4704,11 +4704,11 @@ footer {
   border-radius: var(--radius-lg);
   box-shadow: 0 16px 38px -12px rgba(17, 17, 24, 0.32);
   transition:
-    gap 0.2s ease,
-    padding 0.2s ease,
-    background 0.2s ease,
-    border-radius 0.2s ease,
-    box-shadow 0.2s ease;
+    gap var(--duration-normal) ease,
+    padding var(--duration-normal) ease,
+    background var(--duration-normal) ease,
+    border-radius var(--duration-normal) ease,
+    box-shadow var(--duration-normal) ease;
 }
 .section-rail-item {
   position: relative;
@@ -4721,8 +4721,8 @@ footer {
   cursor: pointer;
   padding: 3px 0;
   transition:
-    gap 0.2s ease,
-    padding 0.2s ease;
+    gap var(--duration-normal) ease,
+    padding var(--duration-normal) ease;
 }
 /* NOTE: the label TEXT is not set here. SectionRail (src/routes/index.tsx) reads
    it live from each section's eyebrow (".s-head .tag"), so to rename a rail label
@@ -4745,12 +4745,12 @@ footer {
   opacity: 1;
   pointer-events: auto;
   transition:
-    opacity 0.2s ease,
-    max-width 0.2s ease,
-    padding 0.2s ease,
-    color 0.2s ease,
-    font-size 0.2s ease,
-    border-color 0.2s ease;
+    opacity var(--duration-normal) ease,
+    max-width var(--duration-normal) ease,
+    padding var(--duration-normal) ease,
+    color var(--duration-normal) ease,
+    font-size var(--duration-normal) ease,
+    border-color var(--duration-normal) ease;
 }
 .section-rail-dot {
   width: 9px;
@@ -4760,9 +4760,9 @@ footer {
   border: 1.5px solid var(--dim);
   background: transparent;
   transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    background var(--duration-normal) ease,
+    border-color var(--duration-normal) ease,
+    box-shadow var(--duration-normal) ease;
 }
 .section-rail-item:hover .section-rail-dot {
   border-color: var(--violet);
@@ -4869,7 +4869,7 @@ footer {
   object-fit: contain;
   opacity: 0.6;
   filter: brightness(0);
-  transition: opacity 0.2s ease;
+  transition: opacity var(--duration-normal) ease;
 }
 .logostrip-item:hover .logostrip-logo {
   opacity: 1;
@@ -4927,9 +4927,9 @@ footer {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease;
+    transform var(--duration-normal) ease,
+    box-shadow var(--duration-normal) ease,
+    border-color var(--duration-normal) ease;
 }
 .case-card:hover {
   transform: translateY(-2px);
@@ -4997,7 +4997,7 @@ footer {
   font-size: 17px;
   font-weight: 500;
   color: var(--text);
-  transition: color 0.15s ease;
+  transition: color var(--duration-fast) ease;
 }
 .faq-q:hover {
   color: var(--violet);
@@ -5006,8 +5006,8 @@ footer {
   flex-shrink: 0;
   color: var(--muted);
   transition:
-    transform 0.25s ease,
-    color 0.15s ease;
+    transform var(--duration-normal) ease,
+    color var(--duration-fast) ease;
 }
 .faq-item.open .faq-chevron {
   transform: rotate(180deg);
@@ -5016,7 +5016,7 @@ footer {
 .faq-a {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.28s ease;
+  transition: grid-template-rows var(--duration-normal) ease;
 }
 .faq-item.open .faq-a {
   grid-template-rows: 1fr;
@@ -5046,16 +5046,16 @@ footer {
   font-weight: 500;
   line-height: 1;
   padding: 10px 18px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   cursor: pointer;
   white-space: nowrap;
   background: transparent;
   color: var(--muted);
   border: 1px solid var(--border-mid);
   transition:
-    color 0.18s ease,
-    border-color 0.18s ease,
-    background 0.18s ease;
+    color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    background var(--duration-fast) ease;
 }
 .faq-tab:hover {
   color: var(--text);
@@ -5261,7 +5261,7 @@ footer {
   background: color-mix(in oklab, var(--dark) 55%, transparent);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
-  animation: modal-fade 0.2s ease;
+  animation: modal-fade var(--duration-normal) ease;
 }
 @keyframes modal-fade {
   from {
@@ -5282,7 +5282,7 @@ footer {
   border-radius: var(--radius-xl);
   padding: 36px;
   box-shadow: var(--shadow-lg);
-  animation: modal-pop 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: modal-pop var(--duration-normal) var(--easing-entrance);
 }
 @keyframes modal-pop {
   from {
@@ -5312,8 +5312,8 @@ footer {
   cursor: pointer;
   color: var(--muted);
   transition:
-    background 0.15s ease,
-    color 0.15s ease;
+    background var(--duration-fast) ease,
+    color var(--duration-fast) ease;
 }
 .modal-close:hover {
   background: var(--surface-2);
