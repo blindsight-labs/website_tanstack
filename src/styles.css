@@ -152,7 +152,6 @@
   --shadow-sm: 0 1px 3px rgba(17, 17, 24, 0.06), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --shadow-md: 0 6px 20px rgba(17, 17, 24, 0.08), 0 0 0 1px rgba(17, 17, 24, 0.04);
   --shadow-lg: 0 18px 50px rgba(17, 17, 24, 0.1), 0 0 0 1px rgba(17, 17, 24, 0.05);
-  --radius-pill: 999px;
   /* ═══ Design-system tokens: motion (duration / easing) ═══ */
   --duration-fast: 150ms;
   --duration-normal: 250ms;
@@ -4504,7 +4503,7 @@ footer {
   gap: 2px;
   background: var(--bg);
   border: 1px solid var(--border-mid);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   padding: 8px 16px;
   font: inherit;
   color: var(--text);
@@ -5046,7 +5045,7 @@ footer {
   font-weight: 500;
   line-height: 1;
   padding: 10px 18px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
   cursor: pointer;
   white-space: nowrap;
   background: transparent;
