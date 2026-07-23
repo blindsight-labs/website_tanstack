@@ -1444,15 +1444,26 @@ h4 {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    /* Hug the text: size to content, but wrap (and break long words) before it
-       can bleed past the pill / off the artwork. */
+    /* Sizing determined here (which words land on which line), but the box is
+       shrunk to the actual widest rendered line by JS after layout — see the
+       measurement effect in Iceberg.tsx. No native CSS width keyword re-shrinks
+       an absolutely positioned box to its post-wrap content once max-width has
+       forced it to wrap (verified empirically: max-content, fit-content, and
+       plain auto on an inline-block all pin to max-width identically once
+       wrapping is triggered — this isn't specific to abspos or a tiny
+       containing block, checked both). */
     width: max-content;
-    /* 38vw keeps interior pills tidy; --ib-label-max (set per-marker in JS) is the
-       hard cap so edge pills like #4 can't bleed off the stage. */
-    max-width: min(38vw, var(--ib-label-max, 38vw));
-    padding: 3px 7px;
+    /* 44vw keeps interior pills tidy without forcing 3-line wraps as often (was
+       38vw); --ib-label-max (set per-marker in JS) is the hard cap so edge pills
+       like #4 can't bleed off the stage. */
+    max-width: min(44vw, var(--ib-label-max, 44vw));
+    padding: 3px 5px;
     font-family: var(--font-sans);
-    font-size: 10px;
+    /* 9.5px (was 10px): the narrowest edge-constrained pills (#2, #5, #6 at
+       375px width) need a bit less per-line width than 10px leaves them, and
+       --ib-label-max's edge-safety margin isn't the right place to spend on
+       this — it's protecting against off-stage bleed, not text width. */
+    font-size: 9.5px;
     line-height: 1.18;
     font-weight: 600;
     color: var(--text);
