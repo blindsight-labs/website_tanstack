@@ -2358,9 +2358,17 @@ const TG_CSS = `
 .tg-rr-3 { width: 78.125%; border-color: rgba(124,110,245,0.14); animation: tgSpin 60s linear infinite; }
 @keyframes tgSpin { to { transform: translate(-50%,-50%) rotate(360deg); } }
 
-.tg-reactor-core { position: relative; width: clamp(118px, 25vw, 160px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #ffffff, #f4f0ff 60%, #ede5ff 100%); border: 1px solid var(--violet); box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; animation: tgCorePulse 3s ease-in-out infinite; }
+.tg-reactor-core { position: relative; width: clamp(118px, 25vw, 160px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #ffffff, #f4f0ff 60%, #ede5ff 100%); border: 1px solid var(--violet); box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
 [data-theme="dark"] .tg-reactor-core { background: radial-gradient(circle at 50% 35%, #2a2440, #1e1933 60%, #181426 100%); }
-@keyframes tgCorePulse { 0%, 100% { box-shadow: 0 0 0 6px rgba(85,70,224,0.06), 0 10px 40px -10px rgba(85,70,224,0.4); } 50% { box-shadow: 0 0 0 14px rgba(85,70,224,0.04), 0 10px 50px -8px rgba(85,70,224,0.55); } }
+/* Pulse via opacity on a static-shadow pseudo-layer, not by animating box-shadow itself —
+   animating box-shadow repaints every frame; every other glow in this file (tg-threat-glow,
+   tg-scenario-orb-glow) already does this the cheap way. */
+.tg-reactor-core::after {
+  content: ""; position: absolute; inset: -8px; border-radius: 50%; pointer-events: none;
+  box-shadow: 0 0 0 14px rgba(85,70,224,0.04), 0 10px 50px -8px rgba(85,70,224,0.55);
+  opacity: 0; animation: tgCorePulse 3s ease-in-out infinite;
+}
+@keyframes tgCorePulse { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 .tg-reactor-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--violet); }
 .tg-reactor-title { font-family: var(--font-display); font-size: 20px; font-weight: 500; text-align: center; line-height: 1.1; color: var(--text); }
 

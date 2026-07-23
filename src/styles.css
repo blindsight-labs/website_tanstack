@@ -2740,7 +2740,7 @@ footer {
   border-bottom-left-radius: 4px;
 }
 .chat-bubble.blocked {
-  background: #fff5f5;
+  background: var(--red-mid);
   border: 1px solid var(--red);
   color: var(--red);
 }
@@ -2943,7 +2943,7 @@ footer {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 6px;
-  box-shadow: 0 16px 40px -16px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 16px 40px -16px rgba(17, 17, 24, 0.18);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);
@@ -4267,7 +4267,7 @@ footer {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 22px 24px;
-  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 24px 60px -20px rgba(17, 17, 24, 0.22);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-6px);
@@ -4600,7 +4600,7 @@ footer {
   padding: 10px 12px;
   border-radius: var(--radius-md);
   background: color-mix(in oklab, #dc2626 12%, transparent);
-  color: #b91c1c;
+  color: #880000;
   font-size: 13px;
 }
 .demo-form .btn {
@@ -5258,7 +5258,7 @@ footer {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: color-mix(in oklab, var(--dark) 55%, transparent);
+  background: rgba(17, 17, 24, 0.5);
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
   animation: modal-fade var(--duration-normal) ease;
