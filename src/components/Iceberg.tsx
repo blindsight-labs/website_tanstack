@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 import icebergImg from "@/assets/iceberg.webp";
@@ -143,6 +143,37 @@ export function Iceberg({
     return () => ro.disconnect();
   }, []);
 
+  // Mobile name pills hug their text, but no native CSS width keyword re-shrinks
+  // an absolutely positioned box to its post-wrap content once `max-width` has
+  // forced it to wrap (`max-content`, `fit-content`, and plain `auto` all pin to
+  // `max-width` identically the instant wrapping triggers — verified directly,
+  // not specific to abspos or the small marker as containing block). `max-width`
+  // still correctly decides *where* lines break; this only shrinks the box
+  // afterward to the widest line that was actually rendered.
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const labels = stage.querySelectorAll<HTMLElement>(".ib-marker-label");
+    labels.forEach((label) => {
+      label.style.width = "";
+      const range = document.createRange();
+      range.selectNodeContents(label);
+      let widest = 0;
+      for (const rect of Array.from(range.getClientRects())) {
+        widest = Math.max(widest, rect.width);
+      }
+      if (widest > 0) {
+        const cs = getComputedStyle(label);
+        // box-sizing: border-box, so the width we set must cover padding AND
+        // border too, or shrinking to it can force the widest line to re-wrap
+        // a second time. +1px covers sub-pixel glyph-advance rounding.
+        const paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+        const borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+        label.style.width = `${Math.ceil(widest + paddingX + borderX) + 1}px`;
+      }
+    });
+  }, [geom]);
+
   // Persistent popup closes on Escape.
   useEffect(() => {
     if (!pinned) return;
@@ -163,8 +194,10 @@ export function Iceberg({
     // Cap the mobile name pill so it can't run past the stage edge: the label sits
     // ~19px off the marker centre (half a 26px marker + 6px gap) and label-left vs
     // -right is chosen by `fx < 0.5`, so the room available is whatever's left to
-    // that edge (less an 8px breathing buffer).
-    const toEdge = (t.fx < 0.5 ? cx : w - cx) - 19 - 8;
+    // that edge (less a 1px breathing buffer — was 8px, tightened because the
+    // longest labels at the narrowest supported width needed the room to stay
+    // within 2 lines; still enough to keep the pill off the artwork's edge).
+    const toEdge = (t.fx < 0.5 ? cx : w - cx) - 19 - 1;
     return {
       left: `${cx}px`,
       top: `${offY + t.fy * bh}px`,
