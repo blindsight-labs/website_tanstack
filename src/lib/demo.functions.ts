@@ -9,6 +9,8 @@ const DemoRequestSchema = z.object({
   role: z.string().trim().max(120).optional().or(z.literal("")),
   companySize: z.string().trim().max(50).optional().or(z.literal("")),
   useCase: z.string().trim().max(80).optional().or(z.literal("")),
+  engine: z.string().trim().max(50).optional().or(z.literal("")),
+  deployment: z.string().trim().max(50).optional().or(z.literal("")),
   message: z.string().trim().max(2000).optional().or(z.literal("")),
   consent: z.boolean(),
   source: z.string().trim().max(120).optional().or(z.literal("")),
@@ -33,6 +35,8 @@ export const submitDemoRequest = createServerFn({ method: "POST" })
         ["Role", data.role || null],
         ["Company size", data.companySize || null],
         ["Use case", data.useCase || null],
+        ["Engine preference", data.engine || null],
+        ["Deployment preference", data.deployment || null],
         ["Source", data.source || "website"],
       ])}
       ${data.message ? `<p style="font-family:system-ui,sans-serif;font-size:14px;margin-top:16px;"><strong>Message:</strong><br>${escapeHtml(data.message).replace(/\n/g, "<br>")}</p>` : ""}

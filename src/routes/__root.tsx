@@ -12,13 +12,16 @@ import { useEffect, useState } from "react";
 
 import { ArrowRight, BookOpen, ChevronDown, Code, Menu, Moon, Sun, X } from "lucide-react";
 
-/* Nav/footer link targeting an on-page section of /shadow. Scrolls in-page
-   when already on /shadow; navigates there with a hash from any other route. */
-function ShadowSectionNavLink({
+/* Nav/footer link targeting an on-page section of a bespoke landing page
+   (/shadow, /demo). Scrolls in-page when already on that route; navigates
+   there with a hash from any other route. */
+function LandingSectionNavLink({
+  to,
   id,
   children,
   onClick,
 }: {
+  to: "/shadow" | "/demo";
   id: string;
   children: React.ReactNode;
   onClick?: () => void;
@@ -26,10 +29,10 @@ function ShadowSectionNavLink({
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
     <Link
-      to="/shadow"
+      to={to}
       hash={id}
       onClick={(e) => {
-        if (pathname === "/shadow") {
+        if (pathname === to) {
           e.preventDefault();
           document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
         }
@@ -478,15 +481,15 @@ function ShadowNav() {
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
       <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        <ShadowSectionNavLink id="hero" onClick={closeMenu}>
+        <LandingSectionNavLink to="/shadow" id="hero" onClick={closeMenu}>
           Top
-        </ShadowSectionNavLink>
-        <ShadowSectionNavLink id="stack" onClick={closeMenu}>
+        </LandingSectionNavLink>
+        <LandingSectionNavLink to="/shadow" id="stack" onClick={closeMenu}>
           How it works
-        </ShadowSectionNavLink>
-        <ShadowSectionNavLink id="faq" onClick={closeMenu}>
+        </LandingSectionNavLink>
+        <LandingSectionNavLink to="/shadow" id="faq" onClick={closeMenu}>
           FAQ
-        </ShadowSectionNavLink>
+        </LandingSectionNavLink>
         <button
           type="button"
           onClick={() => {
@@ -508,13 +511,19 @@ function ShadowNav() {
         </button>
         <ul className="nav-links">
           <li>
-            <ShadowSectionNavLink id="hero">Top</ShadowSectionNavLink>
+            <LandingSectionNavLink to="/shadow" id="hero">
+              Top
+            </LandingSectionNavLink>
           </li>
           <li>
-            <ShadowSectionNavLink id="stack">How it works</ShadowSectionNavLink>
+            <LandingSectionNavLink to="/shadow" id="stack">
+              How it works
+            </LandingSectionNavLink>
           </li>
           <li>
-            <ShadowSectionNavLink id="faq">FAQ</ShadowSectionNavLink>
+            <LandingSectionNavLink to="/shadow" id="faq">
+              FAQ
+            </LandingSectionNavLink>
           </li>
         </ul>
         <button
@@ -538,9 +547,101 @@ function ShadowNav() {
   );
 }
 
+function DemoNav() {
+  const { open: openDemo } = useDemoModal();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { scrolled, menuOpen, setMenuOpen, closeMenu, theme, toggleTheme } = useNavChrome();
+  const [ctaShown, setCtaShown] = useState(false);
+  useEffect(() => {
+    const update = () => {
+      const hero = document.getElementById("hero");
+      setCtaShown(!!hero && hero.getBoundingClientRect().top < -window.innerHeight * 0.55);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [pathname]);
+  return (
+    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
+      <Link to="/" aria-label="Blindsight home" onClick={closeMenu}>
+        <img src={logo} alt="Blindsight" className="nav-logo" />
+      </Link>
+      <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
+        <LandingSectionNavLink to="/demo" id="hero" onClick={closeMenu}>
+          Free trial
+        </LandingSectionNavLink>
+        <LandingSectionNavLink to="/demo" id="how" onClick={closeMenu}>
+          How it works
+        </LandingSectionNavLink>
+        <LandingSectionNavLink to="/demo" id="faq" onClick={closeMenu}>
+          FAQ
+        </LandingSectionNavLink>
+        <button
+          type="button"
+          onClick={() => {
+            closeMenu();
+            openDemo("trial");
+          }}
+        >
+          Start your free trial
+        </button>
+      </div>
+      <div className="nav-right">
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+        </button>
+        <ul className="nav-links">
+          <li>
+            <LandingSectionNavLink to="/demo" id="hero">
+              Free trial
+            </LandingSectionNavLink>
+          </li>
+          <li>
+            <LandingSectionNavLink to="/demo" id="how">
+              How it works
+            </LandingSectionNavLink>
+          </li>
+          <li>
+            <LandingSectionNavLink to="/demo" id="faq">
+              FAQ
+            </LandingSectionNavLink>
+          </li>
+        </ul>
+        <button
+          type="button"
+          className={`btn btn-primary nav-cta ${ctaShown ? "is-revealed" : ""}`}
+          aria-hidden={!ctaShown}
+          tabIndex={ctaShown ? undefined : -1}
+          onClick={() => openDemo("trial")}
+        >
+          Start your free trial
+        </button>
+        <button
+          className={`nav-hamburger ${menuOpen ? "open" : ""}`}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        </button>
+      </div>
+    </nav>
+  );
+}
+
 function NavSwitch() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  return pathname === "/shadow" ? <ShadowNav /> : <Nav />;
+  if (pathname === "/shadow") return <ShadowNav />;
+  if (pathname === "/demo") return <DemoNav />;
+  return <Nav />;
 }
 
 function Footer() {

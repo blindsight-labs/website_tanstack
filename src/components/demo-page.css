@@ -1,0 +1,283 @@
+/* Used exclusively by the /demo route (src/routes/demo.tsx). */
+
+/* ── Hero benchmark proof strip ── */
+.proof-strip {
+  width: 100%;
+  max-width: 900px;
+  margin: 10px auto 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.proof-strip-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+}
+.proof-strip-head svg {
+  width: 14px;
+  height: 14px;
+  color: var(--violet);
+}
+.proof-strip-head span {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--violet-deep);
+}
+.proof-strip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+}
+.proof-stat {
+  padding: 14px 18px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+.proof-stat:last-child {
+  border-right: none;
+}
+.proof-stat-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--violet);
+}
+.proof-stat-unit {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--violet-deep);
+}
+.proof-stat-label {
+  margin-top: 11px;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+.proof-stat-method {
+  margin-top: 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+@media (max-width: 640px) {
+  .proof-strip-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .proof-stat:nth-child(2n) {
+    border-right: none;
+  }
+}
+
+/* ── Walkthrough — video stage placeholder ── */
+.demo-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.demo-stage-body {
+  text-align: center;
+  padding: 32px;
+  max-width: 440px;
+}
+.demo-stage-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-circle);
+  background: var(--violet-mid);
+  border: 1px solid var(--violet-border);
+  color: var(--violet);
+}
+.demo-stage-title {
+  margin-top: 18px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.demo-stage-desc {
+  margin: 8px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.demo-stage-meta {
+  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 13px;
+  border: 1px dashed var(--border-mid);
+  border-radius: var(--radius-full);
+}
+.demo-stage-meta svg {
+  width: 13px;
+  height: 13px;
+  color: var(--dim);
+}
+.demo-stage-meta span {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.walkthrough-foot {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.walkthrough-foot-caption {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.walkthrough-foot-counter {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── What's included — engine cards ── */
+.included-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+.engine-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 28px;
+}
+.engine-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.engine-icon {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius-md);
+  background: var(--violet-mid);
+  border: 1px solid var(--violet-border);
+  color: var(--violet);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.engine-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.engine-kicker {
+  display: block;
+  margin-top: 4px;
+  color: var(--violet-deep);
+}
+.engine-body {
+  margin: 18px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.engine-points {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.engine-point {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.engine-point svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--violet);
+  margin-top: 2px;
+}
+.included-banner {
+  margin-top: 20px;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--violet-deep) 100%);
+  border-radius: var(--radius-lg);
+  padding: 22px 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 6px 18px rgba(85, 70, 224, 0.28);
+}
+.included-banner-copy {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #fff;
+}
+.included-banner-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+/* ── Closing CTA wordmark — see shadow-page.css for the same rule ── */
+.final-cta-logo {
+  display: block;
+  width: 50%;
+  max-width: 300px;
+  margin: 36px auto 0;
+  opacity: 0.55;
+}
+[data-theme="dark"] .final-cta-logo {
+  filter: brightness(0) invert(1);
+}
