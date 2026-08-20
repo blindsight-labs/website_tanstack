@@ -19,6 +19,7 @@ This will give you access to all brand guidelines, design tokens, component spec
 ## Why This Folder Only Contains This README
 
 This folder is intentionally left with only this pointer README to:
+
 - Prevent accidental recreation of brand content in the public repository
 - Keep the repository structure clear (a reader expects `docs/brand/` to exist)
 - Direct all internal contributors to the single source of truth

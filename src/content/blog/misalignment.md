@@ -39,8 +39,6 @@ An AI was trained to play Coast Runners, which is a boat racing game where playe
 
 This type of behavior occurs due to the fact that optimization is blind and purely logical, which means it can exploit loopholes in the reward system, is what we call Reward Hacking.
 
-
-
 ## But why would an AI turn on us?
 
 In Reinforcement Learning (RL), an agent learns to make decisions by interacting with the environment and receiving rewards (or penalties). The objective is to learn the optimal decisions that maximize the cumulative reward. But the optimal decision might not be what we expect:
@@ -70,8 +68,6 @@ Each of the following techniques offers a different approach to interpreting mod
 **Accumulated Local Effects (ALE):** ALE calculates the effect of a feature within small ranges, instead of globally like PDP. For each range, it measures how much the model's prediction changes as the feature value moves within that range, keeping the other features constant.
 
 **Local Surrogated (LIME):** LIME was designed to explain individual predictions of any machine learning model by approximating it locally with an interpretable model. This local model works as an approximation of the complex model around the specific feature.
-
-
 
 Consider a model that predicts house prices based on multiple features like square meters, number of bedrooms, number of bathrooms and number of doors. This not only allows you to detect possible ridiculous behaviors from the model, like the more doors the higher price even with the same square footage, but can also help detect more subtle behaviors. PDP revealed if the house prices increase with square footage, which aligns with our expectations. ALE provided a more nuanced and real view, showing that after a size, the tendency of increasing would diminish. LIME provided a detailed explanation for a specific prediction, showing that a particular house had their price more related to the number of doors than the square footage.
 

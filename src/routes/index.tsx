@@ -13,7 +13,7 @@ import {
 
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
-import { HeroPipelineDemo } from "@/components/HeroPipelineDemo";
+import { HeroRail } from "@/components/HeroRail";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill } from "@/components/InfoPill";
 import { LogoStrip } from "@/components/LogoStrip";
@@ -69,11 +69,11 @@ const SECTIONS: { id: string; label: string }[] = [
 
 function SectionRail({ sections }: { sections: { id: string; label: string }[] }) {
   const [active, setActive] = useState<string>(sections[0]?.id ?? "");
-  // Show the rail fully (labels visible) on load, then collapse to bare dots after
-  // a few seconds. Hovering the rail re-expands it (pure CSS, see .section-rail).
+  // Show the rail fully (labels visible) on load, then collapse to bare dots.
+  // Hovering the rail re-expands it (pure CSS, see .section-rail).
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setCollapsed(true), 3200);
+    const t = setTimeout(() => setCollapsed(true), 800);
     return () => clearTimeout(t);
   }, []);
   // Labels stay in sync with the section titles automatically: we pull each
@@ -162,7 +162,7 @@ function Hero() {
         </div>
 
         <div className="va-hero-demo reveal">
-          <HeroPipelineDemo />
+          <HeroRail />
         </div>
       </div>
 
