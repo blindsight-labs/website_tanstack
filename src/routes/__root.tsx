@@ -323,7 +323,7 @@ function Nav() {
             openDemo("demo");
           }}
         >
-          Secure your AI
+          Book a demo
         </button>
       </div>
       <div className="nav-right">
@@ -443,7 +443,7 @@ function Nav() {
           tabIndex={ctaShown ? undefined : -1}
           onClick={() => openDemo("demo")}
         >
-          Secure your AI
+          Book a demo
         </button>
         <button
           className={`nav-hamburger ${menuOpen ? "open" : ""}`}

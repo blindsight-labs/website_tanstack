@@ -156,7 +156,7 @@ function Hero() {
               className="btn btn-primary"
               onClick={() => open("demo")}
             >
-              Reveal your blind spots
+              Book a demo
             </button>
           </div>
         </div>
