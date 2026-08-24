@@ -37,7 +37,7 @@ export function HeroRail() {
     <div
       className="hero-rail"
       role="img"
-      aria-label="Animated diagram of an AI runtime: traffic flows along a rail through gateway, model and egress nodes while two scans surface and then isolate shadow AI, prompt injection, RAG poisoning and data-leak risks."
+      aria-label="Animated diagram of an AI runtime: traffic flows along a rail through gateway, model, tools and RAG index nodes while two scans surface and then isolate shadow AI, prompt injection and RAG poisoning risks."
     >
       <Rail loop="20" />
     </div>

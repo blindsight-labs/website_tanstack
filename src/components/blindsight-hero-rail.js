@@ -57,10 +57,9 @@
 
   const NODES = [
     { x: 0.13, label: "GATEWAY" },
-    { x: 0.33, label: "MODEL · CLAUDE" },
-    { x: 0.53, label: "TOOLS" },
-    { x: 0.7, label: "RAG INDEX" },
-    { x: 0.87, label: "EGRESS" },
+    { x: 0.38, label: "MODEL · CLAUDE" },
+    { x: 0.62, label: "TOOLS" },
+    { x: 0.87, label: "RAG INDEX" },
   ];
 
   /* Each risk names the pipeline stage it belongs to by NODE INDEX rather than a
@@ -71,7 +70,7 @@
 
      `sub` is the detail shown while the risk is exposed; `verb` replaces it once
      the containment sweep holds the risk. The verb is per-risk on purpose — a
-     single shared word made all four annotations read identically. */
+     single shared word made all annotations read identically. */
   const RISKS = [
     {
       node: 0,
@@ -84,7 +83,7 @@
     },
     {
       node: 2,
-      dx: 0.53,
+      dx: 0.62,
       dy: 58,
       side: "below",
       name: "PROMPT INJECTION",
@@ -93,33 +92,20 @@
     },
     {
       node: 3,
-      dx: 0.755,
+      dx: 0.84,
       dy: -120,
-      side: "right",
+      side: "left",
       name: "RAG POISONING",
       sub: "3 POISONED DOCUMENTS",
       verb: "QUARANTINED",
     },
-    {
-      node: 4,
-      dx: 0.9,
-      dy: 112,
-      side: "left",
-      name: "DATA LEAK",
-      sub: "EGRESS TO UNKNOWN ENDPOINT",
-      verb: "CONTAINED",
-    },
   ];
 
-  /* Compact layout below ~760px: shorter node labels and a larger type floor.
-     Four nodes, not three — one per risk, so every annotation gets its own stage
-     exactly as in the reference render. Three nodes forced two risks to share
-     MODEL, which put two leader lines on one square and read as a mistake. */
+  /* Compact layout below ~760px: shorter node labels and a larger type floor. */
   const NODES_SM = [
     { x: 0.12, label: "GATEWAY" },
-    { x: 0.38, label: "MODEL · CLAUDE" },
-    { x: 0.63, label: "RAG INDEX" },
-    { x: 0.88, label: "EGRESS" },
+    { x: 0.5, label: "MODEL · CLAUDE" },
+    { x: 0.88, label: "RAG INDEX" },
   ];
 
   const RISKS_SM = [
@@ -134,7 +120,7 @@
     },
     {
       node: 1,
-      dx: 0.38,
+      dx: 0.5,
       dy: 54,
       side: "below",
       name: "PROMPT INJECTION",
@@ -143,25 +129,12 @@
     },
     {
       node: 2,
-      dx: 0.68,
+      dx: 0.85,
       dy: -112,
-      side: "right",
+      side: "left",
       name: "RAG POISONING",
       sub: "3 POISONED DOCS",
       verb: "QUARANTINED",
-    },
-    {
-      node: 3,
-      /* 112, matching the wide layout, not 96: at 96 this annotation shares a
-         baseline with PROMPT INJECTION's sub-line, and once the frame narrows to
-         a phone the two run into each other horizontally. It is also the offset
-         RAIL_Y's balance is computed against. */
-      dx: 0.8,
-      dy: 112,
-      side: "left",
-      name: "DATA LEAK",
-      sub: "UNKNOWN ENDPOINT",
-      verb: "CONTAINED",
     },
   ];
 
@@ -172,10 +145,10 @@
 
   /* Vertical position of the rail, as a fraction of frame height. The
      annotations are not symmetric about it — they reach ~125px above (RAG
-     POISONING's label) and ~113px below (DATA LEAK's sub-line) — so 0.5 is not
-     the balanced value. 0.515 centres the *ink*, which is what the eye reads as
-     centred, and leaves an equal band top and bottom. Referenced in three
-     places; keep them going through this constant. */
+     POISONING's label) and ~74px below (PROMPT INJECTION's sub-line) — so 0.5
+     is not the balanced value. 0.515 centres the *ink*, which is what the eye
+     reads as centred, and leaves an equal band top and bottom. Referenced in
+     three places; keep them going through this constant. */
   const RAIL_Y = 0.515;
 
   // Scan sweeps: [start, end] seconds. Risks are revealed/contained as a sweep crosses them.
@@ -191,7 +164,7 @@
     { t: [3.3, 4.1, 6.4, 7.0], text: "SCANNING RUNTIME · EVERY PROMPT, TOOL CALL AND DATA EVENT" },
     {
       t: [6.7, 7.5, 10.4, 11.0],
-      text: "4 RISKS · 3 SYSTEMS YOU HAD NO VISIBILITY OVER",
+      text: "3 RISKS · 3 SYSTEMS YOU HAD NO VISIBILITY OVER",
       tone: "risk",
     },
     { t: [11.5, 12.3, 14.2, 14.8], text: "FOUND, CONTAINED AND PROVEN AT RUNTIME", tone: "ok" },
