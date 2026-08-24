@@ -152,8 +152,12 @@
     },
     {
       node: 3,
+      /* 112, matching the wide layout, not 96: at 96 this annotation shares a
+         baseline with PROMPT INJECTION's sub-line, and once the frame narrows to
+         a phone the two run into each other horizontally. It is also the offset
+         RAIL_Y's balance is computed against. */
       dx: 0.8,
-      dy: 96,
+      dy: 112,
       side: "left",
       name: "DATA LEAK",
       sub: "UNKNOWN ENDPOINT",
@@ -281,6 +285,19 @@
       c.font = `${size}px "IBM Plex Mono", ui-monospace, monospace`;
     }
 
+    /* Set the largest type <= `size` at which `text` fits `maxW`, then leave it
+       set for the caller's fillText. Canvas text cannot wrap, and the hero
+       column is ~350px on a phone while this copy is written for ~660px — so
+       size is the only lever. Floors at 70%: past that the string itself is the
+       thing that has to give, not the type. */
+    _fitMono(text, maxW, size, tracking) {
+      const c = this._ctx;
+      for (let k = 1; ; k -= 0.05) {
+        this._mono(size * k, tracking * k);
+        if (k <= 0.7 || c.measureText(text).width <= maxW) return k;
+      }
+    }
+
     _draw() {
       const c = this._ctx,
         W = this._w,
@@ -355,7 +372,22 @@
       }
       c.stroke();
 
-      // nodes
+      /* Nodes. Each label is fitted to the gap between its node and the nearest
+         neighbour, so they shrink instead of running into each other as the
+         column narrows — at 350px the compact layout's spacing is ~89px while
+         "MODEL · CLAUDE" wants ~113px at full size. The x clamp keeps the first
+         and last labels, which are centred on nodes near the edges, inside the
+         frame. */
+      /* One size for the whole row: the tightest label sets it. Fitting each
+         label independently left GATEWAY at full size next to a visibly smaller
+         MODEL · CLAUDE, which reads as a rendering bug rather than a layout. */
+      const fit = Math.min(
+        ...nodes.map((n, i) => {
+          const left = i > 0 ? n.x - nodes[i - 1].x : Infinity;
+          const right = i < nodes.length - 1 ? nodes[i + 1].x - n.x : Infinity;
+          return this._fitMono(n.label, Math.min(left, right) * W * 0.96, 11 * s, 2.4 * s);
+        }),
+      );
       nodes.forEach((n) => {
         const x = X(n.x),
           r = 4.5 * s;
@@ -363,10 +395,11 @@
         c.lineWidth = 1;
         c.strokeRect(Math.round(x - r) + 0.5, Math.round(railY - r) + 0.5, r * 2, r * 2);
         c.fillStyle = pal.nodeLabel;
-        this._mono(11 * s, 2.4 * s);
+        this._mono(11 * s * fit, 2.4 * s * fit);
         c.textAlign = "center";
         c.textBaseline = "alphabetic";
-        c.fillText(n.label, x, railY - 20 * s);
+        const half = c.measureText(n.label).width / 2 + 4;
+        c.fillText(n.label, clamp(x, half, W - half), railY - 20 * s);
       });
 
       // packets
@@ -406,7 +439,7 @@
       CAPTIONS.forEach((cap) => {
         const a = win(t, cap.t[0], cap.t[1], cap.t[2], cap.t[3]);
         if (a <= 0.01) return;
-        this._mono(11 * s, 1.6 * s);
+        this._fitMono(cap.text, W - 24, 11 * s, 1.6 * s);
         c.textAlign = "center";
         c.textBaseline = "top";
         /* Toned captions are pushed toward the ground, not used at full
@@ -511,12 +544,23 @@
       c.textAlign = align;
       c.textBaseline = "alphabetic";
 
-      this._mono(13 * s, 1.6 * s);
+      /* Room left between the anchor and the frame edge the text grows toward.
+         The sub-line is the long one (a quoted injection payload runs ~230px at
+         full size) and is what overflows first on a phone. */
+      const W = this._w;
+      const room = centered
+        ? Math.min(tx, W - tx) * 2 - 16
+        : align === "right"
+          ? tx - 8
+          : W - tx - 8;
+      const sub = held > 0.5 ? rk.verb : rk.sub;
+
+      this._fitMono(rk.name, room, 13 * s, 1.6 * s);
       c.fillStyle = this._rgba(col, textA);
       c.fillText(rk.name, tx, ty);
-      this._mono(10 * s, 1.1 * s);
+      this._fitMono(sub, room, 10 * s, 1.1 * s);
       c.fillStyle = this._rgba(held > 0.5 ? ok : pal.sub, (held > 0.5 ? 0.8 : 0.9) * textA);
-      c.fillText(held > 0.5 ? rk.verb : rk.sub, tx, ty + 16 * s);
+      c.fillText(sub, tx, ty + 16 * s);
     }
 
     _rgb(hex) {

@@ -3833,14 +3833,45 @@ footer {
   }
   .va-hero-inner {
     grid-template-columns: 1fr;
-    gap: 36px;
-  }
-  .va-hero-copy {
-    align-items: center;
+    row-gap: 18px;
     text-align: center;
   }
-  .va-hero-copy .lede {
+  /* Stacked order is headline → animation → copy → CTA. The headline, copy and
+     CTA live inside .va-hero-copy while the animation is its SIBLING, so `order`
+     alone cannot interleave them — order only sorts items within one formatting
+     context. `display: contents` dissolves the copy column so its three children
+     become grid items of .va-hero-inner, in the same ordering context as
+     .va-hero-demo. Safe here: .va-hero-copy paints nothing of its own (no
+     background, border or padding), and its `.reveal` class is inert. */
+  .va-hero-copy {
+    display: contents;
+  }
+  .va-hero-copy > h1 {
+    order: 1;
+  }
+  /* Stacked, the animation is as wide as the column, and `aspect-ratio: 16/10`
+     turns that width straight into height — at a 900px tablet the box would be
+     562px tall and push the copy and CTA off the first screen. Capping the width
+     keeps it a banner rather than a panel. */
+  .hero-rail {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+  .va-hero-demo {
+    order: 2;
+    /* 18px row-gap + 18px margin = the 36px that used to separate the two
+       columns, preserved above and below the animation. */
+    margin-block: 18px;
+  }
+  .va-hero-copy > .lede {
+    order: 3;
     max-width: none;
+  }
+  .hero-actions {
+    order: 4;
+    /* .va-hero-copy's `align-items: center` used to centre this; with the box
+       gone the row must centre its own button. */
+    justify-content: center;
   }
 }
 @media (max-width: 640px) {
