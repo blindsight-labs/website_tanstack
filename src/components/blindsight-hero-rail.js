@@ -107,7 +107,7 @@
       side: "left",
       name: "DATA LEAK",
       sub: "EGRESS TO UNKNOWN ENDPOINT",
-      verb: "ISOLATED",
+      verb: "CONTAINED",
     },
   ];
 
@@ -157,7 +157,7 @@
       side: "left",
       name: "DATA LEAK",
       sub: "UNKNOWN ENDPOINT",
-      verb: "ISOLATED",
+      verb: "CONTAINED",
     },
   ];
 
