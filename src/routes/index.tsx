@@ -143,12 +143,6 @@ function Hero() {
             unauthorised AI usage on employee laptops, prompt injection, sensitive data leaks, and
             RAG poisoning.
           </p>
-          <p className="lede">
-            Our free assessment takes one hour to install and starts returning findings the same
-            day. Run it for 30 days, to get a full report on every unsanctioned AI tool in your
-            organization, and decide after you have seen the results. No cost, no commitment, no
-            change to how your team works.
-          </p>
           <div className="hero-actions">
             <button
               type="button"
