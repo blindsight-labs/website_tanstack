@@ -3842,30 +3842,6 @@ footer {
   .va-hero-copy .lede {
     max-width: none;
   }
-
-  /* Stacked layout: split the two CTAs around the "Not ready for a full
-     deployment?" sentence — primary CTA pairs with the main pitch, the free
-     Shadow AI CTA follows its own sentence. `display: contents` dissolves the
-     .hero-actions box so both buttons become direct flex children of
-     .va-hero-copy (centred via its `align-items`) and can be reordered. */
-  .hero-actions {
-    display: contents;
-  }
-  .va-hero-copy > h1 {
-    order: 0;
-  }
-  .va-hero-copy > .lede:nth-of-type(1) {
-    order: 1;
-  }
-  #hero-cta {
-    order: 2;
-  }
-  .va-hero-copy > .lede:nth-of-type(2) {
-    order: 3;
-  }
-  .hero-actions > .btn-secondary {
-    order: 4;
-  }
 }
 @media (max-width: 640px) {
   /* Phone: a slightly larger headline for impact, a slightly smaller body. */
