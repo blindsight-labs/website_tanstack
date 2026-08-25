@@ -212,7 +212,7 @@
      removed for now — nothing in the codebase consumed them yet; revisit if
      hero typography needs a token later. */
   /* line-height-tight: spec range 1.0–1.08 (scales with heading size); anchored at 1.0. */
-  --line-height-tight: 1.0;
+  --line-height-tight: 1;
   --line-height-snug: 1.3;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.65;
@@ -2418,11 +2418,11 @@ h4 {
   .engage-snake {
     display: block;
     position: absolute;
-    top: 64px;        /* row-1 circle center (90px row − 8px padding − 18px half-circle) */
+    top: 64px; /* row-1 circle center (90px row − 8px padding − 18px half-circle) */
     left: 0;
     right: 0;
     width: 100%;
-    height: 52px;     /* distance between row-1 and row-2 circle centers (116 − 64) */
+    height: 52px; /* distance between row-1 and row-2 circle centers (116 − 64) */
     pointer-events: none;
     z-index: 0;
   }
@@ -2439,11 +2439,26 @@ h4 {
   .engage-step {
     padding-top: 8px;
   }
-  .engage-step:nth-child(1) { grid-column: 1; grid-row: 1; }
-  .engage-step:nth-child(2) { grid-column: 2; grid-row: 2; }
-  .engage-step:nth-child(3) { grid-column: 3; grid-row: 1; }
-  .engage-step:nth-child(4) { grid-column: 4; grid-row: 2; }
-  .engage-step:nth-child(5) { grid-column: 5; grid-row: 1; }
+  .engage-step:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .engage-step:nth-child(2) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .engage-step:nth-child(3) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .engage-step:nth-child(4) {
+    grid-column: 4;
+    grid-row: 2;
+  }
+  .engage-step:nth-child(5) {
+    grid-column: 5;
+    grid-row: 1;
+  }
   /* Odd steps (top row): label above circle. column-reverse + padding-bottom pins
      the circle to the bottom of the cell so the SVG snake aligns correctly. */
   .engage-step:nth-child(1),
@@ -3326,6 +3341,24 @@ footer {
   width: 100%;
   min-width: 0;
 }
+/* Frame for the hero animation. <blindsight-hero-rail> sets itself to
+   position:absolute/inset:0, so this wrapper owns the box.
+
+   The element drops to its compact 3-node layout below 760px — and this column
+   is 724px at the 1600px hero max-width, ~644px on a 1440px laptop. So compact
+   IS the desktop layout here, deliberately: forcing the wide 5-node variant at
+   this width pushes its type floor down to ~7px. The min-height keeps room for
+   the topmost risk annotation (112px above the rail, which sits at 46% height)
+   on narrow phones, where the aspect ratio alone would collapse the box. */
+.hero-rail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 320px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
 /* Caption above the pipeline graphic (moved out of the headline stack). */
 .hero-demo-cap {
   font-family: var(--font-mono);
@@ -3800,38 +3833,45 @@ footer {
   }
   .va-hero-inner {
     grid-template-columns: 1fr;
-    gap: 36px;
-  }
-  .va-hero-copy {
-    align-items: center;
+    row-gap: 18px;
     text-align: center;
   }
-  .va-hero-copy .lede {
-    max-width: none;
-  }
-
-  /* Stacked layout: split the two CTAs around the "Not ready for a full
-     deployment?" sentence — primary CTA pairs with the main pitch, the free
-     Shadow AI CTA follows its own sentence. `display: contents` dissolves the
-     .hero-actions box so both buttons become direct flex children of
-     .va-hero-copy (centred via its `align-items`) and can be reordered. */
-  .hero-actions {
+  /* Stacked order is headline → animation → copy → CTA. The headline, copy and
+     CTA live inside .va-hero-copy while the animation is its SIBLING, so `order`
+     alone cannot interleave them — order only sorts items within one formatting
+     context. `display: contents` dissolves the copy column so its three children
+     become grid items of .va-hero-inner, in the same ordering context as
+     .va-hero-demo. Safe here: .va-hero-copy paints nothing of its own (no
+     background, border or padding), and its `.reveal` class is inert. */
+  .va-hero-copy {
     display: contents;
   }
   .va-hero-copy > h1 {
-    order: 0;
-  }
-  .va-hero-copy > .lede:nth-of-type(1) {
     order: 1;
   }
-  #hero-cta {
+  /* Stacked, the animation is as wide as the column, and `aspect-ratio: 16/10`
+     turns that width straight into height — at a 900px tablet the box would be
+     562px tall and push the copy and CTA off the first screen. Capping the width
+     keeps it a banner rather than a panel. */
+  .hero-rail {
+    max-width: 560px;
+    margin-inline: auto;
+  }
+  .va-hero-demo {
     order: 2;
+    /* 18px row-gap + 18px margin = the 36px that used to separate the two
+       columns, preserved above and below the animation. */
+    margin-block: 18px;
   }
-  .va-hero-copy > .lede:nth-of-type(2) {
+  .va-hero-copy > .lede {
     order: 3;
+    max-width: none;
   }
-  .hero-actions > .btn-secondary {
+  .hero-actions {
     order: 4;
+    /* .va-hero-copy's `align-items: center` used to centre this; with the box
+       gone the row must centre its own button. */
+    justify-content: center;
   }
 }
 @media (max-width: 640px) {
@@ -4080,10 +4120,7 @@ footer {
 .founder-info {
   --name-size: clamp(
     14px,
-    min(
-      calc(85cqi / var(--name-chars, 14) * 1.6),
-      calc(85cqi / var(--role-chars, 3) * 1.35)
-    ),
+    min(calc(85cqi / var(--name-chars, 14) * 1.6), calc(85cqi / var(--role-chars, 3) * 1.35)),
     34px
   );
 }
@@ -4721,17 +4758,28 @@ footer {
     border-radius var(--duration-normal) ease,
     box-shadow var(--duration-normal) ease;
 }
+/* Two tracks: [label][dot]. The collapse animates the label track from 1fr to
+   0fr, which interpolates smoothly and — crucially — identically for every item
+   regardless of how long its label is. The previous version set `width: 14px` on
+   the collapsed item WITHOUT listing width in the transition, so the button
+   snapped to 14px on the first frame and clipped every label to nothing
+   instantly, while the pill's padding/gap/radius kept easing for the full 250ms
+   around the now-empty space. That snap-then-morph was the wonk. The label's
+   `max-width: 200px -> 0` never got to do anything: the parent had already
+   clipped it. The dot track is a fixed 14px in BOTH states, so the dots never
+   move sideways during the collapse. */
 .section-rail-item {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 14px;
   align-items: center;
-  justify-content: flex-end;
   gap: 10px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 3px 0;
   transition:
+    grid-template-columns var(--duration-normal) ease,
     gap var(--duration-normal) ease,
     padding var(--duration-normal) ease;
 }
@@ -4747,7 +4795,7 @@ footer {
   white-space: nowrap;
   text-align: right;
   overflow: hidden;
-  max-width: 200px;
+  min-width: 0;
   color: var(--muted);
   background: transparent;
   border: 1px solid transparent;
@@ -4757,16 +4805,15 @@ footer {
   pointer-events: auto;
   transition:
     opacity var(--duration-normal) ease,
-    max-width var(--duration-normal) ease,
     padding var(--duration-normal) ease,
     color var(--duration-normal) ease,
-    font-size var(--duration-normal) ease,
     border-color var(--duration-normal) ease;
 }
 .section-rail-dot {
   width: 9px;
   height: 9px;
   border-radius: var(--radius-circle);
+  justify-self: center;
   flex-shrink: 0;
   border: 1.5px solid var(--dim);
   background: transparent;
@@ -4803,13 +4850,11 @@ footer {
   box-shadow: 0 8px 28px -10px rgba(17, 17, 24, 0.18);
 }
 .section-rail.is-collapsed:not(:hover) .section-rail-item {
+  grid-template-columns: 0fr 14px;
   gap: 0;
-  width: 14px;
   padding: 0;
-  justify-content: center;
 }
 .section-rail.is-collapsed:not(:hover) .section-rail-label {
-  max-width: 0;
   padding-left: 0;
   padding-right: 0;
   opacity: 0;

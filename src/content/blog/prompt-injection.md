@@ -40,8 +40,6 @@ This kind of prompt injection can also result in a privacy violation, such as th
 
 It is even possible to get an AI with capabilities beyond just generation to perform unintended actions such as making a request to an arbitrary URL.
 
-
-
 ## Indirect Prompt Injection
 
 Attackers don't always have direct access to the prompts they want to exploit. This is how Indirect Prompt Injection came to be. While usually you'd inject your attack into the prompt itself, an indirect prompt injection makes use of some external source to do so.
@@ -51,8 +49,6 @@ An example of this is someone making a site with good SEO that explains some top
 That's not all an indirect prompt injection can do. Anything direct Prompt Injection can do, indirect can as well. The attacker can even sometimes steal private files from the victim. You can find a really great example of this type of attack here: [Hacking Google Bard - From Prompt Injection to Data Exfiltration](https://embracethered.com/blog/posts/2023/google-bard-data-exfiltration/).
 
 Indirect Prompt Injections can even come as a result of some other system being compromised or poisoned. If an AI references some table or database to complement their knowledge, a malicious actor could manage to add their attack to this resource. The AI would then always refer to this compromised database and trigger the indirect prompt injection attack.
-
-
 
 ## Mitigating Risk from Prompt Injection
 

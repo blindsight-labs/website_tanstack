@@ -13,7 +13,7 @@ import {
 
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
-import { HeroPipelineDemo } from "@/components/HeroPipelineDemo";
+import { HeroRail } from "@/components/HeroRail";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill } from "@/components/InfoPill";
 import { LogoStrip } from "@/components/LogoStrip";
@@ -29,12 +29,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Real-time visibility into every AI action, prompt, response and tool call. Blindsight monitors your runtime and stops threats before they move downstream.",
+          "Blindsight runs at runtime, inspecting every prompt, response and tool call. Stop unauthorised AI use, prompt injection, data leaks and RAG poisoning.",
       },
       { property: "og:title", content: "Blindsight, Runtime Security for AI" },
       {
         property: "og:description",
-        content: "See every AI action in real time. Stop every threat before it moves downstream.",
+        content:
+          "See everything your AI is doing. Stop what it shouldn't. Runtime visibility, enforcement and a full auditable trail.",
       },
       { property: "og:url", content: "https://blindsight.io/" },
     ],
@@ -69,11 +70,11 @@ const SECTIONS: { id: string; label: string }[] = [
 
 function SectionRail({ sections }: { sections: { id: string; label: string }[] }) {
   const [active, setActive] = useState<string>(sections[0]?.id ?? "");
-  // Show the rail fully (labels visible) on load, then collapse to bare dots after
-  // a few seconds. Hovering the rail re-expands it (pure CSS, see .section-rail).
+  // Show the rail fully (labels visible) on load, then collapse to bare dots.
+  // Hovering the rail re-expands it (pure CSS, see .section-rail).
   const [collapsed, setCollapsed] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setCollapsed(true), 3200);
+    const t = setTimeout(() => setCollapsed(true), 800);
     return () => clearTimeout(t);
   }, []);
   // Labels stay in sync with the section titles automatically: we pull each
@@ -121,11 +122,10 @@ function SectionRail({ sections }: { sections: { id: string; label: string }[] }
   );
 }
 
-/* ── Hero — split: copy + CTAs | Runtime Security demo ──
-   Primary CTA opens the demo modal (Runtime Security); secondary links to the
-   Shadow AI product at /shadow. On mobile the two CTAs split apart
-   (see the max-width:640px block in styles.css): the primary sits under the main
-   pitch and the secondary follows the free "reveal Shadow AI" sentence. */
+/* ── Hero — split: copy + CTA | Runtime Security demo ──
+   The single CTA opens the demo modal. Keep its `id="hero-cta"` — __root.tsx
+   watches that element with an IntersectionObserver to decide when to reveal
+   the floating CTA, and silently does nothing if the id goes missing. */
 function Hero() {
   const { open } = useDemoModal();
 
@@ -134,17 +134,14 @@ function Hero() {
       <div className="va-hero-inner">
         <div className="va-hero-copy reveal">
           <h1>
-            <span className="accent">Leverage AI with speed and confidence.</span>
+            <span className="accent">
+              See everything your AI is doing. Stop what it shouldn&apos;t.
+            </span>
           </h1>
           <p className="lede">
-            Blindsight brings visibility and security to your AI at runtime: every prompt, response,
-            tool call and data event. Deploying in a regulated environment? Its runtime audit trail
-            and policy enforcement turn compliance into a feature, not an obstacle, so your team
-            moves fast without flying blind.
-          </p>
-          <p className="lede">
-            Not ready for a full deployment? Start by revealing every unsanctioned AI tool in your
-            organization, for free.
+            Blindsight runs at runtime, inspecting every prompt, response, and tool call. Prevent
+            unauthorised AI usage on employee laptops, prompt injection, sensitive data leaks, and
+            RAG poisoning.
           </p>
           <div className="hero-actions">
             <button
@@ -153,16 +150,13 @@ function Hero() {
               className="btn btn-primary"
               onClick={() => open("demo")}
             >
-              Secure your AI
+              Book a demo
             </button>
-            <a className="btn btn-secondary" href="/shadow">
-              Reveal Shadow AI
-            </a>
           </div>
         </div>
 
         <div className="va-hero-demo reveal">
-          <HeroPipelineDemo />
+          <HeroRail />
         </div>
       </div>
 

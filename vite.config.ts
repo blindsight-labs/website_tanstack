@@ -10,6 +10,12 @@ import tsConfigPaths from "vite-tsconfig-paths";
 // Publish dir is `dist/client` (see netlify.toml). VITE_* env vars are inlined
 // at build time via Vite's default env handling — no extra config needed.
 export default defineConfig({
+  // Pinned away from 5173: Windows/Hyper-V (WSL2) dynamically reserves TCP port
+  // ranges for its internal networking, and 5173 currently falls inside one
+  // (`netsh interface ipv4 show excludedportrange protocol=tcp`), causing
+  // EACCES on bind. Those ranges shift over time; if 3000 ever collides too,
+  // re-run that command and pick another free port outside the listed ranges.
+  server: { port: 3000 },
   plugins: [tsConfigPaths(), tailwindcss(), tanstackStart(), viteReact(), netlify()],
   // Pre-bundle these in the FIRST optimize pass. Otherwise Vite discovers them
   // mid-load ("new dependencies optimized … reloading") and the in-flight client

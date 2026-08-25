@@ -59,8 +59,6 @@ A malicious attacker, knowing these companies exist, could publish a dataset spe
 
 To the human eye, these passwords could look as safe as they can be. When the AI generates a database or login password that looks like this: `!jK@_LO90zzt2-!=1T?z`, a developer could easily decide to keep it, but to the hacker, this is one of his 20 passwords, and when the company publishes their site or product, all the hacker has to do is try those 20 passwords, and one of them will get them in.
 
-
-
 In Summary, the steps to perform a Data Poisoning attack are as following:
 
 1. Identify the datasets used by your target.

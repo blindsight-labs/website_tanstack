@@ -107,23 +107,23 @@ Sensitive information disclosure covers the leakage of private or confidential d
 
 The table below brings the same information into a single reference, mapping each attack type across what it targets, at which stage it occurs, what level of access the attacker needs, its impact in CIA terms, and its classification under NIST AI 100-2. The footnote marks attacks that fall outside the NIST taxonomy entirely.
 
-| Attack type | Target | Stage | Access required | Impact | NIST AI 100-2 category |
-|---|---|---|---|---|---|
-| Data poisoning | Training data | Pre-training | None | Integrity | Predictive AI: Poisoning (availability + targeted poisoning) |
-| Backdoor attacks | Training data / model weights | Pre-training | None to partial | Integrity | Predictive AI: Poisoning (backdoor poisoning) |
-| Model poisoning | Model weights | Pre-training / model distribution | Partial to full | Integrity | Predictive AI: Poisoning (model poisoning) |
-| Model skewing | Model decision patterns | Inference | Black-box | Integrity | Predictive AI: Evasion attacks (closest mapping) |
-| Evasion attacks | Model inputs | Inference | Black-box | Integrity | Predictive AI: Evasion attacks |
-| Prompt injection | Model inputs | Inference | Black-box | Integrity / Confidentiality | Generative AI: Direct and indirect prompt injection |
-| Membership inference | Model outputs | Inference | Black-box | Confidentiality | Predictive AI: Privacy (membership inference) |
-| Model inversion | Model outputs | Inference | Black-box to white-box | Confidentiality | Predictive AI: Privacy (data reconstruction) |
-| Supply chain attacks | Pipeline components | Any stage | None to partial | Integrity / Confidentiality / Availability | Generative AI: Supply chain attacks |
-| Misalignment | Model objectives | Training / inference | None | Integrity | Not in NIST AI 100-2 * |
-| Denial of service | Model availability | Inference | Black-box | Availability | Not in NIST AI 100-2 * |
-| Insecure output handling | Model outputs / downstream systems | Inference | Black-box | Integrity / Confidentiality | Not in NIST AI 100-2 * |
-| Insecure plugin design | Model environment | Inference | Black-box | Integrity / Confidentiality / Availability | Not in NIST AI 100-2 * |
-| Overreliance | Human decision layer | Inference | None | Integrity | Not in NIST AI 100-2 * |
-| Sensitive information disclosure | Model outputs | Inference | Black-box | Confidentiality | Predictive AI: Privacy (data reconstruction / property inference) |
+| Attack type                      | Target                             | Stage                             | Access required        | Impact                                     | NIST AI 100-2 category                                            |
+| -------------------------------- | ---------------------------------- | --------------------------------- | ---------------------- | ------------------------------------------ | ----------------------------------------------------------------- |
+| Data poisoning                   | Training data                      | Pre-training                      | None                   | Integrity                                  | Predictive AI: Poisoning (availability + targeted poisoning)      |
+| Backdoor attacks                 | Training data / model weights      | Pre-training                      | None to partial        | Integrity                                  | Predictive AI: Poisoning (backdoor poisoning)                     |
+| Model poisoning                  | Model weights                      | Pre-training / model distribution | Partial to full        | Integrity                                  | Predictive AI: Poisoning (model poisoning)                        |
+| Model skewing                    | Model decision patterns            | Inference                         | Black-box              | Integrity                                  | Predictive AI: Evasion attacks (closest mapping)                  |
+| Evasion attacks                  | Model inputs                       | Inference                         | Black-box              | Integrity                                  | Predictive AI: Evasion attacks                                    |
+| Prompt injection                 | Model inputs                       | Inference                         | Black-box              | Integrity / Confidentiality                | Generative AI: Direct and indirect prompt injection               |
+| Membership inference             | Model outputs                      | Inference                         | Black-box              | Confidentiality                            | Predictive AI: Privacy (membership inference)                     |
+| Model inversion                  | Model outputs                      | Inference                         | Black-box to white-box | Confidentiality                            | Predictive AI: Privacy (data reconstruction)                      |
+| Supply chain attacks             | Pipeline components                | Any stage                         | None to partial        | Integrity / Confidentiality / Availability | Generative AI: Supply chain attacks                               |
+| Misalignment                     | Model objectives                   | Training / inference              | None                   | Integrity                                  | Not in NIST AI 100-2 \*                                           |
+| Denial of service                | Model availability                 | Inference                         | Black-box              | Availability                               | Not in NIST AI 100-2 \*                                           |
+| Insecure output handling         | Model outputs / downstream systems | Inference                         | Black-box              | Integrity / Confidentiality                | Not in NIST AI 100-2 \*                                           |
+| Insecure plugin design           | Model environment                  | Inference                         | Black-box              | Integrity / Confidentiality / Availability | Not in NIST AI 100-2 \*                                           |
+| Overreliance                     | Human decision layer               | Inference                         | None                   | Integrity                                  | Not in NIST AI 100-2 \*                                           |
+| Sensitive information disclosure | Model outputs                      | Inference                         | Black-box              | Confidentiality                            | Predictive AI: Privacy (data reconstruction / property inference) |
 
 ## Where does this leave us?
 

@@ -3,8 +3,9 @@ import { X } from "lucide-react";
 import { useModalDialog } from "@/hooks/useModalDialog";
 import { DemoForm } from "./DemoForm";
 
-/** "demo" = book a working session; "download" = get the app after sharing details. */
-export type DemoVariant = "demo" | "download";
+/** "demo" = book a working session; "download" = get the app after sharing details;
+ *  "trial" = start the free-trial program (see /demo). */
+export type DemoVariant = "demo" | "download" | "trial";
 
 const VARIANT_COPY: Record<DemoVariant, { tag: string; title: string; sub: string }> = {
   demo: {
@@ -16,6 +17,11 @@ const VARIANT_COPY: Record<DemoVariant, { tag: string; title: string; sub: strin
     tag: "Download Blindsight",
     title: "See your Shadow AI.",
     sub: "Tell us where to send it, we'll email your download link and setup guide within one business day.",
+  },
+  trial: {
+    tag: "Runtime + Shadow AI · Free trial",
+    title: "Measure it on your own traffic.",
+    sub: "10,000 tokens, free. Two minutes, no card, no procurement.",
   },
 };
 
