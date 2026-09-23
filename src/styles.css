@@ -380,9 +380,13 @@
   box-sizing: border-box;
 }
 
+/* overflow-x: clip, not hidden: hidden on both html and body turns body into a
+   scroll container, which silently breaks every position: sticky on the site.
+   `hidden` stays first as the fallback for browsers without clip. */
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -393,6 +397,7 @@ body {
   line-height: 1.65;
   min-height: 100vh;
   overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   /* Avoid orphaned single words on the last line of body copy. */
   text-wrap: pretty;
@@ -4067,6 +4072,15 @@ footer {
 /* ── FAQ accordion ── */
 .faq-inner {
   max-width: 820px;
+}
+/* /faq renders the section as the whole page: clear the fixed nav. */
+.faq-page {
+  padding-top: 136px;
+}
+@media (max-width: 640px) {
+  .faq-page {
+    padding-top: 96px;
+  }
 }
 .faq-list {
   margin-top: 48px;

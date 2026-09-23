@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
 
 /* Nav/footer link targeting an on-page section of a landing page (the home
-   page's See/Govern/Prove steps and FAQ, /shadow, /demo). Scrolls in-page when
+   page's See/Govern/Prove steps, /shadow, /demo). Scrolls in-page when
    already on that route; navigates there with a hash from any other route. */
 function LandingSectionNavLink({
   to,
@@ -185,7 +185,8 @@ const themeInitScript = `(function(){try{var t=localStorage.getItem('theme');if(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // themeInitScript sets data-theme before hydration, so the attribute differs by design.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <HeadContent />
@@ -335,9 +336,9 @@ function Nav() {
         <a href={DOCS_URL} target="_blank" rel="noopener noreferrer" onClick={closeMenu}>
           Documentation
         </a>
-        <LandingSectionNavLink to="/" id="faq" onClick={closeMenu}>
+        <Link to="/faq" onClick={closeMenu}>
           FAQ
-        </LandingSectionNavLink>
+        </Link>
         <button
           type="button"
           onClick={() => {
@@ -375,9 +376,9 @@ function Nav() {
               <a href={DOCS_URL} target="_blank" rel="noopener noreferrer" onClick={close}>
                 Documentation
               </a>
-              <LandingSectionNavLink to="/" id="faq" onClick={close}>
+              <Link to="/faq" onClick={close}>
                 FAQ
-              </LandingSectionNavLink>
+              </Link>
             </>
           )}
         </NavMenu>
@@ -601,6 +602,7 @@ function Footer() {
         <div className="footer-copy">© 2026 Blindsight Technologies AG · Zurich, CH</div>
         <div className="footer-links">
           <Link to="/contact">Contact</Link>
+          <Link to="/faq">FAQ</Link>
           <Link to="/imprint">Imprint</Link>
           <Link to="/privacy">Privacy Notice</Link>
           <a href="mailto:info@blindsight.io">info@blindsight.io</a>

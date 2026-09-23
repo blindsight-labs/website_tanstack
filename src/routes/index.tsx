@@ -3,8 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { BrainExperience } from "@/components/brain/BrainExperience";
 import brainCss from "@/components/brain/brain.css?url";
 import { DemoCta } from "@/components/DemoCta";
-import { FaqSection } from "@/components/FaqSection";
-import { faqSchemaEntities } from "@/lib/faq-content";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -28,16 +26,6 @@ export const Route = createFileRoute("/")({
       { rel: "canonical", href: "https://blindsight.io/" },
       { rel: "stylesheet", href: brainCss },
     ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faqSchemaEntities(),
-        }),
-      },
-    ],
   }),
 });
 
@@ -46,7 +34,6 @@ function Home() {
     <main className="page-home">
       <BrainExperience />
       <DemoCta />
-      <FaqSection />
     </main>
   );
 }

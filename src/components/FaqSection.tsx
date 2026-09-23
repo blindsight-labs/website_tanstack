@@ -59,7 +59,10 @@ function FaqTableBlock({ themeId, table }: { themeId: string; table: FaqTable })
   );
 }
 
-export function FaqSection({ onlyTheme }: { onlyTheme?: string } = {}) {
+/** `page`: rendered as the /faq page itself — the heading becomes the h1 and
+ *  the section clears the fixed nav. */
+export function FaqSection({ onlyTheme, page }: { onlyTheme?: string; page?: boolean } = {}) {
+  const Heading = page ? "h1" : "h2";
   const defaultId = onlyTheme ?? THEMES[0].id;
   const [themeId, setThemeId] = useState<string>(defaultId);
   // Open accordion keys are theme-scoped (`themeId:index`) so every panel can
@@ -72,14 +75,14 @@ export function FaqSection({ onlyTheme }: { onlyTheme?: string } = {}) {
   const visibleThemes = onlyTheme ? THEMES.filter((t) => t.id === onlyTheme) : THEMES;
 
   return (
-    <section className="section" id="faq">
+    <section className={page ? "section faq-page" : "section"} id="faq">
       <div className="section-inner faq-inner">
         <div
           className="s-head reveal"
           style={{ alignItems: "center", textAlign: "center", margin: "0 auto" }}
         >
           <span className="tag">FAQ</span>
-          <h2>Questions, answered.</h2>
+          <Heading>Questions, answered.</Heading>
         </div>
 
         {!onlyTheme && (

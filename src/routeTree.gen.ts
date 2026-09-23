@@ -16,6 +16,7 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as HowToSecureLlmsRouteImport } from './routes/how-to-secure-llms'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -61,6 +62,11 @@ const ImprintRoute = ImprintRouteImport.update({
 const HowToSecureLlmsRoute = HowToSecureLlmsRouteImport.update({
   id: '/how-to-secure-llms',
   path: '/how-to-secure-llms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsRoute = DocsRouteImport.update({
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
+  '/faq': typeof FaqRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -146,6 +153,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
+  '/faq': typeof FaqRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
+  '/faq': typeof FaqRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/llms.txt': typeof LlmsDottxtRoute
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/demo'
     | '/docs'
+    | '/faq'
     | '/how-to-secure-llms'
     | '/imprint'
     | '/llms.txt'
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/demo'
     | '/docs'
+    | '/faq'
     | '/how-to-secure-llms'
     | '/imprint'
     | '/llms.txt'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/demo'
     | '/docs'
+    | '/faq'
     | '/how-to-secure-llms'
     | '/imprint'
     | '/llms.txt'
@@ -249,6 +261,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DemoRoute: typeof DemoRoute
   DocsRoute: typeof DocsRoute
+  FaqRoute: typeof FaqRoute
   HowToSecureLlmsRoute: typeof HowToSecureLlmsRoute
   ImprintRoute: typeof ImprintRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
@@ -309,6 +322,13 @@ declare module '@tanstack/react-router' {
       path: '/how-to-secure-llms'
       fullPath: '/how-to-secure-llms'
       preLoaderRoute: typeof HowToSecureLlmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs': {
@@ -411,6 +431,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DemoRoute: DemoRoute,
   DocsRoute: DocsRoute,
+  FaqRoute: FaqRoute,
   HowToSecureLlmsRoute: HowToSecureLlmsRoute,
   ImprintRoute: ImprintRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
