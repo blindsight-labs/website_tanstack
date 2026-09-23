@@ -725,6 +725,69 @@ h4 {
   color: var(--violet);
 }
 
+/* ── Main nav (site-wide): steps · Company · Resources | Book a demo · theme ── */
+.nav-main .nav-links {
+  margin: 0 auto 0 48px;
+  padding: 0;
+}
+.nav-sep {
+  width: 1px;
+  height: 16px;
+  background: var(--border-mid);
+}
+/* BrainExperience sets <html data-layer> to the active home-page layer. */
+html[data-layer="see"] .nav-step[href$="#see"],
+html[data-layer="govern"] .nav-step[href$="#govern"],
+html[data-layer="prove"] .nav-step[href$="#prove"] {
+  color: var(--text);
+  text-decoration: underline 2px var(--violet);
+  text-underline-offset: 8px;
+}
+.nav-demo {
+  white-space: nowrap;
+}
+.nav-main .nav-dropdown-menu {
+  left: 0;
+  right: auto;
+}
+/* Bridges the gap between trigger and panel so hover survives the crossing. */
+.nav-main .nav-dropdown-menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 12px;
+}
+.nav-mobile-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding: 16px 0 4px;
+}
+.nav-main .nav-mobile-menu {
+  max-height: calc(100svh - 57px);
+  overflow-y: auto;
+}
+/* Steps + two menus + CTA don't fit below desktop: everything moves into the menu. */
+@media (max-width: 1024px) {
+  .nav-main .nav-links,
+  .nav-main .nav-demo {
+    display: none;
+  }
+  .nav-main .nav-hamburger {
+    display: block;
+  }
+}
+@media (min-width: 641px) and (max-width: 1024px) {
+  .nav-main .nav-mobile-menu {
+    top: 63px;
+    max-height: calc(100svh - 63px);
+  }
+}
+
 /* ── Layout ── */
 .section {
   padding: 80px 48px;

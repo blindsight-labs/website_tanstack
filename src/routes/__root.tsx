@@ -10,27 +10,30 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { ArrowRight, BookOpen, ChevronDown, Code, Menu, Moon, Sun, X } from "lucide-react";
+import { ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
 
-/* Nav/footer link targeting an on-page section of a bespoke landing page
-   (/shadow, /demo). Scrolls in-page when already on that route; navigates
-   there with a hash from any other route. */
+/* Nav/footer link targeting an on-page section of a landing page (the home
+   page's See/Govern/Prove steps and FAQ, /shadow, /demo). Scrolls in-page when
+   already on that route; navigates there with a hash from any other route. */
 function LandingSectionNavLink({
   to,
   id,
   children,
   onClick,
+  className,
 }: {
-  to: "/shadow" | "/demo";
+  to: "/" | "/shadow" | "/demo";
   id: string;
   children: React.ReactNode;
   onClick?: () => void;
+  className?: string;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
     <Link
       to={to}
       hash={id}
+      className={className}
       onClick={(e) => {
         if (pathname === to) {
           e.preventDefault();
@@ -195,10 +198,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Shared chrome for both nav variants: scroll shadow, hamburger menu state,
-// and theme toggle. Each nav keeps its own CTA-reveal logic — the two pages
-// trigger it differently (IntersectionObserver on #hero-cta vs. a scroll
-// check against #hero) and forcing those to converge isn't worth it.
+// Shared chrome for all nav variants: scroll shadow, hamburger menu state,
+// and theme toggle. The main nav always shows its CTA; ShadowNav and DemoNav
+// keep their own CTA-reveal logic (IntersectionObserver on #hero-cta vs. a
+// scroll check against #hero) and forcing those to converge isn't worth it.
 function useNavChrome() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -237,58 +240,62 @@ function useNavChrome() {
   };
 }
 
+// The home page's three layers; BrainExperience sets <html data-layer> to the
+// active id, which underlines the matching link (see `.nav-step` in styles.css).
+const STEP_LINKS = [
+  { id: "see", label: "See it" },
+  { id: "govern", label: "Govern it" },
+  { id: "prove", label: "Prove it" },
+] as const;
+
+const COMPANY_LINKS = [
+  { to: "/team", label: "Team" },
+  { to: "/careers", label: "Careers" },
+  { to: "/contact", label: "Contact" },
+] as const;
+
+const DOCS_URL = "https://docs.blindsight.io";
+
+// Hover- or click-opened dropdown; Escape closes it.
+function NavMenu({
+  label,
+  children,
+}: {
+  label: string;
+  children: (close: () => void) => React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+  return (
+    <li
+      className="nav-dropdown"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={close}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") close();
+      }}
+    >
+      <button
+        type="button"
+        className="nav-dropdown-trigger"
+        aria-expanded={open}
+        aria-haspopup="true"
+        onClick={() => setOpen((o) => !o)}
+      >
+        {label}
+        <ChevronDown className="nav-caret" size={14} aria-hidden="true" />
+      </button>
+      <div className={`nav-dropdown-menu ${open ? "open" : ""}`}>{children(close)}</div>
+    </li>
+  );
+}
+
 function Nav() {
   const { open: openDemo } = useDemoModal();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { scrolled, menuOpen, setMenuOpen, closeMenu, theme, toggleTheme } = useNavChrome();
-  const [resourcesOpen, setResourcesOpen] = useState(false);
-  // The CTA mirrors the hero's primary button: it stays collapsed while the
-  // hero CTA (`#hero-cta`) is on screen and reveals once it scrolls out of
-  // view. On pages without a hero CTA it is simply always shown.
-  const [ctaShown, setCtaShown] = useState(false);
-  // Reveal the nav CTA once the hero's primary CTA leaves the viewport. Re-runs
-  // on navigation so it re-attaches to the current page's hero (or, when there
-  // is none, leaves the CTA permanently shown).
-  useEffect(() => {
-    let io: IntersectionObserver | null = null;
-    let mo: MutationObserver | null = null;
-
-    const attach = (heroCta: Element) => {
-      setCtaShown(false);
-      io = new IntersectionObserver(([entry]) => setCtaShown(!entry.isIntersecting), {
-        threshold: 0,
-      });
-      io.observe(heroCta);
-    };
-
-    const heroCta = document.getElementById("hero-cta");
-    if (heroCta) {
-      attach(heroCta);
-    } else {
-      // The target route's code-split chunk may still be loading, so its hero
-      // (and #hero-cta) isn't in the DOM yet even though `pathname` already
-      // points there. Default to shown, but keep watching — if the hero mounts
-      // a beat later, this effect won't re-run (pathname is unchanged), so
-      // without this the CTA would get stuck visible over the hero forever.
-      setCtaShown(true);
-      mo = new MutationObserver(() => {
-        const el = document.getElementById("hero-cta");
-        if (el) {
-          mo?.disconnect();
-          mo = null;
-          attach(el);
-        }
-      });
-      mo.observe(document.body, { childList: true, subtree: true });
-    }
-
-    return () => {
-      io?.disconnect();
-      mo?.disconnect();
-    };
-  }, [pathname]);
   return (
-    <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
+    <nav className={`nav nav-main ${scrolled ? "scrolled" : ""}`}>
       <Link
         to="/"
         aria-label="Blindsight home"
@@ -303,19 +310,34 @@ function Nav() {
       >
         <img src={logo} alt="Blindsight" className="nav-logo" />
       </Link>
-      <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} aria-hidden={!menuOpen}>
-        <Link to="/team" onClick={closeMenu}>
-          Team
-        </Link>
-        <Link to="/careers" onClick={closeMenu}>
-          Careers
-        </Link>
+      <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} inert={!menuOpen}>
+        {STEP_LINKS.map((s) => (
+          <LandingSectionNavLink
+            key={s.id}
+            to="/"
+            id={s.id}
+            className="nav-step"
+            onClick={closeMenu}
+          >
+            {s.label}
+          </LandingSectionNavLink>
+        ))}
+        <span className="nav-mobile-label">Company</span>
+        {COMPANY_LINKS.map((l) => (
+          <Link key={l.to} to={l.to} onClick={closeMenu}>
+            {l.label}
+          </Link>
+        ))}
+        <span className="nav-mobile-label">Resources</span>
         <Link to="/blog" onClick={closeMenu}>
           Blog
         </Link>
-        <Link to="/contact" onClick={closeMenu}>
-          Contact
-        </Link>
+        <a href={DOCS_URL} target="_blank" rel="noopener noreferrer" onClick={closeMenu}>
+          Documentation
+        </a>
+        <LandingSectionNavLink to="/" id="faq" onClick={closeMenu}>
+          FAQ
+        </LandingSectionNavLink>
         <button
           type="button"
           onClick={() => {
@@ -326,7 +348,44 @@ function Nav() {
           Book a demo
         </button>
       </div>
+      <ul className="nav-links">
+        {STEP_LINKS.map((s) => (
+          <li key={s.id}>
+            <LandingSectionNavLink to="/" id={s.id} className="nav-step">
+              {s.label}
+            </LandingSectionNavLink>
+          </li>
+        ))}
+        <li className="nav-sep" aria-hidden="true" />
+        <NavMenu label="Company">
+          {(close) =>
+            COMPANY_LINKS.map((l) => (
+              <Link key={l.to} to={l.to} onClick={close}>
+                {l.label}
+              </Link>
+            ))
+          }
+        </NavMenu>
+        <NavMenu label="Resources">
+          {(close) => (
+            <>
+              <Link to="/blog" onClick={close}>
+                Blog
+              </Link>
+              <a href={DOCS_URL} target="_blank" rel="noopener noreferrer" onClick={close}>
+                Documentation
+              </a>
+              <LandingSectionNavLink to="/" id="faq" onClick={close}>
+                FAQ
+              </LandingSectionNavLink>
+            </>
+          )}
+        </NavMenu>
+      </ul>
       <div className="nav-right">
+        <button type="button" className="btn btn-primary nav-demo" onClick={() => openDemo("demo")}>
+          Book a demo
+        </button>
         <button
           type="button"
           className="theme-toggle"
@@ -335,119 +394,10 @@ function Nav() {
         >
           {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
-        <ul className="nav-links">
-          <li>
-            <Link to="/team">Team</Link>
-          </li>
-          <li>
-            <Link to="/careers">Careers</Link>
-          </li>
-          <li
-            className="nav-dropdown"
-            onMouseEnter={() => setResourcesOpen(true)}
-            onMouseLeave={() => setResourcesOpen(false)}
-          >
-            <button
-              type="button"
-              className="nav-dropdown-trigger"
-              aria-expanded={resourcesOpen}
-              aria-haspopup="true"
-              onClick={() => setResourcesOpen((o) => !o)}
-            >
-              Resources
-              <ChevronDown className="nav-caret" size={14} aria-hidden="true" />
-            </button>
-            <div className={`nav-mega ${resourcesOpen ? "open" : ""}`} role="menu">
-              <div className="nav-mega-stack">
-                <div className="nav-mega-col">
-                  <div className="nav-mega-label">Resources</div>
-                  <Link
-                    to="/blog"
-                    className="nav-mega-item"
-                    onClick={() => setResourcesOpen(false)}
-                  >
-                    <BookOpen className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
-                    <span>Blog</span>
-                  </Link>
-                </div>
-                <div className="nav-mega-col">
-                  <div className="nav-mega-label">Developers</div>
-                  <a
-                    href="https://docs.blindsight.io"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="nav-mega-item"
-                    onClick={() => setResourcesOpen(false)}
-                  >
-                    <Code className="nav-mega-icon" strokeWidth={1.6} aria-hidden="true" />
-                    <span>Documentation</span>
-                  </a>
-                </div>
-              </div>
-              <div className="nav-mega-col nav-mega-col-wide">
-                <div className="nav-mega-label">AI Security Guides</div>
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: "security-in-ai-introduction" }}
-                  className="nav-mega-card"
-                  onClick={() => setResourcesOpen(false)}
-                >
-                  <div className="nav-mega-card-body">
-                    <div className="nav-mega-card-title">Security in AI: An Introduction</div>
-                    <div className="nav-mega-card-cta">
-                      Read primer <ArrowRight size={13} aria-hidden="true" />
-                    </div>
-                  </div>
-                </Link>
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: "ai-threat-detection" }}
-                  className="nav-mega-card"
-                  onClick={() => setResourcesOpen(false)}
-                >
-                  <div className="nav-mega-card-body">
-                    <div className="nav-mega-card-title">
-                      AI Threat Detection - Runtime Defense for Enterprise AI
-                    </div>
-                    <div className="nav-mega-card-cta">
-                      Read guide <ArrowRight size={13} aria-hidden="true" />
-                    </div>
-                  </div>
-                </Link>
-                <Link
-                  to="/blog/$slug"
-                  params={{ slug: "how-to-secure-llms" }}
-                  className="nav-mega-card"
-                  onClick={() => setResourcesOpen(false)}
-                >
-                  <div className="nav-mega-card-body">
-                    <div className="nav-mega-card-title">
-                      How to Secure LLMs: A Step-by-Step Playbook
-                    </div>
-                    <div className="nav-mega-card-cta">
-                      Read guide <ArrowRight size={13} aria-hidden="true" />
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </div>
-          </li>
-          <li>
-            <Link to="/contact">Contact</Link>
-          </li>
-        </ul>
-        <button
-          type="button"
-          className={`btn btn-primary nav-cta ${ctaShown ? "is-revealed" : ""}`}
-          aria-hidden={!ctaShown}
-          tabIndex={ctaShown ? undefined : -1}
-          onClick={() => openDemo("demo")}
-        >
-          Book a demo
-        </button>
         <button
           className={`nav-hamburger ${menuOpen ? "open" : ""}`}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
           onClick={() => setMenuOpen((o) => !o)}
         >
           {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
