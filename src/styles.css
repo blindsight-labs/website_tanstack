@@ -368,20 +368,8 @@
 [data-theme="dark"] .faq-tab.active {
   background: linear-gradient(135deg, #6857ee 0%, #5546e0 100%);
 }
-[data-theme="dark"] .threat-row.hidden-row .threat-num,
-[data-theme="dark"] .ib-marker.is-hidden,
 [data-theme="dark"] .theater-cta .btn-primary:hover {
   background: #5546e0;
-}
-/* Violet TEXT that sits on the white illustration chips (which stay white in
-   dark mode): keep it dark so it doesn't wash out. */
-[data-theme="dark"] .ib-marker.is-visible {
-  color: #3f2fb5;
-}
-/* The responsive name pills beside each marker keep a white background in both
-   themes, so their label text must stay dark or it vanishes in dark mode. */
-[data-theme="dark"] .ib-marker-label {
-  color: #111118;
 }
 [data-theme="dark"] .actor-interceptor .actor-orb,
 [data-theme="dark"] .actor-warden .actor-orb {
@@ -448,16 +436,6 @@ h4 {
 .reveal {
   opacity: 1;
   transform: none;
-}
-@keyframes reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .reveal {
@@ -864,23 +842,6 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
   flex-wrap: wrap;
 }
 
-.threat-strip {
-  margin-top: 0;
-  padding: 20px 32px;
-  border-top: 1px solid var(--border);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: var(--dim);
-  text-transform: uppercase;
-  text-align: center;
-}
-.threat-strip strong {
-  color: var(--muted);
-  font-weight: 500;
-  margin-right: 16px;
-}
-
 /* ── Hero · Hex Lattice (full-bleed center pulse) ── */
 .hero-hex {
   position: relative;
@@ -944,14 +905,6 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
 }
 .hero-hex-inner .hero-actions {
   justify-content: center;
-}
-.hero-hex-inner .threat-strip {
-  margin-top: 56px;
-  padding-top: 24px;
-  border-top: 1px solid color-mix(in oklab, var(--violet) 25%, transparent);
-  max-width: 720px;
-  width: 100%;
-  text-align: center;
 }
 @media (max-width: 640px) {
   .hero-hex {
@@ -1092,521 +1045,6 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
   text-transform: uppercase;
   color: var(--dim);
   margin-top: 16px;
-}
-
-/* ── Iceberg section ── */
-.iceberg-grid {
-  display: grid;
-  /* The label list (1st column) is capped at 540px so its rows stay narrow and
-     the right-aligned meta tag sits close to the name; the iceberg (2nd column)
-     takes ALL remaining width, so the grid fills the section with no leftover
-     side margins and the artwork reads as large as possible. Below 640px the
-     list is dropped and the iceberg swaps to its full-width version. */
-  grid-template-columns: minmax(0, 540px) minmax(0, 1fr);
-  gap: clamp(16px, 3vw, 64px);
-  align-items: center;
-  margin-top: 56px;
-}
-/* Below 1500px the rows stack the meta under the name (see .threat-row), so the
-   list no longer needs the wide single-line column. Hug it to the stacked content
-   (≤340px) so the iceberg — which fills the remaining width — slides left next to
-   it instead of leaving a dead band between the two. */
-@media (max-width: 1440px) {
-  .iceberg-grid {
-    /* List hugs the stacked rows (≤340px); the iceberg fills the rest but never
-       drops below 440px — once the viewport can't fit a 340px list + a 440px
-       iceberg, the list gives way and (at ≤960px) the mobile layout takes over,
-       so the iceberg is never squeezed smaller than it reads in #1/#2. */
-    grid-template-columns: minmax(0, 340px) minmax(440px, 1fr);
-  }
-}
-/* The list stays beside the iceberg at every width above the 640px phone
-   breakpoint — there is intentionally no intermediate step that stacks or drops
-   it. Where space is tight (the rail reserves a ~232px right lane above 980px),
-   the rows themselves compact instead: shorter type and wrapped name/meta via
-   the .threat-row rules below (≤1500px, then ≤820px). Only at ≤640px is the list
-   dropped and the iceberg given the full width. */
-
-.threat-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.threat-row {
-  display: grid;
-  /* num | name | meta pinned right. The list column is kept narrow (see
-     .iceberg-grid) so the right-aligned tag stays near the name rather than
-     drifting across a wide column. */
-  grid-template-columns: auto 1fr auto;
-  gap: 16px;
-  width: 100%;
-  text-align: left;
-  font: inherit;
-  padding: 16px 8px;
-  border: 0;
-  border-bottom: 1px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-  border-radius: var(--radius-md);
-  align-items: center;
-  transition:
-    background var(--duration-fast) ease,
-    border-color var(--duration-fast) ease;
-}
-.threat-row:last-child {
-  border-bottom: none;
-}
-.threat-row:hover,
-.threat-row.active {
-  background: var(--violet-soft);
-  border-bottom-color: transparent;
-}
-.threat-row .name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text);
-  white-space: nowrap;
-}
-.threat-row .meta {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dim);
-  white-space: nowrap;
-}
-.threat-row.hidden-row .meta {
-  color: var(--violet-deep);
-  font-weight: 600;
-}
-
-/* Numbered badge that ties each row to its marker on the iceberg. */
-.threat-num {
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-circle);
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  background: var(--surface);
-  border: 1px solid var(--border-mid);
-  color: var(--muted);
-  transition:
-    box-shadow var(--duration-fast) ease,
-    border-color var(--duration-fast) ease;
-}
-.threat-row.hidden-row .threat-num {
-  background: var(--violet-deep);
-  border-color: transparent;
-  color: #fff;
-}
-.threat-row.active .threat-num {
-  border-color: var(--violet);
-  box-shadow: 0 0 0 3px var(--violet-soft);
-}
-
-/* Description revealed inline on touch/narrow layouts (markers are hidden there). */
-.threat-row-desc {
-  grid-column: 1 / -1;
-  display: none;
-  margin-top: 8px;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--muted);
-}
-.iceberg-footnote {
-  margin-top: 24px;
-  font-size: 14px;
-  color: var(--muted);
-  font-weight: 500;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-@media (max-width: 640px) {
-  .iceberg-footnote {
-    max-width: calc(100vw - 40px);
-  }
-}
-.iceberg-footnote-accent {
-  color: var(--violet-deep);
-  font-weight: 700;
-}
-/* Closing hand-off line that segues into the section below. */
-.iceberg-segue {
-  margin: 40px auto 0;
-  max-width: 680px;
-  text-align: center;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--muted);
-}
-/* As the iceberg holds its fixed width and the label column narrows, compact the
-   rows by LAYOUT only — keep the name at its 14px reading size and instead stack
-   the meta tag under the name so the name gets the full column width and wraps to
-   ~2 lines instead of being squeezed beside the meta. The ceiling is 1500px (not
-   1080) because the rail's right-side lane squeezes the list column at every width
-   it's shown — a single-line row needs ~520px and the lane only frees that up
-   beyond ~1500px. */
-@media (max-width: 1440px) {
-  .threat-row {
-    grid-template-columns: auto 1fr;
-    gap: 4px 8px;
-    padding: 8px 8px;
-  }
-  .threat-row .name {
-    white-space: normal;
-    font-size: 14px;
-    line-height: 1.3;
-  }
-  .threat-row .meta {
-    white-space: normal;
-    font-size: 10px;
-    grid-column: 2;
-    justify-self: start;
-    text-align: left;
-  }
-}
-@media (max-width: 820px) {
-  .threat-row {
-    padding: 8px 4px;
-  }
-  .threat-row .name {
-    font-size: 14px;
-  }
-  .threat-row .meta {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-  }
-}
-@media (max-width: 640px) {
-  .threat-row {
-    grid-template-columns: auto 1fr;
-    gap: 4px 8px;
-    padding: 8px 8px;
-  }
-  .threat-row .name {
-    white-space: normal;
-    font-size: 14px;
-  }
-  .threat-row .meta {
-    white-space: normal;
-    font-size: 10px;
-    grid-column: 2;
-    justify-self: start;
-  }
-  .threat-row.active .threat-row-desc {
-    display: block;
-  }
-  .iceberg-footnote {
-    font-size: 13px;
-  }
-}
-
-.iceberg-svg {
-  width: 100%;
-  height: auto;
-}
-.iceberg-img {
-  position: relative;
-  width: 100%;
-  /* Box is shorter than the artwork's native ratio so the empty sky above the
-     tip (and dead space below) is cropped and the iceberg fills the frame. The
-     marker geometry reads the live background-size / position, so the numbered
-     pins track the artwork through this crop. */
-  aspect-ratio: 1594 / 1275;
-  min-height: 0;
-  margin-top: 0;
-  background-image: url("data:image/svg+xml,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20version%3D%221.1%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20viewBox%3D%220%200%201920%201080%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3Aurl(%23linear-gradient-2)%3B%7D.cls-2%7Bfill%3Aurl(%23linear-gradient-4)%3B%7D.cls-3%7Bfill%3Aurl(%23linear-gradient-3)%3B%7D.cls-4%7Bfill%3Aurl(%23linear-gradient-5)%3B%7D.cls-5%7Bfill%3Aurl(%23linear-gradient-6)%3B%7D.cls-6%7Bfill%3Aurl(%23linear-gradient)%3B%7D%3C%2Fstyle%3E%3ClinearGradient%20id%3D%22linear-gradient%22%20x1%3D%22982.1%22%20y1%3D%22878.9%22%20x2%3D%22982.1%22%20y2%3D%22146.1%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%22.2%22%20stop-color%3D%22%23946cbd%22%2F%3E%3Cstop%20offset%3D%22.4%22%20stop-color%3D%22%23946ebe%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%239775c1%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%239b82c8%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%23a195d1%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%23a9addd%22%2F%3E%3Cstop%20offset%3D%22.7%22%20stop-color%3D%22%23b3caec%22%2F%3E%3Cstop%20offset%3D%22.7%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3Cstop%20offset%3D%22.8%22%20stop-color%3D%22%23c6ddf3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23e1ebf6%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-2%22%20x1%3D%221158.7%22%20y1%3D%22383.7%22%20x2%3D%221158.7%22%20y2%3D%22223.3%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3Cstop%20offset%3D%22.2%22%20stop-color%3D%22%23c0dbf3%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%23d9e9f8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-3%22%20x1%3D%221094.1%22%20y1%3D%22400.4%22%20x2%3D%221165.9%22%20y2%3D%22308.1%22%20xlink%3Ahref%3D%22%23linear-gradient-2%22%2F%3E%3ClinearGradient%20id%3D%22linear-gradient-4%22%20x1%3D%22935.9%22%20y1%3D%22321.7%22%20x2%3D%22852.6%22%20y2%3D%22261.4%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3Cstop%20offset%3D%22.5%22%20stop-color%3D%22%23deecf9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23fff%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-5%22%20x1%3D%22960.9%22%20y1%3D%22876.7%22%20x2%3D%22799.8%22%20y2%3D%22388.1%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23946cbd%22%2F%3E%3Cstop%20offset%3D%22.8%22%20stop-color%3D%22%23a59ee6%22%2F%3E%3Cstop%20offset%3D%22.9%22%20stop-color%3D%22%23a9ade9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23b6d4f1%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23b7d6f2%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22linear-gradient-6%22%20x1%3D%22980.4%22%20y1%3D%22924.7%22%20x2%3D%22980.4%22%20y2%3D%22383.7%22%20gradientUnits%3D%22userSpaceOnUse%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23316db9%22%20stop-opacity%3D%220%22%2F%3E%3Cstop%20offset%3D%22.2%22%20stop-color%3D%22%23316db9%22%20stop-opacity%3D%22.2%22%2F%3E%3Cstop%20offset%3D%22.8%22%20stop-color%3D%22%23316db9%22%20stop-opacity%3D%22.8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23316db9%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%3E%3Cg%20id%3D%22Layer_1%22%3E%3Cg%3E%3Cpath%20class%3D%22cls-6%22%20d%3D%22M1235.5%2C383.7c1.5-.5-40.6-64.5-45.5-72-.3-.5-.7-.8-1.2-1.1l-35.4-17c-.3-.1-.6-.3-.8-.6l-70.8-70.3c-.4-.4-.8-.6-1.3-.8l-17.4-4.8c-.3%2C0-.6-.2-.8-.4l-112-72.5c-1-.7-2.3-.6-3.3%2C0l-8.5%2C5.8c-.7.5-1.2%2C1.3-1.3%2C2.2l-2.3%2C27.5c0%2C1-.6%2C1.8-1.4%2C2.3l-42.3%2C26.1c-.5.3-.9.8-1.2%2C1.4l-21.4%2C50.5c-.6%2C1.3-2%2C2.1-3.4%2C1.8l-22.2-4.4c-1-.2-2.1.2-2.8.9l-110.8%2C125.1c-.7.8-.9-1-.6%2C0l74.4%2C253.6c.2.8.8%2C1.4%2C1.5%2C1.8%2C8.1%2C4.2%2C57.1%2C29.9%2C55.6%2C29.9s64%2C136.4%2C67.5%2C143.7c0%2C.2.2.4.4.6l51.2%2C64.5c1.3%2C1.6%2C3.8%2C1.5%2C4.9-.3l57.3-91c.6-.9%2C1.6-1.4%2C2.6-1.4l31.6.9c1.1%2C0%2C2.1-.5%2C2.7-1.5l70.1-120.8c.2-.3.3-.6.4-1%2C1.6-8.9%2C24.1-131.1%2C22.6-130.6s28.7-24.2%2C32.2-27.1.4-.4.6-.6l16.4-23.9c.3-.4.4-.8.5-1.3l14.5-95.7Z%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%221081.8%20222.9%201087.2%20383.7%201235.5%20383.7%201188.8%20310.7%201152.6%20293.2%201081.8%20222.9%22%2F%3E%3Cpolygon%20class%3D%22cls-3%22%20points%3D%221152.6%20293.2%201087.2%20383.7%201097.1%20383.7%201188.8%20310.7%201152.6%20293.2%22%2F%3E%3Cpolygon%20class%3D%22cls-2%22%20points%3D%22842.5%20257.7%20911.7%20315.6%20868%20261.1%20842.5%20257.7%22%2F%3E%3Cpath%20class%3D%22cls-4%22%20d%3D%22M877.8%2C383.7l102.6%2C495-52.8-66-67.5-143.7-56.1-29.4c-.6-.3-1-.8-1.2-1.4l-74.2-254.4h149.2Z%22%2F%3E%3C%2Fg%3E%3Crect%20class%3D%22cls-5%22%20x%3D%22638.6%22%20y%3D%22383.7%22%20width%3D%22683.6%22%20height%3D%22540.9%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E");
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  background-position: center 46%;
-}
-@media (max-width: 1024px) {
-  .iceberg-img {
-    min-height: 0;
-    margin-top: 0;
-    max-width: 100%;
-  }
-}
-/* (Phone treatment for .iceberg-img lives in the markers block below, where the
-   iceberg becomes the full-width focus.) */
-
-/* ── Iceberg markers + hover tooltips ── */
-.ib-marker {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-circle);
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  font-weight: 600;
-  border: 1.5px solid;
-  cursor: pointer;
-  z-index: 2;
-  transition:
-    transform var(--duration-fast) ease,
-    box-shadow var(--duration-fast) ease;
-}
-.ib-marker.is-visible {
-  background: rgba(255, 255, 255, 0.94);
-  border-color: var(--violet);
-  color: var(--violet-deep);
-  box-shadow: var(--shadow-sm);
-}
-.ib-marker.is-hidden {
-  background: var(--violet-deep);
-  border-color: rgba(255, 255, 255, 0.7);
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(63, 47, 181, 0.45);
-}
-.ib-marker:hover,
-.ib-marker.active {
-  transform: translate(-50%, -50%) scale(1.16);
-  box-shadow: 0 0 0 5px rgba(85, 70, 224, 0.18);
-  z-index: 25;
-}
-
-.ib-tip {
-  position: absolute;
-  right: calc(100% + 14px);
-  top: 50%;
-  transform: translateY(-50%);
-  width: 250px;
-  padding: 16px 16px;
-  text-align: left;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    opacity var(--duration-fast) ease,
-    visibility var(--duration-fast) ease;
-}
-.ib-marker:hover .ib-tip,
-.ib-marker.active .ib-tip {
-  opacity: 1;
-  visibility: visible;
-}
-.ib-tip::after {
-  content: "";
-  position: absolute;
-  right: -6px;
-  top: 50%;
-  width: 11px;
-  height: 11px;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  border-top: 1px solid var(--border);
-  transform: translateY(-50%) rotate(45deg);
-}
-.ib-tip-meta {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--violet-deep);
-  margin-bottom: 4px;
-}
-.ib-tip-name {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.ib-tip-desc {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 400;
-  line-height: 1.55;
-  color: var(--muted);
-}
-
-/* Name pills beside each marker + the "tap for more" hint + the pinned popup
-   modal are all phone-only; on desktop the hover tooltip covers the same job. */
-.iceberg-hint {
-  display: none;
-}
-.ib-marker-label {
-  display: none;
-}
-.ib-modal {
-  display: none;
-}
-
-@media (max-width: 1024px) {
-  /* Iceberg becomes the full-width focus; the name column collapses away and
-     the footnote slides beneath the art. Triggered at 960px (not 640px) because
-     below that a side-by-side list + full-size iceberg no longer fit. */
-  .iceberg-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
-    margin-top: 24px;
-  }
-  .iceberg-col-art {
-    order: 1;
-  }
-  .iceberg-col-list {
-    order: 2;
-  }
-  .iceberg-col-list .threat-list {
-    display: none;
-  }
-  .iceberg-footnote {
-    margin-top: 24px;
-    text-align: center;
-  }
-
-  .iceberg-hint {
-    display: block;
-    text-align: center;
-    margin: 4px 0 0;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--violet-deep);
-  }
-
-  .iceberg-img {
-    position: relative;
-    /* Taller box than the artwork's drawn ratio so the full iceberg — tip to
-       submerged point — clears the frame instead of being cropped. Height scales
-       both the art and the (shared) markers together, so they stay aligned. */
-    aspect-ratio: 1594 / 1500;
-    min-height: 0;
-    margin: 0;
-    width: 100%;
-    background-size: 118% auto;
-    background-position: center 46%;
-    border-radius: var(--radius-lg);
-  }
-
-  /* Numbered tokens shrink a touch and carry their name as a pill alongside. */
-  .ib-marker {
-    width: 26px;
-    height: 26px;
-    font-size: 11px;
-  }
-  .ib-marker-label {
-    display: block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    /* Sizing determined here (which words land on which line), but the box is
-       shrunk to the actual widest rendered line by JS after layout — see the
-       measurement effect in Iceberg.tsx. No native CSS width keyword re-shrinks
-       an absolutely positioned box to its post-wrap content once max-width has
-       forced it to wrap (verified empirically: max-content, fit-content, and
-       plain auto on an inline-block all pin to max-width identically once
-       wrapping is triggered — this isn't specific to abspos or a tiny
-       containing block, checked both). */
-    width: max-content;
-    /* 44vw keeps interior pills tidy without forcing 3-line wraps as often (was
-       38vw); --ib-label-max (set per-marker in JS) is the hard cap so edge pills
-       like #4 can't bleed off the stage. */
-    max-width: min(44vw, var(--ib-label-max, 44vw));
-    padding: 4px 4px;
-    font-family: var(--font-sans);
-    /* 9.5px (was 10px): the narrowest edge-constrained pills (#2, #5, #6 at
-       375px width) need a bit less per-line width than 10px leaves them, and
-       --ib-label-max's edge-safety margin isn't the right place to spend on
-       this — it's protecting against off-stage bleed, not text width. */
-    font-size: 9.5px;
-    line-height: 1.18;
-    font-weight: 600;
-    color: var(--text);
-    background: rgba(255, 255, 255, 0.94);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-  }
-  .ib-marker.label-left .ib-marker-label {
-    right: calc(100% + 6px);
-    text-align: right;
-  }
-  .ib-marker.label-right .ib-marker-label {
-    left: calc(100% + 6px);
-    text-align: left;
-  }
-  .ib-marker.active {
-    z-index: 30;
-  }
-  .ib-marker.active .ib-marker-label {
-    border-color: var(--violet);
-  }
-
-  /* The side tooltip is replaced by a centred, dismissible modal on touch. */
-  .ib-tip {
-    display: none;
-  }
-  .ib-modal {
-    display: flex;
-    position: fixed;
-    inset: 0;
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    background: rgba(17, 17, 24, 0.5);
-    backdrop-filter: blur(3px);
-    animation: ib-modal-in var(--duration-fast) ease-out;
-  }
-  .ib-modal-card {
-    position: relative;
-    width: 100%;
-    max-width: 360px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 24px 24px 24px;
-    box-shadow: var(--shadow-lg);
-    animation: ib-modal-card-in var(--duration-normal) var(--easing-entrance);
-  }
-  .ib-modal-card .ib-tip-name {
-    font-size: 17px;
-    margin-bottom: 8px;
-    padding-right: 24px;
-  }
-  .ib-modal-card .ib-tip-desc {
-    font-size: 13.5px;
-  }
-  .ib-modal-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: var(--radius-md);
-    background: var(--bg-alt);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    cursor: pointer;
-  }
-  .ib-modal-close:hover {
-    color: var(--text);
-    border-color: var(--border-mid);
-  }
 }
 
 /* ── InfoPill: hover/tap info pill (modeled on the iceberg markers) ── */
@@ -2001,151 +1439,6 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
   font-size: 16px;
 }
 
-/* ── Coverage stack: Detect → Protect → Govern ──
-   A left rail with numbered nodes connected by a dashed "builds-on" spine.
-   Node fill escalates (outline → soft → solid) to encode accumulating value.
-   Note: classes are prefixed `cstack-` to avoid colliding with the diagram
-   `.stage`/`.stage-rail` classes defined later in this file. */
-.cstack {
-  list-style: none;
-  margin: 0;
-  max-width: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  align-items: stretch;
-}
-.cstack-tier {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.cstack-rail {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.cstack-num {
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-circle);
-  display: grid;
-  place-items: center;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  background: var(--surface);
-  color: var(--violet);
-  border: 1.5px solid var(--violet-border);
-  box-shadow: var(--shadow-md);
-}
-/* fill escalates with the stack */
-.cstack-protect .cstack-num {
-  background: var(--violet-soft);
-  border-color: var(--violet);
-}
-.cstack-govern .cstack-num {
-  background: var(--violet-soft);
-  border-color: var(--violet);
-}
-/* Continuous connector behind the centred numbers: spans from this number's
-   centre to the next one's (card width + the 24px grid gap). */
-.cstack-spine {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: calc(100% + 24px);
-  height: 2px;
-  transform: translateY(-50%);
-  background: repeating-linear-gradient(90deg, var(--violet-border) 0 5px, transparent 5px 11px);
-}
-.cstack-card {
-  flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 24px 24px;
-  box-shadow: var(--shadow-md);
-}
-.cstack-tier:last-child .cstack-card {
-  margin-bottom: 0;
-}
-.cstack-head {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.cstack-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-lg);
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  background: var(--violet-soft);
-  color: var(--violet-deep);
-}
-.cstack-icon svg {
-  width: 24px;
-  height: 24px;
-}
-.cstack-headtext {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.cstack-name {
-  font-size: 22px;
-  line-height: 1;
-  letter-spacing: -0.01em;
-}
-.cstack-requires {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.cstack-detect .cstack-requires {
-  color: var(--violet);
-}
-.cstack-tagline {
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.55;
-  margin-top: 16px;
-  max-width: 60ch;
-}
-.cstack-items {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-@media (max-width: 640px) {
-  .cstack-tier {
-    grid-template-columns: 38px 1fr;
-    gap: 16px;
-  }
-  .cstack-num {
-    width: 38px;
-    height: 38px;
-    font-size: 12px;
-  }
-  .cstack-card {
-    padding: 20px;
-  }
-  .cstack-name {
-    font-size: 19px;
-  }
-}
-
 .cstack-deploy {
   display: flex;
   flex-wrap: wrap;
@@ -2177,197 +1470,12 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
     font-size: 11px;
   }
 }
-
-/* ── Diagram placeholder above the horizontal stage row ── */
-.cstack-flow {
-  margin: 56px auto 0;
-  max-width: 1080px;
-}
-/* Stage-flow diagram. Colours come from design tokens so it adapts to theme;
-   the violet Blindsight layer + red danger states follow the design rules, and
-   the node glyphs are part of this structural illustration (icon-rule exempt). */
-.sd {
-  margin: 0 0 32px;
-}
-.sd-legend {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 16px;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.sd-legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.sd-legend-swatch {
-  width: 22px;
-  border-top: 2px solid currentColor;
-}
-.sd-legend-ok {
-  color: var(--muted);
-}
-.sd-legend-mal {
-  color: var(--red);
-  border-top-style: dashed;
-}
-.sd-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  font-family: var(--font-display);
-}
-/* Vertical layout swaps in where the stage cards also stack (≤900px). */
-.sd-svg-v {
-  display: none;
-}
-@media (max-width: 1024px) {
-  .sd-svg {
-    display: none;
-  }
-  .sd-svg-v {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-width: 460px;
-    margin: 0 auto;
-    font-family: var(--font-display);
-  }
-  /* Source pills are narrower in the single-row layout — tighten the label. */
-  .sd-svg-v .sd-title,
-  .sd-svg-v .sd-atitle {
-    font-size: 12px;
-  }
-}
-.sd-card {
-  fill: var(--surface);
-  stroke: var(--border);
-  stroke-width: 1.2;
-}
-.sd-title {
-  fill: var(--text);
-  font-size: 15px;
-  font-weight: 600;
-}
-.sd-sub {
-  fill: var(--dim);
-  font-size: 9px;
-  font-family: var(--font-mono);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-.sd-ico {
-  fill: none;
-  stroke: var(--text);
-}
-.sd-acard {
-  fill: rgba(220, 38, 38, 0.06);
-  stroke: var(--red);
-  stroke-width: 1.2;
-}
-.sd-atitle {
-  fill: var(--red);
-  font-size: 15px;
-  font-weight: 600;
-}
-.sd-aico {
-  fill: none;
-  stroke: var(--red);
-}
-.sd-ok {
-  fill: none;
-  stroke: var(--muted);
-  stroke-width: 1.4;
-}
-.sd-mal {
-  fill: none;
-  stroke: var(--red);
-  stroke-width: 1.4;
-  stroke-dasharray: 5 4;
-}
-.sd-x {
-  stroke: var(--red);
-  stroke-width: 2;
-  stroke-linecap: round;
-}
-.sd-bar {
-  fill: var(--violet);
-}
-/* The Blindsight mark is a solid dark glyph: flipped white on the deep violet
-   bar in light mode, kept black on the lighter violet bar in dark mode. */
-.sd-mark {
-  filter: brightness(0) invert(1);
-}
-[data-theme="dark"] .sd-mark {
-  filter: none;
-}
-.sd-aicard {
-  fill: var(--surface);
-  stroke: var(--violet);
-  stroke-width: 1.5;
-}
-.sd-aititle {
-  fill: var(--text);
-  font-size: 18px;
-  font-weight: 600;
-}
-.sd-aisub {
-  fill: var(--violet);
-  font-size: 9px;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  letter-spacing: 1.5px;
-}
-.sd-row {
-  fill: var(--surface-2);
-}
-.sd-rowtx {
-  fill: var(--text);
-  font-size: 12px;
-}
-.sd-badge {
-  fill: var(--violet);
-}
-.sd-check {
-  fill: none;
-  stroke: var(--violet);
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.sd-checkw {
-  fill: none;
-  stroke: #fff;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
 /* Engagement flow sits below the stages as a full-width horizontal timeline
    (no card box — it reads as an inline process strip). */
 .engage {
   position: relative;
   margin: 40px auto 0;
   max-width: 1080px;
-}
-.engage-eyebrow {
-  display: block;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--violet);
-  margin-bottom: 24px;
-}
-.engage-cta {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
 }
 .engage-steps {
   list-style: none;
@@ -2404,11 +1512,6 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
   border: 1.5px solid var(--violet-border);
   box-shadow: var(--shadow-sm);
 }
-.engage-step.is-optional .engage-num {
-  border-style: dashed;
-  color: var(--muted);
-  background: var(--surface-2);
-}
 /* Continuous connector behind the centred numbers (steps are gapless, so the
    span from one number's centre to the next is exactly one step width). */
 .engage-spine {
@@ -2434,9 +1537,6 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
   font-weight: 600;
   color: var(--text);
 }
-.engage-step.is-optional .engage-step-label {
-  color: var(--muted);
-}
 .engage-step-note {
   display: block;
   font-family: var(--font-mono);
@@ -2457,17 +1557,6 @@ html[data-layer="prove"] .nav-step[href$="#prove"] {
   stroke-dasharray: 5 6;
 }
 @media (max-width: 1024px) {
-  /* Stack the stage cards vertically; the horizontal "builds-on" connectors
-     don't read once they're in a single column. */
-  .cstack {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    max-width: 640px;
-    margin: 0 auto;
-  }
-  .cstack-spine {
-    display: none;
-  }
   /* Snake layout: odd steps (1,3,5) on top row, even steps (2,4) on bottom row.
      A single SVG W-curve replaces all individual spines. Circle centers sit at
      Y=26px (row 1) and Y=116px (row 2) so the SVG top/height pins exactly to
@@ -2658,82 +1747,6 @@ footer {
   .demo-page {
     padding: 120px 20px 56px;
   }
-}
-
-/* ── Threat selection menu ── */
-.threat-menu {
-  margin-top: 40px;
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-.threat-card {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 16px;
-  text-align: left;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 24px 24px 20px;
-  cursor: pointer;
-  transition: all var(--duration-normal) ease;
-  box-shadow: var(--shadow-sm);
-  font-family: var(--font-sans);
-}
-.threat-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--violet);
-  box-shadow: 0 14px 34px rgba(85, 70, 224, 0.14);
-}
-.threat-card-icon {
-  width: 52px;
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-lg);
-  background: var(--violet-soft);
-  color: var(--violet);
-}
-.threat-card-cat {
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
-.threat-card-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text);
-  margin-top: 4px;
-}
-.threat-card-desc {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 4px;
-  line-height: 1.5;
-}
-.threat-card-arrow {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-circle);
-  background: var(--text);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  transition:
-    transform var(--duration-normal),
-    background var(--duration-normal);
-}
-.threat-card:hover .threat-card-arrow {
-  background: var(--violet);
-  transform: translateX(3px);
 }
 
 /* Chat window (used standalone by TopologyGraphDemo.tsx) */
@@ -3390,9 +2403,6 @@ footer {
   color: var(--violet);
   font-weight: 600;
 }
-.va-hero-copy .lede .nowrap {
-  white-space: nowrap;
-}
 .va-hero-copy .hero-trust {
   font-size: 14px;
   color: var(--muted);
@@ -3403,24 +2413,6 @@ footer {
 .va-hero-demo {
   width: 100%;
   min-width: 0;
-}
-/* Frame for the hero animation. <blindsight-hero-rail> sets itself to
-   position:absolute/inset:0, so this wrapper owns the box.
-
-   The element drops to its compact 3-node layout below 760px — and this column
-   is 724px at the 1600px hero max-width, ~644px on a 1440px laptop. So compact
-   IS the desktop layout here, deliberately: forcing the wide 5-node variant at
-   this width pushes its type floor down to ~7px. The min-height keeps room for
-   the topmost risk annotation (112px above the rail, which sits at 46% height)
-   on narrow phones, where the aspect ratio alone would collapse the box. */
-.hero-rail {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  min-height: 320px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
 }
 /* Caption above the pipeline graphic (moved out of the headline stack). */
 .hero-demo-cap {
@@ -3912,14 +2904,6 @@ footer {
   .va-hero-copy > h1 {
     order: 1;
   }
-  /* Stacked, the animation is as wide as the column, and `aspect-ratio: 16/10`
-     turns that width straight into height — at a 900px tablet the box would be
-     562px tall and push the copy and CTA off the first screen. Capping the width
-     keeps it a banner rather than a panel. */
-  .hero-rail {
-    max-width: 560px;
-    margin-inline: auto;
-  }
   .va-hero-demo {
     order: 2;
     /* 18px row-gap + 18px margin = the 36px that used to separate the two
@@ -3947,17 +2931,7 @@ footer {
     line-height: 1.5;
   }
 }
-
-/* New scenarios section — the moved threat-scenarios demo. */
-.scenarios-demo {
-  margin-top: 40px;
-}
 /* Mobile: give the copy a little breathing room below the title. */
-@media (max-width: 640px) {
-  .scenarios-copy {
-    margin-top: 8px;
-  }
-}
 
 /* ── Why Blindsight — founder photo placeholders ── */
 .founders-grid {
