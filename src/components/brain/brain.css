@@ -72,9 +72,13 @@ html:has(.brain) {
 .brain-art.is-live .brain-poster-wrap {
   opacity: 0;
 }
-/* Live: the scene draws the object; the button is just its hit area and ring. */
+/* Live: the scene draws the symbol; the button is just its hit area, ringed
+   only when selected or focused. */
 .brain-art.is-live .brain-obj {
   background: none;
+}
+.brain-art.is-live .brain-obj:not([data-picked]):not(:focus-visible)::after {
+  opacity: 0;
 }
 .brain-poster .o {
   fill: none;
@@ -82,20 +86,14 @@ html:has(.brain) {
   stroke-opacity: 0.14;
   stroke-dasharray: 2 6;
 }
-.brain-poster .s,
-.brain-poster .s2 {
+/* Orbiting objects stay neutral: red / green / violet belong to the layers. */
+.brain-poster .s {
   fill: none;
   stroke: var(--brain-streak);
   stroke-linecap: round;
 }
-.brain-poster .s2 {
-  stroke: var(--color-primary-500);
-}
 .brain-poster .b {
   fill: var(--brain-streak);
-}
-.brain-poster .b2 {
-  fill: var(--color-primary-500);
 }
 .brain-poster .g {
   stop-color: var(--brain-glow);
@@ -116,9 +114,7 @@ html:has(.brain) {
 }
 /* Layers: the unmarked orbit field recedes behind the marked objects. */
 .brain:not([data-layer="hero"]) .brain-poster .s,
-.brain:not([data-layer="hero"]) .brain-poster .s2,
-.brain:not([data-layer="hero"]) .brain-poster .b,
-.brain:not([data-layer="hero"]) .brain-poster .b2 {
+.brain:not([data-layer="hero"]) .brain-poster .b {
   opacity: 0.25;
 }
 
@@ -130,12 +126,15 @@ html:has(.brain) {
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: radial-gradient(
-    circle,
-    var(--brain-mark) 0 7px,
-    color-mix(in srgb, var(--brain-mark) 18%, transparent) 8px 15px,
-    transparent 16px
-  );
+  /* Static glass orb (poster / reduced motion): highlight, glowing core, clear shell. */
+  background:
+    radial-gradient(circle at 40% 36%, rgba(255, 255, 255, 0.85) 0 2px, transparent 4px),
+    radial-gradient(
+      circle,
+      var(--brain-mark) 0 5px,
+      color-mix(in srgb, var(--brain-mark) 28%, transparent) 7px 14px,
+      transparent 15px
+    );
   cursor: pointer;
   z-index: 2;
   transition: transform var(--duration-normal) var(--easing-entrance);
@@ -158,24 +157,52 @@ html:has(.brain) {
   outline: none;
 }
 
-/* ── Card + its connector to the object ── */
-.brain-link {
+/* ── Card + its connector, hung off an anchor that tracks the object ──
+   The anchor covers the art box; --x/--y (the object, in % of the box) and
+   data-side are updated every frame by the scene. */
+.brain-anchor {
+  /* Cards stay below the layer heading (top-left) and above the bottom edge. */
+  --card-top: clamp(38%, calc(var(--y) - 48px), 60%);
   position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+/* An elbow: across from the object, then along the card's near edge to it.
+   Both parts sit in the anchor so their % values resolve against the art box. */
+.brain-link,
+.brain-link-v {
+  position: absolute;
+  background: var(--brain-mark);
+}
+.brain-link {
   top: var(--y);
   width: 40px;
   height: 1px;
-  background: var(--brain-mark);
-  z-index: 3;
 }
-.brain-link.is-right {
+.brain-link-v {
+  --a: var(--y);
+  --b: calc(var(--card-top) + 24px);
+  top: min(var(--a), var(--b));
+  height: calc(max(var(--a) - var(--b), var(--b) - var(--a)) + 1px);
+  width: 1px;
+}
+.brain-anchor[data-side="right"] .brain-link {
   left: var(--x);
 }
-.brain-link.is-left {
+.brain-anchor[data-side="right"] .brain-link-v {
+  left: calc(var(--x) + 40px);
+}
+.brain-anchor[data-side="left"] .brain-link {
   right: calc(100% - var(--x));
 }
+.brain-anchor[data-side="left"] .brain-link-v {
+  right: calc(100% - var(--x) + 40px);
+}
 .brain-card {
+  pointer-events: auto;
   position: absolute;
-  top: clamp(0%, calc(var(--y) - 48px), 60%);
+  top: var(--card-top);
   width: 320px;
   box-sizing: border-box;
   padding: 24px;
@@ -185,14 +212,70 @@ html:has(.brain) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  z-index: 3;
   animation: brain-pop var(--duration-normal) var(--easing-entrance);
 }
-.brain-card.is-right {
+.brain-anchor[data-side="right"] .brain-card {
   left: calc(var(--x) + 40px);
 }
-.brain-card.is-left {
+.brain-anchor[data-side="left"] .brain-card {
   right: calc(100% - var(--x) + 40px);
+}
+
+/* ── Layer change: a scan line sweeps the stage in the direction of travel ── */
+.brain-scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--brain-mark);
+  box-shadow: 0 0 24px 4px color-mix(in srgb, var(--brain-mark) 55%, transparent);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  animation-name: brain-scan;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  animation-fill-mode: forwards;
+}
+/* The glow trailing behind the line. */
+.brain-scan::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+  background: linear-gradient(
+    to left,
+    color-mix(in srgb, var(--brain-mark) 16%, transparent),
+    transparent
+  );
+}
+.brain-scan[data-dir="-1"] {
+  animation-direction: reverse;
+}
+.brain-scan[data-dir="-1"]::before {
+  right: auto;
+  left: 0;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--brain-mark) 16%, transparent),
+    transparent
+  );
+}
+@keyframes brain-scan {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  8%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
 }
 @keyframes brain-pop {
   from {
@@ -497,13 +580,12 @@ html:has(.brain) {
   .brain-tick {
     height: 16px;
   }
-  .brain-link {
+  .brain-link,
+  .brain-link-v {
     display: none;
   }
   /* The card docks above the bottom edge instead of floating by its object. */
-  .brain-card,
-  .brain-card.is-left,
-  .brain-card.is-right {
+  .brain-anchor[data-side] .brain-card {
     position: fixed;
     top: auto;
     left: 44px;
@@ -603,5 +685,8 @@ html:has(.brain) {
   }
   .brain-card {
     animation: none;
+  }
+  .brain-scan {
+    display: none;
   }
 }

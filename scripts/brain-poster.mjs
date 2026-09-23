@@ -72,7 +72,6 @@ const OBJS = Array.from({ length: 46 }, (_, i) => ({
   size: 5 + r() * 7,
   dir: r() > 0.5 ? 1 : -1,
   trail: 0.22 + r() * 0.4,
-  tint: r() < 0.25,
 }));
 
 function shape(kind, x, y, s, cls, o) {
@@ -107,10 +106,10 @@ const drawObj = (ob, front) => {
     const q1 = orbitAt(o, (a0 + a1) / 2);
     const q2 = orbitAt(o, a1);
     out.push(
-      `<path class="${ob.tint ? "s2" : "s"}" d="M${f1(q0.x)} ${f1(q0.y)}Q${f1(q1.x)} ${f1(q1.y)} ${f1(q2.x)} ${f1(q2.y)}" stroke-width="${f1(s * 0.7)}" opacity="${op(so * depth)}"/>`,
+      `<path class="s" d="M${f1(q0.x)} ${f1(q0.y)}Q${f1(q1.x)} ${f1(q1.y)} ${f1(q2.x)} ${f1(q2.y)}" stroke-width="${f1(s * 0.7)}" opacity="${op(so * depth)}"/>`,
     );
   });
-  out.push(shape(ob.kind, p.x, p.y, s, ob.tint ? "b2" : "b", op(depth * 0.9)));
+  out.push(shape(ob.kind, p.x, p.y, s, "b", op(depth * 0.9)));
 };
 
 OBJS.forEach((ob) => drawObj(ob, false));

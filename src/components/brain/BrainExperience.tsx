@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { ArrowDown, Check, ChevronLeft, ChevronRight } from "lucide-react";
 
 import posterSvg from "@/assets/brain-poster.svg?raw";
 import type { BrainScene, ScreenPos } from "./brain-scene";
 import {
   AUDIT_CHECKS,
+  DEFAULT_PICK,
   LAYERS,
   MARKED,
+  TRANSITION,
   type LayerId,
   type MarkedObject,
   type StepId,
@@ -17,10 +19,15 @@ import {
    #govern, #prove). Whichever step is half in view is the active layer.
    Scroll, a horizontal swipe on the stage, the edge rails and the nav's
    See/Govern/Prove links all move between layers through native scrolling.
-   In See/Govern/Prove the five marked objects are real buttons: hover, focus
-   or tap one to open its card, which also halts that object. The three.js
-   scene (brain-scene.ts) renders over a static SVG poster, which stays as
-   the fallback for reduced motion and no WebGL. */
+   A layer change sweeps a scan line across the stage; each threat orb takes
+   its new colour a beat after the line passes it.
+   In See/Govern/Prove the nine glass orbs are real buttons: hover, focus or
+   tap one to select it, which halts it and shows its card; tapping or clicking
+   anywhere else (or Esc) releases it. Shadow AI is selected when See it opens,
+   and the selection carries across layers until the visitor picks another or
+   releases it. The three.js scene (brain-scene.ts) renders over
+   a static SVG poster, which stays as the fallback for reduced motion and no
+   WebGL. */
 
 const ORDER = LAYERS.map((l) => l.id);
 
@@ -33,15 +40,22 @@ function objectLabel(layer: StepId, m: MarkedObject) {
   return `Audit trail: ${m.threat.title}`;
 }
 
+const cardSide = (x: number) => (x > 55 ? "left" : "right");
+
 export function BrainExperience() {
   const [layer, setLayer] = useState<LayerId>("hero");
-  // The open card: which object, and where it was on screen when picked.
-  const [picked, setPicked] = useState<{ i: number; x: number; y: number } | null>(null);
+  const [picked, setPicked] = useState<number | null>(null);
+  const [inView, setInView] = useState(true);
+  const [scan, setScan] = useState<{ key: number; dir: 1 | -1 } | null>(null);
   const [live, setLive] = useState(false); // WebGL scene rendering over the poster
   const sectionRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const artRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<BrainScene | null>(null);
   const layerRef = useRef<LayerId>("hero");
+  const pickedRef = useRef<number | null>(null);
   const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const livePos = useRef<ScreenPos[] | null>(null);
   const swipeStart = useRef<{ x: number; y: number } | null>(null);
@@ -54,30 +68,49 @@ export function BrainExperience() {
     if (!canvas || !section) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let cancelled = false;
-    import("./brain-scene").then(({ createBrainScene }) => {
-      if (cancelled) return;
-      try {
-        sceneRef.current = createBrainScene(canvas, {
-          mobile: window.matchMedia("(max-width: 640px)").matches,
-          markedCount: MARKED.length,
-          styleSource: section,
-          onFrame: (pos) => {
-            livePos.current = pos;
-            // Buttons follow their objects without a React render per frame.
-            pos.forEach((p, i) => {
-              const b = btnRefs.current[i];
-              if (!b) return;
-              b.style.left = `${p.x}%`;
-              b.style.top = `${p.y}%`;
-            });
-          },
-          onReady: () => setLive(true),
-        });
-        sceneRef.current.setLayer(layerRef.current);
-      } catch {
-        /* no WebGL: keep the poster */
-      }
-    });
+    import("./brain-scene").then(
+      ({ createBrainScene }) => {
+        if (cancelled) return;
+        try {
+          const scene = createBrainScene(canvas, {
+            mobile: window.matchMedia("(max-width: 640px)").matches,
+            markedCount: MARKED.length,
+            styleSource: section,
+            scanFrac: (xPct) => {
+              const a = artRef.current!.getBoundingClientRect();
+              const s = stageRef.current!.getBoundingClientRect();
+              return (a.left - s.left + (xPct / 100) * a.width) / s.width;
+            },
+            onFrame: (pos) => {
+              livePos.current = pos;
+              // Buttons and the open card follow their objects without a React render per frame.
+              pos.forEach((p, i) => {
+                const b = btnRefs.current[i];
+                if (!b) return;
+                b.style.left = `${p.x}%`;
+                b.style.top = `${p.y}%`;
+              });
+              const i = pickedRef.current;
+              const a = anchorRef.current;
+              if (i !== null && a) {
+                a.style.setProperty("--x", `${pos[i].x}%`);
+                a.style.setProperty("--y", `${pos[i].y}%`);
+                a.dataset.side = cardSide(pos[i].x);
+              }
+            },
+            onReady: () => setLive(true),
+          });
+          if (layerRef.current !== "hero") scene.setLayer(layerRef.current, 1);
+          scene.setHalted(pickedRef.current);
+          sceneRef.current = scene;
+        } catch {
+          /* no WebGL: keep the poster */
+        }
+      },
+      () => {
+        /* chunk failed to load: keep the poster */
+      },
+    );
     const mo = new MutationObserver(() => sceneRef.current?.setTheme());
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     return () => {
@@ -88,42 +121,53 @@ export function BrainExperience() {
     };
   }, []);
 
+  // Active layer = the step at least half in view. (isIntersecting is true for
+  // any overlap, even an edge touching the viewport, so check the ratio.)
   useEffect(() => {
-    layerRef.current = layer;
-    sceneRef.current?.setLayer(layer);
-  }, [layer]);
-
-  useEffect(() => {
-    sceneRef.current?.setHalted(picked?.i ?? null);
-  }, [picked]);
-
-  const pick = (i: number) => {
-    const p = livePos.current?.[i] ?? MARKED[i];
-    setPicked({ i, x: p.x, y: p.y });
-  };
-  const unpick = (i: number) => setPicked((p) => (p?.i === i ? null : p));
-
-  useEffect(() => {
-    const steps = sectionRef.current?.querySelectorAll(".brain-step") ?? [];
-    const io = new IntersectionObserver(
+    const section = sectionRef.current;
+    if (!section) return;
+    const steps = new IntersectionObserver(
       (entries) => {
-        // Any step entering or leaving closes the card (incl. scrolling past the section).
-        setPicked(null);
-        for (const e of entries) if (e.isIntersecting) setLayer(e.target.id as LayerId);
+        for (const e of entries) {
+          if (e.intersectionRatio >= 0.5) setLayer(e.target.id as LayerId);
+        }
       },
       { threshold: 0.5 },
     );
-    steps.forEach((s) => io.observe(s));
-    return () => io.disconnect();
+    section.querySelectorAll(".brain-step").forEach((s) => steps.observe(s));
+    // The card hides once the section scrolls away (it is fixed on phones).
+    const whole = new IntersectionObserver(([e]) => setInView(e.isIntersecting));
+    whole.observe(section);
+    return () => {
+      steps.disconnect();
+      whole.disconnect();
+    };
   }, []);
 
-  // Mirrored onto <html> so the nav can underline the active step.
+  // Layer change: scan line, scene transition, and the default selection.
   useEffect(() => {
+    const prev = layerRef.current;
+    layerRef.current = layer;
     document.documentElement.dataset.layer = layer;
-    return () => {
-      delete document.documentElement.dataset.layer;
-    };
+    if (prev === layer) return;
+    const dir = ORDER.indexOf(layer) > ORDER.indexOf(prev) ? 1 : -1;
+    sceneRef.current?.setLayer(layer, dir);
+    setScan((s) => ({ key: (s?.key ?? 0) + 1, dir }));
+    // Entering See it selects Shadow AI; later layers keep whatever is selected (or not).
+    setPicked((p) => (layer === "hero" ? null : prev === "hero" ? (p ?? DEFAULT_PICK) : p));
   }, [layer]);
+
+  useEffect(
+    () => () => {
+      delete document.documentElement.dataset.layer;
+    },
+    [],
+  );
+
+  useEffect(() => {
+    pickedRef.current = picked;
+    sceneRef.current?.setHalted(picked);
+  }, [picked]);
 
   const go = (delta: 1 | -1) => {
     const next = ORDER[ORDER.indexOf(layer) + delta];
@@ -137,7 +181,7 @@ export function BrainExperience() {
 
   const idx = ORDER.indexOf(layer);
   const nextName = LAYERS[idx + 1]?.name ?? "Book a demo";
-  const pickedObj = picked && layer !== "hero" ? MARKED[picked.i] : null;
+  const cardPos = picked === null ? null : (livePos.current?.[picked] ?? MARKED[picked]);
 
   return (
     <section
@@ -150,6 +194,7 @@ export function BrainExperience() {
       }}
     >
       <div
+        ref={stageRef}
         className="brain-stage"
         onPointerDown={(e) => {
           swipeStart.current = { x: e.clientX, y: e.clientY };
@@ -160,6 +205,11 @@ export function BrainExperience() {
           if (!s) return;
           const dx = e.clientX - s.x;
           const dy = e.clientY - s.y;
+          // A tap or click away from the orbs and card releases the orb and closes its card.
+          if (Math.hypot(dx, dy) < 8) {
+            if (!(e.target as Element).closest("button, a, .brain-card")) setPicked(null);
+            return;
+          }
           if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy)) return;
           go(dx < 0 ? 1 : -1);
         }}
@@ -167,7 +217,7 @@ export function BrainExperience() {
           swipeStart.current = null;
         }}
       >
-        <div className={`brain-art ${live ? "is-live" : ""}`}>
+        <div ref={artRef} className={`brain-art ${live ? "is-live" : ""}`}>
           <div className="brain-poster-wrap" dangerouslySetInnerHTML={{ __html: posterSvg }} />
           <canvas ref={canvasRef} className="brain-canvas" aria-hidden="true" />
           {layer !== "hero" &&
@@ -186,26 +236,38 @@ export function BrainExperience() {
                 className="brain-obj"
                 style={live ? undefined : { left: `${m.x}%`, top: `${m.y}%` }}
                 aria-label={objectLabel(layer, m)}
-                aria-expanded={picked?.i === i}
+                aria-pressed={picked === i}
                 aria-controls="brain-card"
-                data-picked={picked?.i === i || undefined}
+                data-picked={picked === i || undefined}
                 onPointerEnter={(e) => {
-                  if (e.pointerType === "mouse") pick(i);
+                  if (e.pointerType === "mouse") setPicked(i);
                 }}
-                onPointerLeave={(e) => {
-                  if (e.pointerType === "mouse") unpick(i);
-                }}
-                onFocus={() => pick(i)}
-                onBlur={() => unpick(i)}
-                onClick={() => pick(i)}
+                onFocus={() => setPicked(i)}
+                onClick={() => setPicked(i)}
               />
             ))}
           <div className="brain-card-slot" aria-live="polite">
-            {pickedObj && picked && layer !== "hero" && (
-              <BrainCard layer={layer} m={pickedObj} x={picked.x} y={picked.y} />
+            {layer !== "hero" && picked !== null && cardPos && inView && (
+              <BrainCard
+                ref={anchorRef}
+                layer={layer}
+                m={MARKED[picked]}
+                x={cardPos.x}
+                y={cardPos.y}
+              />
             )}
           </div>
         </div>
+
+        {scan && (
+          <span
+            key={scan.key}
+            className="brain-scan"
+            data-dir={scan.dir}
+            style={{ animationDuration: `${TRANSITION.scanMs}ms` }}
+            aria-hidden="true"
+          />
+        )}
 
         {LAYERS.map((l, i) => {
           const active = l.id === layer;
@@ -274,8 +336,12 @@ export function BrainExperience() {
   );
 }
 
-function BrainCard({ layer, m, x, y }: { layer: StepId; m: MarkedObject; x: number; y: number }) {
-  const side = x > 55 ? "is-left" : "is-right";
+/* The card and its connector hang off an anchor at the object's position; the
+   scene's frame callback moves the anchor so the card tracks the object. */
+const BrainCard = forwardRef<
+  HTMLDivElement,
+  { layer: StepId; m: MarkedObject; x: number; y: number }
+>(function BrainCard({ layer, m, x, y }, ref) {
   const style = { "--x": `${x}%`, "--y": `${y}%` } as React.CSSProperties;
   const head = (tag: string) => (
     <div className="brain-card-head">
@@ -291,9 +357,10 @@ function BrainCard({ layer, m, x, y }: { layer: StepId; m: MarkedObject; x: numb
   );
 
   return (
-    <>
-      <span className={`brain-link ${side}`} style={style} aria-hidden="true" />
-      <div id="brain-card" className={`brain-card ${side}`} style={style}>
+    <div ref={ref} className="brain-anchor" data-side={cardSide(x)} style={style}>
+      <span className="brain-link" aria-hidden="true" />
+      <span className="brain-link-v" aria-hidden="true" />
+      <div id="brain-card" className="brain-card">
         {layer === "see" && (
           <>
             {head("Threat")}
@@ -345,6 +412,6 @@ function BrainCard({ layer, m, x, y }: { layer: StepId; m: MarkedObject; x: numb
           </>
         )}
       </div>
-    </>
+    </div>
   );
-}
+});

@@ -20,13 +20,16 @@ export default defineConfig({
   // Pre-bundle these in the FIRST optimize pass. Otherwise Vite discovers them
   // mid-load ("new dependencies optimized … reloading") and the in-flight client
   // entry import 504s — breaking hydration so no buttons work until a reload.
-  // The router-core SSR subpaths + seroval are pulled in by @tanstack/react-start.
+  // The router-core SSR subpaths + seroval are pulled in by @tanstack/react-start;
+  // three is only reached through the home page's dynamic import of brain-scene.
   optimizeDeps: {
     include: [
       "@tanstack/router-core",
       "@tanstack/router-core/isServer",
       "@tanstack/router-core/ssr/client",
       "seroval",
+      "three",
+      "three/examples/jsm/environments/RoomEnvironment.js",
     ],
   },
 });
