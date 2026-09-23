@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import {
   AlertTriangle,
-  ChevronDown,
   FileText,
   LayoutGrid,
   Scale,
@@ -13,10 +11,10 @@ import {
 
 import { useDemoModal } from "@/components/DemoModal";
 import { FaqSection } from "@/components/FaqSection";
-import { HeroRail } from "@/components/HeroRail";
+import { BrainExperience } from "@/components/brain/BrainExperience";
+import brainCss from "@/components/brain/brain.css?url";
 import { Iceberg } from "@/components/Iceberg";
 import { InfoPill } from "@/components/InfoPill";
-import { LogoStrip } from "@/components/LogoStrip";
 import { faqSchemaEntities } from "@/lib/faq-content";
 import { TopologyGraphDemo } from "@/components/TopologyGraphDemo";
 import iconBlindsight from "@/assets/ICON_Blindsight.svg";
@@ -39,7 +37,10 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:url", content: "https://blindsight.io/" },
     ],
-    links: [{ rel: "canonical", href: "https://blindsight.io/" }],
+    links: [
+      { rel: "canonical", href: "https://blindsight.io/" },
+      { rel: "stylesheet", href: brainCss },
+    ],
     scripts: [
       {
         type: "application/ld+json",
@@ -52,129 +53,6 @@ export const Route = createFileRoute("/")({
     ],
   }),
 });
-
-/* ── Section progress rail ──
-   Each rail label is read LIVE from its section's eyebrow heading (the
-   `.s-head .tag` element) at runtime — so renaming a section's eyebrow
-   automatically renames its rail label, with no second place to edit.
-   The `label` below is only a FALLBACK: used for the hero (which has no
-   eyebrow) and as the server-rendered placeholder before hydration.
-   (The rail's appearance is styled in styles.css under ".section-rail".) */
-const SECTIONS: { id: string; label: string }[] = [
-  { id: "hero", label: "Gain Visibility" },
-  { id: "why", label: "Why Blindsight?" },
-  { id: "scenarios", label: "Beyond Shadow AI" },
-  { id: "stack", label: "Adopt in stages" },
-  { id: "faq", label: "FAQ" },
-];
-
-function SectionRail({ sections }: { sections: { id: string; label: string }[] }) {
-  const [active, setActive] = useState<string>(sections[0]?.id ?? "");
-  // Show the rail fully (labels visible) on load, then collapse to bare dots.
-  // Hovering the rail re-expands it (pure CSS, see .section-rail).
-  const [collapsed, setCollapsed] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setCollapsed(true), 800);
-    return () => clearTimeout(t);
-  }, []);
-  // Labels stay in sync with the section titles automatically: we pull each
-  // one from the section's eyebrow (`.s-head .tag`) and only fall back to the
-  // configured `label` when a section has no eyebrow (e.g. the hero).
-  const [labels, setLabels] = useState<Record<string, string>>(() =>
-    Object.fromEntries(sections.map((s) => [s.id, s.label])),
-  );
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) setActive(entry.target.id);
-        }
-      },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
-    );
-    const derived: Record<string, string> = {};
-    for (const s of sections) {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-      const eyebrow = el?.querySelector(".s-head .tag")?.textContent?.trim();
-      derived[s.id] = eyebrow || s.label;
-    }
-    setLabels(derived);
-    return () => observer.disconnect();
-  }, [sections]);
-  const go = (id: string) =>
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  return (
-    <nav className={`section-rail ${collapsed ? "is-collapsed" : ""}`} aria-label="Page progress">
-      {sections.map((s) => (
-        <button
-          key={s.id}
-          type="button"
-          className={`section-rail-item ${active === s.id ? "active" : ""}`}
-          onClick={() => go(s.id)}
-          aria-current={active === s.id ? "true" : undefined}
-        >
-          <span className="section-rail-label">{labels[s.id] ?? s.label}</span>
-          <span className="section-rail-dot" />
-        </button>
-      ))}
-    </nav>
-  );
-}
-
-/* ── Hero — split: copy + CTA | Runtime Security demo ──
-   The single CTA opens the demo modal. Keep its `id="hero-cta"` — __root.tsx
-   watches that element with an IntersectionObserver to decide when to reveal
-   the floating CTA, and silently does nothing if the id goes missing. */
-function Hero() {
-  const { open } = useDemoModal();
-
-  return (
-    <header className="va-hero" id="hero">
-      <div className="va-hero-inner">
-        <div className="va-hero-copy reveal">
-          <h1>
-            <span className="accent">
-              See everything your AI is doing. Stop what it shouldn&apos;t.
-            </span>
-          </h1>
-          <p className="lede">
-            Blindsight runs at runtime, inspecting every prompt, response, and tool call. Prevent
-            unauthorised AI usage on employee laptops, prompt injection, sensitive data leaks, and
-            RAG poisoning.
-          </p>
-          <div className="hero-actions">
-            <button
-              type="button"
-              id="hero-cta"
-              className="btn btn-primary"
-              onClick={() => open("demo")}
-            >
-              Book a demo
-            </button>
-          </div>
-        </div>
-
-        <div className="va-hero-demo reveal">
-          <HeroRail />
-        </div>
-      </div>
-
-      <LogoStrip />
-
-      <button
-        type="button"
-        className="hero-scroll-cue"
-        aria-label="Scroll to see more"
-        onClick={() =>
-          document.getElementById("why")?.scrollIntoView({ behavior: "smooth", block: "start" })
-        }
-      >
-        <ChevronDown className="hero-scroll-chevron" strokeWidth={2} aria-hidden="true" />
-      </button>
-    </header>
-  );
-}
 
 /* ── Scenarios — Shadow AI is the entry point; the old threat demo lives here ── */
 function Scenarios() {
@@ -559,8 +437,7 @@ function Stages() {
 function Home() {
   return (
     <main className="page-home">
-      <SectionRail sections={SECTIONS} />
-      <Hero />
+      <BrainExperience />
       <Iceberg
         id="why"
         eyebrow="Why Blindsight?"

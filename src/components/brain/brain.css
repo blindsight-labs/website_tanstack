@@ -1,0 +1,488 @@
+/* ── Home page brain experience (BrainExperience.tsx) ── */
+
+.brain {
+  --brain-mark: var(--color-primary-500);
+  --brain-streak: var(--dim);
+  --brain-glow: var(--color-primary-300);
+  --brain-node: var(--color-primary-800);
+  position: relative;
+}
+[data-theme="dark"] .brain {
+  --brain-glow: var(--violet);
+  --brain-node: var(--color-primary-50);
+}
+.brain[data-layer="see"] {
+  --brain-mark: var(--color-error-500);
+}
+.brain[data-layer="govern"] {
+  --brain-mark: var(--color-success-500);
+}
+/* Snap to each layer, and then to whatever follows the section. */
+html:has(.brain) {
+  scroll-snap-type: y proximity;
+}
+
+.brain-stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  touch-action: pan-y; /* horizontal swipes reach the stage's pointer handlers */
+}
+.brain-steps {
+  margin-top: -100svh;
+}
+.brain-step {
+  height: 100svh;
+  scroll-snap-align: start;
+}
+
+/* ── Art: poster (and later the WebGL canvas) + object buttons ── */
+/* Centred with margins, not a transform: a transform would make it the
+   containing block for the mobile card's position: fixed. */
+.brain-art {
+  --w: min(100vw, 120svh);
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 54%;
+  width: var(--w);
+  aspect-ratio: 6 / 5;
+  margin: calc(var(--w) * -5 / 12) auto 0;
+}
+.brain-poster-wrap,
+.brain-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.brain-poster .o {
+  fill: none;
+  stroke: var(--brain-streak);
+  stroke-opacity: 0.14;
+  stroke-dasharray: 2 6;
+}
+.brain-poster .s,
+.brain-poster .s2 {
+  fill: none;
+  stroke: var(--brain-streak);
+  stroke-linecap: round;
+}
+.brain-poster .s2 {
+  stroke: var(--color-primary-500);
+}
+.brain-poster .b {
+  fill: var(--brain-streak);
+}
+.brain-poster .b2 {
+  fill: var(--color-primary-500);
+}
+.brain-poster .g {
+  stop-color: var(--brain-glow);
+}
+.brain-poster .e {
+  stroke: var(--color-primary-500);
+  stroke-opacity: 0.3;
+  stroke-width: 0.9;
+}
+.brain-poster .n1 {
+  fill: var(--color-primary-500);
+}
+.brain-poster .n2 {
+  fill: var(--color-secondary-500);
+}
+.brain-poster .n3 {
+  fill: var(--brain-node);
+}
+/* Layers: the unmarked orbit field recedes behind the marked objects. */
+.brain:not([data-layer="hero"]) .brain-poster .s,
+.brain:not([data-layer="hero"]) .brain-poster .s2,
+.brain:not([data-layer="hero"]) .brain-poster .b,
+.brain:not([data-layer="hero"]) .brain-poster .b2 {
+  opacity: 0.25;
+}
+
+.brain-obj {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    var(--brain-mark) 0 7px,
+    color-mix(in srgb, var(--brain-mark) 18%, transparent) 8px 15px,
+    transparent 16px
+  );
+  cursor: pointer;
+  z-index: 2;
+  transition: transform var(--duration-normal) var(--easing-entrance);
+}
+.brain-obj::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--brain-mark) 40%, transparent);
+}
+.brain-obj[data-picked] {
+  transform: scale(1.25);
+}
+.brain-obj[data-picked]::after,
+.brain-obj:focus-visible::after {
+  border: 1.5px dashed var(--brain-mark);
+}
+.brain-obj:focus-visible {
+  outline: none;
+}
+
+/* ── Card ── */
+.brain-card {
+  position: absolute;
+  top: clamp(0%, calc(var(--y) - 48px), 60%);
+  width: 320px;
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-elevation-4);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 3;
+  animation: brain-pop var(--duration-normal) var(--easing-entrance);
+}
+.brain-card.is-right {
+  left: calc(var(--x) + 40px);
+}
+.brain-card.is-left {
+  right: calc(100% - var(--x) + 40px);
+}
+@keyframes brain-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+.brain-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.brain-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.brain-tag::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--brain-mark);
+}
+.brain-card-src {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.brain-card h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.brain-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.brain-card dl {
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.brain-card dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 13px;
+}
+.brain-card dt {
+  color: var(--muted);
+}
+.brain-card dd {
+  margin: 0;
+  font-family: var(--font-mono);
+  text-align: right;
+}
+.brain-trail {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.brain-trail li {
+  position: relative;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.brain-trail li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-primary-500);
+}
+.brain-trail li[data-step="detected"]::before {
+  background: var(--color-error-500);
+}
+.brain-trail li[data-step="corrected"]::before {
+  background: var(--color-success-500);
+}
+.brain-trail span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+.brain-checks {
+  margin: 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+}
+.brain-checks li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brain-checks svg {
+  flex-shrink: 0;
+  color: var(--color-success-800);
+}
+[data-theme="dark"] .brain-checks svg {
+  color: var(--color-success-500);
+}
+
+/* ── Copy: one block per layer, cross-faded ── */
+.brain-copy {
+  position: absolute;
+  inset: 0;
+  padding: 136px 96px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--duration-slow) var(--easing-entrance),
+    visibility var(--duration-slow);
+}
+.brain-copy.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+.brain-copy-head {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.brain-copy h1,
+.brain-copy h2 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+.brain-copy h1 {
+  max-width: 640px;
+  font-size: clamp(40px, 5.4vw, 72px);
+  line-height: 1.04;
+}
+.brain-copy h2 {
+  font-size: clamp(28px, 3.4vw, 48px);
+  line-height: 1.08;
+}
+.brain-copy p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.brain-kicker,
+.brain-hint,
+.brain-count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.brain:not([data-layer="hero"]) .brain-kicker {
+  color: var(--violet);
+}
+.brain-copy-foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brain-copy-foot.is-hero {
+  align-self: flex-end;
+  max-width: 400px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+.brain-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.brain-count {
+  color: var(--text);
+}
+.brain-rule {
+  width: 48px;
+  height: 1px;
+  background: var(--border-mid);
+}
+
+/* ── Edge rails (from the sketch): left = back + progress, right = next ── */
+.brain-rail {
+  position: absolute;
+  top: 72px;
+  bottom: 0;
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 4;
+}
+.brain-rail.is-left {
+  left: 0;
+  gap: 8px;
+  border-right: 1px solid var(--border);
+}
+.brain-rail.is-right {
+  right: 0;
+  border-left: 1px solid var(--border);
+}
+.brain-rail button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+.brain-rail button:hover {
+  color: var(--violet);
+}
+.brain-rail-label {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.brain-tick {
+  width: 6px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--border-mid);
+}
+.brain-tick.is-done {
+  background: var(--violet);
+}
+
+@media (max-width: 640px) {
+  .brain-art {
+    --w: 100vw;
+    top: 50%;
+  }
+  .brain-copy {
+    padding: 80px 36px 32px 44px;
+  }
+  .brain[data-layer="hero"] .brain-copy {
+    padding-left: 20px;
+  }
+  .brain-copy p {
+    font-size: 15px;
+  }
+  .brain-copy-foot.is-hero {
+    align-self: stretch;
+    gap: 16px;
+  }
+  .brain-rail {
+    top: 57px;
+    width: 28px;
+  }
+  .brain-rail button {
+    width: 28px;
+  }
+  .brain-rail-label {
+    display: none;
+  }
+  .brain-tick {
+    height: 16px;
+  }
+  /* The card docks above the bottom edge instead of floating by its object. */
+  .brain-card,
+  .brain-card.is-left,
+  .brain-card.is-right {
+    position: fixed;
+    top: auto;
+    left: 44px;
+    right: 36px;
+    bottom: 24px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brain-copy,
+  .brain-obj {
+    transition: none;
+  }
+  .brain-card {
+    animation: none;
+  }
+}
