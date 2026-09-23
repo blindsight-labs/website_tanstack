@@ -51,11 +51,30 @@ html:has(.brain) {
   margin: calc(var(--w) * -5 / 12) auto 0;
 }
 .brain-poster-wrap,
-.brain-poster {
+.brain-poster,
+.brain-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+/* The WebGL scene fades in over the poster once its first frame renders. */
+.brain-poster-wrap,
+.brain-canvas {
+  transition: opacity var(--duration-slow) var(--easing-entrance);
+}
+.brain-canvas {
+  opacity: 0;
+}
+.brain-art.is-live .brain-canvas {
+  opacity: 1;
+}
+.brain-art.is-live .brain-poster-wrap {
+  opacity: 0;
+}
+/* Live: the scene draws the object; the button is just its hit area and ring. */
+.brain-art.is-live .brain-obj {
+  background: none;
 }
 .brain-poster .o {
   fill: none;
@@ -139,7 +158,21 @@ html:has(.brain) {
   outline: none;
 }
 
-/* ── Card ── */
+/* ── Card + its connector to the object ── */
+.brain-link {
+  position: absolute;
+  top: var(--y);
+  width: 40px;
+  height: 1px;
+  background: var(--brain-mark);
+  z-index: 3;
+}
+.brain-link.is-right {
+  left: var(--x);
+}
+.brain-link.is-left {
+  right: calc(100% - var(--x));
+}
 .brain-card {
   position: absolute;
   top: clamp(0%, calc(var(--y) - 48px), 60%);
@@ -463,6 +496,9 @@ html:has(.brain) {
   }
   .brain-tick {
     height: 16px;
+  }
+  .brain-link {
+    display: none;
   }
   /* The card docks above the bottom edge instead of floating by its object. */
   .brain-card,
