@@ -984,7 +984,7 @@ const LAYOUT = ["a", "b", "c", "d"] as const;
 const VERSION = "v40";
 /** Hover playback (desktop, motion allowed): the card's scene, built once and kept,
  *  animated live on one shared WebGL canvas that moves into the hovered card. */
-const PLAYBACK = false;
+const PLAYBACK = true;
 const PLAY_MS = 1700;
 const easeIO = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 

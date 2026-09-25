@@ -417,6 +417,31 @@
   position: relative;
   overflow: hidden;
 }
+/* hover / focus: the card lifts, its render leans in, the detection tag sharpens
+   (the frames of the incident play in JS) */
+.mT-risk {
+  transition:
+    transform 420ms var(--ease),
+    box-shadow 420ms var(--ease);
+  outline: none;
+}
+.mT-risk__img {
+  transition: transform 900ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .mT-risk:hover,
+  .mT-risk:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 1px var(--ink-4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mT-risk,
+  .mT-risk__img {
+    transition: none;
+    transform: none !important;
+  }
+}
 .mT-risk__img {
   display: block;
   width: 100%;
@@ -521,8 +546,33 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover; /* framed exactly like the still underneath */
   opacity: 0;
   pointer-events: none;
+}
+/* hover-capable pages with playback: the callout appears when the incident has
+   happened — the leader draws from the incident, then the label arrives */
+.mT-call__line polyline {
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 0;
+}
+.mT-risks[data-callouts="hover"] .mT-risk:not([data-played]) .mT-call {
+  opacity: 0;
+}
+.mT-risks[data-callouts="hover"] .mT-call__line polyline {
+  stroke-dashoffset: 1400;
+  transition: stroke-dashoffset 900ms var(--ease);
+}
+.mT-risks[data-callouts="hover"] .mT-risk[data-played] .mT-call__line polyline {
+  stroke-dashoffset: 0;
+}
+.mT-risks[data-callouts="hover"] .mT-call__label {
+  opacity: 0;
+  transition: opacity 380ms var(--ease);
+}
+.mT-risks[data-callouts="hover"] .mT-risk[data-played] .mT-call__label {
+  opacity: 1;
+  transition-delay: 520ms;
 }
 .mT-risk__n {
   margin-bottom: 6px;
