@@ -10,8 +10,8 @@ import { nav, sequence } from "./content";
 import { CtaButton, type SectionProps } from "./shared";
 
 const platform = [
-  ...sequence.stages.map((s) => ({ n: s.n, label: s.label, href: "#sequence" })),
-  { n: "", label: "Product walkthrough", href: "#walkthrough" },
+  ...sequence.stages.map((s) => ({ n: s.n, label: s.label, href: "/#sequence" })),
+  { n: "", label: "Product walkthrough", href: "/#walkthrough" },
 ];
 
 export function Nav({ theme }: SectionProps) {
@@ -94,13 +94,15 @@ export function Nav({ theme }: SectionProps) {
 
   return (
     <header
-      className="mD-nav mT-nav"
+      className="mD mD-chrome mD-nav mT-nav"
+      data-theme={theme}
+      data-type="plex"
       data-scrolled={scrolled || sheetOpen ? "true" : "false"}
       data-over={overInverse && !sheetOpen ? "inverse" : "page"}
       data-sheet={sheetOpen ? "open" : "closed"}
     >
       <div className="mD-container mT-nav__inner">
-        <a href="/mockup-5" className="mT-nav__logo" aria-label="Blindsight, home">
+        <a href="/" className="mT-nav__logo" aria-label="Blindsight, home">
           <img src={logo} alt="" width={96} height={20} data-theme={theme} />
         </a>
 

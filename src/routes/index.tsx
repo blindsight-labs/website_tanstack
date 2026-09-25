@@ -1,8 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { BrainExperience } from "@/components/brain/BrainExperience";
-import brainCss from "@/components/brain/brain.css?url";
-import { DemoCta } from "@/components/DemoCta";
+import { MetalDefs } from "@/components/home/shared";
+import { Hero } from "@/components/home/Hero";
+import { ProofStrip } from "@/components/home/ProofStrip";
+import { Risks } from "@/components/home/Risks";
+import { Sequence } from "@/components/home/Sequence";
+import { Walkthrough } from "@/components/home/Walkthrough";
+import { Deployment } from "@/components/home/Deployment";
+import { Discovery } from "@/components/home/Discovery";
+import { Why } from "@/components/home/Why";
+import { Faq } from "@/components/home/Faq";
+import { FinalCta } from "@/components/home/FinalCta";
+
+import heroCss from "@/components/home/hero.css?url";
+import sequenceCss from "@/components/home/sequence.css?url";
+import midCss from "@/components/home/mid.css?url";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -24,16 +36,28 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://blindsight.io/" },
-      { rel: "stylesheet", href: brainCss },
+      { rel: "stylesheet", href: heroCss },
+      { rel: "stylesheet", href: sequenceCss },
+      { rel: "stylesheet", href: midCss },
     ],
   }),
 });
 
 function Home() {
+  const theme = "light";
   return (
-    <main className="page-home">
-      <BrainExperience />
-      <DemoCta />
+    <main className="mD mD-home" data-theme={theme} data-type="plex">
+      <MetalDefs />
+      <Hero theme={theme} />
+      <ProofStrip theme={theme} />
+      <Risks theme={theme} />
+      <Sequence theme={theme} />
+      <Walkthrough theme={theme} />
+      <Deployment theme={theme} />
+      <Discovery theme={theme} />
+      <Why theme={theme} />
+      <Faq theme={theme} />
+      <FinalCta theme={theme} />
     </main>
   );
 }

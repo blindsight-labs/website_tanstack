@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 
 /* Nav/footer link targeting an on-page section of a landing page (the home
    page's See/Govern/Prove steps, /shadow, /demo). Scrolls in-page when
@@ -50,6 +50,11 @@ function LandingSectionNavLink({
 import { DemoModalProvider, useDemoModal } from "@/components/DemoModal";
 import appCss from "../styles.css?url";
 import logo from "@/assets/LOGO_Blindsight.svg";
+import { Nav } from "@/components/home/Nav";
+import { Footer } from "@/components/home/Footer";
+import homeSystemCss from "@/components/home/system.css?url";
+import homeTopCss from "@/components/home/top.css?url";
+import homeBottomCss from "@/components/home/bottom.css?url";
 
 function NotFoundComponent() {
   return (
@@ -125,8 +130,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap",
       },
+      // site-wide nav + footer (and the home page) use the home design system
+      { rel: "stylesheet", href: homeSystemCss },
+      { rel: "stylesheet", href: homeTopCss },
+      { rel: "stylesheet", href: homeBottomCss },
     ],
     scripts: [
       // Google Analytics (gtag.js) — GA4 property G-06PKBPMVBJ
@@ -239,173 +248,6 @@ function useNavChrome() {
     theme,
     toggleTheme,
   };
-}
-
-// The home page's three layers; BrainExperience sets <html data-layer> to the
-// active id, which underlines the matching link (see `.nav-step` in styles.css).
-const STEP_LINKS = [
-  { id: "see", label: "See it" },
-  { id: "govern", label: "Govern it" },
-  { id: "prove", label: "Prove it" },
-] as const;
-
-const COMPANY_LINKS = [
-  { to: "/team", label: "Team" },
-  { to: "/careers", label: "Careers" },
-  { to: "/contact", label: "Contact" },
-] as const;
-
-const DOCS_URL = "https://docs.blindsight.io";
-
-// Hover- or click-opened dropdown; Escape closes it.
-function NavMenu({
-  label,
-  children,
-}: {
-  label: string;
-  children: (close: () => void) => React.ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  const close = () => setOpen(false);
-  return (
-    <li
-      className="nav-dropdown"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={close}
-      onKeyDown={(e) => {
-        if (e.key === "Escape") close();
-      }}
-    >
-      <button
-        type="button"
-        className="nav-dropdown-trigger"
-        aria-expanded={open}
-        aria-haspopup="true"
-        onClick={() => setOpen((o) => !o)}
-      >
-        {label}
-        <ChevronDown className="nav-caret" size={14} aria-hidden="true" />
-      </button>
-      <div className={`nav-dropdown-menu ${open ? "open" : ""}`}>{children(close)}</div>
-    </li>
-  );
-}
-
-function Nav() {
-  const { open: openDemo } = useDemoModal();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { scrolled, menuOpen, setMenuOpen, closeMenu, theme, toggleTheme } = useNavChrome();
-  return (
-    <nav className={`nav nav-main ${scrolled ? "scrolled" : ""}`}>
-      <Link
-        to="/"
-        aria-label="Blindsight home"
-        onClick={(e) => {
-          // Already home → scroll back to the top instead of a no-op navigation.
-          if (pathname === "/") {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }
-          closeMenu();
-        }}
-      >
-        <img src={logo} alt="Blindsight" className="nav-logo" />
-      </Link>
-      <div className={`nav-mobile-menu ${menuOpen ? "open" : ""}`} inert={!menuOpen}>
-        {STEP_LINKS.map((s) => (
-          <LandingSectionNavLink
-            key={s.id}
-            to="/"
-            id={s.id}
-            className="nav-step"
-            onClick={closeMenu}
-          >
-            {s.label}
-          </LandingSectionNavLink>
-        ))}
-        <span className="nav-mobile-label">Company</span>
-        {COMPANY_LINKS.map((l) => (
-          <Link key={l.to} to={l.to} onClick={closeMenu}>
-            {l.label}
-          </Link>
-        ))}
-        <span className="nav-mobile-label">Resources</span>
-        <Link to="/blog" onClick={closeMenu}>
-          Blog
-        </Link>
-        <a href={DOCS_URL} target="_blank" rel="noopener noreferrer" onClick={closeMenu}>
-          Documentation
-        </a>
-        <Link to="/faq" onClick={closeMenu}>
-          FAQ
-        </Link>
-        <button
-          type="button"
-          onClick={() => {
-            closeMenu();
-            openDemo("demo");
-          }}
-        >
-          Book a demo
-        </button>
-      </div>
-      <ul className="nav-links">
-        {STEP_LINKS.map((s) => (
-          <li key={s.id}>
-            <LandingSectionNavLink to="/" id={s.id} className="nav-step">
-              {s.label}
-            </LandingSectionNavLink>
-          </li>
-        ))}
-        <li className="nav-sep" aria-hidden="true" />
-        <NavMenu label="Company">
-          {(close) =>
-            COMPANY_LINKS.map((l) => (
-              <Link key={l.to} to={l.to} onClick={close}>
-                {l.label}
-              </Link>
-            ))
-          }
-        </NavMenu>
-        <NavMenu label="Resources">
-          {(close) => (
-            <>
-              <Link to="/blog" onClick={close}>
-                Blog
-              </Link>
-              <a href={DOCS_URL} target="_blank" rel="noopener noreferrer" onClick={close}>
-                Documentation
-              </a>
-              <Link to="/faq" onClick={close}>
-                FAQ
-              </Link>
-            </>
-          )}
-        </NavMenu>
-      </ul>
-      <div className="nav-right">
-        <button type="button" className="btn btn-primary nav-demo" onClick={() => openDemo("demo")}>
-          Book a demo
-        </button>
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
-        </button>
-        <button
-          className={`nav-hamburger ${menuOpen ? "open" : ""}`}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((o) => !o)}
-        >
-          {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-        </button>
-      </div>
-    </nav>
-  );
 }
 
 function ShadowNav() {
@@ -592,24 +434,7 @@ function NavSwitch() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   if (pathname === "/shadow") return <ShadowNav />;
   if (pathname === "/demo") return <DemoNav />;
-  return <Nav />;
-}
-
-function Footer() {
-  return (
-    <footer>
-      <div className="footer-inner">
-        <div className="footer-copy">© 2026 Blindsight Technologies AG · Zurich, CH</div>
-        <div className="footer-links">
-          <Link to="/contact">Contact</Link>
-          <Link to="/faq">FAQ</Link>
-          <Link to="/imprint">Imprint</Link>
-          <Link to="/privacy">Privacy Notice</Link>
-          <a href="mailto:info@blindsight.io">info@blindsight.io</a>
-        </div>
-      </div>
-    </footer>
-  );
+  return <Nav theme="light" />;
 }
 
 function RootComponent() {
@@ -622,7 +447,7 @@ function RootComponent() {
       <DemoModalProvider>
         {!isMockup && <NavSwitch />}
         <Outlet />
-        {!isMockup && <Footer />}
+        {!isMockup && <Footer theme="light" />}
       </DemoModalProvider>
     </QueryClientProvider>
   );

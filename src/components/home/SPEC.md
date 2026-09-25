@@ -85,7 +85,7 @@ What actually makes Octane premium (measured from their DOM, not guessed):
   'dots'|'chars')` (glass needs something behind it to refract!), `slab()` (rounded box),
   `studioLights`, `renderOnce(key, build, {width,height,theme,transparent})` → PNG data URL, `PALETTE`.
   Tone mapping is Neutral on purpose (keeps white white through glass).
-  - three is client-only: `import("@/mockups/5/three/core")` inside `useEffect`, never at module top.
+  - three is client-only: `import("@/components/home/three/core")` inside `useEffect`, never at module top.
   - Performance budget: at most TWO live WebGL canvases on the page (hero + optionally the
     sequence). Everything else that wants a rendered object uses `renderOnce` → `<img>`.
   - Headless screenshots use SwiftShader: keep scenes modest (≤ ~40 meshes, no post-processing).

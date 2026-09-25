@@ -136,6 +136,18 @@
   --display-track: -0.045em;
 }
 
+/* Nav and footer carry their own .mD scope so they work on every page; they
+   must not take the page-level min-height. */
+.mD.mD-chrome {
+  min-height: 0;
+}
+
+/* Home page: paint <body> to match, so the transparent footer and overscroll
+   don't show the legacy site background. */
+body:has(.mD-home) {
+  background: #f3f4f6;
+}
+
 /* The live site's root stylesheet sets overflow-x: hidden on <html> and <body>.
    That turns <body> into a scroll container that never scrolls, which silently
    breaks every position: sticky inside it (nav, the See/Secure/Prove sequence).

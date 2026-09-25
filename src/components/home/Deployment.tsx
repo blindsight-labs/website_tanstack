@@ -172,7 +172,7 @@ export function Deployment({ theme }: SectionProps) {
     () => {
       let alive = true;
       setImg({});
-      import("@/mockups/5/three/core")
+      import("@/components/home/three/core")
         .then((core) => {
           const kinds: ObjKind[] = ["core", "puck", "ring"];
           const step = (i: number) => {

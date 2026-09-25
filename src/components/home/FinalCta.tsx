@@ -9,7 +9,7 @@ import type { BufferGeometry, Material, Texture } from "three";
 import { finalCta } from "./content";
 import { CtaButton, Label, useReveal, type SectionProps, type Theme } from "./shared";
 
-type Core = typeof import("@/mockups/5/three/core");
+type Core = typeof import("@/components/home/three/core");
 
 /** Faint dot field in the sheet colour; empty in the middle where the type sits,
  *  denser towards the corners where the glass needs something to refract. */
@@ -219,7 +219,7 @@ export function FinalCta({ theme }: SectionProps) {
       const key = `${w}x${h}:${bg}:${theme}`;
       if (key === lastKey) return;
       lastKey = key;
-      import("@/mockups/5/three/core")
+      import("@/components/home/three/core")
         .then((core) => {
           if (!alive) return;
           setSrc(renderSheet(core, theme, toHex(bg), w, h));

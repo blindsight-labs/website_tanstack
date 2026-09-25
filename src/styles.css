@@ -718,14 +718,6 @@ h4 {
   height: 16px;
   background: var(--border-mid);
 }
-/* BrainExperience sets <html data-layer> to the active home-page layer. */
-html[data-layer="see"] .nav-step[href$="#see"],
-html[data-layer="govern"] .nav-step[href$="#govern"],
-html[data-layer="prove"] .nav-step[href$="#prove"] {
-  color: var(--text);
-  text-decoration: underline 2px var(--violet);
-  text-underline-offset: 8px;
-}
 .nav-demo {
   white-space: nowrap;
 }
@@ -3907,21 +3899,6 @@ footer {
     display: none;
   }
 }
-/* Gutters on the home route (rail shown only above 980px). The rail's labels now
-   collapse to bare dots at rest (expanding only on hover, as a transient overlay),
-   so the resting state needs only enough right clearance for the dot pill — not the
-   old 232px label lane that skewed content to the left. We keep near-symmetric
-   gutters (a touch more on the right for the dot pill) so the content reads centered.
-   Full-bleed backgrounds stay edge-to-edge — only the inner content insets. Scoped
-   to .page-home because the rail is rendered only on the home route. */
-@media (min-width: 1025px) {
-  .page-home .va-hero,
-  .page-home .section {
-    padding-left: 96px;
-    padding-right: 120px;
-  }
-}
-
 /* ── Client / partner logo strip (marquee) ── */
 .logostrip-section {
   padding: 40px 0;

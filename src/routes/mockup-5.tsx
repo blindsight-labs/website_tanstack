@@ -1,26 +1,26 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
-import { MetalDefs, type Theme } from "@/mockups/5/shared";
-import { Nav } from "@/mockups/5/Nav";
-import { Hero } from "@/mockups/5/Hero";
-import { ProofStrip } from "@/mockups/5/ProofStrip";
-import { Risks } from "@/mockups/5/Risks";
-import { Sequence } from "@/mockups/5/Sequence";
-import { Walkthrough } from "@/mockups/5/Walkthrough";
-import { Deployment } from "@/mockups/5/Deployment";
-import { Discovery } from "@/mockups/5/Discovery";
-import { Why } from "@/mockups/5/Why";
-import { Faq } from "@/mockups/5/Faq";
-import { FinalCta } from "@/mockups/5/FinalCta";
-import { Footer } from "@/mockups/5/Footer";
+import { MetalDefs, type Theme } from "@/components/home/shared";
+import { Nav } from "@/components/home/Nav";
+import { Hero } from "@/components/home/Hero";
+import { ProofStrip } from "@/components/home/ProofStrip";
+import { Risks } from "@/components/home/Risks";
+import { Sequence } from "@/components/home/Sequence";
+import { Walkthrough } from "@/components/home/Walkthrough";
+import { Deployment } from "@/components/home/Deployment";
+import { Discovery } from "@/components/home/Discovery";
+import { Why } from "@/components/home/Why";
+import { Faq } from "@/components/home/Faq";
+import { FinalCta } from "@/components/home/FinalCta";
+import { Footer } from "@/components/home/Footer";
 
-import systemCss from "@/mockups/5/system.css?url";
-import heroCss from "@/mockups/5/hero.css?url";
-import topCss from "@/mockups/5/top.css?url";
-import sequenceCss from "@/mockups/5/sequence.css?url";
-import midCss from "@/mockups/5/mid.css?url";
-import bottomCss from "@/mockups/5/bottom.css?url";
+import systemCss from "@/components/home/system.css?url";
+import heroCss from "@/components/home/hero.css?url";
+import topCss from "@/components/home/top.css?url";
+import sequenceCss from "@/components/home/sequence.css?url";
+import midCss from "@/components/home/mid.css?url";
+import bottomCss from "@/components/home/bottom.css?url";
 
 type Search = { theme?: Theme; type?: "plex" | "geist" };
 

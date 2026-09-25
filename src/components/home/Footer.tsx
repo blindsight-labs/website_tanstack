@@ -12,7 +12,7 @@ export function Footer({ theme }: SectionProps) {
   const out = outRaw.trim();
 
   return (
-    <footer className="mDb-footer">
+    <footer className="mD mD-chrome mDb-footer" data-theme={theme} data-type="plex">
       <div className="mD-container">
         <div className="mDb-footer__top">
           <a href="/" className="mDb-footer__logo" aria-label="Blindsight home">

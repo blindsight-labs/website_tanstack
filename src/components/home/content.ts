@@ -6,12 +6,12 @@ export const CTA = "Discover your AI risk";
 
 export const nav = {
   links: [
-    { label: "Platform", href: "#sequence" },
-    { label: "Deployment", href: "#deployment" },
-    { label: "Research", href: "#why" },
+    { label: "Platform", href: "/#sequence" },
+    { label: "Deployment", href: "/#deployment" },
+    { label: "Research", href: "/#why" },
     { label: "Company", href: "/team" },
   ],
-  quiet: { label: "Pricing", href: "#faq" },
+  quiet: { label: "Pricing", href: "/#faq" },
 };
 
 export const hero = {
@@ -233,7 +233,9 @@ export const footer = {
     { label: "Team", href: "/team" },
     { label: "Careers", href: "/careers" },
     { label: "Blog", href: "/blog" },
-    { label: "Pricing", href: "#faq" },
+    { label: "Contact", href: "/contact" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Pricing", href: "/#faq" },
     { label: "Imprint", href: "/imprint" },
     { label: "Privacy", href: "/privacy" },
   ],
