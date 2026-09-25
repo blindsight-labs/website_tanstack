@@ -1,0 +1,567 @@
+/* hero.css — owner "hero". Inset sheet + rendered floor + text + audit row. */
+
+.mD-hero {
+  padding-bottom: var(--s4);
+}
+
+.mD-hero__sheet {
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(660px, calc(100svh - 78px), 940px);
+  isolation: isolate;
+}
+
+/* ---- the render ---- */
+.mD-hero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1100ms var(--ease);
+  pointer-events: none;
+}
+.mD-hero__stage[data-ready="true"] {
+  opacity: 1;
+}
+/* wide: the render lives right of the copy and fades out underneath it, so no
+   object ever sits behind the headline or subline */
+@media (min-width: 1101px) {
+  .mD-hero__stage {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 32%, #000 52%);
+    mask-image: linear-gradient(90deg, transparent 0%, transparent 32%, #000 52%);
+  }
+}
+.mD-hero__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- copy ---- */
+.mD-hero__content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: min(var(--page-max), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+  padding-block: var(--s8) var(--s6);
+}
+.mD-hero__content > * {
+  max-width: 620px;
+}
+.mD-hero__title {
+  margin-top: var(--s5);
+  max-width: 9.5em;
+}
+.mD-hero__sub {
+  margin-top: 44px; /* the display line-height is tight; give the subline air */
+  max-width: 25em;
+}
+.mD-hero__actions {
+  margin-top: var(--s6);
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+}
+
+/* hard proof next to the CTA */
+.mD-hero__proof {
+  margin: var(--s6) 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, max-content));
+  max-width: 600px;
+}
+.mD-hero__fact {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 2px var(--s5) 0;
+  border-left: 1px solid var(--line);
+}
+.mD-hero__fact:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.mD-hero__factValue {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: -0.02em;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink);
+}
+.mD-hero__factValue.is-placeholder {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  letter-spacing: 0;
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--ink-3);
+}
+.mD-hero__factLabel {
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink-3);
+  max-width: 15ch;
+}
+
+/* ---- the caption rail: 01 · SEE IT / 02 · SECURE IT / 03 · GOVERN IT ----
+   the same mono rail as the See / Secure / Govern section, in miniature */
+.mD-hero__beats {
+  position: relative;
+  z-index: 1;
+  width: min(var(--page-max), 100% - 2 * var(--gutter));
+  margin: 0 auto 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+}
+.mD-hero__beat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 176px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  transition: color var(--dur-2) var(--ease);
+}
+.mD-hero__beatLabel {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+.mD-hero__beatDot {
+  color: var(--ink-4);
+}
+.mD-hero__beats[data-beat="1"] [data-k="1"],
+.mD-hero__beats[data-beat="2"] [data-k="2"],
+.mD-hero__beats[data-beat="3"] [data-k="3"] {
+  color: var(--ink);
+}
+/* the result line: shown once its beat has happened */
+.mD-hero__beatResult {
+  order: 3;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-3);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity var(--dur-2) var(--ease),
+    transform var(--dur-2) var(--ease);
+}
+.mD-hero__beats[data-beat="1"] [data-k="1"] .mD-hero__beatResult,
+.mD-hero__beats[data-beat="2"] :is([data-k="1"], [data-k="2"]) .mD-hero__beatResult,
+.mD-hero__beats[data-beat="3"] .mD-hero__beatResult {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- chips over the render: they follow their object ---- */
+.mD-hero__chip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.mD-hero__chipBox {
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 9px 6px 8px;
+  border-radius: var(--r);
+  /* the same glass callout as the See / Secure / Govern section */
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 70%, transparent),
+    0 0 0 1px var(--line);
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+.mD[data-theme="dark"] .mD-hero__chipBox {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px var(--line);
+}
+/* a hairline leader down to the object */
+.mD-hero__chip::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: 14px;
+  background: var(--ink-4);
+}
+.mD-hero__chipK {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mD-hero__chipK::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink-4);
+}
+/* found: ink; the database-pulling one carries the section's one violet dot */
+.mD-hero__chip[data-k="1"][data-state="0"] .mD-hero__chipK::before {
+  background: var(--signal);
+}
+.mD-hero__chip:not([data-k="0"])[data-state="0"] .mD-hero__chipK {
+  color: var(--ink);
+}
+.mD-hero__chip[data-state="2"] .mD-hero__chipK::before {
+  background: var(--ink);
+}
+.mD-hero__chipV {
+  font-size: 11.5px;
+  color: var(--ink);
+}
+
+.mD-hero__beatBar {
+  position: relative;
+  height: 1px;
+  overflow: hidden;
+  background: var(--line);
+}
+.mD-hero__beatFill {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* ---- the audit-trail row that seals at the bottom ---- */
+.mD-hero__log {
+  position: relative;
+  z-index: 1;
+  width: min(var(--page-max), 100% - 2 * var(--gutter));
+  margin: 0 auto var(--s4);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  min-height: 54px;
+  border-radius: var(--r);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  font-size: 12.5px;
+}
+.mD-hero__logHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  padding: 0 18px;
+  border-right: 1px solid var(--line);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.mD-hero__logIllus {
+  padding: 3px 6px;
+  border-radius: var(--r);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 9.5px;
+}
+.mD-hero__logRow,
+.mD-hero__logIdle {
+  grid-column: 2;
+  grid-row: 1;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.mD-hero__logRow {
+  display: grid;
+  grid-template-columns: 70px minmax(0, max-content) minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 0 18px;
+  white-space: nowrap;
+  opacity: 0;
+}
+.mD-hero__logSubject,
+.mD-hero__logDecision {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mD-hero__logDecision {
+  color: var(--ink-2);
+}
+.mD-hero__logSeal {
+  gap: 6px;
+  color: var(--ink-3);
+}
+.mD-hero__logSeal .mD-live {
+  margin-right: 6px;
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.mD-hero__sealStep {
+  display: inline-flex;
+  gap: 6px;
+  opacity: 0;
+}
+.mD-hero__sealDot {
+  color: var(--ink-4);
+}
+.mD-hero__sealIcon {
+  display: inline-flex;
+  margin-left: 6px;
+  opacity: 0;
+}
+.mD-hero__logIdle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mD-hero__idleDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-4);
+  flex-shrink: 0;
+}
+
+/* typing: the row writes itself left to right */
+.mD-hero__type {
+  display: inline-block;
+  clip-path: inset(0 100% 0 0);
+}
+/* hand-over: "observing" fades out first, then the row fades in and types */
+.mD-hero__logIdle {
+  transition-duration: 200ms;
+}
+.mD-hero__log[data-state="typing"] .mD-hero__logRow,
+.mD-hero__log[data-state="sealed"] .mD-hero__logRow {
+  opacity: 1;
+  transition-duration: 200ms;
+  transition-delay: 200ms;
+}
+.mD-hero__log[data-state="typing"] .mD-hero__logIdle,
+.mD-hero__log[data-state="sealed"] .mD-hero__logIdle {
+  opacity: 0;
+}
+.mD-hero__log[data-state="typing"] .mD-hero__type {
+  animation: mD-hero-type 620ms steps(24, end) 220ms forwards;
+}
+.mD-hero__log[data-state="typing"] .mD-hero__type--2 {
+  animation-delay: 740ms;
+}
+.mD-hero__log[data-state="sealed"] .mD-hero__type {
+  clip-path: inset(0 0 0 0);
+}
+/* sealed: detected · corrected · logged, then the lock */
+.mD-hero__log[data-state="sealed"] .mD-live,
+.mD-hero__log[data-state="sealed"] .mD-hero__sealStep,
+.mD-hero__log[data-state="sealed"] .mD-hero__sealIcon {
+  animation: mD-hero-in 360ms var(--ease) both;
+}
+.mD-hero__log[data-state="sealed"] .mD-hero__sealStep {
+  animation-delay: calc(var(--i) * 140ms);
+  color: var(--ink);
+}
+.mD-hero__log[data-state="sealed"] .mD-hero__sealIcon {
+  animation-delay: 460ms;
+}
+@keyframes mD-hero-type {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes mD-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mD-hero__stage {
+    transition: none;
+  }
+  .mD-hero__log * {
+    animation: none !important;
+  }
+  .mD-hero__log[data-state="sealed"] .mD-live,
+  .mD-hero__log[data-state="sealed"] .mD-hero__sealStep,
+  .mD-hero__log[data-state="sealed"] .mD-hero__sealIcon {
+    opacity: 1;
+  }
+}
+
+/* ---- tablet / phone: copy, then the render, then the row ---- */
+@media (max-width: 1100px) {
+  .mD-hero__logHead .mD-hero__logIllus {
+    display: none;
+  }
+  .mD-hero__logRow {
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+  }
+  .mD-hero__logDecision {
+    display: none;
+  }
+}
+
+@media (max-width: 879px) {
+  .mD-hero__sheet {
+    min-height: 0;
+  }
+  /* phone: label, headline, THEN the render, then subline, CTA, proof, log —
+     the animation carries the opening instead of starting below the fold */
+  .mD-hero__content {
+    display: contents;
+  }
+  .mD-hero__content > * {
+    max-width: none;
+    margin-inline: var(--gutter);
+  }
+  .mD-hero__content > .mD-label {
+    order: 0;
+    margin-top: var(--s7);
+    align-self: flex-start;
+  }
+  .mD-hero__title {
+    order: 1;
+  }
+  .mD-hero__stage {
+    order: 2;
+    position: relative;
+    inset: auto;
+    height: max(260px, 62vw);
+    margin-top: var(--s2);
+  }
+  .mD-hero__sub {
+    order: 3;
+    margin-top: var(--s4);
+  }
+  .mD-hero__actions {
+    order: 4;
+  }
+  .mD-hero__proof {
+    order: 5;
+    margin-bottom: var(--s6);
+  }
+  .mD-hero__beats {
+    order: 6;
+    width: auto;
+    margin: 0 var(--gutter) 12px;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mD-hero__beat {
+    flex: 1;
+    width: auto;
+    font-size: 9.5px;
+  }
+  .mD-hero__beatResult {
+    white-space: normal;
+  }
+  /* the rack's chip would climb into the headline on a short stage */
+  .mD-hero__chip[data-k="0"] {
+    display: none;
+  }
+  .mD-hero__chipBox {
+    padding: 4px 7px;
+  }
+  .mD-hero__chipK {
+    font-size: 8px;
+  }
+  .mD-hero__chipV {
+    font-size: 10px;
+  }
+  .mD-hero__log {
+    order: 7;
+    width: auto;
+    margin: 0 10px 10px;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .mD-hero__logHead {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 10px 14px;
+  }
+  .mD-hero__logHead .mD-hero__logIllus {
+    display: inline-block;
+    margin-left: auto;
+  }
+  .mD-hero__logRow,
+  .mD-hero__logIdle {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .mD-hero__logRow {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 6px;
+    column-gap: 12px;
+    padding: 12px 14px;
+    white-space: normal;
+  }
+  .mD-hero__logDecision {
+    display: block;
+    grid-column: 2;
+  }
+  .mD-hero__logSeal {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
+  }
+  .mD-hero__logIdle {
+    padding: 12px 14px;
+    align-self: start;
+  }
+  .mD-hero__proof {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .mD-hero__fact {
+    padding-inline: var(--s3);
+  }
+  .mD-hero__factValue {
+    font-size: 24px;
+  }
+  .mD-hero__factValue.is-placeholder {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .mD-hero__factLabel {
+    font-size: 12px;
+  }
+}

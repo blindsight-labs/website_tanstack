@@ -1,0 +1,609 @@
+/* ==========================================================================
+   Mockup D — base system. Scoped under .mD. Every section file builds on these
+   tokens and components; sections do not invent new colours, radii or type
+   sizes.
+
+   Themes:  .mD[data-theme="light"] (default, Octane rhythm: light grey page,
+            white/glass surfaces, black inset sheets) and .mD[data-theme="dark"].
+   Type:    .mD[data-type="plex"] (current brand fonts, default) and
+            .mD[data-type="geist"] (proposal).
+   ========================================================================== */
+
+.mD {
+  /* ---- spacing (4-based) ---- */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+  --s9: 96px;
+  --s10: 128px;
+  --s11: 160px;
+
+  /* ---- one radius, everywhere ---- */
+  --r: 6px;
+
+  /* ---- layout ---- */
+  --page-max: 1280px;
+  --gutter: clamp(20px, 4vw, 56px);
+  --sheet-inset: 10px; /* inset sheets (Octane) sit this far from the viewport */
+
+  /* ---- type families ---- */
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --display-weight: 300;
+  --display-track: -0.035em;
+
+  /* ---- type scale ---- */
+  --t-display: clamp(48px, 6.2vw, 88px); /* hero only */
+  --t-h1: clamp(40px, 4.6vw, 64px); /* section headlines */
+  --t-h2: clamp(30px, 3.2vw, 44px); /* sub-headlines, final CTA line 2 */
+  --t-h3: 24px; /* card / step titles */
+  --t-lead: 19px;
+  --t-body: 16px;
+  --t-small: 14px;
+  --t-micro: 11.5px; /* mono micro-label */
+
+  /* ---- colour: light theme (default) ---- */
+  --bg: #f3f4f6; /* page */
+  --surface: #ffffff; /* sheets, cards */
+  --surface-2: #f8f8fa; /* recessed areas inside cards */
+  --ink: #0b0b0d; /* headlines, primary text, primary button */
+  --ink-2: #474a52; /* body */
+  --ink-3: #80838c; /* captions, labels */
+  --ink-4: #b4b7bf; /* disabled, faint rules */
+  --line: #dde0e6;
+  --line-2: #eceef2;
+  --inverse-bg: #060607; /* black inset sheets */
+  --inverse-ink: #f4f4f6;
+  --inverse-ink-2: #a3a6ae;
+  --inverse-ink-3: #6b6e77;
+  --inverse-line: rgba(255, 255, 255, 0.1);
+
+  /* glass (CSS): only use over something with depth — a render, a pattern, UI */
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.56));
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --glass-edge: rgba(11, 11, 13, 0.07);
+  --glass-blur: blur(18px) saturate(1.35);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 0 0 1px var(--glass-edge),
+    0 22px 44px -30px rgba(11, 11, 13, 0.35);
+
+  /* metallic grey — every symbol / icon / marker uses this, never flat colour */
+  --metal: linear-gradient(180deg, #ffffff 0%, #d4d6dc 38%, #8d9099 52%, #c3c6cd 78%, #eef0f3 100%);
+  --metal-dark: linear-gradient(180deg, #9ea1aa 0%, #5b5e67 45%, #24252a 55%, #6f727b 100%);
+
+  /* ---- the ONE accent ----
+     Signal violet, moved off Tailwind indigo/violet. It means exactly one thing:
+     a live signal — what Blindsight just found or acted on. Allowed on: live
+     status dots, the found/acted-on item inside an animation or log row, focus
+     rings. NOT allowed on: CTAs, logo, headings, labels, links, icons, charts
+     (except the single "us" mark in the benchmark), backgrounds, gradients. */
+  --signal: #6e4bff;
+  --signal-soft: rgba(110, 75, 255, 0.12);
+
+  /* ---- motion ---- */
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --dur-1: 140ms;
+  --dur-2: 260ms;
+  --dur-3: 600ms;
+
+  background: var(--bg);
+  color: var(--ink-2);
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  text-wrap: pretty;
+}
+
+.mD[data-theme="dark"] {
+  --bg: #060607;
+  --surface: #0d0d10;
+  --surface-2: #121216;
+  --ink: #f4f4f6;
+  --ink-2: #a9abb3;
+  --ink-3: #6e7079;
+  --ink-4: #3c3e45;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-2: rgba(255, 255, 255, 0.06);
+  --inverse-bg: #16161a; /* in dark, "inset sheets" are a lift, not an inversion */
+  --inverse-ink: #f4f4f6;
+  --inverse-ink-2: #a9abb3;
+  --inverse-ink-3: #6e7079;
+  --inverse-line: rgba(255, 255, 255, 0.1);
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03));
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-edge: rgba(0, 0, 0, 0.6);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 0 1px var(--glass-edge),
+    0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  --metal: linear-gradient(180deg, #ffffff 0%, #c9ccd3 40%, #7d8089 54%, #b9bcc4 80%, #e6e8ec 100%);
+  --signal: #a08cff;
+  --signal-soft: rgba(160, 140, 255, 0.14);
+}
+
+.mD[data-type="geist"] {
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-display: "Geist", system-ui, sans-serif;
+  --display-weight: 300;
+  --display-track: -0.045em;
+}
+
+/* The live site's root stylesheet sets overflow-x: hidden on <html> and <body>.
+   That turns <body> into a scroll container that never scrolls, which silently
+   breaks every position: sticky inside it (nav, the See/Secure/Prove sequence).
+   `clip` hides horizontal overflow the same way without creating a scroll box. */
+html:has(.mD),
+html:has(.mD) body {
+  overflow-x: clip;
+}
+
+/* ---- resets inside the scope (the live site's globals leak otherwise) ---- */
+.mD *,
+.mD *::before,
+.mD *::after {
+  box-sizing: border-box;
+}
+.mD a {
+  color: inherit;
+  text-decoration: none;
+}
+/* zero specificity: component classes that set margins on headings/paragraphs
+   (hero subline spacing, phone gutters, title offsets) must win over the reset */
+.mD :where(h1, h2, h3, h4, p) {
+  margin: 0;
+}
+.mD h1,
+.mD h2,
+.mD h3 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-track);
+  text-wrap: balance;
+}
+/* :where() keeps this reset at zero specificity so component classes
+   (.mD-btn: mono caps) always win over it */
+.mD :where(button) {
+  font: inherit;
+}
+.mD ::selection {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* ==========================================================================
+   Layout primitives
+   ========================================================================== */
+.mD-container {
+  width: min(var(--page-max), 100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+.mD-section {
+  padding-block: var(--s10);
+}
+@media (max-width: 1080px) {
+  .mD-section {
+    padding-block: var(--s9);
+  }
+}
+/* phone: 128px bands read as empty screens between sections */
+@media (max-width: 720px) {
+  .mD-section {
+    padding-block: var(--s8);
+  }
+}
+/* Octane's inset sheet: a surface that sits slightly in from the viewport. */
+.mD-sheet {
+  margin-inline: var(--sheet-inset);
+  border-radius: var(--r);
+  background: var(--surface);
+  position: relative;
+  overflow: clip; /* not hidden: must never become a scroll box for sticky children */
+}
+.mD[data-theme="dark"] .mD-sheet--inverse {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.mD-sheet--inverse {
+  background: var(--inverse-bg);
+  color: var(--inverse-ink-2);
+  --ink: var(--inverse-ink);
+  --ink-2: var(--inverse-ink-2);
+  --ink-3: var(--inverse-ink-3);
+  --line: var(--inverse-line);
+  --line-2: rgba(255, 255, 255, 0.06);
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03));
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-edge: rgba(0, 0, 0, 0.6);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 0 1px var(--glass-edge),
+    0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  --signal: #a08cff;
+}
+
+/* ==========================================================================
+   Type roles
+   ========================================================================== */
+.mD-display {
+  font-size: var(--t-display);
+  line-height: 0.98;
+}
+.mD-h1 {
+  font-size: var(--t-h1);
+  line-height: 1.04;
+}
+.mD-h2 {
+  font-size: var(--t-h2);
+  line-height: 1.1;
+}
+.mD-h3 {
+  font-size: var(--t-h3);
+  line-height: 1.2;
+  letter-spacing: -0.015em !important;
+  font-weight: 400 !important;
+}
+.mD-lead {
+  font-size: var(--t-lead);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.mD-small {
+  font-size: var(--t-small);
+  color: var(--ink-3);
+}
+
+/* Micro-label: "03 · PROVE IT". The most distinctive element of the brand —
+   use it to open every section. Optional marker: a small metallic hex. */
+.mD-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1;
+}
+.mD-label__n {
+  color: var(--ink);
+}
+.mD-hex {
+  width: 11px;
+  height: 12px;
+  flex-shrink: 0;
+  background: var(--metal);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.mD-sheet--inverse .mD-hex,
+.mD[data-theme="dark"] .mD-hex {
+  background: var(--metal);
+}
+
+/* live signal dot — the canonical use of the accent */
+.mD-live {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--signal);
+  flex-shrink: 0;
+}
+.mD-live::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--signal);
+  opacity: 0;
+  animation: mD-ping 2.4s var(--ease) infinite;
+}
+@keyframes mD-ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   Buttons — three tiers, all states. Radius --r. The CTA is black (white on
+   dark), never violet.
+   ========================================================================== */
+.mD-btn {
+  --btn-h: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: var(--btn-h);
+  padding: 0 20px;
+  border-radius: var(--r);
+  border: 1px solid transparent;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--dur-1) var(--ease),
+    color var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease),
+    transform var(--dur-1) var(--ease);
+}
+.mD-btn:active {
+  transform: translateY(1px);
+}
+.mD-btn:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+.mD-btn[disabled],
+.mD-btn[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.mD-btn--lg {
+  --btn-h: 52px;
+  padding: 0 24px;
+  font-size: 13px;
+}
+.mD-btn--sm {
+  --btn-h: 38px;
+  padding: 0 14px;
+  font-size: 11.5px;
+}
+/* primary: ink fill with a machined top highlight */
+.mD-btn--primary {
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.mD-btn--primary:hover {
+  background: color-mix(in srgb, var(--ink) 86%, var(--bg));
+}
+.mD[data-theme="dark"] .mD-btn--primary,
+.mD-sheet--inverse .mD-btn--primary {
+  background: #f4f4f6;
+  color: #0b0b0d;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+.mD[data-theme="dark"] .mD-btn--primary:hover,
+.mD-sheet--inverse .mD-btn--primary:hover {
+  background: #ffffff;
+}
+/* secondary: glass */
+.mD-btn--secondary {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  box-shadow: 0 0 0 1px var(--glass-edge);
+  color: var(--ink);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+.mD-btn--secondary:hover {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 25%, transparent);
+}
+/* tertiary: text */
+.mD-btn--ghost {
+  height: auto;
+  padding: 0;
+  color: var(--ink);
+}
+.mD-btn--ghost:hover {
+  color: var(--ink-2);
+}
+.mD-btn__arrow {
+  transition: transform var(--dur-2) var(--ease);
+}
+.mD-btn:hover .mD-btn__arrow {
+  transform: translateX(3px);
+}
+
+/* ==========================================================================
+   Surfaces
+   ========================================================================== */
+.mD-card {
+  border-radius: var(--r);
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.mD-glass {
+  border-radius: var(--r);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+/* dot field for sitting glass on top of */
+.mD-dots {
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 16%, transparent) 1px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+
+/* ==========================================================================
+   Audit-trail panel — the log-row style, carried everywhere product UI shows.
+   Mono, hairlines, timestamp · subject · decision. The acted-on row may carry
+   the live dot; nothing else is coloured.
+   ========================================================================== */
+.mD-log {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.mD-log__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--line);
+}
+.mD-log__row {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line-2);
+}
+.mD-log__row:last-child {
+  border-bottom: 0;
+}
+.mD-log__time {
+  color: var(--ink-3);
+}
+.mD-log__verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+.mD-log__row--muted {
+  color: var(--ink-3);
+}
+
+/* ==========================================================================
+   Nav + dropdown (menus: single-line items, never a grey description line)
+   ========================================================================== */
+.mD-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-2) var(--ease);
+}
+.mD-nav[data-scrolled="true"] {
+  border-bottom-color: var(--line);
+}
+.mD-nav__link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 8px 2px;
+  border-radius: var(--r);
+  transition: color var(--dur-1) var(--ease);
+}
+.mD-nav__link:hover {
+  color: var(--ink-3);
+}
+.mD-nav__link:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+.mD-nav__link--quiet {
+  color: var(--ink-3);
+}
+.mD-menu {
+  min-width: 220px;
+  padding: 6px;
+  border-radius: var(--r);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+.mD-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: calc(var(--r) - 2px);
+  font-size: 14px;
+  color: var(--ink);
+}
+.mD-menu__item:hover,
+.mD-menu__item:focus-visible {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  outline: none;
+}
+
+/* ==========================================================================
+   Motion: reveal on scroll (sections add data-reveal; JS sets data-in)
+   ========================================================================== */
+.mD [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-3) var(--ease),
+    transform var(--dur-3) var(--ease);
+}
+.mD [data-reveal][data-in="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mD [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .mD-live::after {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Mockup-only control bar (not part of the design)
+   ========================================================================== */
+.mD-controls {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 100;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--r);
+  background: rgba(20, 20, 24, 0.86);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.mD-controls button {
+  border: 0;
+  background: transparent;
+  color: #9a9ca5;
+  padding: 7px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.mD-controls button[aria-pressed="true"] {
+  background: #f4f4f6;
+  color: #0b0b0d;
+}
