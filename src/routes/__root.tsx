@@ -614,12 +614,15 @@ function Footer() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // Design mockups (/mockups, /mockup-*) bring their own nav and footer.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isMockup = pathname.startsWith("/mockup");
   return (
     <QueryClientProvider client={queryClient}>
       <DemoModalProvider>
-        <NavSwitch />
+        {!isMockup && <NavSwitch />}
         <Outlet />
-        <Footer />
+        {!isMockup && <Footer />}
       </DemoModalProvider>
     </QueryClientProvider>
   );
