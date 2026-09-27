@@ -6,12 +6,11 @@ export const CTA = "Discover your AI risk";
 
 export const nav = {
   links: [
-    { label: "Platform", href: "#sequence" },
-    { label: "Deployment", href: "#deployment" },
-    { label: "Research", href: "#why" },
+    // Platform and Deployment are already this page; Why and FAQ moved off it
+    { label: "Research", href: "/blog" },
     { label: "Company", href: "/team" },
   ],
-  quiet: { label: "Pricing", href: "#faq" },
+  quiet: { label: "Pricing", href: "/faq" },
 };
 
 export const hero = {
@@ -19,7 +18,7 @@ export const hero = {
   headline: "Use AI without its blind spots.",
   // Subline 4 is the one to use for now; 1–3 are on hold (layout must fit any).
   subline:
-    "Your company is adopting AI faster than security can check it, and attackers are counting on that. Blindsight closes the gap, so AI can keep moving.",
+    "Every AI, every agent, every data flow in and out of AI, visible and under your policies, on your infrastructure with Blindsight.",
   sublineAlternatives: [
     "Every AI, every agent, every data flow, visible and under your policies, on your infrastructure.",
     "AI attacks slip past your tools and your people. So does the AI your team uses without asking. Blindsight sees both and secures both.",
@@ -41,11 +40,11 @@ export const hero = {
   // one result line under each beat, shown once that beat has happened
   beatResults: ["Every AI in view", "Protected at runtime", "Every decision on record"],
   // screen-space chips over the render: rack first, then the two flagged desks.
-  // states: found · contained · governed
+  // states: found · secured · governed, in the page's one vocabulary (flagged, masked, blocked, logged)
   chips: [
-    { name: "agent:finance", states: ["Registered", "Registered", "Registered"] },
-    { name: "crm-assistant", states: ["Unregistered", "Contained", "Governed · REG-01"] },
-    { name: "chatgpt.com", states: ["Unregistered", "Contained", "Governed · DATA-02"] },
+    { name: "agent:finance", states: ["Logged", "Logged", "Logged"] },
+    { name: "crm-assistant", states: ["Flagged", "Masked", "Logged · REG-01"] },
+    { name: "chatgpt.com", states: ["Flagged", "Blocked", "Logged · DATA-02"] },
   ],
   idle: "observing · people, apps, agents",
   logLine: "14:29:10  crm-assistant → crm-db  access paused pending approval  ·  seen · secured · governed",
@@ -74,7 +73,7 @@ export const risks: { id: RiskId; title: string; scenario: string; short: string
     id: "prompt-leak",
     title: "Data leaves through a prompt.",
     scenario:
-      "An employee pastes a client contract into ChatGPT to summarise it. The contract is now outside your company.",
+      "An employee pastes a client contract into ChatGPT to summarize it. The contract is now outside your company.",
     short: "Contract pasted into ChatGPT",
     evidence: "client_contract.pdf → chatgpt.com · confidential",
   },
@@ -111,43 +110,43 @@ export const sequence = {
       n: "01",
       label: "See it",
       title: "Find every AI in use, approved or not.",
-      body: "Blindsight maps the AI tools your people use and the AI systems your teams build, including automations like n8n and Power Automate. For each one you decide: block, approve, protect, or fully onboard.",
+      body: "Blindsight maps the AI tools your people use and the AI systems your teams build, giving you an overview of your true AI inventory and giving you control over what is approved, protected, blocked, or fully onboarded.",
       decisions: ["Block", "Approve", "Protect", "Onboard"],
     },
     {
       n: "02",
       label: "Secure it",
-      title: "Protect the AI you build and the AI your people use.",
-      body: "For your people, sensitive data is pseudonymised before it reaches any AI tool. For your AI systems, prompt injection, adversarial patching and poisoned RAG data are caught at runtime, by models running on your infrastructure.",
+      title: "Protect the AI you use and the AI you build.",
+      body: "For your people, sensitive data is pseudonymized before it reaches any AI tool and they're protected from being injected or poisoned. For your AI systems, prompt injection, adversarial patching and poison are caught before they have a chance to cause any damage.",
     },
     {
       n: "03",
       label: "Govern it",
-      title: "Every decision leaves evidence.",
-      body: "Your written policies become rules Blindsight enforces. Every block, redaction and approval is logged for FADP, the Cyber Resilience Act, ISO 27001 and the EU AI Act.",
-      frameworks: ["FADP", "Cyber Resilience Act", "ISO 27001", "EU AI Act"],
+      title: "Govern your AI use and enforce your controls.",
+      body: "Your written policies and controls are automatically turned into rules Blindsight enforces, making sure you are compliant with CRA, FADP, the EU AI Act and more, and that you have the logs to prove it.",
+      frameworks: ["CRA", "FADP", "EU AI Act", "ISO 27001"],
     },
   ],
   // How each scenario from "The new risks" moves through the three stages.
   thread: {
     "prompt-leak": {
-      see: "chatgpt.com · web tool · 41 users",
-      secure: "Client names and figures pseudonymised before upload",
-      prove: "policy DATA-02 · redacted · 14:31:58",
+      see: "chatgpt.com · personal account on ws-fin-01",
+      secure: "Client names and figures masked before upload",
+      prove: "policy DATA-02 · masked · 14:31:58",
     },
     "hidden-instruction": {
-      see: "agent:finance reads invoice_0412.pdf",
-      secure: "Hidden instruction stripped, agent carries on",
+      see: "agent:finance · running on ws-fin-01",
+      secure: "Hidden instruction stripped from invoice_0412.pdf",
       prove: "policy AGENT-07 · stripped · 14:32:07",
     },
     "poisoned-source": {
-      see: "kb/pricing · page edited 09:12 by unknown",
-      secure: "Poisoned chunk quarantined from retrieval",
-      prove: "policy RAG-03 · quarantined · 14:30:44",
+      see: "support chatbot · ws-sup-01 · customer IBANs in the page",
+      secure: "IBANs masked before they reach the chatbot",
+      prove: "policy DATA-04 · masked · 14:30:44",
     },
     "unregistered-ai": {
-      see: "crm-assistant · OAuth via personal login",
-      secure: "Access paused pending approval",
+      see: "crm-assistant · ws-sal-01",
+      secure: "Access blocked pending approval",
       prove: "policy REG-01 · blocked · 14:29:10",
     },
   } as Record<RiskId, { see: string; secure: string; prove: string }>,
@@ -155,12 +154,12 @@ export const sequence = {
 
 export const deployment = {
   label: "Deployment",
-  headline: "Up and running without a project.",
+  headline: "Deploy on your terms in no time.",
   surfaces: [
     {
       name: "Endpoint agent",
       for: "For the people using AI",
-      body: "A lightweight agent on laptops sees AI use in the browser and desktop apps, and pseudonymises sensitive data before it leaves.",
+      body: "A lightweight agent on laptops sees AI use in the browser and desktop apps, pseudonymizes sensitive data before it leaves, and protects people from being prompt-injected or poisoned by what they paste or open.",
     },
     {
       name: "SDK or proxy",
@@ -168,8 +167,8 @@ export const deployment = {
       body: "One line of SDK, or point traffic at the proxy. Prompts, retrievals and tool calls are inspected at runtime.",
     },
   ],
-  hosting: ["On-prem", "Private cloud", "Our cloud"],
-  local: "Detection runs locally, not through third-party LLM calls.",
+  hosting: ["On-prem", "Private cloud", "Blindsight cloud"],
+  local: "Detection runs on our own models, inside the deployment. No prompt, file or finding is sent to a third-party LLM.",
   steps: "[Step-by-step from the deployment one-pager — Guilherme to supply]",
 };
 
@@ -187,7 +186,7 @@ export const discovery = {
 export const why = {
   label: "Why Blindsight",
   headline: "Built by red team specialists.",
-  body: "We've attacked and secured AI systems inside Fortune 500 companies. Our team combines offensive security specialised in AI with security ML research, so we know how AI gets attacked, and how defensive tools get bypassed. Blindsight is built against both, and we benchmark it against the tools you're likely comparing us with.",
+  body: "We've attacked and secured AI systems inside Fortune 500 companies. Our team combines offensive security specialized in AI with security ML research, so we know how AI gets attacked, and how defensive tools get bypassed. Blindsight is built against both, and we benchmark it against the tools you're likely comparing us with.",
   benchmarkNote: "Illustrative. Benchmark figures to come from Filipe.",
   // Placeholder series: shape only, NOT real results.
   benchmark: [
@@ -206,7 +205,7 @@ export const faq = [
   },
   {
     q: "Where does our data go?",
-    a: "Nowhere new. Blindsight runs on-prem, in your private cloud, or in our cloud if you prefer, and detection runs on models inside that environment rather than through third-party LLM calls. Sensitive data is pseudonymised on the endpoint before it reaches any AI tool.",
+    a: "Nowhere new. Blindsight runs on-prem, in your private cloud, or in our cloud if you prefer, and detection runs on models inside that environment rather than through third-party LLM calls. Sensitive data is pseudonymized on the endpoint before it reaches any AI tool.",
   },
   {
     q: "How is this different from DLP, a gateway, or Microsoft Purview?",
@@ -223,7 +222,7 @@ export const faq = [
 ];
 
 export const finalCta = {
-  headline: "See what AI is doing in your organisation.",
+  headline: "See what AI is doing in your organization.",
 };
 
 export const footer = {

@@ -1,0 +1,462 @@
+/* Mockup 8 · variant c — left column styles (round 2). Every class prefixed .s8c-
+   "One thing at a time": one focus card (fixed size) + one quiet history line.
+   Motion grammar: cause, then effect. Every change here starts 60 ms after the close-up's
+   event; outgoing layers fade (140 ms, no movement), incoming arrive 180 ms later (420 ms). */
+
+/* ---- the stage copy: the same asymmetric swap ---- */
+.s8c .mD-seq__stagecopy {
+  transition:
+    opacity 140ms var(--ease) 60ms,
+    transform 0s linear 200ms;
+}
+.s8c .mD-seq__stagecopy[data-on="true"] {
+  transition:
+    opacity 420ms var(--ease) 240ms,
+    transform 420ms var(--ease) 240ms;
+}
+
+/* the card sits under the copy (22 px column gap + 14 = 36 px of air) and FILLS the column
+   down to the history strip, whose hairline keeps the display's bottom line (the stage keeps
+   a 24 px margin). The column's height is the sheet's, so the card's size is fixed. */
+.s8c-focus {
+  --s8c-emb-hi: #ffffff;
+  --s8c-emb-lo: #8e9199;
+  flex: 1 1 auto;
+  min-height: 200px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 14px;
+}
+.s8c-focus[data-theme="dark"] {
+  --s8c-emb-hi: rgba(255, 255, 255, 0.24);
+  --s8c-emb-lo: #000000;
+}
+.s8c-strip {
+  padding-top: 18px;
+  padding-bottom: 24px;
+}
+
+/* ---- the card: one event, large and calm; its size never changes ---- */
+.s8c-card {
+  position: relative;
+  display: grid;
+  min-height: 0; /* (stretched to .s8c-focus's one row: fixed by the column, never by content) */
+  padding: 22px 26px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--ink);
+  overflow: hidden;
+  transition: border-color 420ms var(--ease) 240ms;
+}
+/* Govern: the record is paper too; it is formal through type (a double rule, the count, the
+   seal line), and its frame firms up a step */
+.s8c-card[data-record="true"] {
+  border-color: var(--ink-4);
+}
+
+/* every slide lives in the same cell: the card holds the tallest, whatever is showing */
+.s8c-slide {
+  grid-area: 1 / 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 140ms var(--ease) 60ms,
+    transform 0s linear 200ms;
+  pointer-events: none;
+}
+.s8c-slide[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition:
+    opacity 420ms var(--ease) 240ms,
+    transform 420ms var(--ease) 240ms;
+}
+
+/* a cross-fade in place (a sentence's tense, a verdict word, the record's lines) */
+.s8c-stack {
+  display: grid;
+}
+.s8c-stack > * {
+  grid-area: 1 / 1;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 140ms var(--ease) 60ms;
+}
+.s8c-stack > [data-on="true"] {
+  opacity: 1;
+  transition: opacity 360ms var(--ease) 200ms;
+}
+
+.s8c-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+.s8c-sys {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.s8c-ai {
+  color: var(--signal);
+}
+.s8c-where {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+.s8c-kind {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+.s8c-small {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+/* the one human sentence: the largest thing on the card */
+.s8c-line {
+  flex: 1;
+  margin-top: 14px;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.36;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.s8c-m {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.s8c-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line-2);
+}
+.s8c-verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.s8c-verdict[data-state="idle"] {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+.s8c-verdict[data-state="live"] {
+  color: var(--ink-2);
+}
+.s8c-decision {
+  color: var(--ink-2);
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity 140ms var(--ease) 60ms;
+}
+.s8c-decision[data-on="true"] {
+  opacity: 1;
+  transition: opacity 360ms var(--ease) 60ms;
+}
+
+/* ---- the record (Govern): paper, formal through type ---- */
+.s8c-kind--record {
+  color: var(--ink);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.s8c-rule {
+  height: 4px;
+  margin-top: 11px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.s8c-head {
+  flex: 1;
+  margin-top: 18px;
+}
+.s8c-head > p {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: var(--display-weight);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.s8c-head > p:first-child {
+  font-size: 21px;
+  color: var(--ink-3);
+  letter-spacing: -0.012em;
+}
+.s8c-dot {
+  margin-left: 0.2em;
+  opacity: 0;
+  transition: opacity 200ms var(--ease) 60ms;
+}
+.s8c-dot[data-on="true"] {
+  opacity: 1;
+  transition: opacity 200ms var(--ease);
+}
+/* the seal line: the blind emboss, "Sealed", the one ticking timestamp */
+.s8c-seal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-2);
+  font-size: 15px;
+  color: var(--ink);
+  opacity: 0;
+  transition: opacity 140ms var(--ease) 60ms;
+}
+.s8c-seal[data-on="true"] {
+  opacity: 1;
+  transition: opacity 360ms var(--ease) 60ms;
+}
+.s8c-sealword {
+  font-weight: 500;
+}
+.s8c-time {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  color: var(--ink-2);
+}
+.s8c-emboss {
+  width: 30px;
+  height: 30px;
+  margin: -4px 0;
+  flex-shrink: 0;
+  overflow: visible;
+  opacity: 0;
+}
+.s8c-emboss[data-on="true"] {
+  opacity: 1;
+  transition: opacity 90ms linear 60ms; /* the press lands: it is simply there */
+}
+.s8c-emboss__hi {
+  fill: var(--s8c-emb-hi);
+  stroke: var(--s8c-emb-hi);
+}
+.s8c-emboss__lo {
+  fill: var(--s8c-emb-lo);
+  stroke: var(--s8c-emb-lo);
+}
+.s8c-emboss__face {
+  fill: var(--surface);
+  stroke: var(--surface);
+}
+.s8c-emboss circle {
+  stroke: none;
+}
+
+/* ---- odometer numbers: the old digit leaves upward, the new one arrives from below ---- */
+.s8c-odo {
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;
+}
+.s8c-roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.s8c-roll > span {
+  display: inline-block;
+}
+.s8c-roll__out {
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: s8c-out 380ms var(--ease) 60ms both;
+}
+.s8c-roll__in {
+  animation: s8c-in 380ms var(--ease) 60ms both;
+}
+@keyframes s8c-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-105%);
+  }
+}
+@keyframes s8c-in {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ---- the history: one quiet line over one hairline ---- */
+.s8c-hist {
+  display: grid;
+  gap: 10px;
+}
+.s8c-htext {
+  min-height: 20px;
+  display: flex;
+  align-items: flex-end;
+}
+.s8c-names {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 14px;
+  row-gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.s8c-name--new {
+  color: var(--signal);
+  opacity: 0;
+  transition: opacity 140ms var(--ease) 60ms;
+}
+.s8c-name--new[data-on="true"] {
+  opacity: 1;
+  transition: opacity 420ms var(--ease) 60ms;
+}
+/* Secure: the house verbs, appended as the close-up completes each act */
+.s8c-name--verb {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-2);
+  opacity: 0;
+  transition: opacity 140ms var(--ease) 60ms;
+}
+.s8c-name--verb[data-on="true"] {
+  opacity: 1;
+  transition: opacity 420ms var(--ease) 60ms;
+}
+.s8c-ticks {
+  display: flex;
+  gap: 6px;
+}
+.s8c-tick {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  overflow: hidden;
+}
+.s8c-hist[data-stage="2"] .s8c-tick {
+  height: 2px;
+}
+.s8c-tick::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition:
+    transform 380ms var(--ease) 60ms,
+    background-color 380ms var(--ease) 60ms;
+}
+.s8c-tick[data-state="live"]::after {
+  transform: scaleX(1);
+  background: var(--ink-3);
+}
+.s8c-tick[data-state="done"]::after {
+  transform: scaleX(1);
+}
+
+/* ---- fit: shorter laptops, narrower columns ---- */
+@media (max-height: 860px) and (min-width: 901px) {
+  .s8c-card {
+    padding: 17px 22px 15px;
+  }
+  .s8c-line {
+    margin-top: 11px;
+    font-size: 19px;
+  }
+  .s8c-head {
+    margin-top: 14px;
+  }
+  .s8c-head > p {
+    font-size: 30px;
+  }
+  .s8c-focus {
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .s8c-strip {
+    padding-bottom: 20px;
+  }
+}
+@media (max-width: 1180px) and (min-width: 901px) {
+  .s8c-line,
+  .s8c-head > p:first-child {
+    font-size: 18.5px;
+  }
+  .s8c-head > p {
+    font-size: 28px;
+  }
+}
+
+/* ---- stacked (phone / reduced motion): one slide, natural height ---- */
+.s8c-focus--still {
+  margin-top: 0;
+  padding-bottom: 0;
+}
+.s8c-focus--still .s8c-card {
+  height: auto;
+  min-height: 196px;
+}
+.s8c-focus--still .s8c-line {
+  font-size: 18px;
+}
+.s8c-focus--still .s8c-head > p {
+  font-size: 28px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .s8c .mD-seq__stagecopy,
+  .s8c-card,
+  .s8c-slide,
+  .s8c-stack > *,
+  .s8c-decision,
+  .s8c-dot,
+  .s8c-seal,
+  .s8c-emboss,
+  .s8c-name--new,
+  .s8c-name--verb,
+  .s8c-tick::after {
+    transition: none !important;
+  }
+  .s8c-roll__out {
+    display: none;
+  }
+  .s8c-roll__in {
+    animation: none;
+  }
+}

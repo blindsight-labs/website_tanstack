@@ -101,7 +101,7 @@ export function Nav({ theme }: SectionProps) {
     >
       <div className="mD-container mT-nav__inner">
         <a href="/mockup-7" className="mT-nav__logo" aria-label="Blindsight, home">
-          <img src={logo} alt="" width={96} height={20} data-theme={theme} />
+          <img src={logo} alt="" width={145} height={30} data-theme={theme} />
         </a>
 
         <nav className="mT-nav__links" aria-label="Primary">

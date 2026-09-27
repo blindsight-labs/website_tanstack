@@ -1,0 +1,393 @@
+/* Mockup 8 · variant b — left column styles. Every class prefixed .s8b-
+   One panel, one fixed height sized to its tallest state (five two-line rows), hairlines only.
+   Govern drops the box: the record is typeset on the page, flush with the copy above.
+   Motion grammar: changes start 60 ms after their cause on screen; no overshoot. */
+
+.s8b-panel {
+  --s8b-x: 18px; /* side inset */
+  --s8b-head: 54px;
+  --s8b-row: 60px;
+  --s8b-lrow: 48px;
+  flex: none;
+  transition:
+    box-shadow 140ms var(--ease),
+    background-color 140ms var(--ease);
+}
+/* Govern: the box goes (outline and fill), so the record reads as a document, not another card */
+.mD .mD-seq__panel.s8b-panel[data-stage="2"] {
+  box-shadow: 0 0 0 1px transparent;
+  background-color: transparent;
+}
+.s8b-panel--live {
+  height: calc(var(--s8b-head) + 5 * var(--s8b-row));
+}
+
+.s8b-layers {
+  display: grid;
+  height: 100%;
+}
+.s8b-layer {
+  grid-area: 1 / 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.s8b-layer[hidden] {
+  display: none;
+}
+.s8b-layer[data-state="2"] {
+  --s8b-x: 0px;
+}
+/* the swap: the old state fades out in place (140 ms); 180 ms later the new one wipes in from
+   the stage side (right → left) over 420 ms */
+.s8b-panel--live .s8b-layer {
+  opacity: 0;
+  clip-path: inset(0 0 0 100%);
+  transition:
+    opacity 140ms linear,
+    clip-path 0s linear 140ms;
+}
+.s8b-panel--live .s8b-layer[data-on="true"] {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transition:
+    opacity 0s linear 180ms,
+    clip-path 420ms var(--ease) 180ms;
+}
+
+/* ---- header: one word, a small count ---- */
+.s8b-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: var(--s8b-head);
+  padding: 0 var(--s8b-x);
+  border-bottom: 1px solid var(--line);
+}
+.s8b-title {
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.s8b-count {
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  column-gap: 1ch; /* (the space between number and noun) */
+}
+/* Govern's header is set as a document title over an ink rule */
+.s8b-layer[data-state="2"] .s8b-head {
+  border-bottom-color: var(--ink);
+}
+.s8b-layer[data-state="2"] .s8b-title {
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+/* ---- odometer: the old value exits upward while the new one enters from below ---- */
+.s8b-roll {
+  display: inline-grid;
+  justify-items: end;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.35;
+}
+.s8b-roll > * {
+  grid-area: 1 / 1;
+  white-space: pre;
+}
+.s8b-roll__in[data-anim="true"] {
+  animation: s8b-roll-in 380ms var(--ease) 60ms both;
+}
+.s8b-roll__out {
+  animation: s8b-roll-out 380ms var(--ease) 60ms both;
+}
+@keyframes s8b-roll-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes s8b-roll-out {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+
+/* ---- rows (See, Secure): a name over a quiet line; one word at the right ---- */
+.s8b-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--s8b-row);
+  padding: 0 var(--s8b-x);
+  border-top: 1px solid var(--line-2);
+}
+.s8b-list > .s8b-row:first-child,
+.s8b-list > :first-child > .s8b-row {
+  border-top: 0;
+}
+.s8b-stack {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.s8b-l1 {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.s8b-ai {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--signal);
+}
+.s8b-obj {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.s8b-sub {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink-3);
+  transition: opacity 420ms var(--ease) 60ms;
+}
+.s8b-sub[data-on="false"] {
+  opacity: 0;
+}
+.s8b-end {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.s8b-word {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+}
+/* Runtime: three events share the panel's height; one not yet acted on is dim and has no word */
+.s8b-list--events > .s8b-row {
+  height: calc(5 * var(--s8b-row) / 3);
+}
+.s8b-row .s8b-stack {
+  transition: opacity 320ms var(--ease) 60ms;
+}
+.s8b-row[data-quiet="true"] .s8b-stack {
+  opacity: 0.42;
+}
+
+/* the live dot holds its place and fades out when its moment passes (at the seal, for good) */
+.s8b-live {
+  margin-inline: 2px;
+  transition: opacity 200ms var(--ease) 60ms;
+}
+.s8b-live[data-on="false"] {
+  opacity: 0;
+}
+.s8b-live[data-on="false"]::after {
+  animation: none;
+}
+
+/* a find from the close-up opens its own row, entering from the stage side */
+.s8b-slot {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms var(--ease) 60ms;
+}
+.s8b-slot[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.s8b-slotin {
+  min-height: 0;
+  overflow: hidden;
+}
+.s8b-slot .s8b-row {
+  opacity: 0;
+  transform: translateX(12px);
+  transition:
+    opacity 320ms var(--ease) 60ms,
+    transform 420ms var(--ease) 60ms;
+}
+.s8b-slot[data-open="true"] .s8b-row {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Govern: the record (rows exist only once written; no ghost lines) ---- */
+.s8b-ledger {
+  flex: none;
+}
+.s8b-lrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--s8b-lrow);
+  padding: 0 var(--s8b-x);
+  border-top: 1px solid transparent;
+  opacity: 0;
+  transform: translateX(12px);
+  transition:
+    opacity 320ms var(--ease) 60ms,
+    transform 420ms var(--ease) 60ms,
+    border-color 320ms var(--ease) 60ms;
+}
+.s8b-lrow[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  border-top-color: var(--line-2);
+}
+.s8b-lrow:first-child {
+  border-top: 0;
+}
+.s8b-subj {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink);
+}
+.s8b-subj .s8b-ai {
+  font-size: inherit;
+}
+.s8b-soft {
+  color: var(--ink-3);
+}
+.s8b-verdict {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+/* the close: a double rule drawn out from its centre at the seal, then the sealed line */
+.s8b-close {
+  flex: none;
+  margin-top: auto;
+  padding: 0 var(--s8b-x) 18px;
+}
+.s8b-rule {
+  height: 4px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  transform: scaleX(0);
+  transition: transform 460ms var(--ease) 60ms;
+}
+.s8b-rule[data-on="true"] {
+  transform: none;
+}
+.s8b-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 20px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.s8b-foot,
+.s8b-iso {
+  opacity: 0;
+  transition: opacity 420ms var(--ease) 60ms;
+}
+.s8b-foot[data-on="true"],
+.s8b-iso[data-on="true"] {
+  opacity: 1;
+}
+.s8b-iso {
+  color: var(--ink-3);
+}
+
+/* ---- shorter laptop screens, and the narrower column: the same panel, tighter ---- */
+@media (max-height: 860px) and (min-width: 901px), (max-width: 1180px) and (min-width: 901px) {
+  .s8b-panel {
+    --s8b-head: 48px;
+    --s8b-row: 54px;
+    --s8b-lrow: 40px;
+  }
+  .s8b-layer[data-state="2"] .s8b-title {
+    font-size: 20px;
+  }
+  .s8b-close {
+    padding-bottom: 14px;
+  }
+}
+@media (max-width: 1180px) and (min-width: 901px) {
+  .s8b-panel {
+    --s8b-x: 14px;
+  }
+}
+
+/* ---- stacked (phone, reduced motion): each state on its own, settled ---- */
+.mD-seq__block .s8b-close {
+  padding-top: 16px;
+}
+@media (max-width: 900px) {
+  .s8b-sub,
+  .s8b-l1 {
+    white-space: normal;
+  }
+  .s8b-l1 {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .s8b-row {
+    height: auto;
+    min-height: var(--s8b-row);
+    padding-block: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .s8b-panel,
+  .s8b-layer,
+  .s8b-slot,
+  .s8b-slot .s8b-row,
+  .s8b-lrow,
+  .s8b-rule,
+  .s8b-sub,
+  .s8b-live,
+  .s8b-foot,
+  .s8b-iso {
+    transition: none;
+  }
+  .s8b-roll__in[data-anim="true"],
+  .s8b-roll__out {
+    animation: none;
+  }
+  .s8b-roll__out {
+    visibility: hidden;
+  }
+}

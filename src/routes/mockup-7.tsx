@@ -9,9 +9,7 @@ import { Risks } from "@/mockups/7/Risks";
 import { Sequence } from "@/mockups/7/Sequence";
 import { Walkthrough } from "@/mockups/7/Walkthrough";
 import { Deployment } from "@/mockups/7/Deployment";
-import { Discovery } from "@/mockups/7/Discovery";
-import { Why } from "@/mockups/7/Why";
-import { Faq } from "@/mockups/7/Faq";
+// Discovery, Why and Faq stay in src/mockups/8 for their own pages later; off the front page
 import { FinalCta } from "@/mockups/7/FinalCta";
 import { Footer } from "@/mockups/7/Footer";
 
@@ -21,6 +19,8 @@ import topCss from "@/mockups/7/top.css?url";
 import sequenceCss from "@/mockups/7/sequence.css?url";
 import midCss from "@/mockups/7/mid.css?url";
 import bottomCss from "@/mockups/7/bottom.css?url";
+import deployCss from "@/mockups/7/deploy.css?url";
+import dotsCss from "@/mockups/7/dots.css?url";
 
 type Search = { theme?: Theme; type?: "plex" | "geist" };
 
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/mockup-7")({
   }),
   component: MockupD,
   head: () => ({
-    meta: [{ title: "Mockup D · Blindsight" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "Mockup 7 · Blindsight" }, { name: "robots", content: "noindex, nofollow" }],
     links: [
       {
         rel: "stylesheet",
@@ -43,6 +43,8 @@ export const Route = createFileRoute("/mockup-7")({
       { rel: "stylesheet", href: sequenceCss },
       { rel: "stylesheet", href: midCss },
       { rel: "stylesheet", href: bottomCss },
+      { rel: "stylesheet", href: deployCss },
+      { rel: "stylesheet", href: dotsCss },
     ],
   }),
 });
@@ -74,9 +76,6 @@ function MockupD() {
         <Sequence theme={theme} />
         <Walkthrough theme={theme} />
         <Deployment theme={theme} />
-        <Discovery theme={theme} />
-        <Why theme={theme} />
-        <Faq theme={theme} />
         <FinalCta theme={theme} />
       </main>
       <Footer theme={theme} />

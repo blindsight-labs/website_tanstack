@@ -15,6 +15,7 @@ import { Route as ShadowRouteImport } from './routes/shadow'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MockupsRouteImport } from './routes/mockups'
 import { Route as MockupLabRouteImport } from './routes/mockup-lab'
+import { Route as Mockup9RouteImport } from './routes/mockup-9'
 import { Route as Mockup8RouteImport } from './routes/mockup-8'
 import { Route as Mockup7RouteImport } from './routes/mockup-7'
 import { Route as Mockup6RouteImport } from './routes/mockup-6'
@@ -67,6 +68,11 @@ const MockupsRoute = MockupsRouteImport.update({
 const MockupLabRoute = MockupLabRouteImport.update({
   id: '/mockup-lab',
   path: '/mockup-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup9Route = Mockup9RouteImport.update({
+  id: '/mockup-9',
+  path: '/mockup-9',
   getParentRoute: () => rootRouteImport,
 } as any)
 const Mockup8Route = Mockup8RouteImport.update({
@@ -205,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/mockup-6': typeof Mockup6Route
   '/mockup-7': typeof Mockup7Route
   '/mockup-8': typeof Mockup8Route
+  '/mockup-9': typeof Mockup9Route
   '/mockup-lab': typeof MockupLabRoute
   '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
@@ -235,6 +242,7 @@ export interface FileRoutesByTo {
   '/mockup-6': typeof Mockup6Route
   '/mockup-7': typeof Mockup7Route
   '/mockup-8': typeof Mockup8Route
+  '/mockup-9': typeof Mockup9Route
   '/mockup-lab': typeof MockupLabRoute
   '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
@@ -267,6 +275,7 @@ export interface FileRoutesById {
   '/mockup-6': typeof Mockup6Route
   '/mockup-7': typeof Mockup7Route
   '/mockup-8': typeof Mockup8Route
+  '/mockup-9': typeof Mockup9Route
   '/mockup-lab': typeof MockupLabRoute
   '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
@@ -300,6 +309,7 @@ export interface FileRouteTypes {
     | '/mockup-6'
     | '/mockup-7'
     | '/mockup-8'
+    | '/mockup-9'
     | '/mockup-lab'
     | '/mockups'
     | '/privacy'
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/mockup-6'
     | '/mockup-7'
     | '/mockup-8'
+    | '/mockup-9'
     | '/mockup-lab'
     | '/mockups'
     | '/privacy'
@@ -361,6 +372,7 @@ export interface FileRouteTypes {
     | '/mockup-6'
     | '/mockup-7'
     | '/mockup-8'
+    | '/mockup-9'
     | '/mockup-lab'
     | '/mockups'
     | '/privacy'
@@ -393,6 +405,7 @@ export interface RootRouteChildren {
   Mockup6Route: typeof Mockup6Route
   Mockup7Route: typeof Mockup7Route
   Mockup8Route: typeof Mockup8Route
+  Mockup9Route: typeof Mockup9Route
   MockupLabRoute: typeof MockupLabRoute
   MockupsRoute: typeof MockupsRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -445,6 +458,13 @@ declare module '@tanstack/react-router' {
       path: '/mockup-lab'
       fullPath: '/mockup-lab'
       preLoaderRoute: typeof MockupLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-9': {
+      id: '/mockup-9'
+      path: '/mockup-9'
+      fullPath: '/mockup-9'
+      preLoaderRoute: typeof Mockup9RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mockup-8': {
@@ -643,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   Mockup6Route: Mockup6Route,
   Mockup7Route: Mockup7Route,
   Mockup8Route: Mockup8Route,
+  Mockup9Route: Mockup9Route,
   MockupLabRoute: MockupLabRoute,
   MockupsRoute: MockupsRoute,
   PrivacyRoute: PrivacyRoute,

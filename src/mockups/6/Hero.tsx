@@ -1,8 +1,8 @@
-/* Hero — mockup 6.
-   The render is the hero: the Blindsight hub-and-orbit mark in glass and chrome
-   (three/heroScene.ts), turning like a dial through the three beats named on the
-   caption rail. Text sits in the clear area on the left of an Octane-style inset
-   sheet; one audit-trail row seals along the bottom. */
+/* Hero — mockup 9.
+   The Blindsight hub-and-orbit mark as the product diagram. Three versions of the
+   scene (three/hero-a|b|c.ts, picked with ?v=) share one contract: the clock, the
+   caption rail, the audit row, and three clickable node labels (01 · SEE IT …)
+   all live here; each scene only draws and animates the mark. */
 import { useEffect, useRef } from "react";
 import { Lock } from "lucide-react";
 
@@ -24,13 +24,32 @@ function frozenTime(): number | null {
   return m ? Number(m[1]) : null;
 }
 
-export function Hero({ theme }: SectionProps) {
+/* Three takes on the assembling mark, switchable with ?v= (a, b, c). */
+export const HERO_VARIANTS = ["a", "b", "c"] as const;
+export type HeroVariant = (typeof HERO_VARIANTS)[number];
+/** What the page needs from a scene module (each exports its own literal timings). */
+type HeroModule = {
+  LOOP_MS: number;
+  SETTLED_MS: number;
+  LOG_T: { in: number; seal: number; out: number };
+  BEATS: readonly { t0: number; t1: number }[];
+  createHeroScene: (typeof import("./three/hero-a"))["createHeroScene"];
+};
+const SCENES: Record<HeroVariant, () => Promise<HeroModule>> = {
+  a: () => import("./three/hero-a"),
+  b: () => import("./three/hero-b"),
+  c: () => import("./three/hero-c"),
+};
+
+export function Hero({ theme, variant = "a" }: SectionProps & { variant?: HeroVariant }) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const beatsRef = useRef<HTMLDivElement>(null);
   const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const nodeRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const jumpRef = useRef<(beat: number) => void>(() => {});
   const log = parseLogLine(hero.logLine);
 
   useEffect(() => {
@@ -50,7 +69,7 @@ export function Hero({ theme }: SectionProps) {
       if (logEl.dataset.state !== s) logEl.dataset.state = s;
     };
 
-    import("./three/heroScene").then(async (mod) => {
+    SCENES[variant]().then(async (mod) => {
       if (disposed) return;
       const cs = getComputedStyle(sheet);
       const scene = await mod.createHeroScene(canvas, {
@@ -103,11 +122,45 @@ export function Hero({ theme }: SectionProps) {
       let hiddenAt: number | null = null;
       const now = () => performance.now() - offset;
 
+      // the node labels follow their nodes; the node of the current beat is "on"
+      const placeNodes = () => {
+        const ns = scene.nodes();
+        // a scene that labels its own beats (or whose nodes are spinning) returns no
+        // nodes: the page's labels step aside
+        nodeRefs.current.forEach((el) => el && (el.hidden = ns.length < 3));
+        if (ns.length < 3) return;
+        const r = stage.getBoundingClientRect();
+        const c = { x: ns.reduce((s, n) => s + n.x, 0) / 3, y: ns.reduce((s, n) => s + n.y, 0) / 3 };
+        ns.forEach((n) => {
+          const el = nodeRefs.current[n.beat];
+          if (!el) return;
+          // pushed out from the mark's centre, so the label sits beside its node
+          const dx = n.x - c.x;
+          const dy = n.y - c.y;
+          const d = Math.hypot(dx, dy) || 1;
+          // clear of the node itself (≈ 70px out along the spoke), and fully on screen;
+          // near the sheet's edge the label stacks ("01" over "SEE IT") to stay beside
+          // its node, out in the orbit's gap, instead of sliding back over the glass
+          const room = dx >= 0 ? r.width - 12 - (n.x + (dx / d) * 74) : n.x + (dx / d) * 74 - 12;
+          el.dataset.stack = "false";
+          if (el.offsetWidth > room) el.dataset.stack = "true";
+          const w = el.offsetWidth;
+          const h = el.offsetHeight;
+          let x = n.x + (dx / d) * 74 - (dx >= 0 ? 0 : w);
+          let y = n.y + (dy / d) * 74 - h / 2;
+          x = Math.min(r.width - w - 12, Math.max(12, x));
+          y = Math.min(r.height - h - 12, Math.max(12, y));
+          el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+          el.dataset.on = n.on > 0.5 ? "true" : "false";
+        });
+      };
+
       const draw = () => {
         const t = still ? stillT : now();
         scene.render(t);
         setLog(still && frozen === null ? "sealed" : logAt(t));
         setBeats(t);
+        placeNodes();
         stage.dataset.ready = "true";
       };
 
@@ -140,6 +193,46 @@ export function Hero({ theme }: SectionProps) {
       const onVis = () => (document.hidden || !onScreen ? pause() : resume());
       document.addEventListener("visibilitychange", onVis);
 
+      // a click on the mark turns it straight to the next beat (See → Secure →
+      // Govern → back round): the clock jumps to where that beat's turn begins
+      const L = mod.LOOP_MS;
+      const onMark = (e: MouseEvent) => {
+        if ((e.target as Element | null)?.closest("a, button, input, textarea")) return false;
+        const r = stage.getBoundingClientRect();
+        return scene.hit(e.clientX - r.left, e.clientY - r.top);
+      };
+      const nextBeat = () => {
+        const lt = ((now() % L) + L) % L;
+        const B = mod.BEATS;
+        const cur = B.findIndex((b) => lt >= b.t0 && lt < b.t1);
+        const target =
+          cur === -1 ? (lt < B[0].t0 ? B[0].t0 : L + B[0].t0) : cur < B.length - 1 ? B[cur + 1].t0 : B[cur].t1;
+        offset -= target - lt;
+      };
+      /** straight to a given beat: the clock moves forward to where it starts */
+      const jumpTo = (beat: number) => {
+        const lt = ((now() % L) + L) % L;
+        const B = mod.BEATS;
+        if (lt >= B[beat].t0 && lt < B[beat].t1) return;
+        const target = B[beat].t0 > lt ? B[beat].t0 : L + B[beat].t0;
+        offset -= target - lt;
+      };
+      jumpRef.current = (beat) => {
+        if (!still) jumpTo(beat);
+      };
+      const onClick = (e: MouseEvent) => {
+        if (still || !onMark(e)) return;
+        const r = stage.getBoundingClientRect();
+        const node = scene.nodeAt(e.clientX - r.left, e.clientY - r.top);
+        if (node >= 0) jumpTo(node);
+        else nextBeat();
+      };
+      const onHover = (e: MouseEvent) => {
+        sheet.style.cursor = !still && onMark(e) ? "pointer" : "";
+      };
+      sheet.addEventListener("click", onClick);
+      sheet.addEventListener("mousemove", onHover);
+
       if (still) draw();
       else loop();
 
@@ -148,6 +241,10 @@ export function Hero({ theme }: SectionProps) {
         ro.disconnect();
         io.disconnect();
         document.removeEventListener("visibilitychange", onVis);
+        sheet.removeEventListener("click", onClick);
+        sheet.removeEventListener("mousemove", onHover);
+        sheet.style.cursor = "";
+        jumpRef.current = () => {};
         scene.dispose();
       };
     });
@@ -157,13 +254,31 @@ export function Hero({ theme }: SectionProps) {
       cleanup();
       delete stage.dataset.ready;
     };
-  }, [theme]);
+  }, [theme, variant]);
 
   return (
     <section className="mD-hero" aria-labelledby="mD-hero-title">
       <div className="mD-sheet mD-hero__sheet" ref={sheetRef}>
         <div className="mD-hero__stage" ref={stageRef} aria-hidden="true">
           <canvas ref={canvasRef} className="mD-hero__canvas" />
+          {/* each outer node names its beat; click one to go straight there */}
+          {hero.beats.map((b, k) => (
+            <button
+              key={b}
+              type="button"
+              className="mD-hero__node"
+              data-on="false"
+              tabIndex={-1}
+              onClick={() => jumpRef.current(k)}
+              ref={(el) => {
+                nodeRefs.current[k] = el;
+              }}
+            >
+              <span className="mD-hero__nodeN">{String(k + 1).padStart(2, "0")}</span>
+              <span className="mD-hero__beatDot">·</span>
+              {b}
+            </button>
+          ))}
         </div>
 
         <div className="mD-hero__content">

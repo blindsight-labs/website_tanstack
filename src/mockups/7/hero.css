@@ -565,3 +565,51 @@
     font-size: 12px;
   }
 }
+
+/* ---- node labels on the mark: 01 · SEE IT, 02 · SECURE IT, 03 · GOVERN IT ----
+   plain mono type beside each outer node; the current one in ink, the others quiet;
+   each is a button (the stage itself ignores the pointer) */
+.mD-hero__node {
+  all: unset;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink-4);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: color var(--dur-2) var(--ease);
+}
+.mD-hero__node:hover,
+.mD-hero__node[data-on="true"] {
+  color: var(--ink);
+}
+.mD-hero__nodeN {
+  color: inherit;
+}
+.mD-hero__node[hidden] {
+  display: none;
+}
+/* near the sheet's edge: "01" over "SEE IT", so the label keeps beside its node */
+.mD-hero__node[data-stack="true"] {
+  flex-direction: column;
+  gap: 2px;
+}
+.mD-hero__node[data-stack="true"] .mD-hero__beatDot {
+  display: none;
+}
+@media (max-width: 879px) {
+  .mD-hero__node {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+}

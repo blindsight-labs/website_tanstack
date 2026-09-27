@@ -464,6 +464,211 @@
   box-shadow: inset 0 0 0 1px var(--ink-3);
 }
 
+/* AI systems are named in the signal colour: the inventory is a list of them */
+.mD-seq__ai {
+  color: var(--signal);
+}
+.mD-seq__where {
+  color: var(--ink-3);
+}
+
+/* a find from the close-up opens its own row (0 → full height), then its decision lands */
+.mD-seq__slot {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 460ms var(--ease);
+}
+.mD-seq__slot[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.mD-seq__slotin {
+  min-height: 0;
+  overflow: hidden;
+}
+.mD-seq__slot .mD-seq__row {
+  border-top: 1px solid var(--line-2);
+  border-bottom: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 320ms var(--ease) 140ms,
+    transform 320ms var(--ease) 140ms;
+}
+.mD-seq__slot[data-open="true"] .mD-seq__row {
+  opacity: 1;
+  transform: none;
+}
+.mD-seq__new {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--ink);
+  font-size: 9.5px;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+  color: var(--ink);
+}
+/* runtime: handled earlier today elsewhere in the fleet: settled, quieter */
+.mD-seq__row--earlier .mD-seq__where,
+.mD-seq__row--earlier .mD-seq__status {
+  color: var(--ink-3);
+}
+.mD-seq__slot .mD-seq__chip {
+  transition:
+    background-color var(--dur-2, 200ms) var(--ease),
+    color var(--dur-2, 200ms) var(--ease);
+}
+
+/* runtime: the verdict, then what was done, in plain case */
+.mD-seq__status {
+  flex-wrap: wrap;
+  row-gap: 3px;
+}
+.mD-seq__note[data-on="false"] {
+  visibility: hidden;
+}
+.mD-seq__note {
+  flex-basis: 100%;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+/* ---------- Govern: the console becomes a ledger ----------
+   The header inverts to an ink band, the ledger is drawn down from it (a clip
+   wipe), columns are ruled, the entries end on a double rule and the seal. */
+.mD-seq__phead {
+  transition:
+    background-color 420ms var(--ease),
+    color 420ms var(--ease),
+    border-color 420ms var(--ease);
+}
+.mD-seq__panel[data-stage="2"] .mD-seq__phead {
+  background: var(--ink);
+  color: var(--surface);
+  border-bottom-color: var(--ink);
+}
+.mD-seq__panel[data-stage="2"] .mD-seq__phead .mD-seq__muted {
+  color: color-mix(in srgb, var(--surface) 58%, var(--ink));
+}
+.mD-seq__panel[data-stage="2"] .mD-seq__count {
+  color: var(--surface);
+}
+.mD-seq__layer--ledger[data-on="true"] {
+  animation: mD-ledger-in 720ms var(--ease) both;
+}
+@keyframes mD-ledger-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.mD-seq__learlier {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+.mD-seq__lhead,
+.mD-seq__lrow {
+  display: grid;
+  grid-template-columns: 56px 62px minmax(0, 1fr) auto;
+  column-gap: 12px;
+}
+.mD-seq__lhead {
+  padding: 10px 16px 8px;
+  border-bottom: 1px solid var(--ink);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mD-seq__lhead span:last-child,
+.mD-seq__lrow .mD-log__verdict {
+  justify-self: end;
+  text-align: right;
+}
+/* the ledger fills the card: entry rows share the height, seal and evidence close it */
+.mD-seq__layer--ledger {
+  display: flex;
+  flex-direction: column;
+}
+.mD-seq__layer--ledger > * {
+  flex: none;
+}
+.mD-seq__layer--ledger > .mD-seq__lrow {
+  flex: 1 0 40px;
+}
+/* a ledger row: mono, tabular, ink only (violet stays on the live dot) */
+.mD-seq__lrow {
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.mD-seq__lrow:has(+ .mD-seq__seal) {
+  border-bottom: 0;
+}
+.mD-seq__lrow .mD-seq__ghost {
+  grid-column: 1 / -1;
+  width: 72%;
+}
+.mD-seq__lid {
+  color: var(--ink-3);
+}
+.mD-seq__lsub {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.mD-seq__hash {
+  color: var(--ink-3);
+}
+/* evidence: one line under the seal */
+.mD-seq__layer--ledger .mD-seq__frameworks {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 14px;
+  padding-block: 10px 11px;
+}
+.mD-seq__seal {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 16px;
+  border-top: 3px double var(--ink);
+  font-size: 11.5px;
+  color: var(--ink);
+  opacity: 0;
+  transition: opacity var(--dur-3, 320ms) var(--ease);
+}
+.mD-seq__seal[data-on="true"] {
+  opacity: 1;
+}
+.mD-seq__seal .mD-hex {
+  margin-inline: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mD-seq__layer--ledger[data-on="true"] {
+    animation: none;
+  }
+  .mD-seq__slot,
+  .mD-seq__slot .mD-seq__row {
+    transition: none;
+  }
+}
+
 /* shorter laptop screens: tighten so the sheet still fits */
 @media (max-height: 860px) and (min-width: 901px) {
   .mD-seq__sheet {
@@ -597,4 +802,23 @@
   .mD-seq__sub {
     white-space: normal;
   }
+}
+
+/* the stage plays mockup 5's office network (its own canvas, its own chips) */
+.mD-seq__stage--net {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+}
+.mD-seq__net {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
+}
+.mD-seq__live[data-ready="true"] .mD-seq__net {
+  opacity: 1;
 }

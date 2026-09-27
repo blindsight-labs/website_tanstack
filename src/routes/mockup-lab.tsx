@@ -13,7 +13,7 @@ function Stage({ theme }: { theme: "light" | "dark" }) {
   useEffect(() => {
     let raf = 0;
     let dispose = () => {};
-    import("@/mockups/4/three/core").then(({ THREE, createRenderer, studioEnvironment, materials, backdrop, slab, studioLights, PALETTE }) => {
+    import("@/mockups/1/three/core").then(({ THREE, createRenderer, studioEnvironment, materials, backdrop, slab, studioLights, PALETTE }) => {
       const canvas = ref.current!;
       const r = createRenderer(canvas);
       const w = canvas.clientWidth;

@@ -1,0 +1,375 @@
+/* Mockup 8 · variant d — "Editorial", round 2. Every class prefixed .s8d-
+   Typography only: the stage copy, then captions in the sans separated by hairlines.
+   Violet only for the system names and the one live dot (out at the seal).
+   Motion grammar: cause, then effect: every left change starts 60 ms after the scene's
+   event; stage swaps are asymmetric (out 140 ms, still; in 180 ms later, over 420 ms). */
+
+/* ---- the stage copy: larger, with air ---- */
+.s8d-copy {
+  display: grid;
+}
+.s8d-stagecopy,
+.s8d-layer {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(8px);
+  /* outgoing: fade in place, then (unseen) step down for its next entrance */
+  transition:
+    opacity 140ms var(--ease),
+    transform 0s linear 140ms;
+  pointer-events: none;
+}
+.s8d-stagecopy[data-on="true"],
+.s8d-layer[data-on="true"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition:
+    opacity 420ms var(--ease) 180ms,
+    transform 420ms var(--ease) 180ms;
+}
+/* the page's .mD-h3 (system.css): --t-h3 24px, 400, -0.015em */
+.s8d-title {
+  font-family: var(--font-display);
+  font-size: var(--t-h3, 24px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.s8d-body {
+  margin-top: 16px;
+  max-width: 34em;
+  font-size: 16px;
+  line-height: 1.62;
+  color: var(--ink-2);
+}
+
+/* ---- the notes: under the copy, with deliberate air; the three stages overlay in one cell
+   (its height is the tallest stage's: fixed); each list grows downward as captions land ---- */
+.s8d-notes {
+  display: grid;
+  margin-top: 30px;
+}
+.s8d-layer {
+  align-self: start;
+}
+.s8d-layer[hidden] {
+  display: none;
+}
+.s8d-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* a slot opens when its caption lands: no empty rows */
+.s8d-slot {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms var(--ease) 60ms;
+}
+.s8d-slot[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+/* (clipped vertically only, so the hanging dot shows in the margin) */
+.s8d-slotin {
+  min-height: 0;
+  clip-path: inset(0 -40px);
+}
+
+/* one caption: text (and an aside at the right), a hairline under it. The text aligns with
+   the copy; the live dot hangs in the margin (the sheet's padding, left of the column) */
+.s8d-line {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 0 13px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-sans);
+  font-size: 16.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  transition:
+    opacity 420ms var(--ease) 60ms,
+    transform 420ms var(--ease) 60ms;
+}
+.s8d-slot[data-open="false"] .s8d-line {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.s8d-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.s8d-aside {
+  flex: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.s8d-line--muted {
+  border-bottom: 0;
+  font-size: 14.5px;
+  color: var(--ink-3);
+}
+/* See: the muted line HEADS the list (on from p = 0), so it keeps its hairline under it */
+.s8d-slot:first-child > .s8d-slotin > .s8d-line--muted {
+  border-bottom: 1px solid var(--line);
+}
+.s8d-name {
+  color: var(--signal);
+  font-weight: 500;
+}
+.s8d-act {
+  color: var(--ink);
+  font-weight: 500;
+}
+.s8d-dash {
+  color: var(--ink-4);
+}
+.s8d-mono {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  letter-spacing: -0.01em;
+  /* a machine token never breaks ("ws-/fin-01" on a phone) */
+  white-space: nowrap;
+}
+.s8d-line .s8d-dot {
+  position: absolute;
+  left: -19px;
+  top: calc(12px + 0.725em - 3.5px);
+  opacity: 0;
+  transition: opacity 200ms var(--ease);
+}
+.s8d-line .s8d-dot[data-on="true"] {
+  opacity: 1;
+}
+
+/* a word that changes in place (Flagged → Protected, Stripping → Stripped) */
+.s8d-swap {
+  display: inline-grid;
+  clip-path: inset(-2px -1px);
+}
+.s8d-swap > span {
+  grid-area: 1 / 1;
+  transition:
+    opacity 380ms var(--ease) 60ms,
+    transform 380ms var(--ease) 60ms;
+}
+.s8d-swap > span[data-on="false"] {
+  opacity: 0;
+}
+.s8d-swap > span:first-child[data-on="false"] {
+  transform: translateY(-70%);
+}
+.s8d-swap > span:last-child[data-on="false"] {
+  transform: translateY(70%);
+}
+
+/* odometer numbers: the old character exits upward, the new one enters from below */
+.s8d-odo {
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;
+}
+.s8d-odo__cell {
+  position: relative;
+  display: inline-block;
+  clip-path: inset(0 -1px);
+}
+.s8d-odo__in {
+  display: inline-block;
+  animation: s8d-odo-in 380ms var(--ease) 60ms both;
+}
+.s8d-odo__out {
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: s8d-odo-out 380ms var(--ease) 60ms both;
+}
+@keyframes s8d-odo-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes s8d-odo-out {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+/* ---- Govern: a formal record, by restraint ---- */
+/* hairlines BETWEEN captions (so the last open one never doubles the double rule) */
+.s8d-record .s8d-line {
+  border-bottom: 0;
+}
+.s8d-record .s8d-slot + .s8d-slot .s8d-line {
+  border-top: 1px solid var(--line);
+}
+/* the tally: a term exists only once its row is logged (never shown ahead), then fades in */
+.s8d-term[data-on="false"] {
+  display: none;
+}
+.s8d-term[data-on="true"] {
+  animation: s8d-term-in 380ms var(--ease) 60ms both;
+}
+@keyframes s8d-term-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.s8d-record .s8d-line {
+  color: var(--ink);
+}
+.s8d-time {
+  font-family: var(--font-mono);
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+.s8d-double {
+  margin-top: 4px;
+  border-top: 3px double var(--ink);
+}
+.s8d-seal {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  color: var(--ink);
+  transition: opacity 420ms var(--ease) 60ms;
+}
+.s8d-seal[data-on="false"] {
+  opacity: 0;
+}
+
+/* shorter laptop screens: tighten so the sheet still fits */
+@media (max-height: 860px) and (min-width: 901px) {
+  .s8d-body {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .s8d-notes {
+    margin-top: 18px;
+  }
+  .s8d-line {
+    padding-top: 9px;
+    padding-bottom: 10px;
+    font-size: 15px;
+  }
+  .s8d-line--muted {
+    font-size: 14px;
+  }
+  .s8d-line .s8d-dot {
+    top: calc(9px + 0.725em - 3.5px);
+  }
+}
+@media (max-width: 1180px) and (min-width: 901px) {
+  .s8d-body {
+    font-size: 15px;
+  }
+  .s8d-line {
+    font-size: 15.5px;
+    gap: 12px;
+  }
+}
+
+/* ---- phone and tablet (≤ 900 px): the captions sit under the full-width close-up ---- */
+@media (max-width: 900px) {
+  .s8d-body {
+    margin-top: 12px;
+    font-size: 15.5px;
+    line-height: 1.58;
+  }
+  .s8d-notes {
+    margin-top: 22px;
+  }
+}
+@media (max-width: 599px) {
+  .s8d-title {
+    font-size: 22px;
+  }
+  .s8d-body {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .s8d-line {
+    gap: 12px;
+    padding: 10px 0 11px;
+    font-size: 15px;
+  }
+  .s8d-line .s8d-dot {
+    left: -15px;
+    top: calc(10px + 0.725em - 3.5px);
+  }
+  .s8d-aside {
+    font-size: 14px;
+  }
+  /* (the muted line keeps 14.5 px: its mono system name is then ≥ 13 px) */
+  .s8d-line--muted {
+    font-size: 14.5px;
+  }
+  .s8d-time {
+    font-size: 13.5px;
+  }
+  /* the sealed line may wrap its clock under it rather than overflow */
+  .s8d-seal {
+    flex-wrap: wrap;
+    column-gap: 12px;
+  }
+}
+
+/* ---- stacked (reduced motion): the notes for one stage ---- */
+.s8d-still .s8d-notes {
+  margin-top: 0;
+}
+.s8d-still .s8d-dot {
+  display: none;
+}
+@media (min-width: 901px) {
+  .mD-seq__block .s8d-still {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .s8d-stagecopy,
+  .s8d-layer,
+  .s8d-slot,
+  .s8d-line,
+  .s8d-line .s8d-dot,
+  .s8d-swap > span,
+  .s8d-seal {
+    transition: none;
+  }
+  .s8d-odo__in,
+  .s8d-odo__out {
+    animation: none;
+  }
+  .s8d-odo__out {
+    display: none;
+  }
+  .s8d-term[data-on="true"] {
+    animation: none;
+  }
+}

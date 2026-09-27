@@ -3,15 +3,13 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { MetalDefs, type Theme } from "@/mockups/5/shared";
 import { Nav } from "@/mockups/5/Nav";
-import { Hero } from "@/mockups/5/Hero";
+import { HERO_VARIANTS, Hero, type HeroVariant } from "@/mockups/5/Hero";
 import { ProofStrip } from "@/mockups/5/ProofStrip";
 import { Risks } from "@/mockups/5/Risks";
-import { Sequence } from "@/mockups/5/Sequence";
+import { SEQ_VARIANTS, Sequence, type SeqVariant } from "@/mockups/5/Sequence";
 import { Walkthrough } from "@/mockups/5/Walkthrough";
 import { Deployment } from "@/mockups/5/Deployment";
-import { Discovery } from "@/mockups/5/Discovery";
-import { Why } from "@/mockups/5/Why";
-import { Faq } from "@/mockups/5/Faq";
+// Discovery, Why and Faq stay in src/mockups/8 for their own pages later; off the front page
 import { FinalCta } from "@/mockups/5/FinalCta";
 import { Footer } from "@/mockups/5/Footer";
 
@@ -22,16 +20,18 @@ import sequenceCss from "@/mockups/5/sequence.css?url";
 import midCss from "@/mockups/5/mid.css?url";
 import bottomCss from "@/mockups/5/bottom.css?url";
 
-type Search = { theme?: Theme; type?: "plex" | "geist" };
+type Search = { theme?: Theme; type?: "plex" | "geist"; v?: HeroVariant; s?: SeqVariant };
 
 export const Route = createFileRoute("/mockup-5")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     theme: s.theme === "dark" ? "dark" : undefined,
     type: s.type === "geist" ? "geist" : undefined,
+    v: HERO_VARIANTS.find((v) => v === s.v && v !== "a"),
+    s: SEQ_VARIANTS.find((v) => v === s.s && v !== "a"),
   }),
   component: MockupD,
   head: () => ({
-    meta: [{ title: "Mockup D · Blindsight" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "Mockup 5 · Blindsight" }, { name: "robots", content: "noindex, nofollow" }],
     links: [
       {
         rel: "stylesheet",
@@ -52,6 +52,7 @@ function MockupD() {
   const navigate = useNavigate({ from: "/mockup-5" });
   const theme: Theme = search.theme ?? "light";
   const type = search.type ?? "plex";
+  const variant: HeroVariant = search.v ?? "a";
 
   // The live site's root stylesheet paints <body>; match it to the mockup theme.
   const [bodyBg] = useState(() => (theme === "dark" ? "#060607" : "#F3F4F6"));
@@ -68,15 +69,12 @@ function MockupD() {
       <MetalDefs />
       <Nav theme={theme} />
       <main>
-        <Hero theme={theme} />
+        <Hero theme={theme} variant={variant} />
         <ProofStrip theme={theme} />
         <Risks theme={theme} />
-        <Sequence theme={theme} />
+        <Sequence theme={theme} scan={search.s ?? "a"} />
         <Walkthrough theme={theme} />
         <Deployment theme={theme} />
-        <Discovery theme={theme} />
-        <Why theme={theme} />
-        <Faq theme={theme} />
         <FinalCta theme={theme} />
       </main>
       <Footer theme={theme} />
@@ -91,6 +89,27 @@ function MockupD() {
             onClick={() => navigate({ search: (s: Search) => ({ ...s, theme: t === "dark" ? "dark" : undefined }) })}
           >
             {t}
+          </button>
+        ))}
+        {HERO_VARIANTS.map((v) => (
+          <button
+            key={v}
+            type="button"
+            aria-pressed={variant === v}
+            onClick={() => navigate({ search: (s: Search) => ({ ...s, v: v === "a" ? undefined : v }) })}
+          >
+            {v}
+          </button>
+        ))}
+        {SEQ_VARIANTS.map((v) => (
+          <button
+            key={`s${v}`}
+            type="button"
+            title="See / Secure / Govern section version"
+            aria-pressed={(search.s ?? "a") === v}
+            onClick={() => navigate({ search: (s: Search) => ({ ...s, s: v === "a" ? undefined : v }) })}
+          >
+            {`s·${v}`}
           </button>
         ))}
         {(["plex", "geist"] as const).map((f) => (

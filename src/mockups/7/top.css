@@ -9,6 +9,9 @@
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: var(--s5);
+  /* the bar runs wider than the page column, so the logo sits near the window's
+     edge (≈48px at 1440, as on blindsight.io) and the CTA mirrors it */
+  width: calc(100% - 2 * clamp(20px, 3.4vw, 48px));
 }
 .mT-nav__logo {
   justify-self: start;
@@ -19,7 +22,7 @@
 }
 .mT-nav__logo img {
   display: block;
-  height: 19px;
+  height: 30px;
   width: auto;
 }
 .mD[data-theme="dark"] .mT-nav__logo img {
@@ -241,7 +244,7 @@
 }
 @media (max-width: 420px) {
   .mT-nav__logo img {
-    height: 16px;
+    height: 22px;
   }
   .mT-nav .mT-nav__cta {
     padding: 0 12px;
@@ -417,6 +420,31 @@
   position: relative;
   overflow: hidden;
 }
+/* hover / focus: the card lifts, its render leans in, the detection tag sharpens
+   (the frames of the incident play in JS) */
+.mT-risk {
+  transition:
+    transform 420ms var(--ease),
+    box-shadow 420ms var(--ease);
+  outline: none;
+}
+.mT-risk__img {
+  transition: transform 900ms var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .mT-risk:hover,
+  .mT-risk:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 0 0 1px var(--ink-4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mT-risk,
+  .mT-risk__img {
+    transition: none;
+    transform: none !important;
+  }
+}
 .mT-risk__img {
   display: block;
   width: 100%;
@@ -521,8 +549,36 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover; /* framed exactly like the still underneath */
   opacity: 0;
   pointer-events: none;
+}
+/* hover-capable pages with playback: the callout appears once the incident has
+   happened — the dot, then the leader drawing itself out to the label, then the words */
+.mT-call__line polyline {
+  stroke-dasharray: var(--len, 1400);
+  stroke-dashoffset: 0;
+}
+.mT-risks[data-callouts="hover"] .mT-call {
+  transition-duration: 160ms;
+}
+.mT-risks[data-callouts="hover"] .mT-risk:not([data-played]) .mT-call {
+  opacity: 0;
+}
+.mT-risks[data-callouts="hover"] .mT-call__line polyline {
+  stroke-dashoffset: var(--len, 1400);
+}
+.mT-risks[data-callouts="hover"] .mT-risk[data-played] .mT-call__line polyline {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 760ms cubic-bezier(0.3, 0.6, 0.2, 1) 180ms;
+}
+.mT-risks[data-callouts="hover"] .mT-call__label {
+  opacity: 0;
+  transition: opacity 360ms var(--ease);
+}
+.mT-risks[data-callouts="hover"] .mT-risk[data-played] .mT-call__label {
+  opacity: 1;
+  transition-delay: 940ms;
 }
 .mT-risk__n {
   margin-bottom: 6px;

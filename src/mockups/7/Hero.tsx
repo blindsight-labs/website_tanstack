@@ -1,22 +1,13 @@
-/* Hero — mockup 6.
-   The render is the hero: the Blindsight hub-and-orbit mark in glass and chrome
-   (three/heroScene.ts), turning like a dial through the three beats named on the
-   caption rail. Text sits in the clear area on the left of an Octane-style inset
-   sheet; one audit-trail row seals along the bottom. */
+/* Hero — mockup 7.
+   The wide shot: an office network in glass (three/office.ts). A scan sweeps the
+   floor and finds the AI nobody registered; each flagged desk is fenced, then the
+   policy reaches it. Chips follow their objects and change with the story; the
+   caption rail under the render names the beat. (The close-up of the same story,
+   on one machine, plays in the See / Secure / Govern section below.) */
 import { useEffect, useRef } from "react";
-import { Lock } from "lucide-react";
 
-import { CtaButton, Label, MetalIcon, type SectionProps } from "./shared";
+import { CtaButton, Label, type SectionProps } from "./shared";
 import { hero } from "./content";
-
-type LogState = "idle" | "typing" | "sealed";
-
-/** "14:32:07  invoice_0412.pdf → agent:finance  hidden instruction stripped  ·  detected · corrected · logged" */
-function parseLogLine(line: string) {
-  const parts = line.split(/\s{2,}/).filter((p) => p !== "·");
-  const [time = "", subject = "", decision = "", seal = ""] = parts;
-  return { time, subject, decision, seal: seal.split(/\s*·\s*/).filter(Boolean) };
-}
 
 /** Dev aid for screenshots: /mockup-7#hero-t=4500 freezes the storyboard at 4.5 s. */
 function frozenTime(): number | null {
@@ -28,17 +19,15 @@ export function Hero({ theme }: SectionProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const logRef = useRef<HTMLDivElement>(null);
   const beatsRef = useRef<HTMLDivElement>(null);
   const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const log = parseLogLine(hero.logLine);
+  const chipRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     const sheet = sheetRef.current;
     const stage = stageRef.current;
     const canvas = canvasRef.current;
-    const logEl = logRef.current;
-    if (!sheet || !stage || !canvas || !logEl) return;
+    if (!sheet || !stage || !canvas) return;
 
     let disposed = false;
     let raf = 0;
@@ -46,11 +35,7 @@ export function Hero({ theme }: SectionProps) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const frozen = frozenTime();
 
-    const setLog = (s: LogState) => {
-      if (logEl.dataset.state !== s) logEl.dataset.state = s;
-    };
-
-    import("./three/heroScene").then(async (mod) => {
+    import("./three/office").then(async (mod) => {
       if (disposed) return;
       const cs = getComputedStyle(sheet);
       const scene = await mod.createHeroScene(canvas, {
@@ -63,20 +48,14 @@ export function Hero({ theme }: SectionProps) {
         return;
       }
 
-      const logAt = (t: number): LogState => {
-        const lt = ((t % mod.LOOP_MS) + mod.LOOP_MS) % mod.LOOP_MS;
-        if (lt >= mod.LOG_T.in && lt < mod.LOG_T.seal) return "typing";
-        if (lt >= mod.LOG_T.seal && lt < mod.LOG_T.out) return "sealed";
-        return "idle";
-      };
-
       const still = reduce || frozen !== null;
       const stillT = frozen ?? mod.SETTLED_MS;
+      const L = mod.LOOP_MS;
 
       // the caption rail follows the same clock: 01 See it · 02 Secure it · 03 Govern it
       let lastBeat = "";
       const setBeats = (t: number) => {
-        const lt = ((t % mod.LOOP_MS) + mod.LOOP_MS) % mod.LOOP_MS;
+        const lt = ((t % L) + L) % L;
         const cur = mod.BEATS.findIndex((b) => lt >= b.t0 && lt < b.t1);
         const key = String(cur + 1);
         if (key !== lastBeat && beatsRef.current) {
@@ -89,6 +68,23 @@ export function Hero({ theme }: SectionProps) {
           // finished beats stay full until the loop resets
           const p = lt >= b.t1 && lt < mod.BEATS[mod.BEATS.length - 1].t1 ? 1 : Math.max(0, Math.min(1, (lt - b.t0) / (b.t1 - b.t0)));
           el.style.transform = `scaleX(${p.toFixed(3)})`;
+        });
+      };
+
+      // chips follow their object; the status word changes as the story moves on
+      const setChips = () => {
+        scene.labels().forEach((l, i) => {
+          const el = chipRefs.current[i];
+          if (!el) return;
+          // never above the stage's top edge: the chip box sits ~56px above its anchor
+          el.style.transform = `translate(${l.x.toFixed(1)}px, ${Math.max(l.y, 60).toFixed(1)}px)`;
+          el.style.opacity = l.a.toFixed(3);
+          const s = String(l.state);
+          if (el.dataset.state !== s) {
+            el.dataset.state = s;
+            const k = el.querySelector<HTMLElement>(".mD-hero__chipK");
+            if (k) k.textContent = hero.chips[i].states[l.state];
+          }
         });
       };
 
@@ -106,8 +102,8 @@ export function Hero({ theme }: SectionProps) {
       const draw = () => {
         const t = still ? stillT : now();
         scene.render(t);
-        setLog(still && frozen === null ? "sealed" : logAt(t));
         setBeats(t);
+        setChips();
         stage.dataset.ready = "true";
       };
 
@@ -164,6 +160,22 @@ export function Hero({ theme }: SectionProps) {
       <div className="mD-sheet mD-hero__sheet" ref={sheetRef}>
         <div className="mD-hero__stage" ref={stageRef} aria-hidden="true">
           <canvas ref={canvasRef} className="mD-hero__canvas" />
+          {hero.chips.map((c, i) => (
+            <span
+              key={c.name}
+              className="mD-hero__chip"
+              data-k={i}
+              data-state="0"
+              ref={(el) => {
+                chipRefs.current[i] = el;
+              }}
+            >
+              <span className="mD-hero__chipBox">
+                <span className="mD-hero__chipK">{c.states[0]}</span>
+                <span className="mD-hero__chipV">{c.name}</span>
+              </span>
+            </span>
+          ))}
         </div>
 
         <div className="mD-hero__content">
@@ -196,38 +208,6 @@ export function Hero({ theme }: SectionProps) {
               </span>
             </span>
           ))}
-        </div>
-
-        <div className="mD-hero__log mD-log" ref={logRef} data-state="idle">
-          <div className="mD-hero__logHead">
-            <span>Audit trail</span>
-            <span className="mD-hero__logIllus">Illustrative</span>
-          </div>
-          <div className="mD-hero__logRow">
-            <span className="mD-log__time">{log.time}</span>
-            <span className="mD-hero__logSubject">
-              <span className="mD-hero__type">{log.subject}</span>
-            </span>
-            <span className="mD-hero__logDecision">
-              <span className="mD-hero__type mD-hero__type--2">{log.decision}</span>
-            </span>
-            <span className="mD-log__verdict mD-hero__logSeal">
-              <span className="mD-live" aria-hidden="true" />
-              {log.seal.map((s, i) => (
-                <span key={s} className="mD-hero__sealStep" style={{ ["--i" as string]: i }}>
-                  {i > 0 && <span className="mD-hero__sealDot" aria-hidden="true">·</span>}
-                  {s}
-                </span>
-              ))}
-              <span className="mD-hero__sealIcon">
-                <MetalIcon icon={Lock} size={13} strokeWidth={1.75} tone={theme === "dark" ? "light" : "ink"} />
-              </span>
-            </span>
-          </div>
-          <div className="mD-hero__logIdle" aria-hidden="true">
-            <span className="mD-hero__idleDot" />
-            {hero.idle}
-          </div>
         </div>
       </div>
     </section>

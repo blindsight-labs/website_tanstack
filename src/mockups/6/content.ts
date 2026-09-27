@@ -6,12 +6,11 @@ export const CTA = "Discover your AI risk";
 
 export const nav = {
   links: [
-    { label: "Platform", href: "#sequence" },
-    { label: "Deployment", href: "#deployment" },
-    { label: "Research", href: "#why" },
+    // Platform and Deployment are already this page; Why and FAQ moved off it
+    { label: "Research", href: "/blog" },
     { label: "Company", href: "/team" },
   ],
-  quiet: { label: "Pricing", href: "#faq" },
+  quiet: { label: "Pricing", href: "/faq" },
 };
 
 export const hero = {
@@ -41,11 +40,11 @@ export const hero = {
   // one result line under each beat, shown once that beat has happened
   beatResults: ["Every AI in view", "Protected at runtime", "Every decision on record"],
   // screen-space chips over the render: rack first, then the two flagged desks.
-  // states: found · contained · governed
+  // states: found · secured · governed, in the page's one vocabulary (flagged, masked, blocked, logged)
   chips: [
-    { name: "agent:finance", states: ["Registered", "Registered", "Registered"] },
-    { name: "crm-assistant", states: ["Unregistered", "Contained", "Governed · REG-01"] },
-    { name: "chatgpt.com", states: ["Unregistered", "Contained", "Governed · DATA-02"] },
+    { name: "agent:finance", states: ["Logged", "Logged", "Logged"] },
+    { name: "crm-assistant", states: ["Flagged", "Masked", "Logged · REG-01"] },
+    { name: "chatgpt.com", states: ["Flagged", "Blocked", "Logged · DATA-02"] },
   ],
   idle: "observing · people, apps, agents",
   logLine: "14:29:10  crm-assistant → crm-db  access paused pending approval  ·  seen · secured · governed",

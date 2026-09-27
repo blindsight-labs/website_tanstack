@@ -3,15 +3,13 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { MetalDefs, type Theme } from "@/mockups/4/shared";
 import { Nav } from "@/mockups/4/Nav";
-import { Hero } from "@/mockups/4/Hero";
+import { HERO_VARIANTS, Hero, type HeroVariant } from "@/mockups/4/Hero";
 import { ProofStrip } from "@/mockups/4/ProofStrip";
 import { Risks } from "@/mockups/4/Risks";
 import { Sequence } from "@/mockups/4/Sequence";
 import { Walkthrough } from "@/mockups/4/Walkthrough";
 import { Deployment } from "@/mockups/4/Deployment";
-import { Discovery } from "@/mockups/4/Discovery";
-import { Why } from "@/mockups/4/Why";
-import { Faq } from "@/mockups/4/Faq";
+// Discovery, Why and Faq stay in src/mockups/8 for their own pages later; off the front page
 import { FinalCta } from "@/mockups/4/FinalCta";
 import { Footer } from "@/mockups/4/Footer";
 
@@ -22,16 +20,17 @@ import sequenceCss from "@/mockups/4/sequence.css?url";
 import midCss from "@/mockups/4/mid.css?url";
 import bottomCss from "@/mockups/4/bottom.css?url";
 
-type Search = { theme?: Theme; type?: "plex" | "geist" };
+type Search = { theme?: Theme; type?: "plex" | "geist"; v?: HeroVariant };
 
 export const Route = createFileRoute("/mockup-4")({
   validateSearch: (s: Record<string, unknown>): Search => ({
     theme: s.theme === "dark" ? "dark" : undefined,
     type: s.type === "geist" ? "geist" : undefined,
+    v: HERO_VARIANTS.find((v) => v === s.v && v !== "a"),
   }),
   component: MockupD,
   head: () => ({
-    meta: [{ title: "Mockup D · Blindsight" }, { name: "robots", content: "noindex, nofollow" }],
+    meta: [{ title: "Mockup 4 · Blindsight" }, { name: "robots", content: "noindex, nofollow" }],
     links: [
       {
         rel: "stylesheet",
@@ -52,6 +51,7 @@ function MockupD() {
   const navigate = useNavigate({ from: "/mockup-4" });
   const theme: Theme = search.theme ?? "light";
   const type = search.type ?? "plex";
+  const variant: HeroVariant = search.v ?? "a";
 
   // The live site's root stylesheet paints <body>; match it to the mockup theme.
   const [bodyBg] = useState(() => (theme === "dark" ? "#060607" : "#F3F4F6"));
@@ -68,15 +68,12 @@ function MockupD() {
       <MetalDefs />
       <Nav theme={theme} />
       <main>
-        <Hero theme={theme} />
+        <Hero theme={theme} variant={variant} />
         <ProofStrip theme={theme} />
         <Risks theme={theme} />
         <Sequence theme={theme} />
         <Walkthrough theme={theme} />
         <Deployment theme={theme} />
-        <Discovery theme={theme} />
-        <Why theme={theme} />
-        <Faq theme={theme} />
         <FinalCta theme={theme} />
       </main>
       <Footer theme={theme} />
@@ -91,6 +88,16 @@ function MockupD() {
             onClick={() => navigate({ search: (s: Search) => ({ ...s, theme: t === "dark" ? "dark" : undefined }) })}
           >
             {t}
+          </button>
+        ))}
+        {HERO_VARIANTS.map((v) => (
+          <button
+            key={v}
+            type="button"
+            aria-pressed={variant === v}
+            onClick={() => navigate({ search: (s: Search) => ({ ...s, v: v === "a" ? undefined : v }) })}
+          >
+            {v}
           </button>
         ))}
         {(["plex", "geist"] as const).map((f) => (

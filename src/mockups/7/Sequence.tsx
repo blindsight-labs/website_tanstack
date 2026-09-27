@@ -8,7 +8,7 @@
  *   See     p 0.00–0.34  a glass scan blade crosses the map; each problem resolves
  *                        from a dashed ghost into glass/chrome, gets labelled and a
  *                        decision (Block / Approve / Protect / Onboard).
- *   Secure  p 0.34–0.67  each is handled in turn: pseudonymised, stripped,
+ *   Secure  p 0.34–0.67  each is handled in turn: pseudonymized, stripped,
  *                        quarantined, paused.
  *   Prove   p 0.67–1.00  each handling seals (chrome hex) into an audit entry, in
  *                        time order; then the frameworks it is logged for.
@@ -21,7 +21,10 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type * as T from "three";
 
-import { risks, sequence, type RiskId } from "./content";
+import { hero, risks, sequence, type RiskId } from "./content";
+import type { HeroScene as NetScene } from "./three/seq-defender";
+/** a chip anchor from the scene (the close-up scene has none: the chips stay hidden) */
+type NetLabel = { x: number; y: number; a: number; state: 0 | 1 | 2 };
 import { Label, type SectionProps, type Theme } from "./shared";
 
 type Core = typeof import("./three/core");
@@ -38,44 +41,68 @@ const CLAUSES = sequence.tagline.split(/(?<=,)\s+/); // "See it," "secure it," "
 
 /** What Blindsight decides (See) and does (Secure) for each scenario. */
 const ACT: Record<RiskId, { decision: number; doing: string; done: string }> = {
-  "prompt-leak": { decision: 2, doing: "Pseudonymising", done: "Pseudonymised" },
+  "prompt-leak": { decision: 2, doing: "Masking", done: "Masked" },
   "hidden-instruction": { decision: 2, doing: "Stripping", done: "Stripped" },
-  "poisoned-source": { decision: 2, doing: "Quarantining", done: "Quarantined" },
-  "unregistered-ai": { decision: 0, doing: "Pausing", done: "Paused" },
+  "poisoned-source": { decision: 2, doing: "Masking", done: "Masked" },
+  "unregistered-ai": { decision: 0, doing: "Blocking", done: "Blocked" },
 };
 
 const ITEMS = risks.map((r, i) => {
   const th = sequence.thread[r.id];
   const [policy = "", verdict = "", time = ""] = th.prove.split(" · ");
+  // "see" is "<the AI system> · <where it runs>": the name is what the inventory lists
+  const [name = "", ...where] = th.see.split(" · ");
   return {
     ...r,
     i,
     n: String(i + 1).padStart(2, "0"),
     act: ACT[r.id],
     th,
-    audit: { policy: policy.replace(/^policy\s+/, ""), verdict, time, subject: th.see.split(" ")[0] },
+    name,
+    where: where.join(" · "),
+    audit: { policy: policy.replace(/^policy\s+/, ""), verdict, time, subject: name },
   };
 });
 
 /** The audit trail is a ledger: entries in the order they happened. */
 const AUDIT_ORDER = [...ITEMS].sort((a, b) => a.audit.time.localeCompare(b.audit.time)).map((x) => x.i);
 
-/* ---------------- timeline (p = scroll progress 0..1) ---------------- */
+/* ---------------- timeline (p = scroll progress 0..1) ----------------
+   The panel follows the close-up (three/seq-defender.ts), so every row changes on
+   something visible: pOf(ms) maps the close-up's storyboard time onto p. */
+const STAGE_P = [0.34, 0.67] as const;
+const pOf = (ms: number) =>
+  ms < 5000
+    ? (ms / 5000) * STAGE_P[0]
+    : ms < 11000
+      ? STAGE_P[0] + ((ms - 5000) / 6000) * (STAGE_P[1] - STAGE_P[0])
+      : STAGE_P[1] + ((ms - 11000) / 3600) * (1 - STAGE_P[1]);
+/** found by the close-up (the rest were already on record when the section opens) */
+const NEW_FINDS = [0, 1]; // chatgpt.com (the tab is flagged), agent:finance (flagged)
 const TL = {
-  stage: [0.34, 0.67] as const,
+  stage: STAGE_P,
   scan: [0.03, 0.29] as const,
-  found: [0.08, 0.13, 0.18, 0.23],
-  handle: [0.37, 0.44, 0.51, 0.58],
-  handleDur: 0.055,
-  sealDur: 0.035,
-  evidence: 0.94,
+  // chatgpt.com at "shadow AI · flagged" (2100), agent:finance at "agent · flagged" (4450)
+  found: [pOf(2100), pOf(4450), 0, 0],
+  /** a new row is "current" (live dot, no decision yet) this long, then its decision lands */
+  decide: 0.05,
+  // Secure, [start, done] per item: agent:finance on the close-up's strip (5500 → 7450),
+  // chatgpt.com on its masking (8350); the fleet's two around them
+  handle: [pOf(8250), pOf(5500), 0.575, 0.475],
+  handled: [pOf(8750), pOf(7450), 0.62, 0.52],
+  handleDur: 0.045, // (the stills' objects)
+  // Govern: rows are written as the close-up folds its finds into its log (11450 +),
+  // the ledger is sealed when the mark presses the log (12450)
+  sealDur: 0.02,
+  closed: pOf(12450),
+  evidence: pOf(13000),
 };
 const SEAL: number[] = [];
-AUDIT_ORDER.forEach((i, k) => (SEAL[i] = 0.71 + k * 0.06));
+AUDIT_ORDER.forEach((i, k) => (SEAL[i] = pOf(11450) + k * 0.022));
 /** Settled end state of each stage (stills, reduced motion). */
-const SETTLED = [0.3, 0.66, 1];
+const SETTLED = [0.33, 0.66, 1];
 /** Playback: ms per stage, and the hold on the finished state before it loops. */
-const STAGE_MS = [5200, 5200, 6000];
+const STAGE_MS = [5000, 6000, 3600]; // the close-up's own beat lengths: the injection must stay readable
 const HOLD_MS = 3200;
 
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
@@ -92,23 +119,49 @@ const stageOf = (p: number): Stage => (p < TL.stage[0] ? 0 : p < TL.stage[1] ? 1
 const BOUNDS = [0, TL.stage[0], TL.stage[1], 1];
 const stageLocal = (p: number, k: number) => seg(p, BOUNDS[k], BOUNDS[k + 1]);
 
-/** The item being acted on right now (the only thing allowed to be violet), or -1. */
+/* ---------------- the panel's events, read off the close-up ----------------
+   Runtime: what the close-up does in Secure, in its order. Ledger: the rows its
+   on-screen log writes in Govern (same rows, same words), sealed when it seals. */
+type RtEvent = { sys: string; obj: string; doing: string; done: string; note: string; t0: number; t1: number };
+const RT_LIVE: RtEvent[] = [
+  { sys: "agent:finance", obj: "invoice_0412.pdf", doing: "Stripping", done: "Stripped", note: "Hidden instruction removed before the agent acts on it", t0: pOf(5500), t1: pOf(7450) },
+  { sys: "agent:finance", obj: "bill-to data", doing: "Masking", done: "Masked", note: "lena.brandt@… → user_7f3a · IBAN → [masked]", t0: pOf(8150), t1: pOf(8560) },
+  { sys: "agent:finance", obj: "send_email → ext-sync.io", doing: "Blocking", done: "Blocked", note: "Send blocked before it left", t0: pOf(9000), t1: pOf(9900) },
+];
+/** handled earlier today, elsewhere in the fleet: shown settled, never animated */
+const RT_EARLIER = [
+  { sys: "crm-assistant", obj: "ws-sal-01", done: "Blocked", note: "Access blocked pending approval", at: "14:29" },
+  { sys: "support chatbot", obj: "ws-sup-01", done: "Masked", note: "IBANs masked before they reach the chatbot", at: "14:30" },
+];
+type LedgerRow = { id: string; time: string; subject: string; policy: string; verdict: string };
+const LEDGER_ROWS: LedgerRow[] = [
+  { id: "0412-01", time: "14:31:40", subject: "chatgpt.com · personal", policy: "DATA-02", verdict: "flagged" },
+  { id: "0412-02", time: "14:31:52", subject: "agent:finance", policy: "AGENT-07", verdict: "flagged" },
+  { id: "0412-03", time: "14:32:01", subject: "invoice_0412.pdf", policy: "AGENT-07", verdict: "stripped" },
+  { id: "0412-04", time: "14:32:03", subject: "lena.brandt@… · IBAN", policy: "DATA-04", verdict: "masked" },
+  { id: "0412-05", time: "14:32:07", subject: "send_email → ext-sync.io", policy: "AGENT-07", verdict: "blocked" },
+];
+/** each ledger row lands as the close-up's fold paints it (FOLD: 11450 + fly 280, 120 ms apart) */
+const LEDGER_AT = LEDGER_ROWS.map((_, k) => pOf(11820 + k * 120));
+const HOLD_DOT = 0.03; // the live dot stays on a finished event this long
+
+/** The event being acted on right now (the only thing allowed to be violet), or -1.
+ *  See: the new find (0 chatgpt.com, 1 agent:finance) · Secure: RT_LIVE · Govern: LEDGER_ROWS */
 function currentAt(p: number) {
   const st = stageOf(p);
-  if (st === 0) {
-    for (let i = 3; i >= 0; i--) if (p >= TL.found[i]) return p < (TL.found[i + 1] ?? TL.scan[1]) ? i : -1;
-    return -1;
-  }
-  if (st === 1) return TL.handle.findIndex((h) => p >= h && p < h + 0.07);
-  return SEAL.findIndex((s) => p >= s && p < s + 0.06);
+  if (st === 0) return NEW_FINDS.find((i) => p >= TL.found[i] && p < TL.found[i] + TL.decide) ?? -1;
+  if (st === 1) return RT_LIVE.findIndex((e) => p >= e.t0 && p < e.t1 + HOLD_DOT);
+  return LEDGER_AT.findIndex((t) => p >= t && p < t + HOLD_DOT);
 }
 
 type Snap = {
   stage: Stage;
   found: boolean[];
+  decided: boolean[];
   acting: number;
   handled: boolean[];
   sealed: boolean[];
+  closed: boolean;
   current: number;
   evidence: boolean;
 };
@@ -116,22 +169,16 @@ function snapAt(p: number): Snap {
   return {
     stage: stageOf(p),
     found: TL.found.map((f) => p >= f),
-    acting: TL.handle.findIndex((h) => p >= h && p < h + TL.handleDur),
-    handled: TL.handle.map((h) => p >= h + TL.handleDur * 0.8),
-    sealed: SEAL.map((s) => p >= s + TL.sealDur * 0.5),
+    decided: TL.found.map((f, i) => (NEW_FINDS.includes(i) ? p >= f + TL.decide : true)),
+    acting: RT_LIVE.findIndex((e) => p >= e.t0 && p < e.t1),
+    handled: RT_LIVE.map((e) => p >= e.t1),
+    sealed: LEDGER_AT.map((t) => p >= t),
+    closed: p >= TL.closed,
     current: currentAt(p),
     evidence: p >= TL.evidence,
   };
 }
 const count = (b: boolean[]) => b.filter(Boolean).length;
-
-function tagState(i: number, s: Snap) {
-  const it = ITEMS[i];
-  if (s.stage === 2 && s.sealed[i]) return `Sealed · ${it.audit.policy}`;
-  if (s.stage >= 1 && s.handled[i]) return it.act.done;
-  if (s.stage === 1 && s.acting === i) return `${it.act.doing}…`;
-  return `Found · ${DECISIONS[it.act.decision]}`;
-}
 
 /* ================================================================== */
 /* 3D — one world, used by the live canvas and by the stills           */
@@ -775,7 +822,7 @@ function buildWorld(core: Core, scene: T.Scene, tone: Tone, layout: Layout): Wor
   const v = new THREE.Vector3();
   return {
     update(p) {
-      const cur = currentAt(p);
+      const cur = -1; // (the phone stills show settled states: nothing is mid-action)
       const st = stageOf(p);
       objs.forEach((o, i) => {
         const r = ease(seg(p, TL.found[i] - 0.01, TL.found[i] + 0.016));
@@ -954,129 +1001,171 @@ function useMedia(query: string) {
 const LIVE_MQ = "(min-width: 901px) and (prefers-reduced-motion: no-preference)";
 const STACK_MQ = "(max-width: 900px), (prefers-reduced-motion: reduce)";
 
-function Marker({ live }: { live: boolean }) {
-  return live ? <span className="mD-live" aria-hidden="true" /> : <span className="mD-hex" aria-hidden="true" />;
+/** An AI system's name (violet: the thing the inventory is about) and where it runs. */
+function Sys({ name, where }: { name: string; where?: string }) {
+  return (
+    <span className="mD-seq__line">
+      <span className="mD-seq__ai">{name}</span>
+      {where ? <span className="mD-seq__where"> · {where}</span> : null}
+    </span>
+  );
 }
 
-/** The product panel: the same audit-trail UI in three states. */
+function Decisions({ on }: { on: number }) {
+  return (
+    <span className="mD-seq__chips" aria-label={on >= 0 ? `Decision: ${DECISIONS[on]}` : "Decision pending"}>
+      {DECISIONS.map((d, k) => (
+        <span key={d} className="mD-seq__chip" data-on={k === on}>
+          {d}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** The inventory: what was on record when the section opens, then the close-up's two finds. */
+const INVENTORY = [
+  { name: "crm-assistant", where: "ws-sal-01", decision: 0 },
+  { name: "support chatbot", where: "ws-sup-01 · customer IBANs in the page", decision: 2 },
+  { name: "n8n", where: "automations · registered", decision: 1 },
+];
+const FINDS_INV = [
+  { name: "chatgpt.com", where: "personal account · ws-fin-01", decision: 2 }, // NEW_FINDS[0]
+  { name: "agent:finance", where: "ws-fin-01", decision: 2 }, // NEW_FINDS[1]
+];
+/** the sealed ledger's reference (illustrative) */
+const LEDGER = { ref: "AT-0412", sealedAt: "14:32:12", hash: "sha256 7c1e…a90f" };
+
+/** The product panel. See and Secure are the live console (inventory, runtime);
+ *  Govern switches to a different object: the ledger the close-up writes, sealed. */
 function Panel({ s, only = false }: { s: Snap; only?: boolean }) {
+  const newFound = count(s.found.slice(0, FINDS_INV.length));
   const heads = ["AI inventory", "Runtime", "Audit trail"];
   const counts = [
-    `${count(s.found)} of 4 new`,
-    `${count(s.handled)} of 4 handled`,
-    `${count(s.sealed)} of 4 sealed`,
+    `${INVENTORY.length + newFound} systems${newFound ? ` · ${newFound} new` : ""}`,
+    `${count(s.handled)} of ${RT_LIVE.length} handled`,
+    `${count(s.sealed)} of ${LEDGER_ROWS.length} entries`,
   ];
-  const sealedOrder = AUDIT_ORDER.filter((i) => s.sealed[i]);
-  const latest = sealedOrder[sealedOrder.length - 1] ?? -1;
   const layer = (k: Stage) => ({
-    className: "mD-seq__layer",
+    className: `mD-seq__layer${k === 2 ? " mD-seq__layer--ledger" : ""}`,
     "data-on": s.stage === k,
     "aria-hidden": s.stage !== k,
     hidden: only && s.stage !== k,
   });
+  const n2 = (k: number) => String(k + 1).padStart(2, "0");
   return (
     <div className="mD-seq__panel mD-log" data-stage={s.stage}>
-      <div className="mD-log__head">
+      <div className="mD-log__head mD-seq__phead">
         <span>
-          {heads[s.stage]} <span className="mD-seq__muted">· Illustrative</span>
+          {heads[s.stage]} <span className="mD-seq__muted">· {s.stage === 2 ? LEDGER.ref : "Illustrative"}</span>
         </span>
         <span className="mD-seq__count">{counts[s.stage]}</span>
       </div>
       <div className="mD-seq__layers">
-        {/* See: inventory, with the decision for each */}
+        {/* See: the inventory. On record first; the close-up's finds arrive below, then get their decision */}
         <div {...layer(0)}>
-          {ITEMS.map((it) => {
-            const found = s.found[it.i];
-            const cur = s.stage === 0 && s.current === it.i;
+          {INVENTORY.map((it, k) => (
+            <div key={it.name} className="mD-seq__row" data-state="found">
+              <span className="mD-seq__idx">{n2(k)}</span>
+              <Sys name={it.name} where={it.where} />
+              <Decisions on={it.decision} />
+            </div>
+          ))}
+          {FINDS_INV.map((it, j) => {
+            const cur = s.stage === 0 && s.current === j;
             return (
-              <div key={it.id} className="mD-seq__row" data-state={cur ? "current" : found ? "found" : "pending"}>
-                <span className="mD-seq__idx">{cur ? <span className="mD-live" aria-hidden="true" /> : it.n}</span>
-                {found ? (
-                  <>
-                    <span className="mD-seq__line">{it.th.see}</span>
-                    <span className="mD-seq__chips" aria-label={`Decision: ${DECISIONS[it.act.decision]}`}>
-                      {DECISIONS.map((d, k) => (
-                        <span key={d} className="mD-seq__chip" data-on={k === it.act.decision}>
-                          {d}
-                        </span>
-                      ))}
+              <div key={it.name} className="mD-seq__slot" data-open={s.found[j]}>
+                <div className="mD-seq__slotin">
+                  <div className="mD-seq__row" data-state={cur ? "current" : "found"}>
+                    <span className="mD-seq__idx">{cur ? <span className="mD-live" aria-hidden="true" /> : n2(INVENTORY.length + j)}</span>
+                    <span className="mD-seq__line">
+                      <span className="mD-seq__ai">{it.name}</span>
+                      <span className="mD-seq__where"> · {it.where}</span>
+                      <span className="mD-seq__new">New</span>
                     </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="mD-seq__ghost" style={{ width: "64%" }} />
-                    <span className="mD-seq__ghost" style={{ width: "40%" }} />
-                  </>
-                )}
+                    <Decisions on={s.decided[j] ? it.decision : -1} />
+                  </div>
+                </div>
               </div>
             );
           })}
-          <div className="mD-seq__row mD-seq__row--known">
-            <span className="mD-seq__idx">
-              <span className="mD-hex" aria-hidden="true" />
-            </span>
-            <span className="mD-seq__line">n8n, Power Automate · already registered</span>
-            <span className="mD-seq__chips" aria-label={`Decision: ${DECISIONS[1]}`}>
-              {DECISIONS.map((d, k) => (
-                <span key={d} className="mD-seq__chip" data-on={k === 1}>
-                  {d}
-                </span>
-              ))}
-            </span>
-          </div>
         </div>
 
-        {/* Secure: runtime handling */}
+        {/* Secure: runtime. Earlier today (settled), then what the close-up does, in its order */}
         <div {...layer(1)}>
-          {ITEMS.map((it) => {
-            const done = s.handled[it.i];
-            const acting = s.acting === it.i;
-            const cur = s.stage === 1 && s.current === it.i;
+          {RT_EARLIER.map((e) => (
+            <div key={e.sys} className="mD-seq__row mD-seq__row--earlier" data-state="done">
+              <span className="mD-seq__idx">
+                <span className="mD-hex" aria-hidden="true" />
+              </span>
+              <Sys name={e.sys} where={e.obj} />
+              <span className="mD-seq__status">
+                <span className="mD-seq__verdict">{e.done}</span>
+                <span className="mD-seq__note">
+                  {e.at} · {e.note}
+                </span>
+              </span>
+            </div>
+          ))}
+          {RT_LIVE.map((e, k) => {
+            const done = s.handled[k];
+            const acting = s.acting === k;
+            const cur = s.stage === 1 && s.current === k;
             return (
-              <div key={it.id} className="mD-seq__row" data-state={cur ? "current" : done ? "done" : "waiting"}>
-                <span className="mD-seq__idx">{cur ? <span className="mD-live" aria-hidden="true" /> : it.n}</span>
-                <span className="mD-seq__line">{done ? it.th.secure : it.th.see}</span>
+              <div key={e.obj} className="mD-seq__row" data-state={cur ? "current" : done ? "done" : "waiting"}>
+                <span className="mD-seq__idx">{cur ? <span className="mD-live" aria-hidden="true" /> : n2(k)}</span>
+                <Sys name={e.sys} where={e.obj} />
                 <span className="mD-seq__status">
                   {done && <span className="mD-hex" aria-hidden="true" />}
-                  {done ? it.act.done : acting ? `${it.act.doing}…` : "Watching"}
+                  <span className="mD-seq__verdict">{done ? e.done : acting ? `${e.doing}…` : "Watching"}</span>
+                  {/* the note's line is reserved from the start: rows never change height */}
+                  <span className="mD-seq__note" data-on={done}>
+                    {e.note}
+                  </span>
                 </span>
               </div>
             );
           })}
         </div>
 
-        {/* Prove: the audit trail, in the order things happened */}
+        {/* Govern: the ledger. The same rows as the close-up's log, a double rule, the seal */}
         <div {...layer(2)}>
-          {AUDIT_ORDER.map((i) => {
-            const it = ITEMS[i];
-            const sealed = s.sealed[i];
-            const dot = s.stage === 2 && (s.current === i || (s.current === -1 && i === latest && s.evidence));
+          <div className="mD-seq__learlier">2 earlier today · REG-01 blocked, DATA-04 masked</div>
+          <div className="mD-seq__lhead" aria-hidden="true">
+            <span>Entry</span>
+            <span>Time</span>
+            <span>Subject</span>
+            <span>Policy · verdict</span>
+          </div>
+          {LEDGER_ROWS.map((r, k) => {
+            const sealed = s.sealed[k];
+            const dot = s.stage === 2 && s.current === k;
             return (
-              <div key={it.id} className="mD-seq__arow" data-state={sealed ? "sealed" : "pending"}>
+              <div key={r.id} className="mD-seq__lrow" data-state={sealed ? "sealed" : "pending"}>
                 {sealed ? (
                   <>
-                    <span className="mD-log__time">{it.audit.time}</span>
-                    <span className="mD-seq__asub">
-                      <span className="mD-seq__line">{it.audit.subject}</span>
-                      <span className="mD-seq__sub">{it.th.secure}</span>
-                    </span>
+                    <span className="mD-seq__lid">{r.id}</span>
+                    <span className="mD-log__time">{r.time}</span>
+                    <span className="mD-seq__lsub">{r.subject}</span>
                     <span className="mD-log__verdict">
-                      <Marker live={dot} />
-                      {it.audit.policy} · {it.audit.verdict}
+                      {dot && <span className="mD-live" aria-hidden="true" />}
+                      {r.policy} · {r.verdict}
                     </span>
                   </>
                 ) : (
-                  <>
-                    <span className="mD-seq__ghost" style={{ width: "70%" }} />
-                    <span className="mD-seq__ghost" style={{ width: "58%" }} />
-                    <span className="mD-seq__ghost" style={{ width: "90px" }} />
-                  </>
+                  <span className="mD-seq__ghost" />
                 )}
               </div>
             );
           })}
+          <div className="mD-seq__seal" data-on={s.closed}>
+            <span className="mD-hex" aria-hidden="true" />
+            <span>
+              Sealed {LEDGER.sealedAt} · {LEDGER_ROWS.length} entries · <span className="mD-seq__hash">{LEDGER.hash}</span>
+            </span>
+          </div>
           <div className="mD-seq__frameworks" data-on={s.evidence}>
-            <span className="mD-seq__fwlabel">Logged for</span>
+            <span className="mD-seq__fwlabel">Evidence for</span>
             <span className="mD-seq__fwlist">
               {FRAMEWORKS.map((f) => (
                 <span key={f} className="mD-seq__fw">
@@ -1091,6 +1180,15 @@ function Panel({ s, only = false }: { s: Snap; only?: boolean }) {
   );
 }
 
+/** Section clock (p 0..1 over See / Secure / Govern) → the close-up's storyboard time
+ *  (three/seq-defender.ts: See 0–5000, Secure 5000–11000, Govern 11000–15000). */
+const netTime = (p: number) =>
+  p < BOUNDS[1]
+    ? (p / BOUNDS[1]) * 5000
+    : p < BOUNDS[2]
+      ? 5000 + ((p - BOUNDS[1]) / (BOUNDS[2] - BOUNDS[1])) * 6000
+      : 11000 + ((p - BOUNDS[2]) / (1 - BOUNDS[2])) * 3600;
+
 /* ---------------- desktop: the self-playing sequence (no scroll pinning) ---------------- */
 function SequenceLive({ theme }: { theme: Theme }) {
   const on = useMedia(LIVE_MQ);
@@ -1098,7 +1196,7 @@ function SequenceLive({ theme }: { theme: Theme }) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const chipRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [snap, setSnap] = useState<Snap>(() => snapAt(0));
   const [ready, setReady] = useState(false);
@@ -1113,25 +1211,25 @@ function SequenceLive({ theme }: { theme: Theme }) {
     if (!scroller || !sheet || !stageEl || !canvas) return;
     let dead = false;
     let raf = 0;
-    let live: Live | null = null;
+    // the stage is the close-up of the hero's story (one machine), played by this section's clock
+    let net: NetScene | null = null;
     let lastKey = "";
     let visible = true;
-    let clamp: Rect = { x: 0, y: 0, w: 0, h: 0 };
 
-    const placeTags = (anchors: Anchor[]) => {
-      const LEAD = 16;
-      const sizes = anchors.map((_, i) => {
-        const el = tagRefs.current[i];
-        return el ? [el.offsetWidth, el.offsetHeight] : [0, 0];
-      });
-      anchors.forEach((a, i) => {
-        const el = tagRefs.current[i];
+    /** the network's chips follow their objects; the status word changes with the story */
+    const placeChips = (labels: NetLabel[]) => {
+      if (labels.length === 0) chipRefs.current.forEach((el) => el && (el.style.opacity = "0"));
+      labels.forEach((l, i) => {
+        const el = chipRefs.current[i];
         if (!el) return;
-        const [w, h] = sizes[i];
-        const x = Math.min(clamp.x + clamp.w - w - 6, Math.max(clamp.x + 6, a.x - w / 2));
-        const y = a.above ? a.y - h - LEAD : a.y + LEAD;
-        el.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
-        el.style.setProperty("--lead-x", `${Math.round(Math.min(w - 10, Math.max(10, a.x - x)))}px`);
+        el.style.transform = `translate(${l.x.toFixed(1)}px, ${Math.max(l.y, 60).toFixed(1)}px)`;
+        el.style.opacity = l.a.toFixed(3);
+        const s = String(l.state);
+        if (el.dataset.state !== s) {
+          el.dataset.state = s;
+          const k = el.querySelector<HTMLElement>(".mD-hero__chipK");
+          if (k) k.textContent = hero.chips[i].states[l.state];
+        }
       });
     };
 
@@ -1164,6 +1262,15 @@ function SequenceLive({ theme }: { theme: Theme }) {
     const kick = () => {
       if (!raf && visible && started) raf = requestAnimationFrame(tick);
     };
+    // dev aid for screenshots: #seq-p=0.4 pins the section clock (0..1) and scrolls here
+    const pin = /seq-p=([\d.]+)/.exec(window.location.hash);
+    if (pin) {
+      p = target = Math.min(1, Number(pin[1]));
+      auto = false;
+      started = true;
+      // land with the section title clear of the sticky nav (≈ 72px)
+      requestAnimationFrame(() => window.scrollTo(0, scroller.getBoundingClientRect().top + window.scrollY - 72));
+    }
     goRef.current = (k: number) => {
       auto = false;
       hold = 0;
@@ -1183,9 +1290,9 @@ function SequenceLive({ theme }: { theme: Theme }) {
         lastKey = k;
         setSnap(s);
       }
-      if (live && visible) {
-        live.render(p);
-        placeTags(live.anchors());
+      if (net && visible) {
+        net.render(netTime(p));
+        placeChips(net.labels());
       }
     };
     const request = () => {
@@ -1194,29 +1301,36 @@ function SequenceLive({ theme }: { theme: Theme }) {
       else frame();
     };
     const measure = () => {
-      if (!live) return;
-      const sr = sheet.getBoundingClientRect();
+      if (!net) return;
       const st = stageEl.getBoundingClientRect();
-      const stage = { x: st.left - sr.left, y: st.top - sr.top, w: st.width, h: st.height };
-      clamp = stage;
-      // room above for the back row's callouts and below for the front row's
-      live.resize(sr.width, sr.height, { x: stage.x + 10, y: stage.y + 70, w: stage.w - 20, h: stage.h - 160 });
+      net.resize(st.width, st.height, "panel");
       request();
     };
 
-    import("./three/core")
-      .then((core) => {
+    import("./three/seq-defender")
+      .then(async (mod) => {
         if (dead) return;
-        live = createLive(core, canvas, toneOf(sheet, theme));
+        const cs = getComputedStyle(sheet);
+        const scene = await mod.createHeroScene(canvas, {
+          theme,
+          bg: cs.backgroundColor,
+          ink: cs.getPropertyValue("--ink").trim() || (theme === "dark" ? "#f4f4f6" : "#0b0b0d"),
+        });
+        if (dead) {
+          scene.dispose();
+          return;
+        }
+        net = scene;
+        // compile shaders now (even off-screen) so the first scroll into view is instant;
+        // before measure(), so the frame the clock asks for is the one left on screen
+        net.render(netTime(0));
         measure();
-        // compile shaders now (even off-screen) so the first scroll into view is instant
-        live.render(0);
         setReady(true);
       })
       .catch((err) => console.warn("[sequence] 3D unavailable", err));
 
     const ro = new ResizeObserver(measure);
-    ro.observe(sheet);
+    ro.observe(stageEl);
     // starts playing once a third of it is on screen; pauses off screen
     const io = new IntersectionObserver(
       ([e]) => {
@@ -1234,7 +1348,7 @@ function SequenceLive({ theme }: { theme: Theme }) {
       goRef.current = () => {};
       ro.disconnect();
       io.disconnect();
-      live?.dispose();
+      net?.dispose();
       setReady(false);
     };
   }, [on, theme]);
@@ -1244,8 +1358,6 @@ function SequenceLive({ theme }: { theme: Theme }) {
       <div className="mD-seq__scroller" ref={scrollerRef}>
         <div className="mD-seq__sticky">
           <div className="mD-sheet mD-seq__sheet" ref={sheetRef}>
-            <canvas className="mD-seq__canvas" ref={canvasRef} aria-hidden="true" />
-
             <header className="mD-seq__head">
               <h2 className="mD-seq__tagline">
                 {CLAUSES.map((c, k) => (
@@ -1287,34 +1399,24 @@ function SequenceLive({ theme }: { theme: Theme }) {
               <Panel s={snap} />
             </div>
 
-            <div className="mD-seq__stage" ref={stageRef} aria-hidden="true" />
-
-            <div className="mD-seq__tags" aria-hidden="true">
-              {ITEMS.map((it) => {
-                const i = it.i;
-                const cur = snap.current === i && snap.stage < 2;
-                return (
-                  <div
-                    key={it.id}
-                    className="mD-seq__tag"
-                    data-on={ready && snap.found[i]}
-                    data-above={LAYOUT.wide.above[i]}
-                    data-current={cur}
-                    ref={(el) => {
-                      tagRefs.current[i] = el;
-                    }}
-                  >
-                    <span className="mD-seq__tagidx">
-                      {/* the current item is already violet in the panel row and on
-                          the object; the callout keeps the neutral hex */}
-                      <Marker live={false} />
-                      {it.n}
-                    </span>
-                    <span className="mD-seq__tagname">{it.short}</span>
-                    <span className="mD-seq__tagstate">{tagState(i, snap)}</span>
-                  </div>
-                );
-              })}
+            <div className="mD-seq__stage mD-seq__stage--net" ref={stageRef} aria-hidden="true">
+              <canvas className="mD-seq__net" ref={canvasRef} />
+              {hero.chips.map((c, i) => (
+                <span
+                  key={c.name}
+                  className="mD-hero__chip"
+                  data-k={i}
+                  data-state="0"
+                  ref={(el) => {
+                    chipRefs.current[i] = el;
+                  }}
+                >
+                  <span className="mD-hero__chipBox">
+                    <span className="mD-hero__chipK">{c.states[0]}</span>
+                    <span className="mD-hero__chipV">{c.name}</span>
+                  </span>
+                </span>
+              ))}
             </div>
           </div>
         </div>

@@ -24,7 +24,8 @@ export const SETTLED_MS = 2900;
 export const LOG_T = { in: 5600, seal: 6800, out: 9700 };
 /** The three beats, for the caption rail under the render. */
 export const BEATS = [
-  { n: "01", label: "See it", t0: 600, t1: 3700 },
+  // starts at the loop's start, so after "Govern it" the turn back lands straight on it
+  { n: "01", label: "See it", t0: 0, t1: 3700 },
   { n: "02", label: "Secure it", t0: 3700, t1: 5400 },
   { n: "03", label: "Govern it", t0: 5400, t1: 9700 },
 ] as const;
@@ -32,10 +33,20 @@ export const BEATS = [
 export type HeroLabel = { x: number; y: number; a: number; state: 0 | 1 | 2 };
 export type HeroMode = "wide" | "narrow";
 export type HeroOptions = { theme: Theme; bg: string; ink: string };
+/** One outer node, for the page to label: stage px, the beat it stands for, and how
+ *  "on" it is right now (0..1; 1 = the beat being shown). */
+export type HeroNode = { x: number; y: number; beat: number; on: number };
+
 export type HeroScene = {
   resize(width: number, height: number, mode: HeroMode): void;
   render(timeMs: number): void;
   labels(): HeroLabel[];
+  /** is this point (stage px) on the mark? */
+  hit(x: number, y: number): boolean;
+  /** the three outer nodes, in stage px (for their labels) */
+  nodes(): HeroNode[];
+  /** the beat of the node under this point (stage px), or -1 */
+  nodeAt(x: number, y: number): number;
   dispose(): void;
 };
 
@@ -342,7 +353,8 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   /* ---------- per-frame ---------- */
   let viewW = 1;
   let viewH = 1;
-  let lastAbs = -1;
+  let lastReal = -1;
+  let dialShown: number | null = null;
 
   function dialAngle(t: number) {
     let base = 0;
@@ -367,9 +379,12 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
 
   function update(tAbs: number) {
     const t = ((tAbs % LOOP_MS) + LOOP_MS) % LOOP_MS;
-    const dt = lastAbs < 0 ? 16 : Math.min(64, Math.abs(tAbs - lastAbs));
-    lastAbs = tAbs;
-    const ph = (t / LOOP_MS) * Math.PI * 2;
+    const nowMs = performance.now();
+    const dt = lastReal < 0 ? 16 : Math.min(64, nowMs - lastReal);
+    lastReal = nowMs;
+    // ambient motion (sway, float, travelling reflections) runs on real time, not the
+    // story clock: a click that jumps the story to the next beat never jerks it
+    const ph = ((nowMs % LOOP_MS) / LOOP_MS) * Math.PI * 2;
 
     // first appearance: it turns in and settles (only on the very first loop)
     const intro = outCubic(seg(tAbs, 0, 1800));
@@ -386,7 +401,15 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     );
     rig.position.y = Math.sin(ph * 2) * 0.03;
     rig.scale.setScalar(0.9 + 0.1 * intro);
-    dial.rotation.z = deg(dialAngle(t)) - (1 - intro) * 0.6;
+    // the dial eases from where it is towards where the story says, so a jump (a
+    // click, even mid-turn) rolls on smoothly instead of snapping
+    const target = deg(dialAngle(t));
+    if (dialShown === null) dialShown = target;
+    else {
+      const d = ((((target - dialShown + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)) - Math.PI;
+      dialShown += d * (1 - Math.exp(-dt / 70));
+    }
+    dial.rotation.z = dialShown - (1 - intro) * 0.6;
 
     // the one violet: the front node's inlay, once the turn has settled
     const sig = signalAt(t);
@@ -423,6 +446,18 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     camera.updateProjectionMatrix();
   }
 
+  const nodesNow = (): HeroNode[] => {
+    return NODE_A.map((a, i) => {
+      const w = dial.localToWorld(new THREE.Vector3(Math.cos(deg(a)), Math.sin(deg(a)), 0.03)).project(camera);
+      return {
+        x: ((w.x + 1) / 2) * viewW,
+        y: ((1 - w.y) / 2) * viewH,
+        beat: ACTIVE_BY_BEAT.indexOf(i),
+        on: inlays[i].mat.opacity,
+      };
+    });
+  };
+
   return {
     resize,
     render(tMs: number) {
@@ -430,6 +465,32 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
       renderer.render(scene, camera);
     },
     labels: () => [],
+    nodes: () => nodesNow(),
+    nodeAt(x: number, y: number) {
+      const ns = nodesNow();
+      const c = new THREE.Vector3(0, 0, 0).applyMatrix4(rig.matrixWorld).project(camera);
+      const e = new THREE.Vector3(0, 1, 0).applyMatrix4(rig.matrixWorld).project(camera);
+      const unit = Math.hypot(((e.x - c.x) / 2) * viewW, ((e.y - c.y) / 2) * viewH); // px per world unit
+      let best = -1;
+      let bd = NODE_R * 1.5 * unit;
+      ns.forEach((n) => {
+        const d = Math.hypot(n.x - x, n.y - y);
+        if (d < bd) {
+          bd = d;
+          best = n.beat;
+        }
+      });
+      return best;
+    },
+    hit(x: number, y: number) {
+      // the mark's centre and outer radius, projected to stage pixels
+      const c = new THREE.Vector3(0, 0, 0).applyMatrix4(rig.matrixWorld).project(camera);
+      const e = new THREE.Vector3(0, 1 + NODE_R + 0.1, 0).applyMatrix4(rig.matrixWorld).project(camera);
+      const cx = ((c.x + 1) / 2) * viewW;
+      const cy = ((1 - c.y) / 2) * viewH;
+      const r = Math.hypot(((e.x + 1) / 2) * viewW - cx, ((1 - e.y) / 2) * viewH - cy);
+      return Math.hypot(x - cx, y - cy) <= r;
+    },
     dispose() {
       window.removeEventListener("pointermove", onMove);
       scene.traverse((o) => {

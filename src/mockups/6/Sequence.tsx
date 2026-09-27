@@ -21,7 +21,8 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import type * as T from "three";
 
-import { risks, sequence, type RiskId } from "./content";
+import { hero, risks, sequence, type RiskId } from "./content";
+import type { HeroLabel as NetLabel, HeroScene as NetScene } from "./three/networkScene";
 import { Label, type SectionProps, type Theme } from "./shared";
 
 type Core = typeof import("./three/core");
@@ -1091,14 +1092,32 @@ function Panel({ s, only = false }: { s: Snap; only?: boolean }) {
   );
 }
 
+/** Section clock (p 0..1 over See / Secure / Govern) → the network storyboard's time:
+ *  See = the scan and the two unregistered AIs, Secure = the fences, Govern = the policy. */
+const netTime = (p: number) =>
+  p < BOUNDS[1]
+    ? 300 + (p / BOUNDS[1]) * 3200
+    : p < BOUNDS[2]
+      ? 3500 + ((p - BOUNDS[1]) / (BOUNDS[2] - BOUNDS[1])) * 1500
+      : 5000 + ((p - BOUNDS[2]) / (1 - BOUNDS[2])) * 2600;
+
 /* ---------------- desktop: the self-playing sequence (no scroll pinning) ---------------- */
-function SequenceLive({ theme }: { theme: Theme }) {
+/** The See / Secure / Govern scene: three takes on the logo as the scanner (?s=a|b|c). */
+export const SEQ_VARIANTS = ["a", "b", "c"] as const;
+export type SeqVariant = (typeof SEQ_VARIANTS)[number];
+const NET_SCENES = {
+  a: () => import("./three/net-a"),
+  b: () => import("./three/net-b"),
+  c: () => import("./three/net-c"),
+} as const;
+
+function SequenceLive({ theme, scan }: { theme: Theme; scan: SeqVariant }) {
   const on = useMedia(LIVE_MQ);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const tagRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const chipRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [snap, setSnap] = useState<Snap>(() => snapAt(0));
   const [ready, setReady] = useState(false);
@@ -1113,25 +1132,24 @@ function SequenceLive({ theme }: { theme: Theme }) {
     if (!scroller || !sheet || !stageEl || !canvas) return;
     let dead = false;
     let raf = 0;
-    let live: Live | null = null;
+    // the stage is mockup 5's office network, played by this section's clock
+    let net: NetScene | null = null;
     let lastKey = "";
     let visible = true;
-    let clamp: Rect = { x: 0, y: 0, w: 0, h: 0 };
 
-    const placeTags = (anchors: Anchor[]) => {
-      const LEAD = 16;
-      const sizes = anchors.map((_, i) => {
-        const el = tagRefs.current[i];
-        return el ? [el.offsetWidth, el.offsetHeight] : [0, 0];
-      });
-      anchors.forEach((a, i) => {
-        const el = tagRefs.current[i];
+    /** the network's chips follow their objects; the status word changes with the story */
+    const placeChips = (labels: NetLabel[]) => {
+      labels.forEach((l, i) => {
+        const el = chipRefs.current[i];
         if (!el) return;
-        const [w, h] = sizes[i];
-        const x = Math.min(clamp.x + clamp.w - w - 6, Math.max(clamp.x + 6, a.x - w / 2));
-        const y = a.above ? a.y - h - LEAD : a.y + LEAD;
-        el.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
-        el.style.setProperty("--lead-x", `${Math.round(Math.min(w - 10, Math.max(10, a.x - x)))}px`);
+        el.style.transform = `translate(${l.x.toFixed(1)}px, ${Math.max(l.y, 60).toFixed(1)}px)`;
+        el.style.opacity = l.a.toFixed(3);
+        const s = String(l.state);
+        if (el.dataset.state !== s) {
+          el.dataset.state = s;
+          const k = el.querySelector<HTMLElement>(".mD-hero__chipK");
+          if (k) k.textContent = hero.chips[i].states[l.state];
+        }
       });
     };
 
@@ -1164,6 +1182,14 @@ function SequenceLive({ theme }: { theme: Theme }) {
     const kick = () => {
       if (!raf && visible && started) raf = requestAnimationFrame(tick);
     };
+    // dev aid for screenshots: #seq-p=0.4 pins the section clock (0..1) and scrolls here
+    const pin = /seq-p=([\d.]+)/.exec(window.location.hash);
+    if (pin) {
+      p = target = Math.min(1, Number(pin[1]));
+      auto = false;
+      started = true;
+      requestAnimationFrame(() => scroller.scrollIntoView({ block: "start" }));
+    }
     goRef.current = (k: number) => {
       auto = false;
       hold = 0;
@@ -1183,9 +1209,9 @@ function SequenceLive({ theme }: { theme: Theme }) {
         lastKey = k;
         setSnap(s);
       }
-      if (live && visible) {
-        live.render(p);
-        placeTags(live.anchors());
+      if (net && visible) {
+        net.render(netTime(p));
+        placeChips(net.labels());
       }
     };
     const request = () => {
@@ -1194,29 +1220,36 @@ function SequenceLive({ theme }: { theme: Theme }) {
       else frame();
     };
     const measure = () => {
-      if (!live) return;
-      const sr = sheet.getBoundingClientRect();
+      if (!net) return;
       const st = stageEl.getBoundingClientRect();
-      const stage = { x: st.left - sr.left, y: st.top - sr.top, w: st.width, h: st.height };
-      clamp = stage;
-      // room above for the back row's callouts and below for the front row's
-      live.resize(sr.width, sr.height, { x: stage.x + 10, y: stage.y + 70, w: stage.w - 20, h: stage.h - 160 });
+      net.resize(st.width, st.height, "narrow");
       request();
     };
 
-    import("./three/core")
-      .then((core) => {
+    NET_SCENES[scan]()
+      .then(async (mod) => {
         if (dead) return;
-        live = createLive(core, canvas, toneOf(sheet, theme));
+        const cs = getComputedStyle(sheet);
+        const scene = await mod.createHeroScene(canvas, {
+          theme,
+          bg: cs.backgroundColor,
+          ink: cs.getPropertyValue("--ink").trim() || (theme === "dark" ? "#f4f4f6" : "#0b0b0d"),
+        });
+        if (dead) {
+          scene.dispose();
+          return;
+        }
+        net = scene;
+        // compile shaders now (even off-screen) so the first scroll into view is instant;
+        // before measure(), so the frame the clock asks for is the one left on screen
+        net.render(netTime(0));
         measure();
-        // compile shaders now (even off-screen) so the first scroll into view is instant
-        live.render(0);
         setReady(true);
       })
       .catch((err) => console.warn("[sequence] 3D unavailable", err));
 
     const ro = new ResizeObserver(measure);
-    ro.observe(sheet);
+    ro.observe(stageEl);
     // starts playing once a third of it is on screen; pauses off screen
     const io = new IntersectionObserver(
       ([e]) => {
@@ -1234,18 +1267,16 @@ function SequenceLive({ theme }: { theme: Theme }) {
       goRef.current = () => {};
       ro.disconnect();
       io.disconnect();
-      live?.dispose();
+      net?.dispose();
       setReady(false);
     };
-  }, [on, theme]);
+  }, [on, theme, scan]);
 
   return (
     <div className="mD-seq__live" data-stage={snap.stage} data-ready={ready}>
       <div className="mD-seq__scroller" ref={scrollerRef}>
         <div className="mD-seq__sticky">
           <div className="mD-sheet mD-seq__sheet" ref={sheetRef}>
-            <canvas className="mD-seq__canvas" ref={canvasRef} aria-hidden="true" />
-
             <header className="mD-seq__head">
               <h2 className="mD-seq__tagline">
                 {CLAUSES.map((c, k) => (
@@ -1287,34 +1318,24 @@ function SequenceLive({ theme }: { theme: Theme }) {
               <Panel s={snap} />
             </div>
 
-            <div className="mD-seq__stage" ref={stageRef} aria-hidden="true" />
-
-            <div className="mD-seq__tags" aria-hidden="true">
-              {ITEMS.map((it) => {
-                const i = it.i;
-                const cur = snap.current === i && snap.stage < 2;
-                return (
-                  <div
-                    key={it.id}
-                    className="mD-seq__tag"
-                    data-on={ready && snap.found[i]}
-                    data-above={LAYOUT.wide.above[i]}
-                    data-current={cur}
-                    ref={(el) => {
-                      tagRefs.current[i] = el;
-                    }}
-                  >
-                    <span className="mD-seq__tagidx">
-                      {/* the current item is already violet in the panel row and on
-                          the object; the callout keeps the neutral hex */}
-                      <Marker live={false} />
-                      {it.n}
-                    </span>
-                    <span className="mD-seq__tagname">{it.short}</span>
-                    <span className="mD-seq__tagstate">{tagState(i, snap)}</span>
-                  </div>
-                );
-              })}
+            <div className="mD-seq__stage mD-seq__stage--net" ref={stageRef} aria-hidden="true">
+              <canvas className="mD-seq__net" ref={canvasRef} />
+              {hero.chips.map((c, i) => (
+                <span
+                  key={c.name}
+                  className="mD-hero__chip"
+                  data-k={i}
+                  data-state="0"
+                  ref={(el) => {
+                    chipRefs.current[i] = el;
+                  }}
+                >
+                  <span className="mD-hero__chipBox">
+                    <span className="mD-hero__chipK">{c.states[0]}</span>
+                    <span className="mD-hero__chipV">{c.name}</span>
+                  </span>
+                </span>
+              ))}
             </div>
           </div>
         </div>
@@ -1392,10 +1413,10 @@ function SequenceStacked({ theme }: { theme: Theme }) {
   );
 }
 
-export function Sequence({ theme }: SectionProps) {
+export function Sequence({ theme, scan = "a" }: SectionProps & { scan?: SeqVariant }) {
   return (
     <section id="sequence" className="mD-seq" aria-label={sequence.tagline}>
-      <SequenceLive theme={theme} />
+      <SequenceLive theme={theme} scan={scan} />
       <SequenceStacked theme={theme} />
     </section>
   );
