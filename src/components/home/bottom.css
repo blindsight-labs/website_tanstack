@@ -1,0 +1,624 @@
+/* ==========================================================================
+   bottom.css — Why (07), FAQ (08), closing sheet (09), footer.
+   Owner: "bottom". Everything is scoped under .mDb-* and uses system tokens.
+   ========================================================================== */
+
+/* ---- placeholders the team still has to supply: muted, mono, boxed ---- */
+.mDb-ph {
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  padding: 0.05em 0.4em;
+  border-radius: var(--r);
+  box-shadow: inset 0 0 0 1px var(--line);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  white-space: normal;
+}
+
+/* ==========================================================================
+   07 · Why Blindsight
+   ========================================================================== */
+/* stacked: label, headline, then the body in a reading column under it */
+.mDb-why__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: var(--s8);
+}
+.mDb-why__head .mDb-why__body {
+  margin-top: var(--s5);
+  max-width: 560px;
+}
+.mDb-why__title {
+  margin-top: var(--s5);
+  max-width: 12ch;
+}
+.mDb-why__body {
+  max-width: 46ch;
+  padding-bottom: 6px;
+}
+
+/* one panel: chart (left) | quote slot (right), split by a hairline */
+.mDb-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 2.4fr) minmax(0, 1fr);
+  overflow: hidden;
+}
+.mDb-bench__fig {
+  margin: 0;
+  min-width: 0;
+}
+.mDb-bench .mD-log__head {
+  padding: 16px 24px;
+}
+.mDb-bench__plot {
+  --name-w: 172px;
+  --row-h: 52px;
+  --pad-l: 24px;
+  --pad-r: 44px;
+  --col-gap: 20px;
+  position: relative;
+  padding: 26px var(--pad-r) 16px var(--pad-l);
+}
+.mDb-bench__row {
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr);
+  column-gap: var(--col-gap);
+  position: relative;
+  z-index: 1;
+}
+/* vertical gridlines behind the bars, over the track column only */
+.mDb-bench__grid {
+  position: absolute;
+  top: 16px;
+  bottom: 52px;
+  left: calc(var(--pad-l) + var(--name-w) + var(--col-gap));
+  right: var(--pad-r);
+  pointer-events: none;
+}
+.mDb-bench__grid span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line-2);
+}
+.mDb-bench__grid span:first-child {
+  background: var(--line);
+}
+.mDb-bench__name {
+  height: var(--row-h);
+  display: flex;
+  align-items: center;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.mDb-bench__name .mDb-ph {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12px;
+}
+.mDb-bench__name--us {
+  color: var(--ink);
+  font-weight: 500;
+}
+.mDb-bench__track {
+  height: var(--row-h);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+/* The bar: flat, 18px, one radius. Blindsight in ink, the rest in light grey. */
+.mDb-bench__bar {
+  position: relative;
+  height: 18px;
+  width: calc(var(--v) * 100%);
+  border-radius: var(--r);
+  overflow: hidden;
+  background: var(--ink-4);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 1100ms var(--ease);
+}
+.mDb-bench__bar--us {
+  background: var(--ink);
+}
+.mDb-bench__bar[data-ready="true"] {
+  background: transparent;
+}
+.mDb-bench__bar img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease);
+}
+.mDb-bench__bar[data-ready="true"] img {
+  opacity: 1;
+}
+.mDb-bench[data-in="true"] .mDb-bench__bar {
+  transform: scaleX(1);
+}
+.mDb-bench__live {
+  position: absolute;
+  left: calc(var(--v) * 100% + 14px);
+  top: 50%;
+  margin-top: -3.5px;
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease) 1000ms;
+}
+.mDb-bench[data-in="true"] .mDb-bench__live {
+  opacity: 1;
+}
+.mDb-bench__axis {
+  grid-column: 2;
+  position: relative;
+  height: 28px;
+  margin-top: 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+.mDb-bench__axis span {
+  position: absolute;
+  top: 8px;
+  transform: translateX(-50%);
+}
+.mDb-bench__axis span:first-child {
+  transform: none;
+}
+.mDb-bench__axis span:last-child {
+  transform: translateX(-100%);
+}
+.mDb-bench__note {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: 14px 24px;
+  border-top: 1px solid var(--line-2);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+/* quote placeholder */
+.mDb-quote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s7);
+  padding: 24px 28px 24px;
+  border-left: 1px solid var(--line-2);
+  background: var(--surface-2);
+}
+.mDb-quote blockquote {
+  margin: 0;
+}
+.mDb-quote__mark {
+  display: block;
+  margin: 8px 0 var(--s5);
+}
+.mDb-quote__text {
+  font-size: var(--t-h3);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  font-weight: 300;
+}
+/* the quote slot is set at display size even as a placeholder, so the
+   column reads as a quote-in-waiting, not an empty box */
+.mDb-quote__text .mDb-ph {
+  display: block; /* one box, not a box per wrapped line */
+  -webkit-box-decoration-break: slice;
+  box-decoration-break: slice;
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.mDb-quote__who {
+  display: grid;
+  gap: 4px;
+  padding-top: var(--s4);
+  border-top: 1px solid var(--line-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mDb-quote__who .mDb-ph {
+  text-transform: none;
+  letter-spacing: 0;
+  justify-self: start;
+}
+
+/* ==========================================================================
+   08 · FAQ — long-form, hairlines, mono index
+   ========================================================================== */
+.mDb-faq__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: var(--s8);
+  align-items: start;
+}
+.mDb-faq__head {
+  position: sticky;
+  top: 108px;
+  display: grid;
+  gap: var(--s5);
+}
+.mDb-faq__title {
+  max-width: 9ch;
+}
+.mDb-faq__count {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mDb-faq__list {
+  border-top: 1px solid var(--line);
+}
+.mDb-q {
+  border-bottom: 1px solid var(--line);
+}
+.mDb-q__h {
+  margin: 0;
+  font: inherit;
+  letter-spacing: normal;
+}
+.mDb-q__btn {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 32px;
+  align-items: baseline;
+  padding: 28px 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--r);
+}
+.mDb-q__btn:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 4px;
+}
+.mDb-q__n {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  transition: color var(--dur-2) var(--ease);
+}
+.mDb-q[data-open="true"] .mDb-q__n {
+  color: var(--ink);
+}
+.mDb-q__text {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: -0.012em;
+  font-weight: 400;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.mDb-q__icon {
+  justify-self: end;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  transition: transform var(--dur-3) var(--ease);
+}
+.mDb-q[data-open="true"] .mDb-q__icon {
+  transform: rotate(180deg);
+}
+.mDb-q__btn:hover .mDb-q__text {
+  color: color-mix(in srgb, var(--ink) 72%, var(--bg));
+}
+.mDb-q__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms var(--ease);
+}
+.mDb-q[data-open="true"] .mDb-q__panel {
+  grid-template-rows: 1fr;
+}
+.mDb-q__inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.mDb-q__a {
+  max-width: 62ch;
+  padding: 0 32px 36px 64px;
+  font-size: 17px;
+  line-height: 1.72;
+  color: var(--ink-2);
+  hyphens: manual;
+}
+.mDb-q__lede {
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   09 · Closing sheet — black inset sheet, rendered glass + chrome
+   ========================================================================== */
+.mDb-final {
+  padding-block: 0;
+}
+.mDb-final__sheet {
+  min-height: clamp(560px, 80vh, 780px);
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+.mD[data-theme="dark"] .mDb-final__sheet {
+  box-shadow: 0 0 0 1px var(--line);
+}
+.mDb-final__render {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 1200ms var(--ease);
+}
+.mDb-final__render[data-ready="true"] {
+  opacity: 1;
+}
+.mDb-final__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--s6);
+  padding: var(--s10) var(--gutter);
+}
+.mDb-final__title {
+  max-width: 14ch;
+}
+.mDb-final__fine {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.mDb-footer {
+  padding: var(--s9) 0 var(--s7);
+  /* the live site styles every <footer> with a full-bleed top border */
+  border-top: 0;
+  background: transparent;
+}
+.mDb-footer__top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--s6);
+  padding-bottom: var(--s7);
+}
+.mDb-footer__logo {
+  display: inline-flex;
+  border-radius: var(--r);
+}
+.mDb-footer__logo img {
+  display: block;
+  height: 20px;
+  width: auto;
+}
+.mD[data-theme="dark"] .mDb-footer__logo img {
+  filter: invert(1);
+}
+.mDb-footer__tag {
+  font-size: var(--t-small);
+  color: var(--ink-3);
+}
+.mDb-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px var(--s5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mDb-footer__links a {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-radius: var(--r);
+  transition: color var(--dur-1) var(--ease);
+}
+.mDb-footer__links a:hover {
+  color: var(--ink-3);
+}
+.mDb-footer__links a:focus-visible,
+.mDb-footer__logo:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+.mDb-term {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 16px 0;
+  border-block: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.mDb-term__prompt {
+  color: var(--ink-3);
+}
+.mDb-term__cmd {
+  color: var(--ink);
+}
+.mDb-term__out {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.mDb-term__caret {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: var(--ink-3);
+  animation: mDb-caret 1.1s steps(1) infinite;
+}
+@keyframes mDb-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.mDb-footer__base {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s5);
+  padding-top: var(--s5);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 960px) {
+  .mDb-why__head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s5);
+    margin-bottom: var(--s7);
+  }
+  .mDb-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mDb-quote {
+    border-left: 0;
+    border-top: 1px solid var(--line-2);
+  }
+  .mDb-faq__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s7);
+  }
+  .mDb-faq__head {
+    position: static;
+  }
+  .mDb-faq__title {
+    max-width: none;
+  }
+  .mDb-footer__top {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s5);
+  }
+}
+
+@media (max-width: 640px) {
+  .mDb-footer__links {
+    gap: 18px 22px;
+  }
+  /* the caret would wrap onto a line of its own */
+  .mDb-term__caret {
+    display: none;
+  }
+  .mDb-bench .mD-log__head {
+    padding: 14px 16px;
+  }
+  .mDb-bench__plot {
+    --pad-l: 16px;
+    --pad-r: 16px;
+    padding: 12px var(--pad-r) 12px var(--pad-l);
+  }
+  .mDb-bench__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mDb-bench__grid {
+    display: none;
+  }
+  .mDb-bench__name {
+    height: auto;
+    padding-top: 14px;
+    padding-bottom: 8px;
+  }
+  .mDb-bench__track {
+    height: 18px;
+    margin-right: 26px;
+  }
+  .mDb-bench__axis {
+    grid-column: 1;
+    margin-right: 26px;
+  }
+  .mDb-bench__note {
+    flex-direction: column;
+    padding: 12px 16px;
+  }
+  .mDb-quote {
+    padding: 24px 20px 20px;
+  }
+  .mDb-q__btn {
+    grid-template-columns: 40px minmax(0, 1fr) 28px;
+    padding: 22px 0;
+  }
+  .mDb-q__text {
+    font-size: 18px;
+  }
+  .mDb-q__a {
+    padding: 0 0 28px 40px;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .mDb-final__sheet {
+    min-height: 620px;
+  }
+  .mDb-final__content {
+    padding: var(--s9) var(--s5);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mDb-bench__bar {
+    transform: none;
+    transition: none;
+  }
+  .mDb-bench__live {
+    opacity: 1;
+    transition: none;
+  }
+  .mDb-q__panel,
+  .mDb-q__icon,
+  .mDb-final__render {
+    transition: none;
+  }
+  .mDb-term__caret {
+    animation: none;
+  }
+}
