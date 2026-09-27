@@ -27,15 +27,8 @@ export type NavItem = { label: string; n?: string; sep?: boolean; desktopOnly?: 
 );
 
 export const nav = {
-  // Platform: the three stages (→ the landing's #sequence, built from `sequence` in Nav.tsx),
-  // then these.
-  platform: {
-    label: "Platform",
-    more: [
-      { label: "Product walkthrough", to: "/", hash: "walkthrough", sep: true, desktopOnly: true },
-      { label: "Shadow AI", to: "/shadow" },
-    ] as NavItem[],
-  },
+  // Platform: a plain link to the landing (no menu)
+  platform: { label: "Platform", to: "/" } as NavItem,
   menus: [
     {
       label: "Company",
@@ -54,7 +47,6 @@ export const nav = {
       ] as NavItem[],
     },
   ],
-  quiet: { label: "Free trial", to: "/demo" } as NavItem,
   // The campaign pages keep their own conversion in the Nav CTA (the modal kind their
   // forms are tracked by); every other page uses the site CTA ("demo").
   campaignCta: {

@@ -1,25 +1,19 @@
 /* Nav — the site header on every page (mounted once in src/routes/__root.tsx).
    Sticky, frosted, hairline appears on scroll; over a black inset sheet it turns black.
-   Logo left; Platform / Company / Resources menus centred (mono, single-line items); the
-   quiet Free-trial link, the theme toggle and the one CTA right. Below 900px: logo + CTA +
-   a menu button that opens a glass sheet (the menus as labelled groups, then the theme). */
+   Logo left; the Platform link (to the landing) and the Company / Resources menus centred
+   (mono, single-line items); the theme toggle and the one CTA right. Below 900px: logo +
+   CTA + a menu button that opens a glass sheet (Platform, the menus as labelled groups,
+   then the theme). */
 import { Fragment, useCallback, useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
 
 import logo from "@/assets/LOGO_Blindsight.svg";
-import { nav, sequence, type NavItem } from "./content";
+import { nav, type NavItem } from "./content";
 import { CtaButton, Label, type SectionProps } from "./shared";
 import { useSiteTheme } from "./theme";
 
-const platformItems: NavItem[] = [
-  ...sequence.stages.map((s): NavItem => ({ n: s.n, label: s.label, to: "/", hash: "sequence" })),
-  ...nav.platform.more,
-];
-const menus: { label: string; items: NavItem[] }[] = [
-  { label: nav.platform.label, items: platformItems },
-  ...nav.menus,
-];
+const menus: { label: string; items: NavItem[] }[] = nav.menus;
 
 const smooth = (): ScrollBehavior =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
@@ -242,15 +236,21 @@ export function Nav({ theme }: SectionProps) {
         </Link>
 
         <nav className="mT-nav__links" aria-label="Primary">
+          <NavLink
+            item={nav.platform}
+            className="mD-nav__link mT-dd__btn"
+            onNavigate={() => {
+              if (pathname === "/") window.scrollTo({ top: 0, behavior: smooth() });
+            }}
+          >
+            {nav.platform.label}
+          </NavLink>
           {menus.map((m) => (
             <NavMenu key={m.label} label={m.label} items={m.items} />
           ))}
         </nav>
 
         <div className="mT-nav__end">
-          <NavLink item={nav.quiet} className="mD-nav__link mD-nav__link--quiet mT-nav__quiet">
-            {nav.quiet.label}
-          </NavLink>
           <button type="button" className="bs-theme-toggle" aria-label={themeLabel} onClick={toggleTheme}>
             {theme === "dark" ? (
               <Sun size={16} strokeWidth={1.5} aria-hidden="true" />
@@ -279,6 +279,12 @@ export function Nav({ theme }: SectionProps) {
       <div id={sheetId} className="mT-sheet" data-open={sheetOpen ? "true" : "false"} hidden={!sheetOpen}>
         <div className="mD-container">
           <ul role="list" className="mT-sheet__list">
+            <li>
+              <NavLink item={nav.platform} className="mT-sheet__item" onNavigate={closeSheet}>
+                <span className="mT-sheet__n" aria-hidden="true" />
+                {nav.platform.label}
+              </NavLink>
+            </li>
             {menus.map((m) => (
               <Fragment key={m.label}>
                 <li className="bs-sheet__group">
@@ -299,12 +305,6 @@ export function Nav({ theme }: SectionProps) {
               </Fragment>
             ))}
             <li className="bs-sheet__gap" aria-hidden="true" />
-            <li>
-              <NavLink item={nav.quiet} className="mT-sheet__item mT-sheet__item--quiet" onNavigate={closeSheet}>
-                <span className="mT-sheet__n" aria-hidden="true" />
-                {nav.quiet.label}
-              </NavLink>
-            </li>
             <li>
               <button
                 type="button"
