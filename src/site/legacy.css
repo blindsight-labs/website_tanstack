@@ -1,0 +1,27 @@
+/* legacy.css — keeps the LEGACY (pre-redesign) pages looking as they did inside the .mD site
+   wrapper. Applies only under .bs-legacy (set by LegacyFrame in src/site/pages/registry.tsx and
+   on the legacy modal backdrop). system.css keeps its element resets off .bs-legacy subtrees.
+   Delete this file with src/site/pages/legacy once every page has a new version. */
+
+/* The design system reuses three legacy token names on .mD; restore the legacy values
+   (styles.css :root and [data-theme="dark"]). */
+.mD .bs-legacy {
+  --bg: #fafaf8;
+  --surface: #ffffff;
+  --surface-2: #f7f7f5;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.65;
+}
+.mD[data-theme="dark"] .bs-legacy {
+  --bg: #0d0d13;
+  --surface: #181821;
+  --surface-2: #20202b;
+}
+
+/* The old nav was position: fixed, so every legacy page pads its own top to clear it. The
+   site nav is sticky (68px, in flow): pull the page back up under it, as before. */
+.mD .bs-legacy--page {
+  margin-top: -68px;
+  background: var(--bg);
+}

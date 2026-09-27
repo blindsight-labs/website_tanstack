@@ -1,0 +1,274 @@
+/* b-dform.css — version B: DemoForm (src/components/DemoForm.tsx) restyled inside the chrome
+   demo card through its own class names; its markup and logic are untouched. Overrides the
+   legacy rules in styles.css (violet gradients, pills). The shared chrome hairline (fields,
+   path cards, the confirm row) is set in b-forms.css; tokens --pb-field / --pb-hair live on
+   the card and follow the site theme. */
+.mD[data-site-variant="b"] .pb-modal .demo-form-wrap {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-form,
+.mD[data-site-variant="b"] .pb-modal .demo-fields {
+  gap: 18px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-fields[hidden],
+.mD[data-site-variant="b"] .pb-modal .demo-path-toggle[hidden] {
+  display: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-heading,
+.mD[data-site-variant="b"] .pb-modal .demo-field > span {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-field {
+  gap: 8px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-toggle {
+  gap: 12px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+/* the two paths: equal chrome-hairline cards */
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill {
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  min-height: 92px;
+  padding: 16px;
+  border-radius: var(--r);
+  color: var(--ink);
+  text-align: left;
+  filter: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+/* chosen: the rim turns ink */
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill.is-selected,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill.is-selected:hover {
+  background:
+    linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
+    linear-gradient(var(--ink), var(--ink)) border-box;
+  box-shadow: inset 0 0 0 1px var(--ink);
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill-row svg,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill.is-selected .demo-path-pill-row svg {
+  width: 18px;
+  height: 18px;
+  color: var(--ink-2);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill-title,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill-secondary .demo-path-pill-title,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill-primary .demo-path-pill-title {
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill-meta,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill-secondary .demo-path-pill-meta,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill.is-selected .demo-path-pill-meta {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-confirm {
+  min-height: 44px;
+  padding: 0 4px 0 14px;
+  border-radius: var(--r);
+  font-size: 15px;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-path-confirm svg {
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-startup-link {
+  min-height: 40px;
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-startup-link:hover {
+  color: var(--ink);
+}
+
+/* fields */
+.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, select, textarea) {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: var(--r);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-field textarea {
+  min-height: 112px;
+  padding: 12px 14px;
+  line-height: 1.55;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea)::placeholder {
+  color: var(--ink-3);
+}
+/* the select carries its chevron over the same chrome hairline */
+.mD[data-site-variant="b"] .pb-modal .demo-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 40px;
+  border: 1px solid transparent;
+  background:
+    var(--pb-chevron) no-repeat right 16px center padding-box,
+    linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
+    var(--pb-hair) border-box;
+  box-shadow: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-field select:hover {
+  background:
+    var(--pb-chevron) no-repeat right 16px center padding-box,
+    linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
+    var(--pb-hair-strong) border-box;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-field option {
+  background: var(--surface);
+  color: var(--ink);
+}
+/* focus: the rim turns ink; the keyboard ring is the site's one signal */
+.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea):focus {
+  outline: none;
+  background:
+    linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
+    linear-gradient(var(--ink), var(--ink)) border-box;
+  box-shadow: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-field select:focus {
+  outline: none;
+  background:
+    var(--pb-chevron) no-repeat right 16px center padding-box,
+    linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
+    linear-gradient(var(--ink), var(--ink)) border-box;
+  box-shadow: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, select, textarea):focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-row {
+  gap: 18px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-consent {
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-consent input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-error {
+  padding: 12px 14px;
+  border-radius: var(--r);
+  background: var(--surface-2);
+  box-shadow: inset 2px 0 0 var(--ink);
+  font-size: 14px;
+  color: var(--ink);
+}
+/* the submit: the site's primary button, full width */
+.mD[data-site-variant="b"] .pb-modal .demo-form .btn {
+  align-self: stretch;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 52px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: var(--r);
+  background: var(--ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+  filter: none;
+  transform: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bg);
+  transition: background var(--dur-1) var(--ease);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-form .btn:hover {
+  background: color-mix(in srgb, var(--ink) 86%, var(--bg));
+  transform: none;
+  filter: none;
+}
+.mD[data-site-variant="b"][data-theme="dark"] .pb-modal .demo-form .btn {
+  background: #f4f4f6;
+  color: #0b0b0d;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+.mD[data-site-variant="b"][data-theme="dark"] .pb-modal .demo-form .btn:hover {
+  background: #ffffff;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-form .btn:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-form .btn[disabled] {
+  opacity: 0.45;
+  cursor: progress;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-success {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--s3) 0 0;
+  border: 0;
+  background: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-success .tag {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-success h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-success p {
+  margin: 0;
+  color: var(--ink-2);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-success a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-4);
+  text-underline-offset: 3px;
+}

@@ -322,7 +322,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
               />
             </label>
             <label className="demo-consent">
-              <input name="consent" type="checkbox" defaultChecked />
+              <input name="consent" type="checkbox" />
               <span>I agree to be contacted by Blindsight about this request.</span>
             </label>
             {error && (

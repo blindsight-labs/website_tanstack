@@ -1,39 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { BrainExperience } from "@/components/brain/BrainExperience";
-import brainCss from "@/components/brain/brain.css?url";
-import { DemoCta } from "@/components/DemoCta";
+import { Home } from "@/site/Home";
+import { hero } from "@/site/content";
+import { loadOffice } from "@/site/three/load";
+
+const TITLE = `Blindsight · ${hero.headline}`;
 
 export const Route = createFileRoute("/")({
   component: Home,
-  head: () => ({
-    meta: [
-      { title: "Blindsight, Runtime Security for AI" },
-      {
-        name: "description",
-        content:
-          "Blindsight inspects every prompt, response and tool call at runtime. See threats like prompt injection and data leaks, govern them with policy, and prove it with an audit trail.",
-      },
-      { property: "og:title", content: "Blindsight, Runtime Security for AI" },
-      {
-        property: "og:description",
-        content:
-          "How can you secure what you can't see? See it. Govern it. Prove it. Runtime visibility, enforcement and a full auditable trail.",
-      },
-      { property: "og:url", content: "https://blindsight.io/" },
-    ],
-    links: [
-      { rel: "canonical", href: "https://blindsight.io/" },
-      { rel: "stylesheet", href: brainCss },
-    ],
-  }),
+  head: () => {
+    // Client: start the Hero's 3D download (three.js + the office scene) as the router starts
+    // hydrating or navigating here, before React renders (Home.tsx starts it too). Vite
+    // preloads the scene's chunks in parallel. (A <link rel="modulepreload"> can't be written
+    // here: the hashed chunk names aren't known in source.)
+    if (typeof window !== "undefined") loadOffice().catch(() => undefined);
+    return {
+      meta: [
+        { title: TITLE },
+        { name: "description", content: hero.subline },
+        { property: "og:title", content: hero.headline },
+        { property: "og:description", content: hero.subline },
+        { property: "og:url", content: "https://blindsight.io/" },
+        { name: "twitter:title", content: hero.headline },
+        { name: "twitter:description", content: hero.subline },
+      ],
+      links: [{ rel: "canonical", href: "https://blindsight.io/" }],
+    };
+  },
 });
-
-function Home() {
-  return (
-    <main className="page-home">
-      <BrainExperience />
-      <DemoCta />
-    </main>
-  );
-}

@@ -20,7 +20,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 
 import { Label, type SectionProps, type Theme } from "./shared";
 import { sequence } from "./content";
-import { BOUNDS, CLAUSES, HOLD_MS, SETTLED, STAGES, STAGE_MS, netTime, snapAt, stageLocal, type Snap } from "./seq/model";
+import { BOUNDS, CLAUSES, HOLD_MS, SETTLED, STAGES, STAGE_DWELL, STAGE_MS, netTime, snapAt, stageLocal, type Snap } from "./seq/model";
 import { Left, Still } from "./seq/Left";
 
 
@@ -99,14 +99,23 @@ function SequenceLive({ theme }: { theme: Theme }) {
     let auto = true;
     let started = false;
     let hold = 0;
+    let dwell = 0; // ms left of the pause at a stage's end
     let last = 0;
     const tick = (now: number) => {
       raf = 0;
       const dt = last ? Math.min(64, now - last) : 16;
       last = now;
-      if (p < target) {
+      if (dwell > 0) {
+        dwell -= dt;
+      } else if (p < target) {
         const k = p < BOUNDS[1] ? 0 : p < BOUNDS[2] ? 1 : 2;
-        p = Math.min(target, p + ((BOUNDS[k + 1] - BOUNDS[k]) / STAGE_MS[k]) * dt);
+        const next = Math.min(target, p + ((BOUNDS[k + 1] - BOUNDS[k]) / STAGE_MS[k]) * dt);
+        // reaching the end of a stage: hold on it (still inside the stage) before crossing
+        const end = BOUNDS[k + 1] - 1e-4;
+        if (k < 2 && p < end && next >= end && STAGE_DWELL[k] > 0) {
+          p = end;
+          dwell = STAGE_DWELL[k];
+        } else p = next;
       } else if (auto) {
         hold += dt;
         if (hold > HOLD_MS) {

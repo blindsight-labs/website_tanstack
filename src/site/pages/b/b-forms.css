@@ -1,0 +1,360 @@
+/* b-forms.css — version B: the application form (/careers/apply) and the demo card (the
+   DemoModal's .bs-modal, with DemoForm restyled through its own class names). */
+
+/* ==========================================================================
+   Hairline fields (the page's form)
+   ========================================================================== */
+/* one white sheet: the role and what happens next on the left, the form on the right */
+.mD[data-site-variant="b"] .pb-apply__sheet {
+  margin-bottom: var(--s4);
+  padding-block: var(--s8);
+}
+.mD[data-site-variant="b"] .pb-apply__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: var(--s7) var(--s8);
+  align-items: start;
+}
+.mD[data-site-variant="b"] .pb-apply__side {
+  min-width: 0;
+}
+.mD[data-site-variant="b"] .pb-apply__sticky {
+  position: sticky;
+  top: calc(68px + var(--s6));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s4);
+}
+.mD[data-site-variant="b"] .pb-apply__role {
+  font-size: clamp(26px, 2.4vw, 34px);
+  line-height: 1.1;
+}
+.mD[data-site-variant="b"] .pb-apply__desc {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.mD[data-site-variant="b"] .pb-apply__nextK {
+  margin: var(--s4) 0 0;
+}
+.mD[data-site-variant="b"] .pb-apply__panel {
+  min-width: 0;
+  padding: var(--s6) var(--s7) var(--s7);
+  border-radius: var(--r);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.mD[data-site-variant="b"] .pb-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s5);
+}
+.mD[data-site-variant="b"] .pb-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s5);
+}
+.mD[data-site-variant="b"] .pb-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mD[data-site-variant="b"] .pb-field__k {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-field :is(input, textarea),
+.mD[data-site-variant="b"] .pb-file__face {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--r);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  transition: box-shadow var(--dur-1) var(--ease);
+}
+.mD[data-site-variant="b"] .pb-field textarea {
+  min-height: 132px;
+  padding: 12px 14px;
+  resize: vertical;
+  line-height: 1.55;
+}
+.mD[data-site-variant="b"] .pb-field :is(input, textarea)::placeholder {
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-field :is(input, textarea):hover,
+.mD[data-site-variant="b"] .pb-file:hover .pb-file__face {
+  box-shadow: inset 0 0 0 1px var(--ink-4);
+}
+.mD[data-site-variant="b"] .pb-field :is(input, textarea):focus {
+  outline: none;
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.mD[data-site-variant="b"] .pb-field :is(input, textarea):focus-visible,
+.mD[data-site-variant="b"] .pb-file input:focus-visible + .pb-file__face {
+  outline: 2px solid var(--signal);
+  outline-offset: 1px;
+}
+/* the file field: the native input covers a quiet face (name + Browse) */
+.mD[data-site-variant="b"] .pb-file input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.mD[data-site-variant="b"] .pb-file__face {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding-right: 6px;
+}
+.mD[data-site-variant="b"] .pb-file__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-file[data-has] .pb-file__name {
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.mD[data-site-variant="b"] .pb-file__btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: calc(var(--r) - 2px);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 44px;
+  padding-top: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.mD[data-site-variant="b"] .pb-check input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-error {
+  padding: 12px 14px;
+  border-radius: var(--r);
+  background: var(--surface-2);
+  box-shadow: inset 2px 0 0 var(--ink);
+  font-size: 14px;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-form__foot {
+  padding-top: var(--s3);
+}
+.mD[data-site-variant="b"] .pb-done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s5);
+  padding-block: var(--s5);
+}
+.mD[data-site-variant="b"] .pb-done a:not(.mD-btn) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-4);
+  text-underline-offset: 3px;
+}
+
+/* ==========================================================================
+   The demo card: dark glass (the black-sheet language) in both themes
+   ========================================================================== */
+/* chrome tokens: the rim (the site's metal gradient, 1px) and the quieter hairline shared by
+   the close button, the path cards and the fields. The card follows the site theme. */
+.mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
+  --pb-card: var(--surface);
+  --pb-field: var(--surface);
+  --pb-rim: linear-gradient(180deg, #ffffff 0%, #d2d5da 30%, #8e919a 52%, #c4c7ce 76%, #eceef1 100%);
+  --pb-hair: linear-gradient(180deg, #e4e6ea 0%, #c3c6cd 50%, #dcdee3 100%);
+  --pb-hair-strong: linear-gradient(180deg, #c9ccd3 0%, #8e919a 50%, #b9bcc3 100%);
+  --pb-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2380838c' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+.mD[data-site-variant="b"][data-theme="dark"] .modal-backdrop[data-site-variant="b"] .bs-modal {
+  --pb-field: #121216;
+  --pb-rim: linear-gradient(180deg, #8d9099 0%, #3e4047 34%, #1c1d21 55%, #4b4e56 80%, #6e7179 100%);
+  --pb-hair: linear-gradient(180deg, #3f4148 0%, #26272c 50%, #36383e 100%);
+  --pb-hair-strong: linear-gradient(180deg, #7c8089 0%, #3e4047 50%, #62656d 100%);
+  --pb-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23a9abb3' stroke-width='1.5'/%3E%3C/svg%3E");
+}
+
+.mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] {
+  background: rgba(11, 11, 13, 0.28);
+  -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  backdrop-filter: blur(8px) saturate(1.1);
+}
+.mD[data-site-variant="b"][data-theme="dark"] .modal-backdrop[data-site-variant="b"] {
+  background: rgba(0, 0, 0, 0.62);
+}
+/* the card: its own surface inside a 1px machined metal rim */
+.mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
+  max-width: 880px;
+  overscroll-behavior: contain;
+  border: 1px solid transparent;
+  border-radius: var(--r);
+  background:
+    linear-gradient(var(--pb-card), var(--pb-card)) padding-box,
+    var(--pb-rim) border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 40px 80px -30px rgba(11, 11, 13, 0.42);
+  color: var(--ink-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-4) transparent;
+  animation: pb-pop 360ms var(--ease) both;
+}
+.mD[data-site-variant="b"][data-theme="dark"] .modal-backdrop[data-site-variant="b"] .bs-modal {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 40px 90px -30px rgba(0, 0, 0, 0.85);
+}
+@keyframes pb-pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+.mD[data-site-variant="b"] .pb-modal {
+  position: relative;
+  padding: var(--s7) var(--s7) var(--s7);
+}
+/* the chrome hairline, shared: the close button, the path cards, the fields */
+.mD[data-site-variant="b"] .pb-modal__close,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill,
+.mD[data-site-variant="b"] .pb-modal .demo-path-confirm,
+.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea) {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
+    var(--pb-hair) border-box;
+  box-shadow: none;
+}
+.mD[data-site-variant="b"] .pb-modal__close:hover,
+.mD[data-site-variant="b"] .pb-modal .demo-path-pill:hover,
+.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea):hover {
+  background:
+    linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
+    var(--pb-hair-strong) border-box;
+}
+.mD[data-site-variant="b"] .pb-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--ink);
+  cursor: pointer;
+}
+.mD[data-site-variant="b"] .pb-modal__close:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+.mD[data-site-variant="b"] .pb-modal__head {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: var(--s4);
+  align-items: start;
+  padding-right: 52px;
+}
+/* the maker's badge: the flat mark in the site's metal gradient */
+.mD[data-site-variant="b"] .pb-modal__mark {
+  display: block;
+  width: 34px;
+  height: 34px;
+  margin-top: -2px;
+}
+.mD[data-site-variant="b"] .pb-modal__headText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 4px;
+}
+.mD[data-site-variant="b"] .pb-modal__title {
+  font-size: clamp(26px, 3vw, 34px);
+  line-height: 1.12;
+}
+.mD[data-site-variant="b"] .pb-modal__sub {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.mD[data-site-variant="b"] .pb-modal__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+  gap: var(--s7);
+  align-items: start;
+  margin-top: var(--s6);
+  padding-top: var(--s6);
+  border-top: 1px solid var(--line);
+}
+/* while the form is still only the path choice (or already sent), the left column is short:
+   the steps run across under it instead of down beside it, so the card has no void */
+@media (min-width: 721px) {
+  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-modal__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s6);
+  }
+  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-modal__next {
+    padding: var(--s5) 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-2);
+  }
+  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-next {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 var(--s5);
+    border-top: 0;
+  }
+  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-next__item {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+.mD[data-site-variant="b"] .pb-modal__form {
+  min-width: 0;
+}
+.mD[data-site-variant="b"] .pb-modal__next {
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--s6);
+  border-left: 1px solid var(--line-2);
+}

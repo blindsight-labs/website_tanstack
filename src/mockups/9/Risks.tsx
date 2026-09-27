@@ -972,7 +972,7 @@ function sceneStack(core: Core, ctx: Ctx, tone: Tone, p = 1) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 04 · AI nobody registered                                           */
+/* 04 · Unregistered AI accessing sensitive data                                           */
 /* One object: a smoked-glass assistant, "crm-assistant" printed on it */
 /* (the one violet) over a large counter. A sales rep's chrome badge,  */
 /* s.weber, seats in its top; record slips lift out of a small CRM     */

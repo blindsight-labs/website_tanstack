@@ -1,0 +1,102 @@
+/* chrome.css — site chrome additions over top.css: the theme toggle, the Nav's three menus
+   (separators, mobile-sheet groups), the demo-modal card baseline for page versions, and
+   the REVIEW-ONLY switch. Prefix: bs-. Tokens from system.css only. */
+
+/* ==========================================================================
+   Theme toggle (Nav). Hairline square like the menu button; follows the inverse nav.
+   ========================================================================== */
+.bs-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    color var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease);
+}
+.bs-theme-toggle:hover {
+  color: var(--ink-3);
+}
+.bs-theme-toggle:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+@media (max-width: 899px) {
+  /* on phones and tablets the toggle lives in the menu sheet */
+  .mT-nav__end .bs-theme-toggle {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Nav menus: a divider above an item marked data-sep (instead of top.css's
+   "always above the last item")
+   ========================================================================== */
+.mT-nav .mT-dd__menu li:last-child:not([data-sep]) {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.mT-nav .mT-dd__menu li[data-sep] {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line-2);
+}
+.mT-nav .mT-dd__menu--narrow {
+  min-width: 200px;
+}
+
+/* Mobile sheet: scrolls when taller than the screen; menus are labelled groups */
+.mT-nav .mT-sheet {
+  max-height: calc(100dvh - 68px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.bs-sheet__group {
+  padding: 22px 0 8px;
+}
+.bs-sheet__group:first-child {
+  padding-top: 14px;
+}
+.bs-sheet__gap {
+  height: 14px;
+}
+.bs-sheet__theme {
+  width: 100%;
+  padding: 0;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+.mT-nav .bs-sheet__theme {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Demo modal: the card shell a page version's `demoModal` renders into.
+   Versions style the surface (scope under [data-site-variant]).
+   ========================================================================== */
+.bs-modal {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+}
+.bs-modal:focus {
+  outline: none;
+}
+

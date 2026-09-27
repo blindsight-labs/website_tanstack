@@ -61,6 +61,9 @@ export const SETTLED = [0.33, 0.66, 1];
 export const PACE = 1.8;
 export const STAGE_MS = [5000, 6000, 3600].map((ms) => ms * PACE);
 export const HOLD_MS = 5200;
+/** a pause at the end of each stage (before the next begins), so its last caption can be
+ *  read: See ends on agent:finance being flagged, only ~1 s before Secure starts */
+export const STAGE_DWELL = [2600, 1200, 0];
 
 export const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
 export const seg = (p: number, a: number, b: number) => clamp01((p - a) / (b - a));

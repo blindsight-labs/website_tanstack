@@ -89,7 +89,7 @@ export const risks: { id: RiskId; title: string; scenario: string; short: string
   },
   {
     id: "unregistered-ai",
-    title: "AI nobody registered.",
+    title: "Unregistered AI accessing sensitive data.",
     scenario:
       "A sales rep connects an AI assistant to the CRM with their own login. It can read every customer record, and security doesn't know it exists.",
     short: "AI assistant on the CRM",

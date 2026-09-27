@@ -1,0 +1,259 @@
+/* b-resp.css — version B, responsive: 1440 desktop, 1180 laptop, 768 tablet, 390 phone.
+   Tap targets ≥ 44px, text ≥ 13px on phones, no horizontal scroll. */
+
+@media (max-width: 1080px) {
+  .mD[data-site-variant="b"] .pb-topic,
+  .mD[data-site-variant="b"] .pb-machine {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mD[data-site-variant="b"] .pb-topic {
+    gap: var(--s5);
+  }
+  .mD[data-site-variant="b"] .pb-topic__side {
+    position: static;
+  }
+  .mD[data-site-variant="b"] .pb-sec__sheet {
+    padding-block: var(--s8);
+  }
+  .mD[data-site-variant="b"] .pb-contact__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s6);
+  }
+}
+
+/* tablet and below: the header stacks (the object on top, fading into the copy); the
+   editorial splits become one column, the kicker above its content */
+@media (max-width: 900px) {
+  .mD[data-site-variant="b"] .pb-head__sheet,
+  .mD[data-site-variant="b"] :is(.pb-head--compact, .pb-head--short) .pb-head__sheet {
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+  }
+  /* the box keeps close to the still's own aspect (880 × 720), so the object is framed whole
+     (plinth included, not cropped at the top); the fade starts below the plinth */
+  .mD[data-site-variant="b"] .pb-head__fig,
+  .mD[data-site-variant="b"] .pb-head--short .pb-head__fig {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: clamp(300px, 78vw, 460px);
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%),
+      linear-gradient(180deg, transparent 0, #000 8%, #000 84%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%),
+      linear-gradient(180deg, transparent 0, #000 8%, #000 84%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .mD[data-site-variant="b"] .pb-head__fig img {
+    object-position: 50% 58%;
+  }
+  .mD[data-site-variant="b"] .pb-head--short .pb-head__fig {
+    height: clamp(240px, 60vw, 360px);
+  }
+  .mD[data-site-variant="b"] .pb-head__inner,
+  .mD[data-site-variant="b"] .pb-head--short .pb-head__inner {
+    margin-top: calc(-1 * var(--s5));
+    padding-block: 0 var(--s8);
+  }
+  .mD[data-site-variant="b"] .pb-head__text {
+    max-width: 640px;
+  }
+  .mD[data-site-variant="b"] :is(.pb-split__grid, .pb-apply__grid, .pb-lead) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s6);
+  }
+  .mD[data-site-variant="b"] :is(.pb-split__sticky, .pb-apply__sticky) {
+    position: static;
+  }
+  .mD[data-site-variant="b"] .pb-split__title {
+    max-width: 20ch;
+  }
+  /* the document outline is not needed once the text is one column: the sections are numbered */
+  .mD[data-site-variant="b"] .pb-legal .pb-outline {
+    display: none;
+  }
+  .mD[data-site-variant="b"] .pb-people--sm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .mD[data-site-variant="b"] .pb-engines,
+  .mD[data-site-variant="b"] .pb-deploy__opts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mD[data-site-variant="b"] .pb-engine + .pb-engine {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-2);
+  }
+  .mD[data-site-variant="b"] .pb-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mD[data-site-variant="b"] .pb-step,
+  .mD[data-site-variant="b"] .pb-step + .pb-step {
+    padding: var(--s5) 0;
+    border-left: 0;
+  }
+  .mD[data-site-variant="b"] .pb-step + .pb-step {
+    border-top: 1px solid var(--line);
+  }
+  .mD[data-site-variant="b"] .pb-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .mD[data-site-variant="b"] .pb-modal__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s6);
+  }
+  .mD[data-site-variant="b"] .pb-modal__next {
+    padding: var(--s5) 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--line-2);
+  }
+}
+
+@media (max-width: 720px) {
+  .mD[data-site-variant="b"] .pb-sec {
+    padding-block: var(--s8);
+  }
+  .mD[data-site-variant="b"] .pb-sec--sheet {
+    padding-block: var(--s3);
+  }
+  .mD[data-site-variant="b"] .pb-sec__sheet,
+  .mD[data-site-variant="b"] .pb-split,
+  .mD[data-site-variant="b"] .pb-lead {
+    padding-block: var(--s8);
+  }
+  .mD[data-site-variant="b"] .pb-group > .pb-split + .pb-split > .pb-split__grid {
+    padding-top: var(--s8);
+  }
+  .mD[data-site-variant="b"] .pb-apply__sheet {
+    padding-block: var(--s6) var(--s8);
+  }
+  .mD[data-site-variant="b"] .pb-apply__panel {
+    padding: var(--s5) var(--s4) var(--s6);
+  }
+  .mD[data-site-variant="b"] :is(.pb-people--lg, .pb-people--sm, .pb-values, .pb-stats, .pb-checks, .pb-form__row) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mD[data-site-variant="b"] :is(.pb-value, .pb-stat, .pb-check4),
+  .mD[data-site-variant="b"] :is(.pb-value, .pb-stat, .pb-check4):nth-child(even) {
+    padding: var(--s5) 0;
+    border-left: 0;
+  }
+  /* rows: the date/number column folds above the title, the meta under it */
+  .mD[data-site-variant="b"] .pb-row {
+    grid-template-columns: minmax(0, 1fr) 20px;
+    grid-template-areas:
+      "n n"
+      "main arrow"
+      "meta meta";
+    gap: 8px var(--s3);
+  }
+  .mD[data-site-variant="b"] .pb-row__n {
+    flex-direction: row;
+    gap: 6px;
+  }
+  .mD[data-site-variant="b"] .pb-row__meta {
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--s3);
+    text-align: left;
+  }
+  .mD[data-site-variant="b"] .pb-inbox {
+    grid-template-columns: minmax(0, 1fr) 20px;
+    gap: 4px var(--s4);
+  }
+  .mD[data-site-variant="b"] .pb-inbox__v {
+    grid-column: 1;
+    overflow-wrap: anywhere;
+  }
+  .mD[data-site-variant="b"] .pb-inbox__go {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .mD[data-site-variant="b"] .pb-address__lines {
+    font-size: 22px;
+  }
+  .mD[data-site-variant="b"] .pb-doc__h {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+  .mD[data-site-variant="b"] .pb-doc__body {
+    padding-left: 0;
+  }
+  .mD[data-site-variant="b"] .pb-dl__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .mD[data-site-variant="b"] .pb-qa__q {
+    font-size: 16.5px;
+  }
+  .mD[data-site-variant="b"] .pb-tab {
+    min-height: 44px;
+  }
+  .mD[data-site-variant="b"] .pb-tabs {
+    width: 100%;
+  }
+  .mD[data-site-variant="b"] .pb-shadow__demo {
+    padding: var(--s3);
+  }
+  .mD[data-site-variant="b"] .pb-shadow__log .mD-log__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .mD[data-site-variant="b"] .pb-shadow__log .mD-log__time {
+    grid-column: 1 / -1;
+  }
+  .mD[data-site-variant="b"] :is(.pb-meta, .pb-count, .pb-row__meta, .pb-row__n, .pb-stat__method, .pb-sources ol, .pb-byline__meta, .pb-next__n) {
+    font-size: 13px;
+  }
+  .mD[data-site-variant="b"] .pb-head__actions .mD-btn {
+    flex: 1 1 auto;
+  }
+  /* the landing's closing sheet on b's pages: its headline always wraps inside the sheet
+     (14ch at the phone floor of --t-h1 could meet "organization." at 390) */
+  .mD[data-site-variant="b"] .mDb-final__content {
+    max-width: 100%;
+  }
+  .mD[data-site-variant="b"] .mDb-final__title {
+    max-width: min(14ch, 100%);
+    font-size: clamp(32px, 9.4vw, 40px);
+    overflow-wrap: break-word;
+  }
+  /* the demo card: nearly full screen */
+  .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] {
+    padding: 8px;
+    align-items: flex-end;
+  }
+  .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
+    max-height: calc(100dvh - 16px);
+  }
+  .mD[data-site-variant="b"] .pb-modal {
+    padding: var(--s5);
+  }
+  .mD[data-site-variant="b"] .pb-modal__head {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: var(--s3);
+    padding-right: 48px;
+  }
+  .mD[data-site-variant="b"] .pb-modal__mark {
+    width: 30px;
+    height: 30px;
+  }
+  .mD[data-site-variant="b"] .pb-modal__close {
+    top: 10px;
+    right: 10px;
+  }
+  .mD[data-site-variant="b"] .pb-modal .demo-path-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mD[data-site-variant="b"] .pb-modal .demo-path-pill {
+    min-height: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
+    animation: none;
+  }
+}
