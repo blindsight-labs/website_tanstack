@@ -3,17 +3,17 @@
 import { useEffect, type ComponentType, type ReactNode, type RefObject } from "react";
 import { ArrowRight, type LucideProps } from "lucide-react";
 
-import { useDemoModal, type DemoVariant } from "@/components/DemoModal";
+import { useDemoModal } from "@/components/DemoModal";
 import { CTA } from "./content";
 
 export type Theme = "light" | "dark";
 export type SectionProps = { theme: Theme };
 
-/** "03 · GOVERN IT" micro-label with the metallic hex marker. */
-export function Label({ n, children, hex = true }: { n?: string; children: ReactNode; hex?: boolean }) {
+/** "03 · GOVERN IT" micro-label. Carries information the heading doesn't (a place, a step, a
+ *  list's name); never an eyebrow restating the heading below it. */
+export function Label({ n, children }: { n?: string; children: ReactNode }) {
   return (
     <span className="mD-label">
-      {hex && <span className="mD-hex" aria-hidden="true" />}
       {n && (
         <>
           <span className="mD-label__n">{n}</span>
@@ -25,27 +25,24 @@ export function Label({ n, children, hex = true }: { n?: string; children: React
   );
 }
 
-/** The one CTA. Opens the site's global demo-request modal (`kind` picks its form:
- *  "demo" by default, "download" / "trial" on the campaign pages). */
+/** The one CTA. Opens the site's global demo-request modal. */
 export function CtaButton({
   size = "md",
   variant = "primary",
   label = CTA,
   className = "",
-  kind = "demo",
 }: {
   size?: "sm" | "md" | "lg";
   variant?: "primary" | "secondary";
   label?: string;
   className?: string;
-  kind?: DemoVariant;
 }) {
   const { open, prefetch } = useDemoModal();
   const cls = ["mD-btn", `mD-btn--${variant}`, size !== "md" ? `mD-btn--${size}` : "", className]
     .filter(Boolean)
     .join(" ");
   return (
-    <button type="button" className={cls} onClick={() => open(kind)} onPointerEnter={prefetch} onFocus={prefetch}>
+    <button type="button" className={cls} onClick={open} onPointerEnter={prefetch} onFocus={prefetch}>
       {label}
       <ArrowRight size={14} strokeWidth={1.75} className="mD-btn__arrow" aria-hidden="true" />
     </button>
@@ -67,7 +64,7 @@ export function MetalDefs() {
         <linearGradient id="mD-metal-ink" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#7C8089" />
           <stop offset="0.45" stopColor="#2B2D33" />
-          <stop offset="0.55" stopColor="#0B0B0D" />
+          <stop offset="0.55" stopColor="#111118" />
           <stop offset="1" stopColor="#50535B" />
         </linearGradient>
       </defs>

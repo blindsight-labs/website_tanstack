@@ -1,7 +1,7 @@
 /* Page version B · "Objects", round 2 hybrid: every page header carries one rendered
    glass/chrome object (the landing's Risks studio, renderOnce stills); bodies use version A's
    editorial structure (sheets, sticky kicker, outline), copied here as .pb-; every page ends
-   on the landing's FinalCta. All 15 keys are provided. Stylesheets are scoped under
+   on the landing's FinalCta. All 13 keys are provided. Stylesheets are scoped under
    .mD[data-site-variant="b"], classes prefixed .pb-.
 
    Pages load on demand (one chunk each, see ../registry.tsx), so no page's code sits in the
@@ -29,8 +29,6 @@ export const pages: PageLoaders = {
   author: () => import("./Author").then((m) => m.AuthorB),
   imprint: () => import("./Imprint").then((m) => m.ImprintB),
   privacy: () => import("./Privacy").then((m) => m.PrivacyB),
-  demo: () => import("./Demo").then((m) => m.DemoB),
-  shadow: () => import("./Shadow").then((m) => m.ShadowB),
   notFound: () => Promise.resolve(NotFoundB),
   error: () => Promise.resolve(ErrorB),
   demoModal: () => import("./DemoModal").then((m) => m.DemoModalB),

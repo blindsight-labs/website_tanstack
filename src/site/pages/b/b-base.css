@@ -72,9 +72,7 @@
   font-size: var(--t-h2);
   line-height: 1.1;
 }
-.mD[data-site-variant="b"] .pb-head__quiet {
-  color: var(--ink-3);
-}
+
 .mD[data-site-variant="b"] .pb-head__lead {
   margin-top: var(--s5);
   max-width: 34em;
@@ -149,7 +147,7 @@
 .mD[data-site-variant="b"] .pb-link:hover {
   text-decoration-color: var(--ink);
 }
-.mD[data-site-variant="b"] :is(.pb-back, .pb-link, .pb-card, .pb-tab, .pb-qa__q, .pb-inbox):focus-visible {
+.mD[data-site-variant="b"] :is(.pb-back, .pb-link, .pb-tab, .pb-qa__q, .pb-inbox):focus-visible {
   outline: 2px solid var(--signal);
   outline-offset: 2px;
 }
@@ -210,27 +208,6 @@
 }
 
 /* cards: white on the grey page, a hairline ring (the Risks cards) */
-.mD[data-site-variant="b"] .pb-card {
-  display: block;
-  border-radius: var(--r);
-  background: var(--surface);
-  box-shadow: 0 0 0 1px var(--line-2);
-}
-.mD[data-site-variant="b"] .pb-sec--sheet .pb-card {
-  box-shadow: 0 0 0 1px var(--line);
-}
-.mD[data-site-variant="b"] a.pb-card {
-  transition:
-    opacity var(--dur-3) var(--ease),
-    transform 420ms var(--ease),
-    box-shadow 420ms var(--ease);
-}
-@media (hover: hover) and (pointer: fine) {
-  .mD[data-site-variant="b"] a.pb-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 0 1px var(--ink-4);
-  }
-}
 
 .mD[data-site-variant="b"] .pb-meta {
   display: flex;
@@ -299,7 +276,6 @@
   gap: var(--s4);
 }
 .mD[data-site-variant="b"] .pb-split__title {
-  margin-top: var(--s2);
   max-width: 14ch;
   font-size: clamp(28px, 2.6vw, 38px);
   line-height: 1.1;
@@ -675,8 +651,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .mD[data-site-variant="b"] .pb-still img,
-  .mD[data-site-variant="b"] .pb-qa__a,
-  .mD[data-site-variant="b"] a.pb-card {
+  .mD[data-site-variant="b"] .pb-qa__a {
     transition: none;
   }
 }

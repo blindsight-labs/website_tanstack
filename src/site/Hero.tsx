@@ -66,7 +66,7 @@ export function Hero({ theme }: SectionProps) {
       const scene = await mod.createHeroScene(canvas, {
         theme,
         bg: cs.backgroundColor,
-        ink: cs.getPropertyValue("--ink").trim() || (theme === "dark" ? "#f4f4f6" : "#0b0b0d"),
+        ink: cs.getPropertyValue("--ink").trim() || (theme === "dark" ? "#ececf1" : "#111118"),
       });
       if (disposed) {
         scene.dispose();

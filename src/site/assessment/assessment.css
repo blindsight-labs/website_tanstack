@@ -350,8 +350,8 @@
   white-space: nowrap;
 }
 .mD .ra-switch a[aria-current="page"] {
-  background: #f4f4f6;
-  color: #0b0b0d;
+  background: #ececf1;
+  color: #111118;
 }
 @media (max-width: 720px) {
   .mD .ra-switch .ra-switch__name {

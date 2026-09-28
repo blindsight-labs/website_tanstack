@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNod
 import { Activity, Ban, Boxes, Check, ChevronsUpDown, Download, EyeOff, Plug, ScrollText, Search, Stamp, type LucideProps } from "lucide-react";
 
 import { DotField } from "./DotField";
-import { Label, MetalIcon, useReveal, type SectionProps, type Theme } from "./shared";
+import { MetalIcon, useReveal, type SectionProps, type Theme } from "./shared";
 
 /* ------------------------------------------------------------------ */
 /* Shared render helpers for the mid sections (Deployment / Discovery  */
@@ -18,9 +18,9 @@ export type Core = typeof import("./three/core");
 
 /** Exact surface colours the rendered images must melt into. */
 export const MID_SURFACE = {
-  sheetInverse: { light: "#060607", dark: "#111114" },
-  surface: { light: "#FFFFFF", dark: "#0D0D10" },
-  page: { light: "#F3F4F6", dark: "#060607" },
+  sheetInverse: { light: "#111118", dark: "#20202B" },
+  surface: { light: "#FFFFFF", dark: "#181821" },
+  page: { light: "#F4F4F1", dark: "#0D0D13" },
 };
 
 /** A canvas texture drawn by `draw`, for backdrops that glass can refract. */
@@ -318,7 +318,6 @@ export function Walkthrough({ theme }: SectionProps) {
         <div className="mD-container">
           <header ref={head} className="mid-wt__head" data-reveal>
             <div>
-              <Label>Console</Label>
               <h2 id="mid-wt-title" className="mD-h1 mid-wt__title">
                 One console, from first finding to audit evidence.
               </h2>
@@ -341,7 +340,6 @@ export function Walkthrough({ theme }: SectionProps) {
                 onClick={() => pick(v.id)}
               >
                 <span className="mid-wt__tab-k">
-                  <span className="mD-hex" aria-hidden="true" />
                   {v.label}
                 </span>
                 <span className="mid-wt__tab-bar" key={`${v.id}-${view === v.id}-${auto}`} aria-hidden="true" />

@@ -1,15 +1,13 @@
 /* Footer — the site footer on every page (mounted once in src/routes/__root.tsx):
-   logo + tagline + links, the terminal status line, company line. */
+   logo + tagline + links, company line. */
 import { Fragment } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight } from "lucide-react";
 
 import logo from "@/assets/LOGO_Blindsight.svg";
 import { footer, sequence } from "./content";
-import { MetalIcon, type SectionProps } from "./shared";
 
 /** "a · b": each segment unbreakable with its trailing dot, so a line only ever
- *  breaks after a dot, never inside a phrase ("· 1 / awaiting decision"). */
+ *  breaks after a dot, never inside a phrase ("8001 / Zürich"). */
 function Segments({ text }: { text: string }) {
   const parts = text.split(" · ");
   return (
@@ -27,12 +25,7 @@ function Segments({ text }: { text: string }) {
   );
 }
 
-export function Footer({ theme }: SectionProps) {
-  // "$ blindsight status  →  all AI systems observed · 1 awaiting decision"
-  const [cmdRaw, outRaw = ""] = footer.terminal.split("→");
-  const cmd = cmdRaw.replace(/^\s*\$\s*/, "").trim();
-  const out = outRaw.trim();
-
+export function Footer() {
   return (
     <footer className="mDb-footer">
       <div className="mD-container">
@@ -51,20 +44,6 @@ export function Footer({ theme }: SectionProps) {
             </ul>
           </nav>
         </div>
-
-        <p className="mDb-term">
-          <span className="mDb-term__prompt" aria-hidden="true">
-            $
-          </span>
-          <span className="mDb-term__cmd">{cmd}</span>
-          <MetalIcon icon={ChevronRight} size={14} tone={theme === "dark" ? "light" : "ink"} />
-          <span className="mDb-term__out">
-            <span className="mD-live" aria-hidden="true" />
-            <span>
-              <Segments text={out} />
-            </span>
-          </span>
-        </p>
 
         <div className="mDb-footer__base">
           <span>

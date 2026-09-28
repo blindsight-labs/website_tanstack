@@ -164,6 +164,8 @@ export function Nav({ theme }: SectionProps) {
   // Over a black inset sheet the frosted nav turns black too (as Octane's does),
   // instead of becoming a flat grey band. Re-checked per page.
   const [overInverse, setOverInverse] = useState(false);
+  // While the hero's own CTA is on screen the nav's copy of it steps back: one CTA at a time.
+  const [heroCta, setHeroCta] = useState(false);
   useEffect(() => {
     let raf = 0;
     const check = () => {
@@ -176,6 +178,8 @@ export function Nav({ theme }: SectionProps) {
         if (r.top <= navBottom * 0.5 && r.bottom >= navBottom * 0.5) over = true;
       });
       setOverInverse(over);
+      const cta = document.querySelector<HTMLElement>(".mD-hero__actions")?.getBoundingClientRect();
+      setHeroCta(!!cta && cta.height > 0 && cta.bottom > navBottom && cta.top < window.innerHeight);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(check);
@@ -208,7 +212,6 @@ export function Nav({ theme }: SectionProps) {
   }, [sheetOpen]);
 
   const closeSheet = () => setSheetOpen(false);
-  const campaign = nav.campaignCta[pathname];
   const themeLabel = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
 
   return (
@@ -217,6 +220,7 @@ export function Nav({ theme }: SectionProps) {
       data-scrolled={scrolled || sheetOpen ? "true" : "false"}
       data-over={overInverse && !sheetOpen ? "inverse" : "page"}
       data-sheet={sheetOpen ? "open" : "closed"}
+      data-hero-cta={heroCta ? "true" : undefined}
     >
       <div className="mD-container mT-nav__inner">
         <Link
@@ -251,6 +255,7 @@ export function Nav({ theme }: SectionProps) {
         </nav>
 
         <div className="mT-nav__end">
+          <CtaButton size="sm" className="mT-nav__cta" />
           <button type="button" className="bs-theme-toggle" aria-label={themeLabel} onClick={toggleTheme}>
             {theme === "dark" ? (
               <Sun size={16} strokeWidth={1.5} aria-hidden="true" />
@@ -258,7 +263,6 @@ export function Nav({ theme }: SectionProps) {
               <Moon size={16} strokeWidth={1.5} aria-hidden="true" />
             )}
           </button>
-          <CtaButton size="sm" className="mT-nav__cta" label={campaign?.label} kind={campaign?.kind} />
           <button
             type="button"
             className="mT-nav__burger"

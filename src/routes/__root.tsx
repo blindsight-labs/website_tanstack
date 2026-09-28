@@ -122,7 +122,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             url: "https://blindsight.io",
             logo: "https://blindsight.io/favicon.png",
             description:
-              "Runtime security for AI. Blindsight provides real-time visibility and threat protection for every AI prompt, response, and tool call, plus Shadow AI discovery for security and compliance teams deploying AI in regulated environments.",
+              "Runtime security for AI. Blindsight provides real-time visibility and threat protection for every AI prompt, response, and tool call, for security and compliance teams deploying AI in regulated environments.",
             address: {
               "@type": "PostalAddress",
               streetAddress: "Rennweg 57",
@@ -207,7 +207,7 @@ function SiteChrome() {
     <DemoModalProvider>
       <Nav theme={theme} />
       <Outlet />
-      <Footer theme={theme} />
+      <Footer />
     </DemoModalProvider>
   );
 }

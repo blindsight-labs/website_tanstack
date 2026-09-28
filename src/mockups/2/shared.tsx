@@ -42,7 +42,7 @@ export function CtaButton({
     .filter(Boolean)
     .join(" ");
   return (
-    <button type="button" className={cls} onClick={() => open("demo")}>
+    <button type="button" className={cls} onClick={open}>
       {label}
       <ArrowRight size={14} strokeWidth={1.75} className="mD-btn__arrow" aria-hidden="true" />
     </button>

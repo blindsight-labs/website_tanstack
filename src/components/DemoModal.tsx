@@ -4,12 +4,8 @@ import { afterHeroIdle } from "@/site/heroReady";
 import { preloadPage, resolvePage } from "@/site/pages/registry";
 import { useSiteVariant } from "@/site/variant";
 
-/** "demo" = book a working session; "download" = get the app after sharing details;
- *  "trial" = start the free-trial program (see /demo). */
-export type DemoVariant = "demo" | "download" | "trial";
-
 const DemoModalContext = createContext<{
-  open: (variant?: DemoVariant) => void;
+  open: () => void;
   close: () => void;
   /** Start loading the card's code (a CTA calls it on hover / focus, so opening is instant). */
   prefetch: () => void;
@@ -36,12 +32,8 @@ const prefetch = () => {
  *  src/site/chrome.css); the backdrop carries data-site-variant for version styling. */
 export function DemoModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [kind, setKind] = useState<DemoVariant>("demo");
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const open = (v: DemoVariant = "demo") => {
-    setKind(v);
-    setIsOpen(true);
-  };
+  const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
 
   useModalDialog(isOpen, close, cardRef);
@@ -72,7 +64,7 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
           >
             {/* only if opened before the prefetch landed: the card fills in when it arrives */}
             <Suspense fallback={null}>
-              <Card kind={kind} onClose={close} />
+              <Card onClose={close} />
             </Suspense>
           </div>
         </div>

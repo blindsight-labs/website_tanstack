@@ -62,7 +62,8 @@
   /* the copy starts on the page column (x = 80 at 1440), exactly where the other
      sheets' .mD-container puts theirs: a gutter inside the sheet, or the centred
      page-max column (percentages: the sheet's containing block is the full-width section) */
-  padding: 34px 44px 30px max(var(--gutter), calc((100% - var(--page-max)) / 2 - var(--sheet-inset)));
+  /* a full band above the headline (it opens a section), then 40px steps: headline, rail, content */
+  padding: 64px 44px 40px max(var(--gutter), calc((100% - var(--page-max)) / 2 - var(--sheet-inset)));
   /* (the right keeps the sheet's own 44px: the close-up runs to the sheet's edge) */
   isolation: isolate;
 }
@@ -117,8 +118,10 @@
 /* ---- rail: 01 · SEE IT / 02 · SECURE IT / 03 · GOVERN IT ---- */
 .mD-seq__rail {
   grid-area: rail;
+  /* ends on the page column's right edge, not the sheet's (the stage bleeds; the rail doesn't) */
+  max-width: var(--page-max);
   list-style: none;
-  margin: 26px 0 0;
+  margin: 40px 0 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -176,8 +179,8 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  padding-top: 26px;
+  gap: 24px;
+  padding-top: 40px;
 }
 .mD-seq__copy {
   display: grid;
@@ -703,17 +706,17 @@
 /* shorter laptop screens: tighten so the sheet still fits */
 @media (max-height: 860px) and (min-width: 901px) {
   .mD-seq__sheet {
-    padding-top: 26px;
-    padding-bottom: 22px;
+    padding-top: 40px;
+    padding-bottom: 24px;
   }
   .mD-seq__tagline {
     font-size: clamp(34px, 3.6vw, 52px);
   }
   .mD-seq__rail {
-    margin-top: 20px;
+    margin-top: 32px;
   }
   .mD-seq__left {
-    padding-top: 20px;
+    padding-top: 32px;
     gap: 16px;
   }
   .mD-seq__stagecopy p {

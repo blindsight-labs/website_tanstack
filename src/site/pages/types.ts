@@ -4,8 +4,6 @@
    does not provide it. A version component receives exactly the props below. */
 import type { ComponentType } from "react";
 
-import type { DemoVariant } from "@/components/DemoModal";
-
 /** A page that takes no props (the route owns the head/meta; the page reads its own data). */
 export type NoProps = Record<never, never>;
 
@@ -24,10 +22,6 @@ export type BlogPostProps = { slug: string };
 export type AuthorProps = { slug: string };
 export type ImprintProps = NoProps;
 export type PrivacyProps = NoProps;
-/** Free-trial campaign page. FAQ copy: DEMO_FAQS in ./legacy/Demo.tsx (also feeds the route's JSON-LD). */
-export type DemoProps = NoProps;
-/** Shadow AI campaign page (ShadowAiDemo). */
-export type ShadowProps = NoProps;
 export type NotFoundProps = NoProps;
 /** Call router.invalidate() then reset() for "Try again" (see ./legacy/ErrorPage.tsx). */
 export type ErrorProps = { error: Error; reset: () => void };
@@ -35,8 +29,8 @@ export type ErrorProps = { error: Error; reset: () => void };
  *  the backdrop, the dialog element (focus on open, Escape, scroll lock, click-outside) and
  *  wraps this in <div class="bs-modal" role="dialog" aria-labelledby="demo-modal-title">.
  *  So: include an element with id="demo-modal-title", a close button calling onClose, and
- *  <DemoForm variant={kind} /> (src/components/DemoForm.tsx) for the submission logic. */
-export type DemoModalProps = { kind: DemoVariant; onClose: () => void };
+ *  <DemoForm /> (src/components/DemoForm.tsx) for the submission logic. */
+export type DemoModalProps = { onClose: () => void };
 
 export type PageProps = {
   team: TeamProps;
@@ -49,8 +43,6 @@ export type PageProps = {
   author: AuthorProps;
   imprint: ImprintProps;
   privacy: PrivacyProps;
-  demo: DemoProps;
-  shadow: ShadowProps;
   notFound: NotFoundProps;
   error: ErrorProps;
   demoModal: DemoModalProps;

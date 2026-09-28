@@ -92,7 +92,8 @@ export function Sec({
     label || title ? (
       <div className={`pb-sec__head${headAside ? " pb-sec__head--aside" : ""}`} data-reveal>
         <div className="pb-sec__headText">
-          {label && <Label>{label}</Label>}
+          {/* a label names a section only when it has no heading to do it */}
+          {label && !title && <Label>{label}</Label>}
           {title && <h2 className="mD-h2">{title}</h2>}
           {lead && <p className="pb-sec__lead">{lead}</p>}
         </div>
@@ -117,7 +118,8 @@ export function SheetGroup({ children, className = "" }: { children: ReactNode; 
   return <div className={`mD-sheet pb-group ${className}`.trim()}>{children}</div>;
 }
 
-/** A's editorial block: a sticky kicker (label, short title, note, extras) on the left,
+/** A's editorial block: a sticky side (title, note, extras) on the left, the kicker label
+ *  standing in only when there is no title (it always names the section for assistive tech),
  *  content on the right. `sheet` gives it its own white sheet; inside a SheetGroup, don't. */
 export function Split({
   id,
@@ -149,7 +151,7 @@ export function Split({
       <div className="mD-container pb-split__grid">
         <div className="pb-split__side">
           <div className="pb-split__sticky" data-reveal>
-            <Label>{kicker}</Label>
+            {!title && <Label>{kicker}</Label>}
             {title && (
               <h2 id={titleId} className="pb-split__title">
                 {title}

@@ -2,11 +2,11 @@
 
 /* the close-up starts where the left column's content starts, never flush under the rail */
 .mD-seq__stage--net {
-  margin-top: 26px;
+  margin-top: 40px;
 }
 @media (max-height: 860px) and (min-width: 901px) {
   .mD-seq__stage--net {
-    margin-top: 20px;
+    margin-top: 32px;
   }
 }
 
@@ -29,7 +29,7 @@
     height: auto;
   }
   .mD-seq__sheet {
-    --pad: 32px;
+    --pad: var(--gutter); /* the page's content edge */
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto;
     grid-template-areas:
@@ -37,7 +37,7 @@
       "rail"
       "stage"
       "left";
-    padding: 30px var(--pad) 36px;
+    padding: 48px var(--pad) 40px;
   }
   /* the close-up bleeds to the sheet's edges (its clear colour is the sheet's, and the
      scene feathers its own edges); 16:10 on a tablet */
@@ -45,28 +45,28 @@
     justify-self: start;
     align-self: start;
     width: calc(100% + 2 * var(--pad));
-    margin: 24px calc(-1 * var(--pad)) 0;
+    margin: 32px calc(-1 * var(--pad)) 0;
     aspect-ratio: 16 / 10;
   }
   .mD-seq__left {
-    padding-top: 26px;
+    padding-top: 32px;
   }
 }
 /* phone: 4:3, a tighter sheet, a compact rail (number over word, 13 px) */
 @media (max-width: 599px) {
   .mD-seq__sheet {
-    --pad: 22px;
-    padding: 26px var(--pad) 30px;
+    --pad: var(--gutter); /* the page's content edge */
+    padding: 40px var(--pad) 32px;
   }
   .mD-seq__stage--net {
-    margin-top: 20px;
+    margin-top: 24px;
     aspect-ratio: 4 / 3;
   }
   .mD-seq__left {
-    padding-top: 22px;
+    padding-top: 24px;
   }
   .mD-seq__rail {
-    margin-top: 22px;
+    margin-top: 24px;
     gap: 12px;
   }
   .mD-seq__step {
@@ -96,7 +96,7 @@
    ========================================================================== */
 /* inline padding: on the page column, as the live sheet (sequence.css) */
 .mD-seq__rm {
-  padding: 34px max(var(--gutter), calc((100% - var(--page-max)) / 2 - var(--sheet-inset))) 44px;
+  padding: 64px max(var(--gutter), calc((100% - var(--page-max)) / 2 - var(--sheet-inset))) 48px;
 }
 .mD-seq__rm .mD-seq__still {
   width: 100%;
@@ -107,7 +107,7 @@
 }
 @media (max-width: 900px) {
   .mD-seq__rm {
-    padding: 30px 32px 36px;
+    padding: 48px var(--gutter) 40px;
   }
   .mD-seq__rm .mD-seq__block {
     margin-top: var(--s7);
@@ -115,11 +115,11 @@
 }
 @media (max-width: 599px) {
   .mD-seq__rm {
-    padding: 26px 22px 30px;
+    padding: 40px var(--gutter) 32px;
   }
   .mD-seq__rm .mD-seq__still {
-    width: calc(100% + 44px);
-    margin-inline: -22px;
+    width: calc(100% + 2 * var(--gutter));
+    margin-inline: calc(-1 * var(--gutter));
     aspect-ratio: 4 / 3;
   }
 }

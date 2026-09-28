@@ -133,7 +133,7 @@
   --border-mid: #d4d4ce;
   --text: #111118;
   --muted: #50505f;
-  --dim: #848494;
+  --dim: #6c6c7c;
   --violet: #5546e0;
   --violet-deep: #3f2fb5;
   --violet-soft: #f0eefb;
@@ -229,7 +229,7 @@
   --color-neutral-200: #e8e8e4;
   --color-neutral-300: #d4d4ce;
   --color-neutral-400: #afaeaa;
-  --color-neutral-500: #848494;
+  --color-neutral-500: #6c6c7c; /* v1.9: darkened from #848494 to clear 4.5:1 on neutral-100 */
   --color-neutral-600: #50505f;
   --color-neutral-700: #393944;
   --color-neutral-800: #25252f;
@@ -304,8 +304,8 @@
   --border: #2a2a35;
   --border-mid: #3a3a47;
   --text: #ececf1;
-  --muted: #9a9aac;
-  --dim: #6c6c7b;
+  --muted: #b0b0c0;
+  --dim: #8a8a9a;
   /* Brighter than the light-mode violet so the accent stays legible as TEXT on
      near-black. Fills that carry white text are pinned back to the saturated
      brand violet just below. */
@@ -322,7 +322,7 @@
      from the (now dark) page rather than blending in. */
   --dark: #20202b;
   --dark-text: #ececf1;
-  --dark-muted: #9a9aac;
+  --dark-muted: #b0b0c0;
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
   --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.05);
   --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.06);

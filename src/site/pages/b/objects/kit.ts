@@ -312,7 +312,7 @@ export function inkCss(tone: Tone, k: number) {
 export function ink(tone: Tone, k = 0.45) {
   return new THREE.MeshBasicMaterial({ color: new THREE.Color(inkCss(tone, k)), toneMapped: false });
 }
-export const signalCss = (theme: Theme) => (theme === "dark" ? "#a08cff" : "#6e4bff");
+export const signalCss = (theme: Theme) => (theme === "dark" ? "#7c6cf5" : "#5546e0");
 
 /** A flat printed line on a face (XY plane at z). */
 export function bar(parent: T.Object3D, x0: number, y: number, w: number, h: number, z: number, mat: T.Material, depth = 0.004) {

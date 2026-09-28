@@ -36,7 +36,6 @@
   margin-bottom: var(--s7);
 }
 .dp7-title {
-  margin-top: var(--s5);
   max-width: 14ch;
 }
 /* ---- figure frame -------------------------------------------------------- */
@@ -46,7 +45,7 @@
   background: var(--surface);
   box-shadow:
     0 0 0 1px var(--line),
-    0 40px 80px -60px rgba(11, 11, 13, 0.3);
+    0 40px 80px -60px rgba(17, 17, 24, 0.3);
 }
 /* ---- the map --------------------------------------------------------------
    Columns: pad | source | wire | CARD | gate | wire | destination
@@ -102,7 +101,7 @@
   background: var(--dp7-node-bg);
   box-shadow:
     0 0 0 1px var(--dp7-node-edge),
-    0 1px 2px rgba(11, 11, 13, 0.05);
+    0 1px 2px rgba(17, 17, 24, 0.05);
 }
 .dp7-node__k {
   display: flex;
@@ -199,7 +198,7 @@
 .dp7-port[data-area="pB"] {
   border-top: 0;
   border-radius: 0 0 var(--r) var(--r);
-  box-shadow: 0 30px 50px -36px rgba(11, 11, 13, 0.35);
+  box-shadow: 0 30px 50px -36px rgba(17, 17, 24, 0.35);
 }
 .dp7-port__k {
   display: flex;
@@ -274,10 +273,11 @@
 
 /* ---- below the diagram: steps + where it runs ----------------------------- */
 .dp7-below {
-  margin-top: var(--s7);
+  /* the steps are their own group, not a caption of the diagram: a full band apart */
+  margin-top: var(--s9);
 }
 /* sub-labels ("Runs on", "Step by step") are the system label (.mD-label: ink-3
-   mono caps with the hex) inside a plain heading; the rule belongs to the list */
+   mono caps) inside a plain heading; the rule belongs to the list */
 .dp7 .dp7-kicker {
   margin: 0 0 var(--s4);
   font-size: var(--t-micro);
@@ -484,11 +484,11 @@
     border-top: 1px solid var(--line-2);
     border-bottom: 1px solid var(--dp7-card-edge);
     border-radius: 0 0 var(--r) var(--r);
-    box-shadow: 0 30px 50px -36px rgba(11, 11, 13, 0.35);
+    box-shadow: 0 30px 50px -36px rgba(17, 17, 24, 0.35);
   }
 
   .dp7-below {
-    margin-top: var(--s6);
+    margin-top: var(--s8);
   }
 }
 

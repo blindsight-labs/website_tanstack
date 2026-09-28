@@ -204,7 +204,7 @@
   --pb-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2380838c' stroke-width='1.5'/%3E%3C/svg%3E");
 }
 .mD[data-site-variant="b"][data-theme="dark"] .modal-backdrop[data-site-variant="b"] .bs-modal {
-  --pb-field: #121216;
+  --pb-field: #20202b;
   --pb-rim: linear-gradient(180deg, #8d9099 0%, #3e4047 34%, #1c1d21 55%, #4b4e56 80%, #6e7179 100%);
   --pb-hair: linear-gradient(180deg, #3f4148 0%, #26272c 50%, #36383e 100%);
   --pb-hair-strong: linear-gradient(180deg, #7c8089 0%, #3e4047 50%, #62656d 100%);
@@ -212,7 +212,7 @@
 }
 
 .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] {
-  background: rgba(11, 11, 13, 0.28);
+  background: rgba(17, 17, 24, 0.28);
   -webkit-backdrop-filter: blur(8px) saturate(1.1);
   backdrop-filter: blur(8px) saturate(1.1);
 }
@@ -230,7 +230,7 @@
     var(--pb-rim) border-box;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 40px 80px -30px rgba(11, 11, 13, 0.42);
+    0 40px 80px -30px rgba(17, 17, 24, 0.42);
   color: var(--ink-2);
   scrollbar-width: thin;
   scrollbar-color: var(--ink-4) transparent;

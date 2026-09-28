@@ -70,9 +70,9 @@ export function Still({ scene, arg = "", width, height, className = "", dark: fo
     const dark = forceDark || el.closest<HTMLElement>(".mD")?.dataset.theme === "dark";
     const tone = {
       theme: (dark ? "dark" : "light") as "dark" | "light",
-      surface: read("--pb-still-bg", read("--surface", dark ? "#0d0d10" : "#ffffff")),
-      dot: read("--ink-4", dark ? "#3c3e45" : "#b4b7bf"),
-      ink: read("--ink", dark ? "#f4f4f6" : "#0b0b0d"),
+      surface: read("--pb-still-bg", read("--surface", dark ? "#181821" : "#ffffff")),
+      dot: read("--ink-4", dark ? "#3a3a47" : "#afaeaa"),
+      ink: read("--ink", dark ? "#ececf1" : "#111118"),
     };
     const key = [scene, arg, tone.theme, tone.surface, width, height].join("|");
     const hit = urls.get(key);

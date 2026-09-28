@@ -368,7 +368,7 @@ export async function createIcebergScene(
     Math.min(1, dc.b / Math.max(sc.b, 1e-3)),
   );
   const inkColor = new THREE.Color(colors.ink);
-  const lightInk = new THREE.Color("#f4f4f6");
+  const lightInk = new THREE.Color("#ececf1");
   const edgeTop = inkColor.clone();
   let deep = 0;
 
@@ -474,7 +474,7 @@ export async function createIcebergScene(
         depthTest: !through,
         uniforms: {
           top: { value: edgeTop },
-          bottom: { value: new THREE.Color("#f4f4f6") },
+          bottom: { value: new THREE.Color("#ececf1") },
           opacity: { value: opacity },
           underOpacity: { value: opacity * (theme === "light" ? 0.7 : 1) },
         },
@@ -530,7 +530,7 @@ export async function createIcebergScene(
   );
   const signal = keep(
     new THREE.MeshBasicMaterial({
-      color: new THREE.Color(theme === "light" ? "#6E4BFF" : "#A08CFF"),
+      color: new THREE.Color(theme === "light" ? "#5546E0" : "#7C6CF5"),
       toneMapped: false,
     }),
   );

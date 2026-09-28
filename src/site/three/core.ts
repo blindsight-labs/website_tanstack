@@ -29,11 +29,11 @@ export { THREE, RoundedBoxGeometry };
 export type Theme = "light" | "dark";
 
 export const PALETTE = {
-  light: { bg: "#F3F4F6", ink: "#0B0B0D", dot: "#C9CBD2" },
-  dark: { bg: "#060607", ink: "#F4F4F6", dot: "#2A2B31" },
-  // Brand signal. Moved off Tailwind indigo (#4F46E5/#6366F1) and violet (#8B5CF6).
-  signal: "#6E4BFF",
-  signalOnDark: "#A08CFF",
+  light: { bg: "#F4F4F1", ink: "#111118", dot: "#D4D4CE" },
+  dark: { bg: "#0D0D13", ink: "#ECECF1", dot: "#2A2A35" },
+  // Brand signal: the design system's primary 500, and its dark anchor.
+  signal: "#5546E0",
+  signalOnDark: "#7C6CF5",
 };
 
 export function createRenderer(canvas?: HTMLCanvasElement, opts: { alpha?: boolean } = {}) {
