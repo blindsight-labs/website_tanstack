@@ -97,6 +97,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       links: [
         { rel: "stylesheet", href: appCss },
         { rel: "icon", href: "/favicon.png", type: "image/png" },
+        // the SVG follows the browser's colour scheme (dark ink, white in dark mode); listed
+        // last so browsers that read SVG icons pick it, the PNG stays the fallback
+        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
         {

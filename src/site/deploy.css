@@ -55,28 +55,33 @@
 .dp7-map {
   display: grid;
   grid-template-columns:
-    24px minmax(170px, 1fr) minmax(88px, 1fr) minmax(270px, 1.2fr) 36px
+    32px minmax(170px, 1fr) minmax(88px, 1fr) minmax(270px, 1.2fr) 40px
     minmax(88px, 1fr) minmax(170px, 1fr);
-  grid-template-rows: 48px auto auto auto 28px;
+  /* the boundary's inset: 32px at the sides and foot, 56px at the head (the legend sits
+     on its top edge); the map itself sits 32px inside the figure on every side */
+  grid-template-rows: 56px auto auto auto 32px;
   grid-template-areas:
     ".  .    .   .    .    .    .   "
     ".  srcA inA pA   outA outA dstA"
     ".  .    .   core .    .    .   "
     ".  srcB inB pB   outB outB dstB"
     ".  .    .   .    .    .    .   ";
-  padding: var(--s6) var(--s6) var(--s6) var(--s5);
+  padding: var(--s6);
 }
 
 .dp7-env {
+  position: relative;
   grid-column: 1 / 6;
   grid-row: 1 / 6;
   border: 1px solid var(--dp7-env);
   border-radius: var(--r);
   pointer-events: none;
 }
+/* a legend on the boundary's top edge: centred on the line, its background masking it */
 .dp7-env__k {
-  display: inline-block;
-  margin-left: 20px;
+  position: absolute;
+  top: -1px;
+  left: 20px;
   padding: 0 10px;
   transform: translateY(-50%);
   background: var(--surface);
@@ -552,14 +557,15 @@
     box-shadow: none;
   }
   .dp7-core {
-    margin-bottom: var(--s5);
+    margin-bottom: var(--s6);
   }
   .dp7-node[data-area] {
     margin: 0;
     padding: 14px 16px;
   }
+  /* the second lane starts a clear step below the first, so the two read as two flows */
   .dp7-node[data-area="srcB"] {
-    margin-top: var(--s6);
+    margin-top: var(--s7);
   }
   .dp7-node__k,
   .dp7-port__k {

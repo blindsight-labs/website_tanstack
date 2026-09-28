@@ -8,6 +8,7 @@ import { Fragment, useCallback, useEffect, useId, useRef, useState, type ReactNo
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
 
+import mark from "@/assets/ICON_Blindsight.svg";
 import logo from "@/assets/LOGO_Blindsight.svg";
 import { nav, type NavItem } from "./content";
 import { CtaButton, Label, type SectionProps } from "./shared";
@@ -236,7 +237,12 @@ export function Nav({ theme }: SectionProps) {
             closeSheet();
           }}
         >
-          <img src={logo} alt="" width={145} height={30} data-theme={theme} />
+          {/* below 410px the wordmark can't fit at a legible size: the mark alone stands in
+              (foundations §7, logo minimum size) */}
+          <picture>
+            <source media="(max-width: 409px)" srcSet={mark} width={30} height={30} />
+            <img src={logo} alt="" width={145} height={30} data-theme={theme} />
+          </picture>
         </Link>
 
         <nav className="mT-nav__links" aria-label="Primary">

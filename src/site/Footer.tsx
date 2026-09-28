@@ -31,7 +31,7 @@ export function Footer() {
       <div className="mD-container">
         <div className="mDb-footer__top">
           <Link to="/" className="mDb-footer__logo" aria-label="Blindsight home">
-            <img src={logo} alt="Blindsight" width={96} height={20} />
+            <img src={logo} alt="Blindsight" width={145} height={30} />
           </Link>
           <p className="mDb-footer__tag">{sequence.tagline}</p>
           <nav aria-label="Footer">

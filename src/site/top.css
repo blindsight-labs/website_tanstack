@@ -25,6 +25,7 @@
   display: block;
   height: 30px;
   width: auto;
+  max-width: none; /* never squeezed by the grid: a squashed wordmark is illegible */
 }
 .mD[data-theme="dark"] .mT-nav__logo img {
   filter: invert(1);
@@ -271,7 +272,12 @@
     --btn-h: 44px;
   }
 }
-@media (max-width: 420px) {
+/* compact bar: the full-size logo + CTA + menu button need ~440px of bar; below 500px
+   the wordmark drops to 22px and the CTA tightens so nothing overflows or squeezes */
+@media (max-width: 500px) {
+  .mT-nav__inner {
+    gap: var(--s3);
+  }
   .mT-nav__logo img {
     height: 22px;
   }
@@ -282,6 +288,12 @@
   }
   .mT-nav .mT-nav__cta .mD-btn__arrow {
     display: none;
+  }
+}
+/* the mark alone (Nav.tsx <picture>): square, a touch larger than the wordmark's height */
+@media (max-width: 409px) {
+  .mT-nav__logo img {
+    height: 28px;
   }
 }
 

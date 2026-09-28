@@ -65,11 +65,13 @@
 }
 .mDb-footer__logo {
   display: inline-flex;
+  justify-self: start; /* one column on phones: the link hugs the mark, not the row */
   border-radius: var(--r);
 }
+/* never smaller than the nav's logo (30px, the minimum size for the wordmark) */
 .mDb-footer__logo img {
   display: block;
-  height: 20px;
+  height: 30px;
   width: auto;
 }
 .mD[data-theme="dark"] .mDb-footer__logo img {
@@ -128,18 +130,35 @@
 /* ==========================================================================
    Responsive
    ========================================================================== */
+/* one column: the footer stacks on the page's centre line (logo, tagline, links, then
+   the company lines), not ragged down the left edge */
 @media (max-width: 900px) {
   .mDb-footer__top {
     grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
     gap: var(--s4);
+    text-align: center;
+  }
+  .mDb-footer__logo {
+    justify-self: center;
+  }
+  .mDb-footer__links {
+    justify-content: center;
+  }
+  .mDb-footer__base {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 }
 
 @media (max-width: 600px) {
-  /* six links as two even rows of three, never one left alone */
+  /* six links as two even rows of three, never one left alone; the grid centred as a block */
   .mDb-footer__links {
     display: grid;
     grid-template-columns: repeat(3, max-content);
+    justify-content: center;
+    justify-items: center;
     gap: 0 28px;
   }
   .mDb-final__sheet {
