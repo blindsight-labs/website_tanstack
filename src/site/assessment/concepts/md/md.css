@@ -1,0 +1,725 @@
+/* Mockup D · "Lens · Scale" — all rules scoped under .mD .rmd, system.css tokens only.
+   One sheet; a sticky stage (the render) under the site nav, the copy scrolling over it. The
+   render is the page: white sky above the waterline; below it the water, the page's light grey
+   at the surface darkening continuously to near-black at the keel. The header's copy lives on
+   the white; everything after it (.rmd-deep) lives on the water: each atom of copy takes the
+   ink of the grey behind it (data-u, set by the scene loop: 0 = dark ink on light water, 1 =
+   light ink on dark water). The light violet is the lens's light: it marks what the lens does
+   (the flagging node and its chip, the ruler's live tick at the edge of the light, the "With
+   Blindsight" state) and nothing else — never a CTA, a heading, a background or a wash. */
+
+.mD .rmd {
+  --rmd-nav: 68px; /* the site nav's height: the stage sits just below it */
+  --rmd-S: calc(100vh - var(--rmd-nav)); /* the stage's height */
+  /* the water: the surface's grey (the page's light grey, a touch deeper so it reads as water
+     under the white sheet) and the keel's near-black; the scene reads both */
+  --rmd-surf: #e6e8ec;
+  --rmd-deep: #050506;
+  --rmd-sea: var(--rmd-deep);
+  /* the sky: the page's grey rather than the pure white sheet, so white ice separates from it */
+  --rmd-sky: #f4f4f5;
+  /* ink on the sky and the light water (a) / on the dark water (b) */
+  --rmd-a: var(--ink);
+  --rmd-a1: var(--ink-2);
+  --rmd-a2: var(--ink-3);
+  --rmd-a3: var(--ink-4);
+  --rmd-b: var(--inverse-ink);
+  --rmd-b2: var(--inverse-ink-2);
+  /* the violet: the signal on the light water (v0), the light violet on the dark water (v1,
+     also the lens's light: the scene reads it) */
+  --rmd-v0: #6e4bff;
+  --rmd-v1: #c9bfff;
+  padding-bottom: var(--s2);
+}
+@supports (height: 100svh) {
+  .mD .rmd {
+    --rmd-S: calc(100svh - var(--rmd-nav));
+  }
+}
+/* dark: the surface is a lift above the sheet (as inset sheets are in dark), the deep is black */
+.mD[data-theme="dark"] .rmd {
+  --rmd-surf: #1b1b20;
+  --rmd-deep: #020203;
+  --rmd-sky: var(--surface);
+  --rmd-v0: #a08cff;
+  --rmd-v1: #a08cff;
+}
+/* the sheet is the sky (the scene reads its colour) */
+.mD .rmd-sheet {
+  background: var(--rmd-sky);
+}
+
+.mD .rmd-track {
+  position: relative;
+}
+
+/* ---- the stage ---- */
+.mD .rmd-stage {
+  position: sticky;
+  top: var(--rmd-nav);
+  z-index: 0;
+  height: var(--rmd-S);
+  overflow: hidden;
+}
+/* the water: the sheet from the waterline down (under the render), the surface's grey
+   darkening to the deep — what shows before the render fades in, and without one */
+.mD .rmd .rmd-sea {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--rmd-wl, 100%);
+  bottom: 0;
+  z-index: 0;
+  background: linear-gradient(180deg, var(--rmd-surf) 0, var(--rmd-deep) 62%);
+  box-shadow: none;
+}
+.mD .rmd-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease);
+}
+.mD .rmd[data-live="true"] .rmd-canvas {
+  opacity: 1;
+}
+
+/* ---- the depth ruler (right edge) and the scale ---- */
+.mD .rmd-ruler {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.mD .rmd-ruler__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.mD .rmd-ruler__a,
+.mD .rmd-ruler__m,
+.mD .rmd-ruler__b,
+.mD .rmd-ruler__lit {
+  fill: none;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+/* on the sky, on the light water, on the dark water */
+.mD .rmd-ruler__a {
+  stroke: color-mix(in srgb, var(--rmd-a) 50%, transparent);
+}
+.mD .rmd-ruler__m {
+  stroke: color-mix(in srgb, var(--rmd-a) 42%, transparent);
+}
+.mD .rmd-ruler__b {
+  stroke: color-mix(in srgb, var(--rmd-b) 42%, transparent);
+}
+/* the live tick: the edge of the light, where the answers put it */
+.mD .rmd-ruler__lit {
+  stroke: var(--rmd-v0);
+}
+.mD .rmd-ruler__lit[data-u="1"] {
+  stroke: var(--rmd-v1);
+}
+.mD .rmd-tick,
+.mD .rmd-depth,
+.mD .rmd-scale {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 13px;
+  white-space: nowrap;
+}
+.mD .rmd-tick {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  color: var(--rmd-a2);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  will-change: transform;
+}
+.mD .rmd-tick--lit {
+  color: var(--rmd-v0);
+}
+.mD .rmd-depth {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: var(--rmd-a2);
+}
+.mD .rmd-scale {
+  position: absolute;
+  right: 16px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--rmd-a);
+  font-variant-numeric: tabular-nums;
+}
+.mD .rmd-scale__k {
+  color: var(--rmd-a2);
+}
+.mD .rmd-scale__bar {
+  display: block;
+  height: 5px;
+  border: 1px solid currentColor;
+  border-top: 0;
+  opacity: 0.7;
+}
+/* on the dark water: its ink */
+.mD .rmd-tick[data-u="1"],
+.mD .rmd-depth[data-u="1"] {
+  color: var(--rmd-b2);
+}
+.mD .rmd-tick--lit[data-u="1"] {
+  color: var(--rmd-v1);
+}
+.mD .rmd-scale[data-u="1"] {
+  color: var(--rmd-b);
+}
+.mD .rmd-scale[data-u="1"] .rmd-scale__k {
+  color: var(--rmd-b2);
+}
+
+/* ---- the labels that ride on the render (positioned by the scene) ---- */
+.mD .rmd-flag,
+.mD .rmd-gauge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  will-change: transform;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.mD .rmd-flag {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 10px 8px;
+  border-radius: var(--r);
+  /* solid, not glass: it sits above the lens, never read through it — in the grey of the water
+     behind it (set by the scene loop), so only its hairline and its copy show */
+  background: var(--rmd-w, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  box-shadow: 0 12px 28px -18px rgba(11, 11, 13, 0.35);
+}
+/* the key carries the node's violet (it is the lens's flag): the dot and the word */
+.mD .rmd-flag__k {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--rmd-v0);
+}
+.mD .rmd-flag__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.mD .rmd-flag__v {
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--rmd-a);
+}
+/* on the dark water or the darkened sky: the light ink, the light violet */
+.mD .rmd-flag[data-u="1"] {
+  --ink: var(--inverse-ink);
+  border-color: var(--inverse-line);
+  box-shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.8);
+}
+.mD .rmd-flag[data-u="1"] .rmd-flag__k {
+  color: var(--rmd-v1);
+}
+.mD .rmd-flag[data-u="1"] .rmd-flag__v {
+  color: var(--rmd-b);
+}
+.mD .rmd-gauge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  /* the full ink of the water behind it, whichever that is */
+  color: var(--rmd-a);
+}
+/* its hairline marks the edge of the light on the ice: the live violet */
+.mD .rmd-gauge__tick {
+  width: 18px;
+  height: 1px;
+  background: var(--rmd-v0);
+}
+.mD .rmd-gauge[data-u="1"] {
+  color: var(--rmd-b);
+}
+.mD .rmd-gauge[data-u="1"] .rmd-gauge__tick {
+  background: var(--rmd-v1);
+}
+
+/* no WebGL: a quiet outline of the tip in the header; the copy below keeps its black sheet */
+.mD .rmd-fallback {
+  display: none;
+  position: absolute;
+  right: 6%;
+  top: 14%;
+  width: min(42%, 520px);
+  height: 58%;
+}
+.mD .rmd-stage[data-fallback="true"] .rmd-fallback {
+  display: block;
+}
+.mD .rmd-stage[data-fallback="true"] .rmd-flag,
+.mD .rmd-stage[data-fallback="true"] .rmd-gauge,
+.mD .rmd-stage[data-fallback="true"] .rmd-ruler {
+  display: none;
+}
+.mD .rmd-fallback__line {
+  stroke: var(--ink-4);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.mD .rmd-fallback__berg {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- the copy, scrolling over the stage ---- */
+.mD .rmd-flow {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(-1 * var(--rmd-S));
+}
+.mD .rmd-col {
+  max-width: 520px;
+}
+
+/* 01 · the header, on the white. Its bottom edge is the waterline at the top of the page */
+.mD .rmd-head {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--rmd-S) * 0.82);
+  padding-block: var(--s6) var(--s6);
+}
+.mD .rmd-title {
+  margin-top: var(--s4);
+  font-size: clamp(36px, 3.4vw, 50px);
+  line-height: 1.04;
+}
+.mD .rmd-lead {
+  margin-top: var(--s3);
+  font-size: 16.5px;
+}
+/* the card changes height per question; the header (and so the waterline) must not */
+.mD .rmd-quiz {
+  min-height: 452px;
+}
+.mD .rmd-tipwin {
+  display: none;
+}
+
+/* 02–06 · on the water. Until the render takes over (and whenever there is none) the copy
+   sits on its own dark sheet in the dark water's ink; live, every atom of it takes the ink of
+   the grey behind it (data-u) */
+.mD .rmd-deep {
+  --ink: var(--inverse-ink);
+  --ink-2: var(--inverse-ink-2);
+  --ink-3: var(--inverse-ink-3);
+  --ink-4: color-mix(in srgb, var(--inverse-ink) 30%, transparent);
+  --line: var(--inverse-line);
+  --line-2: rgba(255, 255, 255, 0.06);
+  --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03));
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-edge: rgba(0, 0, 0, 0.6);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 0 0 1px var(--glass-edge),
+    0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  --signal: #a08cff;
+  --rmd-v: var(--rmd-v1);
+  color: var(--ink-2);
+  /* until the render takes over (and whenever there is none) the copy carries its own sheet */
+  background: var(--rmd-sea);
+}
+/* live: the render carries the water; the copy crosses the waterline with its ink following
+   the grey behind it (the sky darkens with the pull-back too, so no copy sits on white then) */
+.mD .rmd[data-live="true"] .rmd-deep {
+  background: none;
+}
+.mD .rmd-deep .mD-btn--primary {
+  background: #f4f4f6;
+  color: #0b0b0d;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+.mD .rmd-deep .mD-btn--primary:hover {
+  background: #ffffff;
+}
+/* an atom (desktop: each label, heading, paragraph, row; phone: the whole card) over the light
+   water near the surface: the sky's ink. The ink changes as the water behind it darkens with
+   the scroll, so it eases rather than pops */
+.mD .rmd-deep [data-u="0"] {
+  --ink: var(--rmd-a);
+  --ink-2: var(--rmd-a1);
+  --ink-3: var(--rmd-a2);
+  --ink-4: var(--rmd-a3);
+  --line: color-mix(in srgb, var(--rmd-a) 22%, transparent);
+  --line-2: color-mix(in srgb, var(--rmd-a) 12%, transparent);
+  --signal: #6e4bff;
+  --rmd-v: var(--rmd-v0);
+  color: var(--ink-2);
+}
+/* over the water's mid greys (either side of the flip) the body copy and the captions take the
+   full ink of their side: the muted inks sit at ~2.5:1 there */
+.mD .rmd-deep [data-m="1"] {
+  --ink-2: var(--ink);
+  --ink-3: var(--ink);
+}
+.mD .rmd-deep [data-u="0"] .mD-btn--primary {
+  background: var(--rmd-a);
+  color: var(--rmd-sky);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+.mD .rmd-deep [data-u="0"] .mD-btn--primary:hover {
+  background: color-mix(in srgb, var(--rmd-a) 86%, var(--rmd-sky));
+}
+.mD .rmd-deep .rmd-card,
+.mD .rmd-deep .rmd-card :where(:not(button, button *)) {
+  transition:
+    color var(--dur-2) var(--ease),
+    border-color var(--dur-2) var(--ease),
+    background-color var(--dur-2) var(--ease);
+}
+.mD .rmd-deep .rmd-col {
+  max-width: 460px;
+}
+/* while the water behind the copy runs through its mid greys, the captions keep the body's
+   ink (ink-2), not the muted caption grey: it would vanish there */
+.mD .rmd-deep .mD-label {
+  color: var(--ink-2);
+}
+
+/* each step holds its card in the water for a stretch of the scroll, so every frame of the
+   descent has its line, then lets it leave through the top. The hold is a sticky box of a
+   fixed height (taller than any card), so where a hold ends depends on the step's height alone;
+   each step's padding keeps its card off the previous one's frame. The track runs ≈ 600vh past
+   the header (about six screens of pull-back: the frame doubles on each). With the header ≈
+   0.82 screen the cards stand at ≈ p12–15 (02), p35–37 (03, gone by p49), p59–62 (04),
+   p81–83 (05), and the close arrives over the last tenth; 02 starts just below the fold. */
+.mD .rmd-step {
+  display: block;
+  padding: 0;
+}
+.mD .rmd-step--2 {
+  min-height: 104vh;
+  min-height: 104svh;
+  padding-top: 22vh;
+  padding-top: 22svh;
+}
+.mD .rmd-step--3 {
+  min-height: 128vh;
+  min-height: 128svh;
+  padding-top: 50vh;
+  padding-top: 50svh;
+}
+.mD .rmd-step--4 {
+  min-height: 143vh;
+  min-height: 143svh;
+  padding-top: 60vh;
+  padding-top: 60svh;
+}
+.mD .rmd-step--5 {
+  min-height: 126vh;
+  min-height: 126svh;
+  padding-top: 46vh;
+  padding-top: 46svh;
+}
+.mD .rmd-hold {
+  position: sticky;
+  top: calc(var(--rmd-nav) + 34vh);
+  top: calc(var(--rmd-nav) + 34svh);
+  height: 68vh;
+  height: 68svh;
+}
+.mD .rmd-h2 {
+  margin-top: var(--s4);
+}
+.mD .rmd-p {
+  margin-top: var(--s4);
+  max-width: 30em;
+  color: var(--ink-2);
+}
+.mD .rmd-p strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.mD .rmd-stat {
+  margin-top: var(--s5);
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.mD .rmd-stat strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+/* the close's payoff line: the scale, in the numbers' full ink */
+.mD .rmd-payoff {
+  margin-top: var(--s4);
+  color: var(--ink);
+}
+.mD .rmd-list {
+  margin: var(--s5) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 420px;
+}
+/* each row is an atom (its own ink), so the rules belong to the rows */
+.mD .rmd-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.mD .rmd-list li:first-child {
+  border-top: 1px solid var(--line);
+}
+.mD .rmd-list li span:last-child {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* 06 · the close rests low on the black, under the whole berg's waterline */
+.mD .rmd-close {
+  display: flex;
+  align-items: flex-end;
+  min-height: var(--rmd-S);
+  padding-block: var(--s7) var(--s7);
+}
+/* the toggle: Today / With Blindsight — the lens's light off and on. Two mono buttons on one
+   hairline; the live one carries the violet dot */
+.mD .rmd-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s5);
+  margin-top: var(--s5);
+}
+.mD .rmd-mode__b {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition:
+    color var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease);
+}
+.mD .rmd-mode__b:hover {
+  color: var(--ink);
+}
+.mD .rmd-mode__b[aria-pressed="true"] {
+  color: var(--ink);
+  border-bottom-color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+.mD .rmd-mode__b:focus-visible {
+  outline: 2px solid var(--rmd-v);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.mD .rmd-mode__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink-3) 60%, transparent);
+  transition: background-color var(--dur-1) var(--ease);
+}
+/* live: the dot takes the violet */
+.mD .rmd-mode__b[aria-pressed="true"] .rmd-mode__dot {
+  background: var(--rmd-v);
+}
+.mD .rmd-nums {
+  max-width: 460px;
+}
+.mD .rmd-nums dt {
+  color: var(--ink-2);
+}
+.mD .rmd-nums > div {
+  position: relative;
+}
+/* the state the toggle shows carries the full ink; the other steps back. With Blindsight on,
+   the est. figures take the violet tick (a hairline over their column) */
+.mD .rmd-nums[data-mode="bs"] > div:not(.rmd-nums__bs) dd,
+.mD .rmd-nums[data-mode="today"] > .rmd-nums__bs dd {
+  color: var(--ink-2);
+}
+.mD .rmd-nums__bs::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rmd-v);
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.mD .rmd-nums[data-mode="bs"] > .rmd-nums__bs::before {
+  opacity: 1;
+}
+.mD .rmd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s5);
+  margin-top: var(--s6);
+}
+
+/* ---- phone and narrow: stacked. Headline and quiz, then the tip in a window at the header's
+   foot (the waterline), then the reveal in black-glass cards at the foot of the screen ---- */
+@media (max-width: 899px) {
+  .mD .rmd-head {
+    display: block;
+    min-height: 0;
+    padding-block: var(--s6) 0;
+  }
+  .mD .rmd-col {
+    max-width: 560px;
+  }
+  .mD .rmd-title {
+    font-size: clamp(32px, 8.4vw, 44px);
+  }
+  .mD .rmd-lead {
+    font-size: 16px;
+  }
+  .mD .rmd-quiz {
+    min-height: 0;
+  }
+  .mD .rmd-tipwin {
+    display: block;
+    height: calc(var(--rmd-S) * 0.44);
+  }
+  .mD .rmd-deep .rmd-col {
+    max-width: 560px;
+  }
+  .mD .rmd-hold {
+    top: calc(var(--rmd-nav) + 26vh);
+    top: calc(var(--rmd-nav) + 26svh);
+    height: 66vh;
+    height: 66svh;
+  }
+  /* the first card stands lower, so the summit shows above it */
+  .mD .rmd-step--2 .rmd-hold {
+    top: calc(var(--rmd-nav) + 26vh + 230px);
+    top: calc(var(--rmd-nav) + 26svh + 230px);
+    height: calc(66vh - 230px);
+    height: calc(66svh - 230px);
+  }
+  .mD .rmd-close {
+    padding-block: var(--s4);
+  }
+  /* the cards are solid, in the grey of the water behind their middle (set by the scene loop;
+     the dark water's until it runs): the scene passes behind them, never through */
+  .mD .rmd-card {
+    margin-inline: auto;
+    padding: var(--s4) var(--s5) var(--s5);
+    border-radius: var(--r);
+    background: var(--rmd-w, var(--rmd-sea));
+    border: 1px solid var(--inverse-line);
+    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+  }
+  .mD .rmd-card[data-u="0"] {
+    border-color: color-mix(in srgb, var(--rmd-a) 16%, transparent);
+    box-shadow: 0 30px 60px -30px rgba(11, 11, 13, 0.35);
+  }
+  .mD .rmd-h2 {
+    font-size: 26px;
+  }
+  .mD .rmd-p {
+    font-size: 15px;
+  }
+  .mD .rmd-close .rmd-p {
+    margin-top: var(--s3);
+  }
+  .mD .rmd-mode {
+    margin-top: var(--s4);
+    gap: var(--s4);
+  }
+  .mD .rmd-close .ra-nums {
+    margin-top: var(--s4);
+  }
+  .mD .rmd-actions {
+    margin-top: var(--s4);
+    gap: var(--s4);
+  }
+  .mD .rmd-tick,
+  .mD .rmd-depth,
+  .mD .rmd-scale {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+  /* phone: the header's copy runs the full width; the black sheet alone carries the page */
+  .mD .rmd-stage[data-fallback="true"] .rmd-fallback {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .mD .rmd-card {
+    padding: var(--s4);
+  }
+  .mD .rmd-actions .mD-btn--lg {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mD .rmd-canvas,
+  .mD .rmd-flag,
+  .mD .rmd-gauge,
+  .mD .rmd-mode__b,
+  .mD .rmd-mode__dot,
+  .mD .rmd-nums__bs::before,
+  .mD .rmd-deep .rmd-card,
+  .mD .rmd-deep .rmd-card :where(:not(button, button *)) {
+    transition: none;
+  }
+}

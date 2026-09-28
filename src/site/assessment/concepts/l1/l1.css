@@ -1,0 +1,551 @@
+/* Mockup 1 · "Lens · Pull-back" — all rules scoped under .mD .rl1, system.css tokens only.
+   One white sheet; a sticky stage (the render and its depth ruler) under the site nav, the copy
+   scrolling over it. Desktop: the render starts in a framed window right of the quiz and opens
+   to the whole sheet as the header scrolls away (Mockup1.tsx sets the clip and the vars). */
+
+.mD .rl1 {
+  --rl1-nav: 68px; /* the site nav's height: the stage sits just below it */
+  padding-bottom: var(--s2);
+}
+
+.mD .rl1-track {
+  position: relative;
+}
+
+/* ---- the stage ---- */
+.mD .rl1-stage {
+  /* set per frame by Mockup1.tsx: the window's left edge, its inset, how open it is (0..1),
+     and the ruler's spine */
+  --rl1-wl: 0px;
+  --rl1-wi: 0px;
+  --rl1-q: 1;
+  --rl1-spine: calc(100% - 62px);
+  position: sticky;
+  top: var(--rl1-nav);
+  z-index: 0;
+  height: calc(100vh - var(--rl1-nav));
+  height: calc(100svh - var(--rl1-nav));
+  overflow: hidden;
+}
+.mD .rl1-view {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.mD .rl1-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease);
+}
+.mD .rl1-stage[data-ready="true"] .rl1-canvas {
+  opacity: 1;
+}
+
+/* the header window: a hairline frame that fades as it opens, and viewfinder corners that ride
+   out to the sheet's corners */
+.mD .rl1-frame,
+.mD .rl1-finder {
+  position: absolute;
+  top: var(--rl1-wi);
+  right: var(--rl1-wi);
+  bottom: var(--rl1-wi);
+  left: var(--rl1-wl);
+  pointer-events: none;
+}
+.mD .rl1-frame {
+  border: 1px solid var(--line);
+  border-radius: calc(var(--r) * (1 - var(--rl1-q)));
+  opacity: calc(1 - var(--rl1-q));
+}
+.mD .rl1-finder {
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease);
+}
+.mD .rl1-stage[data-ready="true"] .rl1-finder {
+  opacity: 1;
+}
+.mD .rl1-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid color-mix(in srgb, var(--ink) 38%, transparent);
+}
+.mD .rl1-corner--tl {
+  top: 12px;
+  left: 12px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+.mD .rl1-corner--tr {
+  top: 12px;
+  right: 12px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+.mD .rl1-corner--bl {
+  bottom: 12px;
+  left: 12px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+.mD .rl1-corner--br {
+  bottom: 12px;
+  right: 12px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+/* ---- the depth ruler (placed per frame) ---- */
+.mD .rl1-ruler {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.mD .rl1-ruler path {
+  fill: none;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.mD .rl1-ruler .rl1-ruler__spine {
+  stroke: var(--ink-4);
+}
+/* as far as the light reaches: the spine in ink */
+.mD .rl1-ruler .rl1-ruler__lit {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+.mD .rl1-ruler .rl1-ruler__ticks {
+  stroke: var(--ink-3);
+}
+.mD .rl1-ruler .rl1-ruler__lead {
+  stroke: color-mix(in srgb, var(--ink) 26%, transparent);
+}
+.mD .rl1-ruler .rl1-ruler__seen {
+  fill: var(--ink);
+  stroke: none;
+}
+.mD .rl1-ruler .rl1-ruler__hid {
+  fill: var(--surface);
+  stroke: var(--ink-3);
+}
+
+.mD .rl1-tick,
+.mD .rl1-risk,
+.mD .rl1-depth,
+.mD .rl1-scale {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 13px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.mD .rl1-tick {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  will-change: transform;
+}
+.mD .rl1-risks {
+  position: absolute;
+  top: 0;
+  left: calc(var(--rl1-spine) - 24px);
+  width: 0;
+  height: 0;
+}
+.mD .rl1-risk {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: inline-flex;
+  gap: 7px;
+  opacity: 0;
+  color: var(--ink-3);
+  will-change: transform, opacity;
+  transition: color var(--dur-2) var(--ease);
+}
+.mD .rl1-risk__n {
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-2) var(--ease);
+}
+/* in view: in ink */
+.mD .rl1-risk[data-seen="true"] {
+  color: var(--ink);
+}
+.mD .rl1-risk[data-seen="true"] .rl1-risk__n {
+  color: var(--ink-3);
+}
+.mD .rl1-stage[data-compact="true"] .rl1-risk__t {
+  display: none;
+}
+.mD .rl1-depth,
+.mD .rl1-scale {
+  position: absolute;
+  right: calc(100% - var(--rl1-spine) - 38px);
+  color: var(--ink-3);
+  opacity: 0;
+  transition: opacity var(--dur-3) var(--ease);
+}
+.mD .rl1-depth {
+  top: calc(var(--rl1-wi) + 34px);
+}
+.mD .rl1-scale {
+  bottom: calc(var(--rl1-wi) + 32px);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.mD .rl1-stage[data-ready="true"] .rl1-depth,
+.mD .rl1-stage[data-ready="true"] .rl1-scale {
+  opacity: 1;
+}
+.mD .rl1-scale__k {
+  color: var(--ink-3);
+}
+.mD .rl1-scale__bar {
+  display: block;
+  height: 5px;
+  border: 1px solid currentColor;
+  border-top: 0;
+  opacity: 0.7;
+}
+
+/* the labels that ride on the render (positioned by the scene) */
+.mD .rl1-flag,
+.mD .rl1-gauge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  will-change: transform;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.mD .rl1-flag {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 7px 10px 8px;
+  border-radius: var(--r);
+  /* a near-solid chip: legible on the ice, the water and the dark theme alike */
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+.mD .rl1-flag__k {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--ink-2);
+}
+.mD .rl1-flag__v {
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+}
+.mD .rl1-gauge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--ink-2);
+}
+.mD .rl1-gauge__tick {
+  width: 18px;
+  height: 1px;
+  background: var(--ink);
+}
+
+/* no WebGL: a quiet outline of the berg, and no ruler or labels */
+.mD .rl1-fallback {
+  display: none;
+  position: absolute;
+  right: 8%;
+  top: 10%;
+  width: min(40%, 480px);
+  height: 80%;
+}
+.mD .rl1-stage[data-fallback="true"] .rl1-fallback {
+  display: block;
+}
+.mD
+  .rl1-stage[data-fallback="true"]
+  :is(
+    .rl1-flag,
+    .rl1-gauge,
+    .rl1-ruler,
+    .rl1-tick,
+    .rl1-risks,
+    .rl1-depth,
+    .rl1-scale,
+    .rl1-frame,
+    .rl1-finder
+  ) {
+  display: none;
+}
+.mD .rl1-fallback__line {
+  stroke: var(--ink-4);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.mD .rl1-fallback__berg {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* ---- the copy, scrolling over the stage ---- */
+.mD .rl1-flow {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(-100vh + var(--rl1-nav));
+  margin-top: calc(-100svh + var(--rl1-nav));
+}
+.mD .rl1-col {
+  max-width: 520px;
+}
+.mD .rl1-col--close {
+  max-width: 460px;
+}
+
+.mD .rl1-head {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - var(--rl1-nav));
+  min-height: calc(100svh - var(--rl1-nav));
+  padding-block: var(--s7);
+}
+.mD .rl1-title {
+  margin-top: var(--s4);
+  font-size: clamp(36px, 3.6vw, 52px);
+  line-height: 1.04;
+}
+.mD .rl1-lead {
+  margin-top: var(--s4);
+  font-size: 17px;
+}
+
+.mD .rl1-step {
+  display: flex;
+  align-items: center;
+  min-height: 88vh;
+  min-height: 88svh;
+  padding-block: var(--s8);
+}
+.mD .rl1-h2 {
+  margin-top: var(--s4);
+}
+.mD .rl1-p {
+  margin-top: var(--s4);
+  max-width: 30em;
+  color: var(--ink-2);
+}
+.mD .rl1-p strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.mD .rl1-stat {
+  margin-top: var(--s5);
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mD .rl1-stat strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.mD .rl1-list {
+  margin: var(--s5) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 420px;
+  border-top: 1px solid var(--line);
+}
+.mD .rl1-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line-2);
+  font-size: 14.5px;
+  color: var(--ink);
+}
+.mD .rl1-list li > span:last-child,
+.mD .rl1-list__n {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.mD .rl1-list__n {
+  margin-right: 10px;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.mD .rl1-close {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - var(--rl1-nav));
+  min-height: calc(100svh - var(--rl1-nav));
+  padding-block: var(--s7);
+}
+.mD .rl1-nums {
+  max-width: 460px;
+}
+.mD .rl1-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s5);
+  margin-top: var(--s6);
+}
+
+/* ---- phone and narrow: stacked. The head covers the stage (the tip shows under the form);
+   the reveal's copy rides in glass cards at the foot of the screen; the ruler keeps to a thin
+   strip on the right (ticks and the risks' dots, no names) ---- */
+@media (max-width: 899px) {
+  .mD .rl1-stage {
+    --rl1-spine: calc(100% - 20px);
+  }
+  .mD .rl1-frame,
+  .mD .rl1-finder,
+  .mD .rl1-depth,
+  .mD .rl1-tick,
+  .mD .rl1-risks {
+    display: none;
+  }
+  .mD .rl1-scale {
+    top: 14px;
+    right: 12px;
+    bottom: auto;
+    gap: 8px;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+  }
+  .mD .rl1-head {
+    display: block;
+    min-height: 0;
+    padding-block: var(--s6) var(--s5);
+    background: var(--surface);
+  }
+  .mD .rl1-col,
+  .mD .rl1-col--close {
+    max-width: 560px;
+  }
+  .mD .rl1-lead {
+    font-size: 16px;
+  }
+  .mD .rl1-step {
+    align-items: stretch;
+    min-height: 92vh;
+    min-height: 92svh;
+    padding-block: var(--s5) var(--s3);
+  }
+  /* each card rests at the foot of the screen while its step passes (the berg keeps the
+     upper band) and fades as it leaves (Mockup1.tsx) */
+  .mD .rl1-step > .mD-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .mD .rl1-step .rl1-card {
+    position: sticky;
+    bottom: 12px;
+    width: 100%;
+  }
+  /* the list is the desktop's; on the phone the ruler's dots and the count carry it */
+  .mD .rl1-list {
+    display: none;
+  }
+  .mD .rl1-close {
+    align-items: flex-end;
+    padding-block: var(--s4);
+  }
+  .mD .rl1-card {
+    margin-inline: auto;
+    padding: var(--s4) var(--s5) var(--s5);
+    border-radius: var(--r);
+    /* an opaque white (dark: lifted) inset sheet: nothing of the render shows through */
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, 0.35);
+  }
+  .mD .rl1-h2 {
+    font-size: 26px;
+  }
+  .mD .rl1-p {
+    font-size: 15px;
+  }
+  .mD .rl1-close .rl1-p {
+    margin-top: var(--s3);
+  }
+  .mD .rl1-close .ra-nums {
+    margin-top: var(--s4);
+  }
+  .mD .rl1-actions {
+    margin-top: var(--s4);
+    gap: var(--s4);
+  }
+  .mD .rl1-fallback {
+    left: 15%;
+    right: auto;
+    top: auto;
+    bottom: 4%;
+    width: 70%;
+    height: 44%;
+  }
+}
+@media (max-width: 480px) {
+  .mD .rl1-card {
+    padding: var(--s4);
+  }
+  .mD .rl1-actions .mD-btn--lg {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mD .rl1-canvas,
+  .mD .rl1-finder,
+  .mD .rl1-depth,
+  .mD .rl1-scale,
+  .mD .rl1-risk,
+  .mD .rl1-risk__n,
+  .mD .rl1-flag,
+  .mD .rl1-gauge {
+    transition: none;
+  }
+}

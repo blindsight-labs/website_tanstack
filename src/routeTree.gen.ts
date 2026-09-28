@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeamRouteImport } from './routes/team'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShadowRouteImport } from './routes/shadow'
+import { Route as RiskAssessmentRouteImport } from './routes/risk-assessment'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as MockupsRouteImport } from './routes/mockups'
 import { Route as MockupLabRouteImport } from './routes/mockup-lab'
@@ -53,6 +54,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ShadowRoute = ShadowRouteImport.update({
   id: '/shadow',
   path: '/shadow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiskAssessmentRoute = RiskAssessmentRouteImport.update({
+  id: '/risk-assessment',
+  path: '/risk-assessment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/mockup-lab': typeof MockupLabRoute
   '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
+  '/risk-assessment': typeof RiskAssessmentRoute
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/mockup-lab': typeof MockupLabRoute
   '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
+  '/risk-assessment': typeof RiskAssessmentRoute
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
@@ -279,6 +287,7 @@ export interface FileRoutesById {
   '/mockup-lab': typeof MockupLabRoute
   '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
+  '/risk-assessment': typeof RiskAssessmentRoute
   '/shadow': typeof ShadowRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/team': typeof TeamRoute
@@ -313,6 +322,7 @@ export interface FileRouteTypes {
     | '/mockup-lab'
     | '/mockups'
     | '/privacy'
+    | '/risk-assessment'
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
@@ -344,6 +354,7 @@ export interface FileRouteTypes {
     | '/mockup-lab'
     | '/mockups'
     | '/privacy'
+    | '/risk-assessment'
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
@@ -376,6 +387,7 @@ export interface FileRouteTypes {
     | '/mockup-lab'
     | '/mockups'
     | '/privacy'
+    | '/risk-assessment'
     | '/shadow'
     | '/sitemap.xml'
     | '/team'
@@ -409,6 +421,7 @@ export interface RootRouteChildren {
   MockupLabRoute: typeof MockupLabRoute
   MockupsRoute: typeof MockupsRoute
   PrivacyRoute: typeof PrivacyRoute
+  RiskAssessmentRoute: typeof RiskAssessmentRoute
   ShadowRoute: typeof ShadowRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TeamRoute: typeof TeamRoute
@@ -437,6 +450,13 @@ declare module '@tanstack/react-router' {
       path: '/shadow'
       fullPath: '/shadow'
       preLoaderRoute: typeof ShadowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risk-assessment': {
+      id: '/risk-assessment'
+      path: '/risk-assessment'
+      fullPath: '/risk-assessment'
+      preLoaderRoute: typeof RiskAssessmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -667,6 +687,7 @@ const rootRouteChildren: RootRouteChildren = {
   MockupLabRoute: MockupLabRoute,
   MockupsRoute: MockupsRoute,
   PrivacyRoute: PrivacyRoute,
+  RiskAssessmentRoute: RiskAssessmentRoute,
   ShadowRoute: ShadowRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TeamRoute: TeamRoute,
