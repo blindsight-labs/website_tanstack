@@ -494,6 +494,12 @@
     box-shadow: 0 0 0 1px var(--ink-4);
   }
 }
+/* keyboard focus on any device (touch laptops, keyboards on tablets): the site's one
+   focus ring, not the hover hairline, which is too faint to find */
+.mT-risk:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
 @media (prefers-reduced-motion: reduce) {
   .mT-risk,
   .mT-risk__img {

@@ -563,7 +563,11 @@ html:has(.mD) body {
 .mD-menu__item:hover,
 .mD-menu__item:focus-visible {
   background: color-mix(in srgb, var(--ink) 6%, transparent);
-  outline: none;
+}
+/* keyboard: the tint alone is too faint to track; the site's one focus ring, inside the item */
+.mD-menu__item:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: -2px;
 }
 
 /* ==========================================================================

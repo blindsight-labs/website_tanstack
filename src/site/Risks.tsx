@@ -1808,6 +1808,8 @@ export function Risks({ theme }: SectionProps) {
                 {...(PLAYBACK
                   ? {
                       tabIndex: 0,
+                      // focusable for the playback: it announces as its risk's title
+                      "aria-labelledby": `mT-risk-${r.id}`,
                       // touch devices loop by scroll position instead (a tap's
                       // emulated mouseenter must not fight it)
                       onMouseEnter: () => player.current?.mode !== "touch" && play(i),
@@ -1833,7 +1835,9 @@ export function Risks({ theme }: SectionProps) {
                   </span>
                 </div>
                 <div className="mT-risk__text">
-                  <h3 className="mD-h3">{r.title}</h3>
+                  <h3 id={`mT-risk-${r.id}`} className="mD-h3">
+                    {r.title}
+                  </h3>
                   <p>{r.scenario}</p>
                 </div>
               </li>
