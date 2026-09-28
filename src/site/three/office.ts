@@ -1043,13 +1043,18 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     for (let i = nCaster; i < NC; i++) floorU.uCB.value[i].z = 0;
   }
 
-  // chip anchors (a chip ≈ 140×44 px hangs ≈ 56 px above its anchor): beside each
-  // object on open floor, clear of its monitor and of the other chips
+  // chip anchors (a chip ≈ 150×44 px hangs ≈ 56 px above its anchor): the rack's above
+  // its top; each shadow AI's just above its own workstation's monitor (top at TOP + 0.52,
+  // set back mz = −DESK.d / 2 + 0.13), so the chip names the computer it runs on
+  const monAnchor = (d: { x: number; z: number }) => new THREE.Vector3(d.x, TOP + 0.6, d.z - DESK.d / 2 + 0.13);
   const labelPos = [
     new THREE.Vector3(RACK.x - 0.1, 2.05, RACK.z), // above the rack, clear of its top
-    new THREE.Vector3(3.1, 0, -0.5), // crm-assistant: the open floor right-front of its own desk, ws-sal-01 (kept in from the card's right edge)
-    new THREE.Vector3(1.9, 0, 3.37), // chatgpt.com: in front of m.keller's desk, clear of its fence and puck
+    monAnchor(DESKS[FLAGGED[0].desk]), // crm-assistant, ws-sal-01
+    monAnchor(DESKS[FLAGGED[1].desk]), // chatgpt.com, m.keller's ws-fin-01
   ];
+  /** the wide framing was tuned with chips on the open floor beside the flagged desks;
+   *  it still reserves those spots, so the shot (and the posters) keep their scale */
+  const FRAME_CHIPS = [...labelPos, new THREE.Vector3(3.1, 0, -0.5), new THREE.Vector3(1.9, 0, 3.37)];
   /** what the wide framing must hold whole: the rack, the database, the front row's
    *  left desk and the two flagged desks (the chips are added in resize). The rest
    *  (the far-right desk, the floor, the blade's sweep) may bleed off the card. */
@@ -1096,7 +1101,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
           proj.set(x, y, z).sub(target);
           take(proj.dot(r), proj.dot(up));
         }
-        for (const a of labelPos) {
+        for (const a of FRAME_CHIPS) {
           proj.copy(a).sub(target);
           const [u, v] = [proj.dot(r), proj.dot(up)];
           take(u - 72 / s, v + 80 / s);

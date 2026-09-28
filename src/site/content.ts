@@ -76,11 +76,12 @@ export const hero = {
   // one result line under each beat, shown once that beat has happened
   beatResults: ["Every AI in view", "Protected at runtime", "Every decision on record"],
   // screen-space chips over the render: rack first, then the two flagged desks.
-  // states: found · secured · governed, in the page's one vocabulary (flagged, masked, blocked, logged)
+  // states: found · secured · governed, in the page's one vocabulary (flagged, masked, blocked, logged).
+  // The two finds say they are shadow AI until governed: then they are registered, and just logged.
   chips: [
     { name: "agent:support", states: ["Logged", "Logged", "Logged"] },
-    { name: "crm-assistant", states: ["Flagged", "Blocked", "Logged · REG-01"] },
-    { name: "chatgpt.com", states: ["Flagged", "Masked", "Logged · DATA-02"] },
+    { name: "crm-assistant", states: ["Shadow AI · Flagged", "Shadow AI · Blocked", "Logged · REG-01"] },
+    { name: "chatgpt.com", states: ["Shadow AI · Flagged", "Shadow AI · Masked", "Logged · DATA-02"] },
   ],
   idle: "observing · people, apps, agents",
   logLine: "14:29:10  crm-assistant → crm-db  blocked pending approval  ·  seen · secured · governed",
