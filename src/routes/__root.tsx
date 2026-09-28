@@ -21,7 +21,7 @@ import {
   THEME_WRAPPER_SCRIPT,
   useSiteTheme,
 } from "@/site/theme";
-import { consentHeadScripts, trackPageView } from "@/lib/consent";
+import { consentHeadScripts, loadCookiebot, trackPageView } from "@/lib/consent";
 import { watchOverflow } from "@/lib/overflow-watch";
 
 import appCss from "../styles.css?url";
@@ -230,6 +230,7 @@ function usePageViews(pathname: string) {
 function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   usePageViews(pathname);
+  useEffect(loadCookiebot, []);
   useEffect(() => (import.meta.env.DEV ? watchOverflow() : undefined), [pathname]);
   return (
     <SiteFrame>

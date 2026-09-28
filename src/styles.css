@@ -4446,3 +4446,25 @@ footer {
     animation: none;
   }
 }
+
+/* Cookiebot banner (injected into <body>, outside the site's scope). An unticked category
+   reads as off: a light track, not the same ink as a ticked one. The three choices keep
+   the same size and place (declining must be as easy as accepting); only "Allow all" is
+   filled, so accepting and declining never look like the same button. */
+#CybotCookiebotDialog
+  .CybotCookiebotDialogBodyLevelButtonSliderWrapper
+  input[type="checkbox"]:not(:checked)
+  + .CybotCookiebotDialogBodyLevelButtonSlider {
+  background-color: #d4d5d9 !important;
+}
+#CybotCookiebotDialog #CybotCookiebotDialogBodyButtonDecline,
+#CybotCookiebotDialog #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection {
+  background-color: #fff !important;
+  color: #0b0b0d !important;
+  border-color: #0b0b0d !important;
+}
+#CybotCookiebotDialog #CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll {
+  background-color: #0b0b0d !important;
+  color: #fff !important;
+  border-color: #0b0b0d !important;
+}
