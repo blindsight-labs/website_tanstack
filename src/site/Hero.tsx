@@ -35,6 +35,7 @@ const POSTER_STYLE = POSTER_KEYS.every((k) => POSTER_FILES[`/src/assets/hero/pos
   : null;
 
 export function Hero({ theme }: SectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -112,6 +113,23 @@ export function Hero({ theme }: SectionProps) {
         });
       };
 
+      // the invitation: once the story has resolved (GOVERN sealed, both AIs chrome), the CTA
+      // lights once per loop (hero.css keys on data-invite). Never in reduced motion (its
+      // still frame is SETTLED_MS, inside the window); frozen (#hero-t) inside the window
+      // shows the effect's peak, statically, for screenshots.
+      let lastInvite = "";
+      const setInvite = (t: number) => {
+        const sec = sectionRef.current;
+        if (!sec) return;
+        const lt = ((t % L) + L) % L;
+        const inside = !reduce && lt >= mod.INVITE.t0 && lt < mod.INVITE.t1;
+        const v = inside ? (frozen !== null ? "peak" : "true") : "";
+        if (v === lastInvite) return;
+        lastInvite = v;
+        if (v) sec.dataset.invite = v;
+        else delete sec.dataset.invite;
+      };
+
       const fit = () => {
         const r = stage.getBoundingClientRect();
         scene.resize(r.width, r.height, r.width >= 880 ? "wide" : "narrow");
@@ -130,6 +148,7 @@ export function Hero({ theme }: SectionProps) {
         scene.render(t);
         setBeats(t);
         setChips();
+        setInvite(t);
         stage.dataset.ready = "true";
         markHeroReady(); // below-the-fold 3D may start now (./heroReady.ts)
       };
@@ -179,15 +198,17 @@ export function Hero({ theme }: SectionProps) {
       };
     });
 
+    const section = sectionRef.current;
     return () => {
       disposed = true;
       cleanup();
       delete stage.dataset.ready;
+      if (section) delete section.dataset.invite;
     };
   }, [theme]);
 
   return (
-    <section className="mD-hero" aria-labelledby="mD-hero-title">
+    <section className="mD-hero" aria-labelledby="mD-hero-title" ref={sectionRef}>
       <div className="mD-sheet mD-hero__sheet" ref={sheetRef}>
         <div
           className="mD-hero__stage"

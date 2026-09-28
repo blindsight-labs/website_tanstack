@@ -82,7 +82,8 @@
      Signal violet, moved off Tailwind indigo/violet. It means exactly one thing:
      a live signal — what Blindsight just found or acted on. Allowed on: live
      status dots, the found/acted-on item inside an animation or log row, focus
-     rings. NOT allowed on: CTAs, logo, headings, labels, links, icons, charts
+     rings. NOT allowed on: CTAs (one exception: the hero CTA's
+     one-beat invitation, hero.css), logo, headings, labels, links, icons, charts
      (except the single "us" mark in the benchmark), backgrounds, gradients. */
   --signal: #6e4bff;
   --signal-soft: rgba(110, 75, 255, 0.12);

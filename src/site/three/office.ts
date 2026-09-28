@@ -11,7 +11,7 @@
  *   0.0–0.6 s   calm office.
  *   0.6–3.5 s   SEE IT. A scan sweeps the floor. Behind it the plan updates: the
  *               rack's agent is marked REGISTERED; on two desks an AI nobody
- *               registered prints into view: the same hex as the rack's, in raw metal. As each is
+ *               registered prints into view: the same hex as the rack's, in violet. As each is
  *               found its data flow shows: crm-assistant pulling records out of
  *               the database (the one violet signal) and chatgpt.com sending
  *               data out of the building.
@@ -21,6 +21,20 @@
  *   5.0–9.7 s   GOVERN IT. Policy pulses run from the rack to both fences, the
  *               agent's core turns once, and the audit row (DOM) seals.
  *   9.7–10.4 s  the office resets calmly.
+ *
+ * Materials and the invitation:
+ *   · Dark desks read as solid smoked glass: in dark only, the desks, monitors, rack
+ *     blades and database discs share a denser smoke (lower transmission, a grey body,
+ *     deep short attenuation), the rack cabinet a lighter one (its core stays legible),
+ *     and every desk, the cabinet and the discs get a thin ink rim on their edges. The
+ *     dark fence walls are a plain transparent smoked pane, not transmissive glass (which
+ *     hid the desk inside). Light mode keeps the lighter glass.
+ *   · Violet is the unknown AI: the two unregistered hexes print in satin violet metal
+ *     (not raw grey), their wireframe draws in violet, they stay violet while contained,
+ *     and as the policy pulse reaches each one (GOVERN) they settle to the rack agent's
+ *     chrome: crm-assistant 5750–6350 ms, chatgpt.com 6100–6700 ms. Unknown → registered.
+ *   · INVITE: the window after the story resolves (7000–9000 ms) in which the Hero
+ *     lights the CTA once (hero.css).
  */
 import { THREE, RoundedBoxGeometry, createRenderer, yieldToMain, type Theme } from "./core";
 
@@ -29,6 +43,9 @@ export const LOOP_MS = 10400;
 export const SETTLED_MS = 7600;
 /** When the DOM audit-trail row should appear, seal and clear. */
 export const LOG_T = { in: 5100, seal: 6300, out: 9700 };
+/** After GOVERN has sealed and both AIs have settled to chrome, before the reset: the
+ *  page's CTA invites once (the Hero sets data-invite on its section inside this window). */
+export const INVITE = { t0: 7000, t1: 9000 };
 /** The three beats, for the caption rail under the render. */
 export const BEATS = [
   { n: "01", label: "See it", t0: 600, t1: 3500 },
@@ -70,6 +87,12 @@ const FENCE: [number, number][] = [
   [3850, 4800],
 ];
 const POLICY: [number, number] = [5050, 6000];
+/** per flagged AI: from the policy's first packet reaching its fence (see shot() calls in
+ *  update) until its violet has settled to the registered agent's chrome */
+const SETTLE: [number, number][] = [
+  [POLICY[0] + 700, POLICY[0] + 1300],
+  [POLICY[0] + 250 + 800, POLICY[0] + 1650],
+];
 const CORE_TURN: [number, number] = [5200, 6600];
 const RESET: [number, number] = [9700, 10400];
 
@@ -412,10 +435,35 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
       envMapIntensity: 1,
       ...extra,
     });
-  // thin optical thickness everywhere: what sits inside stays legible
-  const matCabinet = glass({ thickness: 0.12 });
-  const matSheet = glass({ thickness: 0.08 });
-  const matDisc = glass({ thickness: 0.12 });
+  // thin optical thickness everywhere: what sits inside stays legible.
+  // Dark: clear glass over a near-black floor shows only the floor, so the desks all but
+  // vanish. A smoked glass instead: a light body with a little less transmission, a deep
+  // grey attenuation (the grid still shows through), a slight frost and a clear coat that
+  // carries a front-to-back sheen, so it reads as a solid object. The cabinet gets a
+  // lighter smoke: the registered agent's core inside it stays legible. Light keeps the
+  // clear glass.
+  const smoke = (thickness: number, transmission: number, attenuationDistance: number) =>
+    glass({
+      thickness,
+      transmission,
+      color: new THREE.Color("#d4d6dc"),
+      attenuationColor: new THREE.Color("#2b2d33"),
+      attenuationDistance,
+      roughness: 0.12,
+      clearcoat: 1,
+      clearcoatRoughness: 0.04,
+      envMapIntensity: 1.4,
+    });
+  const matCabinet = dark ? smoke(0.12, 0.92, 1.6) : glass({ thickness: 0.12 });
+  const matSheet = dark ? smoke(0.08, 0.86, 0.9) : glass({ thickness: 0.08 });
+  const matDisc = dark ? smoke(0.12, 0.86, 1.1) : glass({ thickness: 0.12 });
+  // dark only: a thin ink rim on the edges of the desks, the cabinet and the discs, so each
+  // form is drawn against the black floor. Top edges (matRim) a step brighter than the
+  // uprights (matRimPost).
+  const rimMat = (opacity: number) =>
+    new THREE.MeshBasicMaterial({ color: ink, toneMapped: false, transparent: true, opacity, depthWrite: false });
+  const matRim = dark ? rimMat(0.5) : null;
+  const matRimPost = dark ? rimMat(0.36) : null;
   const matChrome = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(dark ? "#e6e8ec" : "#f3f4f6"),
     metalness: 1,
@@ -431,25 +479,55 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     envMapIntensity: 1,
   });
   const clipPlanes = FLAGGED.map(() => new THREE.Plane(new THREE.Vector3(0, -1, 0), 0));
+  // the AI nobody registered is violet: satin violet metal (not a glow) from the moment the
+  // scan finds it and while it is contained; governed, it settles to the registered agent's
+  // chrome (matCore, below; update() blends them)
+  // (anodized satin: part metal, with a clear coat; in dark lighter and less metallic, or
+  // it mirrors the black studio into a deep indigo blob)
+  const gunViolet = {
+    color: new THREE.Color(dark ? "#b4a4ff" : "#7a58ff"),
+    metalness: dark ? 0.55 : 0.8,
+    roughness: dark ? 0.26 : 0.24,
+    env: dark ? 1.25 : 1,
+    clearcoat: dark ? 0.8 : 1,
+    clearcoatRoughness: dark ? 0.12 : 0.1,
+  };
   const matGun = FLAGGED.map(
     (_, i) =>
       new THREE.MeshPhysicalMaterial({
-        // raw, unpolished: the registered core is mirror chrome, this is not
-        color: new THREE.Color(dark ? "#85878C" : "#A3A6AD"),
-        metalness: 1,
-        roughness: 0.42,
+        color: gunViolet.color.clone(),
+        metalness: gunViolet.metalness,
+        roughness: gunViolet.roughness,
+        envMapIntensity: gunViolet.env,
+        clearcoat: gunViolet.clearcoat,
+        clearcoatRoughness: gunViolet.clearcoatRoughness,
         clippingPlanes: [clipPlanes[i]],
         side: THREE.DoubleSide,
       }),
   );
+  // dark: NOT transmissive. The transmission pass only sees opaque objects, so through a
+  // transmissive wall the (now smoked-glass) desk vanished and each fence read as a
+  // near-black box. A plain transparent smoked pane blends over the desk instead; its
+  // peak opacity is WALL_MAX (update() scales the rise by it). Light: as live.
+  const WALL_MAX = dark ? 0.2 : 1;
   const matWall = FLAGGED.map(() =>
-    glass({
-      thickness: 0.3,
-      attenuationColor: new THREE.Color(dark ? "#8A8A8E" : "#B2B4B8"),
-      attenuationDistance: dark ? 2.2 : 3,
-      transparent: true,
-      opacity: 0,
-    }),
+    dark
+      ? new THREE.MeshPhysicalMaterial({
+          color: new THREE.Color("#9a9ca3"),
+          metalness: 0,
+          roughness: 0.05,
+          envMapIntensity: 1.4,
+          transparent: true,
+          opacity: 0,
+          depthWrite: false,
+        })
+      : glass({
+          thickness: 0.3,
+          attenuationColor: new THREE.Color("#B2B4B8"),
+          attenuationDistance: 3,
+          transparent: true,
+          opacity: 0,
+        }),
   );
   // monitors: graphite glass in light mode, so every desk has one dark anchor
   // on the white page (all-clear glass read as fog)
@@ -521,6 +599,27 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     parent.add(m);
     return m;
   };
+  /* dark-only rims: thin strips on a rounded box's edges, centred on the rounding's
+     mid-arc (≈ 0.3 × radius in from each face). Light builds none. */
+  const RIM = 0.009;
+  const rimGeo = new THREE.BoxGeometry(1, RIM, RIM);
+  /** a rectangle of rims at height y, half sizes hw × hd, centred on (x, z) */
+  const rimRect = (parent: THREE.Object3D, x: number, y: number, z: number, hw: number, hd: number) => {
+    if (!matRim) return;
+    for (const s of [-1, 1]) {
+      add(parent, rimGeo, matRim, x, y, z + s * hd).scale.x = hw * 2;
+      const m = add(parent, rimGeo, matRim, x + s * hw, y, z);
+      m.scale.x = hd * 2;
+      m.rotation.y = Math.PI / 2;
+    }
+  };
+  /** a vertical rim from y0 to y1 at (x, z) */
+  const rimPost = (parent: THREE.Object3D, x: number, z: number, y0: number, y1: number) => {
+    if (!matRimPost) return;
+    const m = add(parent, rimGeo, matRimPost, x, (y0 + y1) / 2, z);
+    m.scale.x = y1 - y0;
+    m.rotation.z = Math.PI / 2;
+  };
 
   /* ---------- people: low machined chrome pucks, one per desk ---------- */
   const puckProfile: THREE.Vector2[] = [];
@@ -567,6 +666,10 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     // glass panel legs: satin slabs printed as dark grey blocks on the white page
     add(g, legGeo, matSheet, -DESK.w / 2 + 0.06, DESK.top / 2, 0);
     add(g, legGeo, matSheet, DESK.w / 2 - 0.06, DESK.top / 2, 0);
+    // dark: the top's upper edge and each leg's outer front edge (radii 0.02 / 0.012)
+    rimRect(g, 0, TOP - 0.006, 0, DESK.w / 2 - 0.006, DESK.d / 2 - 0.006);
+    for (const s of [-1, 1])
+      rimPost(g, s * (DESK.w / 2 - 0.06 + 0.015 - 0.0036), (DESK.d - 0.08) / 2 - 0.0036, 0, DESK.top - 0.0225);
     const mz = -DESK.d / 2 + 0.13;
     add(g, footGeo, matChrome, 0, TOP + 0.007, mz);
     add(g, neckGeo, matChrome, 0, TOP + 0.07, mz - 0.01);
@@ -590,6 +693,9 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const rack = new THREE.Group();
   rack.position.set(RACK.x, 0, RACK.z);
   add(rack, new RoundedBoxGeometry(0.78, 1.6, 0.66, 4, 0.05), matCabinet, 0, 0.8, 0);
+  // dark: the cabinet's top edge and its four uprights (radius 0.05)
+  rimRect(rack, 0, 1.6 - 0.015, 0, 0.39 - 0.015, 0.33 - 0.015);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) rimPost(rack, sx * (0.39 - 0.015), sz * (0.33 - 0.015), 0, 1.6);
   // glass blades with a thin chrome bezel: solid satin blades stacked into a
   // dark grey tower
   const bladeGeo = new RoundedBoxGeometry(0.64, 0.07, 0.52, 2, 0.02);
@@ -627,6 +733,12 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     ? new THREE.MeshPhysicalMaterial({ color: new THREE.Color("#b4b7bd"), metalness: 1, roughness: 0.2, envMapIntensity: 0.32 })
     : matChrome;
   const core = new THREE.Mesh(coreGeo, matCore);
+  // governed, the found AI settles to the registered agent's chrome. Dark: brighter than the
+  // core's own values (which sit behind the cabinet's glass); bare on the desk those read as a
+  // black lump next to it, not the same chrome
+  const govTarget = dark
+    ? { color: new THREE.Color("#d2d5db"), metalness: 0.5, roughness: 0.26, env: 1.3, coat: 0.6 }
+    : { color: matCore.color, metalness: matCore.metalness, roughness: matCore.roughness, env: matCore.envMapIntensity, coat: 0.05 };
   coreSpin.add(core);
   rack.add(coreSpin);
   scene.add(rack);
@@ -652,15 +764,19 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const spacerGeo = new THREE.CylinderGeometry(0.26, 0.26, 0.03, 48);
   const db = new THREE.Group();
   db.position.set(DB.x, 0, DB.z);
+  // dark: a rim ring on each disc's top edge (R 0.42, bevel 0.035)
+  const discRimGeo = matRim ? new THREE.TorusGeometry(0.42 - 0.0105, RIM / 2, 6, 96) : null;
   for (let i = 0; i < 3; i++) {
     add(db, discGeo, matDisc, 0, i * 0.19, 0);
     if (i < 2) add(db, spacerGeo, matChrome, 0, i * 0.19 + 0.17, 0);
+    if (matRim && discRimGeo) add(db, discRimGeo, matRim, 0, i * 0.19 + 0.15 - 0.0105, 0).rotation.x = Math.PI / 2;
   }
   scene.add(db);
 
   /* ---------- the AIs nobody registered: the same hex as the rack's agent, in
-     raw unpolished metal ("the same kind of thing, but nobody registered it"),
-     standing on the desk and printing up out of it, wireframe first ---------- */
+     satin violet metal ("the same kind of thing, but nobody registered it"),
+     standing on the desk and printing up out of it, wireframe first; governed,
+     it turns the agent's chrome ---------- */
   const aiGeo = new THREE.ExtrudeGeometry(hexShape, {
     depth: 0.1,
     bevelEnabled: true,
@@ -869,6 +985,18 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
       matWire[i].opacity = Math.max(wireIn, wireOut) * (dark ? 0.7 : 0.55);
       a.wire.visible = matWire[i].opacity > 0.001;
 
+      /* unknown → registered: violet until the policy reaches it, then the agent's chrome
+         (it stays chrome as it sinks away in the reset; the next loop finds it violet) */
+      const gov = smooth(seg(t, SETTLE[i][0], SETTLE[i][1]));
+      const mg = matGun[i];
+      mg.color.copy(gunViolet.color).lerp(govTarget.color, gov);
+      mg.metalness = lerp(gunViolet.metalness, govTarget.metalness, gov);
+      mg.roughness = lerp(gunViolet.roughness, govTarget.roughness, gov);
+      mg.envMapIntensity = lerp(gunViolet.env, govTarget.env, gov);
+      // the coat thins out but never reaches 0 (crossing 0 would recompile the program mid-loop)
+      mg.clearcoat = lerp(gunViolet.clearcoat, govTarget.coat, gov);
+      matWire[i].color.copy(signalCol).lerp(ink, gov);
+
       /* fence: square draws (first 45%), walls rise (the rest) */
       const [f0, f1] = FENCE[i];
       const fx = fences[i];
@@ -883,7 +1011,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
       const wallK = rise * sink;
       fx.walls.scale.y = Math.max(wallK, 0.0001);
       fx.walls.visible = wallK > 0.002;
-      matWall[i].opacity = smooth(clamp01(wallK * 3)) * alive;
+      matWall[i].opacity = smooth(clamp01(wallK * 3)) * alive * WALL_MAX;
       if (wallK > 0.01)
         caster(fx.d.x, fx.d.z, FENCE_H.x, FENCE_H.z, 0.03, 0.2, (dark ? 0.35 : 0.08) * wallK);
       fenceK.push(rise);

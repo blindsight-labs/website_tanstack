@@ -334,3 +334,97 @@
     display: none;
   }
 }
+
+/* ---------------- the unknown AI in violet, and the CTA's invitation ----------------
+   1. The unknown AI is violet: the two flagged chips (data-k 1, 2) name their AI in violet
+      while it is unregistered (state 0 found, 1 contained) and turn ink when governed (2),
+      in step with the scene's hexes settling from violet metal to chrome.
+   2. The invitation: when the story has resolved, Hero.tsx sets data-invite="true" on the
+      section (office.ts INVITE, 7000–9000 ms) and the primary CTA warms toward violet with a
+      soft violet halo, once (1.9 s), then settles. Only the hero's CTA: the header's stays
+      static. data-invite="peak" (a frozen #hero-t inside the window) holds the peak. */
+
+/* ---- 1. chips: violet while unregistered ---- */
+.mD-hero__chip:not([data-k="0"]) .mD-hero__chipV,
+.mD-hero__chip:not([data-k="0"]) .mD-hero__chipK::before {
+  transition:
+    color 480ms var(--ease, ease),
+    background-color 480ms var(--ease, ease);
+}
+.mD-hero__chip:not([data-k="0"]):is([data-state="0"], [data-state="1"]) .mD-hero__chipV {
+  color: var(--signal);
+}
+.mD-hero__chip:not([data-k="0"]):is([data-state="0"], [data-state="1"]) .mD-hero__chipK::before {
+  background: var(--signal);
+}
+
+/* ---- 2. the CTA's invitation ----
+   A blur-only halo (no hard spread ring: that reads as focus / selected) plus a 1px
+   violet edge; the fill carries most of the colour in light, the halo does in dark. */
+.mD-hero__actions .mD-btn--primary {
+  --inv-base: var(--ink);
+  --inv-fill: color-mix(in srgb, var(--signal) 88%, var(--ink));
+  --inv-halo-a: 38%;
+  --inv-sh:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+}
+/* dark: the light button (system.css) warms to ~#b8a8fe; the ink text stays */
+.mD[data-theme="dark"] .mD-hero__actions .mD-btn--primary {
+  --inv-base: #f4f4f6;
+  --inv-fill: color-mix(in srgb, var(--signal) 68%, #f4f4f6);
+  --inv-halo-a: 45%;
+  --inv-sh: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* rise to the peak (32%), hold it to 50%, then an even settle. Every stop has the same
+   shadow list, so it interpolates; the last stop is the static look (edge and halo at 0
+   alpha), so the end is seamless. No overshoot. */
+@keyframes mD-hero-invite {
+  0% {
+    background-color: var(--inv-base);
+    box-shadow:
+      var(--inv-sh),
+      0 0 0 1px color-mix(in srgb, var(--signal) 0%, transparent),
+      0 6px 28px 2px color-mix(in srgb, var(--signal) 0%, transparent);
+    animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  32%,
+  50% {
+    background-color: var(--inv-fill);
+    box-shadow:
+      var(--inv-sh),
+      0 0 0 1px color-mix(in srgb, var(--signal) 40%, transparent),
+      0 6px 28px 2px color-mix(in srgb, var(--signal) var(--inv-halo-a), transparent);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  100% {
+    background-color: var(--inv-base);
+    box-shadow:
+      var(--inv-sh),
+      0 0 0 1px color-mix(in srgb, var(--signal) 0%, transparent),
+      0 6px 28px 2px color-mix(in srgb, var(--signal) 0%, transparent);
+  }
+}
+.mD-hero[data-invite="true"] .mD-hero__actions .mD-btn--primary {
+  animation: mD-hero-invite 1900ms linear 1 both;
+}
+/* frozen inside the window: the peak, held */
+.mD-hero[data-invite="peak"] .mD-hero__actions .mD-btn--primary {
+  background-color: var(--inv-fill);
+  box-shadow:
+    var(--inv-sh),
+    0 0 0 1px color-mix(in srgb, var(--signal) 40%, transparent),
+    0 6px 28px 2px color-mix(in srgb, var(--signal) var(--inv-halo-a), transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mD-hero__chip:not([data-k="0"]) .mD-hero__chipV,
+  .mD-hero__chip:not([data-k="0"]) .mD-hero__chipK::before {
+    transition: none;
+  }
+  /* Hero.tsx never sets data-invite here; this holds even if it did */
+  .mD-hero[data-invite] .mD-hero__actions .mD-btn--primary {
+    animation: none;
+  }
+}
