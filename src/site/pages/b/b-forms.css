@@ -251,8 +251,7 @@
   position: relative;
   padding: var(--s7) var(--s7) var(--s7);
 }
-/* the chrome hairline, shared: the close button, the path cards, the fields */
-.mD[data-site-variant="b"] .pb-modal__close,
+/* the chrome hairline, shared: the path cards, the fields */
 .mD[data-site-variant="b"] .pb-modal .demo-path-pill,
 .mD[data-site-variant="b"] .pb-modal .demo-path-confirm,
 .mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea) {
@@ -262,7 +261,6 @@
     var(--pb-hair) border-box;
   box-shadow: none;
 }
-.mD[data-site-variant="b"] .pb-modal__close:hover,
 .mD[data-site-variant="b"] .pb-modal .demo-path-pill:hover,
 .mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea):hover {
   background:
@@ -279,9 +277,16 @@
   width: 44px;
   height: 44px;
   padding: 0;
-  border-radius: 50%;
-  color: var(--ink);
+  /* a bare X: no ring, the 44px hit area stays */
+  border: 0;
+  border-radius: var(--r);
+  background: none;
+  color: var(--ink-2);
   cursor: pointer;
+  transition: color var(--dur-1) var(--ease);
+}
+.mD[data-site-variant="b"] .pb-modal__close:hover {
+  color: var(--ink);
 }
 .mD[data-site-variant="b"] .pb-modal__close:focus-visible {
   outline: 2px solid var(--signal);
@@ -357,4 +362,98 @@
   flex-direction: column;
   padding-left: var(--s6);
   border-left: 1px solid var(--line-2);
+}
+
+/* reCAPTCHA v3: the floating badge is hidden (Google allows it when the form carries the
+   attribution line, RecaptchaNotice). The line sits under the submit button as fine print,
+   pulled closer to it than the form's field gap so it reads as part of the button. */
+.grecaptcha-badge {
+  visibility: hidden;
+}
+.mD[data-site-variant="b"] :is(.demo-captcha-note, .pb-captcha-note) {
+  margin: -6px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] :is(.demo-captcha-note, .pb-captcha-note) a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* links inside the consent line (terms, privacy notice) must read as links */
+.mD[data-site-variant="b"] :is(.demo-consent, .pb-check) a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Form errors (FormAlert). Red is the platform's one colour for "something is wrong", used as a
+   tint and a hairline, not a fill: icon + title say what happened, the detail says what to do. */
+.mD[data-site-variant="b"] {
+  --form-error: #c52626;
+}
+.mD[data-site-variant="b"][data-theme="dark"] {
+  --form-error: #e05252;
+}
+.mD[data-site-variant="b"] .form-alert {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--form-error) 32%, transparent);
+  border-radius: var(--r);
+  background: color-mix(in srgb, var(--form-error) 6%, var(--surface));
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.5;
+  animation: form-alert-in var(--dur-2) var(--ease);
+}
+.mD[data-site-variant="b"] .form-alert__icon {
+  margin-top: 3px;
+  color: var(--form-error);
+}
+.mD[data-site-variant="b"] .form-alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.mD[data-site-variant="b"] .form-alert :is(p) {
+  margin: 0;
+}
+.mD[data-site-variant="b"] .form-alert__title {
+  font-weight: 500;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .form-alert__help {
+  margin-top: 6px !important;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--form-error) 16%, transparent);
+  font-size: 13px;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .form-alert__help a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.mD[data-site-variant="b"] .form-alert__ref {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+@keyframes form-alert-in {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mD[data-site-variant="b"] .form-alert {
+    animation: none;
+  }
 }

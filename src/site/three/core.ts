@@ -36,6 +36,20 @@ export const PALETTE = {
   signalOnDark: "#A08CFF",
 };
 
+/** Phones, and devices that ask for less (Save-Data, ≤ 4 GB): their 3× screens would otherwise
+ *  render every scene at 2× or more, the dominant GPU/battery cost. */
+function constrainedDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  const n = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+  const phone = window.matchMedia("(pointer: coarse) and (max-width: 899px)").matches;
+  return phone || n.connection?.saveData === true || (n.deviceMemory ?? 8) <= 4;
+}
+
+/** The device pixel ratio a scene renders at: `cap` normally, at most 1.5 on constrained devices. */
+export function pixelRatio(cap: number): number {
+  return Math.min(window.devicePixelRatio || 1, constrainedDevice() ? Math.min(cap, 1.5) : cap);
+}
+
 export function createRenderer(canvas?: HTMLCanvasElement, opts: { alpha?: boolean } = {}) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -49,7 +63,7 @@ export function createRenderer(canvas?: HTMLCanvasElement, opts: { alpha?: boole
   // ACES greys it into "milky plastic".
   renderer.toneMapping = THREE.NeutralToneMapping;
   renderer.toneMappingExposure = 1.0;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(pixelRatio(2));
   return renderer;
 }
 
@@ -258,7 +272,7 @@ export function renderOnce(
   if (hit) return hit;
   if (!offscreen) offscreen = createRenderer(undefined, { alpha: true });
   const r = offscreen;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = pixelRatio(2);
   r.setPixelRatio(dpr);
   r.setSize(opts.width, opts.height, false);
   const scene = new THREE.Scene();

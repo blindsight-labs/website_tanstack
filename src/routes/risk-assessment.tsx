@@ -6,7 +6,7 @@ import mcCss from "@/site/assessment/concepts/mc/mc.css?url";
 import mdCss from "@/site/assessment/concepts/md/md.css?url";
 import { RiskAssessment } from "@/site/assessment/RiskAssessment";
 
-const TITLE = "AI Risk Assessment · Blindsight";
+const TITLE = "AI risk assessment · Blindsight";
 const DESCRIPTION =
   "A free, two-minute AI exposure assessment for CISOs and CIOs: see how much of your AI risk is visible today, and how much you could prevent.";
 

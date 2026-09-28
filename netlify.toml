@@ -12,3 +12,15 @@ publish = "dist/client"
 BUN_VERSION = "1.2"
 # Node is required by some build tooling even when Bun is the package manager.
 NODE_VERSION = "20"
+
+# Baseline security headers (GDPR Art. 32 / FADP Art. 8: appropriate technical measures).
+# No Content-Security-Policy yet: it must allow Cookiebot, Google Analytics and Turnstile and
+# the inline theme/consent scripts, so roll it out in Report-Only mode first.
+[[headers]]
+for = "/*"
+[headers.values]
+Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+X-Content-Type-Options = "nosniff"
+X-Frame-Options = "SAMEORIGIN"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"

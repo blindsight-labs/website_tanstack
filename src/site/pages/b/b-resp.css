@@ -23,7 +23,7 @@
 
 /* tablet and below: the header stacks (the object on top, fading into the copy); the
    editorial splits become one column, the kicker above its content */
-@media (max-width: 900px) {
+@media (max-width: 899px) {
   .mD[data-site-variant="b"] .pb-head__sheet,
   .mD[data-site-variant="b"] :is(.pb-head--compact, .pb-head--short) .pb-head__sheet {
     flex-direction: column;
@@ -194,6 +194,10 @@
   }
   .mD[data-site-variant="b"] .pb-tabs {
     width: 100%;
+    /* the strip scrolls sideways here: fade the right edge so the cut-off topic reads as "more" */
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    padding-right: 32px;
   }
   .mD[data-site-variant="b"] .pb-shadow__demo {
     padding: var(--s3);
@@ -222,11 +226,13 @@
   }
   /* the demo card: nearly full screen */
   .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] {
-    padding: 8px;
+    /* clear of the notch (landscape) and the home indicator */
+    padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
+      max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
     align-items: flex-end;
   }
   .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
-    max-height: calc(100dvh - 16px);
+    max-height: calc(100dvh - max(8px, env(safe-area-inset-top)) - max(8px, env(safe-area-inset-bottom)));
   }
   .mD[data-site-variant="b"] .pb-modal {
     padding: var(--s5);
@@ -255,5 +261,13 @@
 @media (prefers-reduced-motion: reduce) {
   .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
     animation: none;
+  }
+}
+
+/* Phones: the demo card is the form and nothing else. The header's one-line promise already
+   says what happens next; the three steps below the form only made it longer. */
+@media (max-width: 720px) {
+  .mD[data-site-variant="b"] .pb-modal__next {
+    display: none;
   }
 }

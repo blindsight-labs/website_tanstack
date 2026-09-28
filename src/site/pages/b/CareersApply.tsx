@@ -6,8 +6,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+import { FormAlert } from "@/components/FormAlert";
+import { RecaptchaNotice, useRecaptcha } from "@/components/Recaptcha";
 import { submitApplication } from "@/lib/careers.functions";
-import { friendlyFormError, isValidEmail } from "@/lib/form-error";
+import { trackEvent } from "@/lib/consent";
+import { checkError, friendlyFormError, isValidEmail, type FormErrorInfo } from "@/lib/form-error";
 import { Label } from "@/site/shared";
 import { ROLES } from "../legacy/Careers";
 import { fileToBase64 } from "../legacy/CareersApply";
@@ -19,9 +22,10 @@ export function CareersApplyB() {
   const { role } = applyRoute.useSearch();
   const submit = useServerFn(submitApplication);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<FormErrorInfo | null>(null);
   const [done, setDone] = useState(false);
   const [fileName, setFileName] = useState("");
+  const getCaptchaToken = useRecaptcha("careers");
   const known = ROLES.find((r) => r.title === role);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -35,15 +39,15 @@ export function CareersApplyB() {
     const file = f.get("cv") as File | null;
 
     if (!consent) {
-      setError("Please confirm you agree to be contacted.");
+      setError(checkError("Please confirm you agree to be contacted."));
       return;
     }
     if (!isValidEmail(email)) {
-      setError("Please enter a valid email address.");
+      setError(checkError("Please enter a valid email address."));
       return;
     }
-    if (file && file.size > 5 * 1024 * 1024) {
-      setError("CV must be 5MB or smaller.");
+    if (file && file.size > 4 * 1024 * 1024) {
+      setError(checkError("CV must be 4MB or smaller."));
       return;
     }
 
@@ -53,9 +57,11 @@ export function CareersApplyB() {
         file && file.size > 0
           ? { filename: file.name, mimeType: file.type || "application/octet-stream", base64: await fileToBase64(file) }
           : null;
+      const captchaToken = await getCaptchaToken(); // fresh per attempt: tokens are single-use
       await submit({
-        data: { role: role || "General application", name, email, message, consent, cv },
+        data: { role: role || "General application", name, email, message, consent, cv, captchaToken },
       });
+      trackEvent("generate_lead", { form: "job-application" });
       setDone(true);
     } catch (err) {
       setError(friendlyFormError(err));
@@ -134,7 +140,7 @@ export function CareersApplyB() {
                   </label>
                 </div>
                 <label className="pb-field pb-file" data-has={fileName ? "true" : undefined}>
-                  <span className="pb-field__k">CV · PDF, DOC, DOCX or TXT · max 5MB</span>
+                  <span className="pb-field__k">CV · PDF, DOC, DOCX or TXT · max 4MB</span>
                   <input
                     name="cv"
                     type="file"
@@ -151,20 +157,23 @@ export function CareersApplyB() {
                   <textarea name="message" rows={5} maxLength={2000} placeholder="Optional: links, what you'd build here, when you can start." />
                 </label>
                 <label className="pb-check">
-                  <input name="consent" type="checkbox" />
-                  <span>I agree to be contacted by Blindsight about this application.</span>
+                  <input name="consent" type="checkbox" required />
+                  <span>
+                    I agree to be contacted by Blindsight about this application. See our{" "}
+                    <Link to="/privacy" target="_blank" rel="noopener">
+                      Privacy Notice
+                    </Link>
+                    .
+                  </span>
                 </label>
-                {error && (
-                  <p className="pb-error" role="alert">
-                    {error}
-                  </p>
-                )}
+                {error && <FormAlert error={error} email="careers@blindsight.io" subject="Job application" />}
                 <div className="pb-form__foot">
                   <button type="submit" className="mD-btn mD-btn--primary mD-btn--lg" disabled={submitting}>
                     {submitting ? "Sending…" : "Submit application"}
                     {!submitting && <ArrowRight size={14} strokeWidth={1.75} className="mD-btn__arrow" aria-hidden="true" />}
                   </button>
                 </div>
+                <RecaptchaNotice className="pb-captcha-note" />
               </form>
             )}
           </div>

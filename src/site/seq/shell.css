@@ -4,19 +4,19 @@
 .mD-seq__stage--net {
   margin-top: 26px;
 }
-@media (max-height: 860px) and (min-width: 901px) {
+@media (max-height: 860px) and (min-width: 900px) {
   .mD-seq__stage--net {
     margin-top: 20px;
   }
 }
 
 /* ==========================================================================
-   Phone and tablet (≤ 900 px): the SAME live DOM, restacked in one column:
+   Phone and tablet (≤ 899 px): the SAME live DOM, restacked in one column:
    tagline, the rail (three tappable steps), the close-up at full width, then the
    current stage's copy and captions. Same clock and loop as the desktop; it plays
    only while in view. (Reduced motion keeps the stills below.)
    ========================================================================== */
-@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+@media (max-width: 899px) and (prefers-reduced-motion: no-preference) {
   .mD-seq__live {
     display: block;
   }
@@ -24,7 +24,7 @@
     display: none;
   }
 }
-@media (max-width: 900px) {
+@media (max-width: 899px) {
   .mD-seq__sticky {
     height: auto;
   }
@@ -105,7 +105,7 @@
 .mD-seq__rm .mD-seq__still img {
   object-fit: cover;
 }
-@media (max-width: 900px) {
+@media (max-width: 899px) {
   .mD-seq__rm {
     padding: 30px 32px 36px;
   }

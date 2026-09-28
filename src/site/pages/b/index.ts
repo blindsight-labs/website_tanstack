@@ -29,6 +29,7 @@ export const pages: PageLoaders = {
   author: () => import("./Author").then((m) => m.AuthorB),
   imprint: () => import("./Imprint").then((m) => m.ImprintB),
   privacy: () => import("./Privacy").then((m) => m.PrivacyB),
+  evaluationTerms: () => import("./EvaluationTerms").then((m) => m.EvaluationTermsB),
   demo: () => import("./Demo").then((m) => m.DemoB),
   shadow: () => import("./Shadow").then((m) => m.ShadowB),
   notFound: () => Promise.resolve(NotFoundB),

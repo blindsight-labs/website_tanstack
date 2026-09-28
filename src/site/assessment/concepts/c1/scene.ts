@@ -5,7 +5,7 @@
    The only things that change between frames: the camera (scroll: dolly back + a slightly
    wider lens, see frame.ts) and the water level (answers). Rendered on demand by Concept1.tsx.
    Client-only: imported dynamically. */
-import { THREE, createRenderer, studioLights, type Theme } from "@/site/three/core";
+import { THREE, createRenderer, studioLights, pixelRatio, type Theme } from "@/site/three/core";
 
 import { KEEL, PEAK, type Cam } from "./frame";
 
@@ -228,7 +228,7 @@ export async function createBergScene(
   const dark = theme === "dark";
   const renderer = createRenderer(canvas);
   // the stage is full-bleed: keep the fill rate sane on an integrated GPU
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setPixelRatio(pixelRatio(1.5));
   renderer.transmissionResolutionScale = 0.75;
   const above = color(opts.colors.above, dark ? "#0d0d10" : "#ffffff");
   const below = color(opts.colors.below, dark ? "#16161a" : "#060607");

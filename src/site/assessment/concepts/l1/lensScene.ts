@@ -28,7 +28,7 @@
    - the violet inlay on one node is the risk the lens is flagging (the page names it).
 
    Client-only: imported dynamically from Mockup1.tsx. Renders on demand. */
-import { THREE, createRenderer, studioLights, type Theme } from "@/site/three/core";
+import { THREE, createRenderer, studioLights, pixelRatio, type Theme } from "@/site/three/core";
 
 import { HB, TOP, litDepth } from "./depth";
 
@@ -501,7 +501,7 @@ export async function createLensScene(
 ): Promise<LensScene> {
   const dark = opts.theme === "dark";
   const renderer = createRenderer(canvas);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(pixelRatio(1.75));
   const page = new THREE.Color().setStyle(opts.surface);
   const ink = new THREE.Color().setStyle(opts.ink);
   renderer.setClearColor(page, 1);

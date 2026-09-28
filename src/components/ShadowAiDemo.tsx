@@ -442,7 +442,7 @@ export function ShadowAiDemo() {
         </h2>
         <div className="sa2-card">
           <div className="sa2-top">
-            <span className="sa2-kick">// Shadow AI — live traffic</span>
+            <span className="sa2-kick">// Shadow AI · live traffic</span>
             <div className="sa2-ctrl">
               <span className="sa2-badge sa-badge">Unprotected</span>
               <button

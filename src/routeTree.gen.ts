@@ -9,161 +9,42 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TeamRouteImport } from './routes/team'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ShadowRouteImport } from './routes/shadow'
-import { Route as RiskAssessmentRouteImport } from './routes/risk-assessment'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as MockupsRouteImport } from './routes/mockups'
-import { Route as MockupLabRouteImport } from './routes/mockup-lab'
-import { Route as Mockup9RouteImport } from './routes/mockup-9'
-import { Route as Mockup8RouteImport } from './routes/mockup-8'
-import { Route as Mockup7RouteImport } from './routes/mockup-7'
-import { Route as Mockup6RouteImport } from './routes/mockup-6'
-import { Route as Mockup5RouteImport } from './routes/mockup-5'
-import { Route as Mockup4RouteImport } from './routes/mockup-4'
-import { Route as Mockup3RouteImport } from './routes/mockup-3'
-import { Route as Mockup2RouteImport } from './routes/mockup-2'
-import { Route as Mockup1RouteImport } from './routes/mockup-1'
-import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
-import { Route as ImprintRouteImport } from './routes/imprint'
-import { Route as HowToSecureLlmsRouteImport } from './routes/how-to-secure-llms'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as DocsRouteImport } from './routes/docs'
-import { Route as DemoRouteImport } from './routes/demo'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as CareersRouteImport } from './routes/careers'
-import { Route as BlogRouteImport } from './routes/blog'
-import { Route as AiThreatDetectionRouteImport } from './routes/ai-threat-detection'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogIndexRouteImport } from './routes/blog.index'
-import { Route as CareersApplyRouteImport } from './routes/careers_.apply'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AiThreatDetectionRouteImport } from './routes/ai-threat-detection'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as CareersRouteImport } from './routes/careers'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DemoRouteImport } from './routes/demo'
+import { Route as DocsRouteImport } from './routes/docs'
+import { Route as EvaluationTermsRouteImport } from './routes/evaluation-terms'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as HowToSecureLlmsRouteImport } from './routes/how-to-secure-llms'
+import { Route as ImprintRouteImport } from './routes/imprint'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
+import { Route as Mockup1RouteImport } from './routes/mockup-1'
+import { Route as Mockup2RouteImport } from './routes/mockup-2'
+import { Route as Mockup3RouteImport } from './routes/mockup-3'
+import { Route as Mockup4RouteImport } from './routes/mockup-4'
+import { Route as Mockup5RouteImport } from './routes/mockup-5'
+import { Route as Mockup6RouteImport } from './routes/mockup-6'
+import { Route as Mockup7RouteImport } from './routes/mockup-7'
+import { Route as Mockup8RouteImport } from './routes/mockup-8'
+import { Route as Mockup9RouteImport } from './routes/mockup-9'
+import { Route as MockupLabRouteImport } from './routes/mockup-lab'
+import { Route as MockupsRouteImport } from './routes/mockups'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as RiskAssessmentRouteImport } from './routes/risk-assessment'
+import { Route as ShadowRouteImport } from './routes/shadow'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as TeamRouteImport } from './routes/team'
 import { Route as AuthorsSlugRouteImport } from './routes/authors.$slug'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as CareersApplyRouteImport } from './routes/careers_.apply'
 
-const TeamRoute = TeamRouteImport.update({
-  id: '/team',
-  path: '/team',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShadowRoute = ShadowRouteImport.update({
-  id: '/shadow',
-  path: '/shadow',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RiskAssessmentRoute = RiskAssessmentRouteImport.update({
-  id: '/risk-assessment',
-  path: '/risk-assessment',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MockupsRoute = MockupsRouteImport.update({
-  id: '/mockups',
-  path: '/mockups',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MockupLabRoute = MockupLabRouteImport.update({
-  id: '/mockup-lab',
-  path: '/mockup-lab',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup9Route = Mockup9RouteImport.update({
-  id: '/mockup-9',
-  path: '/mockup-9',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup8Route = Mockup8RouteImport.update({
-  id: '/mockup-8',
-  path: '/mockup-8',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup7Route = Mockup7RouteImport.update({
-  id: '/mockup-7',
-  path: '/mockup-7',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup6Route = Mockup6RouteImport.update({
-  id: '/mockup-6',
-  path: '/mockup-6',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup5Route = Mockup5RouteImport.update({
-  id: '/mockup-5',
-  path: '/mockup-5',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup4Route = Mockup4RouteImport.update({
-  id: '/mockup-4',
-  path: '/mockup-4',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup3Route = Mockup3RouteImport.update({
-  id: '/mockup-3',
-  path: '/mockup-3',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup2Route = Mockup2RouteImport.update({
-  id: '/mockup-2',
-  path: '/mockup-2',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup1Route = Mockup1RouteImport.update({
-  id: '/mockup-1',
-  path: '/mockup-1',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
-  id: '/llms.txt',
-  path: '/llms.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ImprintRoute = ImprintRouteImport.update({
-  id: '/imprint',
-  path: '/imprint',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HowToSecureLlmsRoute = HowToSecureLlmsRouteImport.update({
-  id: '/how-to-secure-llms',
-  path: '/how-to-secure-llms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocsRoute = DocsRouteImport.update({
-  id: '/docs',
-  path: '/docs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CareersRoute = CareersRouteImport.update({
-  id: '/careers',
-  path: '/careers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiThreatDetectionRoute = AiThreatDetectionRouteImport.update({
@@ -171,9 +52,139 @@ const AiThreatDetectionRoute = AiThreatDetectionRouteImport.update({
   path: '/ai-threat-detection',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvaluationTermsRoute = EvaluationTermsRouteImport.update({
+  id: '/evaluation-terms',
+  path: '/evaluation-terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HowToSecureLlmsRoute = HowToSecureLlmsRouteImport.update({
+  id: '/how-to-secure-llms',
+  path: '/how-to-secure-llms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImprintRoute = ImprintRouteImport.update({
+  id: '/imprint',
+  path: '/imprint',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup1Route = Mockup1RouteImport.update({
+  id: '/mockup-1',
+  path: '/mockup-1',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup2Route = Mockup2RouteImport.update({
+  id: '/mockup-2',
+  path: '/mockup-2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup3Route = Mockup3RouteImport.update({
+  id: '/mockup-3',
+  path: '/mockup-3',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup4Route = Mockup4RouteImport.update({
+  id: '/mockup-4',
+  path: '/mockup-4',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup5Route = Mockup5RouteImport.update({
+  id: '/mockup-5',
+  path: '/mockup-5',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup6Route = Mockup6RouteImport.update({
+  id: '/mockup-6',
+  path: '/mockup-6',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup7Route = Mockup7RouteImport.update({
+  id: '/mockup-7',
+  path: '/mockup-7',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup8Route = Mockup8RouteImport.update({
+  id: '/mockup-8',
+  path: '/mockup-8',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mockup9Route = Mockup9RouteImport.update({
+  id: '/mockup-9',
+  path: '/mockup-9',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MockupLabRoute = MockupLabRouteImport.update({
+  id: '/mockup-lab',
+  path: '/mockup-lab',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MockupsRoute = MockupsRouteImport.update({
+  id: '/mockups',
+  path: '/mockups',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiskAssessmentRoute = RiskAssessmentRouteImport.update({
+  id: '/risk-assessment',
+  path: '/risk-assessment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShadowRoute = ShadowRouteImport.update({
+  id: '/shadow',
+  path: '/shadow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
+  id: '/authors/$slug',
+  path: '/authors/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -181,19 +192,14 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/',
   getParentRoute: () => BlogRoute,
 } as any)
-const CareersApplyRoute = CareersApplyRouteImport.update({
-  id: '/careers_/apply',
-  path: '/careers/apply',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
-const AuthorsSlugRoute = AuthorsSlugRouteImport.update({
-  id: '/authors/$slug',
-  path: '/authors/$slug',
+const CareersApplyRoute = CareersApplyRouteImport.update({
+  id: '/careers_/apply',
+  path: '/careers/apply',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -205,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
+  '/evaluation-terms': typeof EvaluationTermsRoute
   '/faq': typeof FaqRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
@@ -237,6 +244,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
+  '/evaluation-terms': typeof EvaluationTermsRoute
   '/faq': typeof FaqRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
@@ -271,6 +279,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/docs': typeof DocsRoute
+  '/evaluation-terms': typeof EvaluationTermsRoute
   '/faq': typeof FaqRoute
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/demo'
     | '/docs'
+    | '/evaluation-terms'
     | '/faq'
     | '/how-to-secure-llms'
     | '/imprint'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/demo'
     | '/docs'
+    | '/evaluation-terms'
     | '/faq'
     | '/how-to-secure-llms'
     | '/imprint'
@@ -371,6 +382,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/demo'
     | '/docs'
+    | '/evaluation-terms'
     | '/faq'
     | '/how-to-secure-llms'
     | '/imprint'
@@ -405,6 +417,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   DemoRoute: typeof DemoRoute
   DocsRoute: typeof DocsRoute
+  EvaluationTermsRoute: typeof EvaluationTermsRoute
   FaqRoute: typeof FaqRoute
   HowToSecureLlmsRoute: typeof HowToSecureLlmsRoute
   ImprintRoute: typeof ImprintRoute
@@ -431,179 +444,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/team': {
-      id: '/team'
-      path: '/team'
-      fullPath: '/team'
-      preLoaderRoute: typeof TeamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shadow': {
-      id: '/shadow'
-      path: '/shadow'
-      fullPath: '/shadow'
-      preLoaderRoute: typeof ShadowRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/risk-assessment': {
-      id: '/risk-assessment'
-      path: '/risk-assessment'
-      fullPath: '/risk-assessment'
-      preLoaderRoute: typeof RiskAssessmentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockups': {
-      id: '/mockups'
-      path: '/mockups'
-      fullPath: '/mockups'
-      preLoaderRoute: typeof MockupsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-lab': {
-      id: '/mockup-lab'
-      path: '/mockup-lab'
-      fullPath: '/mockup-lab'
-      preLoaderRoute: typeof MockupLabRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-9': {
-      id: '/mockup-9'
-      path: '/mockup-9'
-      fullPath: '/mockup-9'
-      preLoaderRoute: typeof Mockup9RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-8': {
-      id: '/mockup-8'
-      path: '/mockup-8'
-      fullPath: '/mockup-8'
-      preLoaderRoute: typeof Mockup8RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-7': {
-      id: '/mockup-7'
-      path: '/mockup-7'
-      fullPath: '/mockup-7'
-      preLoaderRoute: typeof Mockup7RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-6': {
-      id: '/mockup-6'
-      path: '/mockup-6'
-      fullPath: '/mockup-6'
-      preLoaderRoute: typeof Mockup6RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-5': {
-      id: '/mockup-5'
-      path: '/mockup-5'
-      fullPath: '/mockup-5'
-      preLoaderRoute: typeof Mockup5RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-4': {
-      id: '/mockup-4'
-      path: '/mockup-4'
-      fullPath: '/mockup-4'
-      preLoaderRoute: typeof Mockup4RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-3': {
-      id: '/mockup-3'
-      path: '/mockup-3'
-      fullPath: '/mockup-3'
-      preLoaderRoute: typeof Mockup3RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-2': {
-      id: '/mockup-2'
-      path: '/mockup-2'
-      fullPath: '/mockup-2'
-      preLoaderRoute: typeof Mockup2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-1': {
-      id: '/mockup-1'
-      path: '/mockup-1'
-      fullPath: '/mockup-1'
-      preLoaderRoute: typeof Mockup1RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/llms.txt': {
-      id: '/llms.txt'
-      path: '/llms.txt'
-      fullPath: '/llms.txt'
-      preLoaderRoute: typeof LlmsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/imprint': {
-      id: '/imprint'
-      path: '/imprint'
-      fullPath: '/imprint'
-      preLoaderRoute: typeof ImprintRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/how-to-secure-llms': {
-      id: '/how-to-secure-llms'
-      path: '/how-to-secure-llms'
-      fullPath: '/how-to-secure-llms'
-      preLoaderRoute: typeof HowToSecureLlmsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/docs': {
-      id: '/docs'
-      path: '/docs'
-      fullPath: '/docs'
-      preLoaderRoute: typeof DocsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/careers': {
-      id: '/careers'
-      path: '/careers'
-      fullPath: '/careers'
-      preLoaderRoute: typeof CareersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-threat-detection': {
@@ -613,11 +458,193 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AiThreatDetectionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/evaluation-terms': {
+      id: '/evaluation-terms'
+      path: '/evaluation-terms'
+      fullPath: '/evaluation-terms'
+      preLoaderRoute: typeof EvaluationTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/how-to-secure-llms': {
+      id: '/how-to-secure-llms'
+      path: '/how-to-secure-llms'
+      fullPath: '/how-to-secure-llms'
+      preLoaderRoute: typeof HowToSecureLlmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/imprint': {
+      id: '/imprint'
+      path: '/imprint'
+      fullPath: '/imprint'
+      preLoaderRoute: typeof ImprintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-1': {
+      id: '/mockup-1'
+      path: '/mockup-1'
+      fullPath: '/mockup-1'
+      preLoaderRoute: typeof Mockup1RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-2': {
+      id: '/mockup-2'
+      path: '/mockup-2'
+      fullPath: '/mockup-2'
+      preLoaderRoute: typeof Mockup2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-3': {
+      id: '/mockup-3'
+      path: '/mockup-3'
+      fullPath: '/mockup-3'
+      preLoaderRoute: typeof Mockup3RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-4': {
+      id: '/mockup-4'
+      path: '/mockup-4'
+      fullPath: '/mockup-4'
+      preLoaderRoute: typeof Mockup4RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-5': {
+      id: '/mockup-5'
+      path: '/mockup-5'
+      fullPath: '/mockup-5'
+      preLoaderRoute: typeof Mockup5RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-6': {
+      id: '/mockup-6'
+      path: '/mockup-6'
+      fullPath: '/mockup-6'
+      preLoaderRoute: typeof Mockup6RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-7': {
+      id: '/mockup-7'
+      path: '/mockup-7'
+      fullPath: '/mockup-7'
+      preLoaderRoute: typeof Mockup7RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-8': {
+      id: '/mockup-8'
+      path: '/mockup-8'
+      fullPath: '/mockup-8'
+      preLoaderRoute: typeof Mockup8RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-9': {
+      id: '/mockup-9'
+      path: '/mockup-9'
+      fullPath: '/mockup-9'
+      preLoaderRoute: typeof Mockup9RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockup-lab': {
+      id: '/mockup-lab'
+      path: '/mockup-lab'
+      fullPath: '/mockup-lab'
+      preLoaderRoute: typeof MockupLabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mockups': {
+      id: '/mockups'
+      path: '/mockups'
+      fullPath: '/mockups'
+      preLoaderRoute: typeof MockupsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risk-assessment': {
+      id: '/risk-assessment'
+      path: '/risk-assessment'
+      fullPath: '/risk-assessment'
+      preLoaderRoute: typeof RiskAssessmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shadow': {
+      id: '/shadow'
+      path: '/shadow'
+      fullPath: '/shadow'
+      preLoaderRoute: typeof ShadowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/authors/$slug': {
+      id: '/authors/$slug'
+      path: '/authors/$slug'
+      fullPath: '/authors/$slug'
+      preLoaderRoute: typeof AuthorsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -627,13 +654,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof BlogRoute
     }
-    '/careers_/apply': {
-      id: '/careers_/apply'
-      path: '/careers/apply'
-      fullPath: '/careers/apply'
-      preLoaderRoute: typeof CareersApplyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -641,11 +661,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
-    '/authors/$slug': {
-      id: '/authors/$slug'
-      path: '/authors/$slug'
-      fullPath: '/authors/$slug'
-      preLoaderRoute: typeof AuthorsSlugRouteImport
+    '/careers_/apply': {
+      id: '/careers_/apply'
+      path: '/careers/apply'
+      fullPath: '/careers/apply'
+      preLoaderRoute: typeof CareersApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -671,6 +691,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   DemoRoute: DemoRoute,
   DocsRoute: DocsRoute,
+  EvaluationTermsRoute: EvaluationTermsRoute,
   FaqRoute: FaqRoute,
   HowToSecureLlmsRoute: HowToSecureLlmsRoute,
   ImprintRoute: ImprintRoute,

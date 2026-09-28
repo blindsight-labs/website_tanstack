@@ -272,3 +272,87 @@
   text-decoration-color: var(--ink-4);
   text-underline-offset: 3px;
 }
+
+.mD[data-site-variant="b"] .pb-modal .demo-startup-link:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Stepped form: "Step 2 of 3 · Your company" over a segmented bar, one short group of
+   fields per step, Back + Continue at the foot */
+.mD[data-site-variant="b"] .pb-modal .demo-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-steps__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-steps__label strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-steps__bar {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-steps__bar span {
+  height: 2px;
+  border-radius: 1px;
+  background: var(--line);
+  transition: background var(--dur-2) var(--ease);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-steps__bar span:is([data-state="done"], [data-state="current"]) {
+  background: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-step {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-step[hidden] {
+  display: none;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-nav .btn {
+  flex: 1;
+}
+.mD[data-site-variant="b"] .pb-modal .demo-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: none;
+  font-size: 14px;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-back:hover {
+  color: var(--ink);
+  border-color: var(--ink-4);
+}
+.mD[data-site-variant="b"] .pb-modal .demo-back:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mD[data-site-variant="b"] .pb-modal .demo-steps__bar span {
+    transition: none;
+  }
+}

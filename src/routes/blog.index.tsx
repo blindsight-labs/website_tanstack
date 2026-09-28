@@ -9,7 +9,7 @@ export const Route = createFileRoute("/blog/")({
     await preloadPage("blogIndex");
     return {
       meta: [
-        { title: "AI Security Research & Insights | Blindsight Blog" },
+        { title: "AI security research and insights · Blindsight" },
         {
           name: "description",
           content:

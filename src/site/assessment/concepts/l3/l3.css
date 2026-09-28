@@ -92,7 +92,7 @@
 .mD .rl3-depth,
 .mD .rl3-scale {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -174,7 +174,7 @@
   box-shadow: 0 12px 28px -18px rgba(11, 11, 13, 0.35);
 }
 .mD .rl3-flag__k {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.14em;
   color: var(--ink-3);
@@ -197,7 +197,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.12em;
   /* on the black it needs the sea's full ink to read */
@@ -449,7 +449,7 @@
   .mD .rl3-tick,
   .mD .rl3-depth,
   .mD .rl3-scale {
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 0.08em;
   }
   /* phone: the header's copy runs the full width; the black sheet alone carries the page */

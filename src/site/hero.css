@@ -118,7 +118,7 @@
   gap: 8px;
   width: 176px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -220,7 +220,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 9.5px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -259,7 +259,7 @@
   }
 }
 /* phone: the two monitors sit close; crm-assistant hangs on a longer leader, above chatgpt.com's box */
-@media (max-width: 600px) {
+@media (max-width: 599px) {
   .mD-hero__chip[data-k="1"] .mD-hero__chipBox {
     bottom: 28px;
   }
@@ -275,10 +275,11 @@
   }
 }
 
-/* ---- tablet / phone (≤ 879, where the scene switches to its narrow framing):
+/* ---- tablet / phone (≤ 899 viewport = stage < 880, where the scene switches to its narrow
+   framing and the nav to its burger):
    label, headline, THEN the render, then subline, CTA and the caption rail —
    the animation carries the opening instead of starting below the fold ---- */
-@media (max-width: 879px) {
+@media (max-width: 899px) {
   .mD-hero__sheet {
     min-height: 0;
   }
@@ -337,7 +338,7 @@
     padding: 5px 8px;
   }
   .mD-hero__chipK {
-    font-size: 10px;
+    font-size: 11px;
   }
   .mD-hero__chipV {
     font-size: 12px;
@@ -345,7 +346,7 @@
 }
 /* phone: the rail keeps its number and word; the result lines would wrap to
    three lines in a third of 390px, so they go (the chips carry the story) */
-@media (max-width: 600px) {
+@media (max-width: 599px) {
   .mD-hero__beat {
     letter-spacing: 0.06em;
   }

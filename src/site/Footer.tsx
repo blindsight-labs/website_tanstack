@@ -5,6 +5,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
 
 import logo from "@/assets/LOGO_Blindsight.svg";
+import { COOKIEBOT_CBID, openCookieSettings } from "@/lib/consent";
 import { footer, sequence } from "./content";
 import { MetalIcon, type SectionProps } from "./shared";
 
@@ -48,6 +49,17 @@ export function Footer({ theme }: SectionProps) {
                   <Link to={l.to}>{l.label}</Link>
                 </li>
               ))}
+              {COOKIEBOT_CBID && (
+                <li>
+                  <button
+                    type="button"
+                    className="mDb-footer__consent"
+                    onClick={openCookieSettings}
+                  >
+                    Cookie settings
+                  </button>
+                </li>
+              )}
             </ul>
           </nav>
         </div>

@@ -48,8 +48,8 @@ export function ApplyPage() {
       setError("Please enter a valid email address.");
       return;
     }
-    if (file && file.size > 5 * 1024 * 1024) {
-      setError("CV must be 5MB or smaller.");
+    if (file && file.size > 4 * 1024 * 1024) {
+      setError("CV must be 4MB or smaller.");
       return;
     }
 
@@ -75,7 +75,7 @@ export function ApplyPage() {
       });
       setDone(true);
     } catch (err) {
-      setError(friendlyFormError(err));
+      setError(friendlyFormError(err).detail);
     } finally {
       setSubmitting(false);
     }
@@ -121,7 +121,7 @@ export function ApplyPage() {
                   <input name="email" type="email" required maxLength={255} autoComplete="email" />
                 </label>
                 <label className="demo-field">
-                  <span>CV (PDF, DOC, DOCX or TXT · max 5MB)</span>
+                  <span>CV (PDF, DOC, DOCX or TXT · max 4MB)</span>
                   <input
                     name="cv"
                     type="file"

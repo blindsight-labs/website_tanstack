@@ -1,4 +1,6 @@
 /* Version B · /imprint. The legal text is the legacy page's, verbatim; only the frame is new. */
+import { Link } from "@tanstack/react-router";
+
 import { LegalPage, type LegalSection } from "./Legal";
 
 const row = (k: string, v: string) => (
@@ -73,18 +75,13 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <p>
-          The protection of your personal data is important to us. Our use of personal data is governed by our Privacy Policy,
-          which complies with the Swiss Federal Act on Data Protection (nFADP / revDSG) and, where applicable, the EU General
-          Data Protection Regulation (GDPR).
+          How we process personal data, which cookies we use and your rights are described in our{" "}
+          <Link to="/privacy">Privacy Notice</Link>. It covers the Swiss Federal Act on Data Protection (FADP / nDSG), the EU
+          and UK GDPR where they apply, and US state privacy laws where they apply.
         </p>
         <p>
-          This website uses Google Analytics to measure usage. Anonymous usage data may be transmitted to and stored on Google
-          servers. You may opt out of analytics collection at any time.
-        </p>
-        <p>
-          <strong>Cookie notice:</strong> This website uses analytics cookies (Google Analytics, ID: G-06PKBPMVBJ) to understand
-          visitor behaviour. No personal data is sold or shared with third parties for marketing purposes. By continuing to use
-          this site, you acknowledge this use. For full details, see our Privacy Policy.
+          Analytics cookies (Google Analytics) are set only with your consent, which you can give, refuse or withdraw at any
+          time in the cookie settings linked in the site footer.
         </p>
       </>
     ),
@@ -96,11 +93,7 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <p>
-          The European Commission provides an online dispute resolution (ODR) platform for consumers:{" "}
-          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">
-            ec.europa.eu/consumers/odr
-          </a>
-          . We are neither obligated nor willing to participate in dispute resolution proceedings before a consumer arbitration
+          We are neither obliged nor willing to take part in dispute resolution proceedings before a consumer arbitration
           board.
         </p>
         <p>
@@ -143,7 +136,7 @@ const SECTIONS: LegalSection[] = [
     body: (
       <p>
         This website and its content are governed by Swiss law. The place of jurisdiction is Zurich, Switzerland. This Imprint
-        was last updated in May 2026.
+        was last updated in September 2026.
       </p>
     ),
   },
@@ -154,7 +147,7 @@ export function ImprintB() {
     <LegalPage
       title="Imprint"
       printed="Imprint"
-      lead="Blindsight Technologies AG · Rennweg 57, 8001 Zürich · last updated May 2026"
+      lead="Blindsight Technologies AG · Rennweg 57, 8001 Zürich · last updated September 2026"
       sections={SECTIONS}
     />
   );

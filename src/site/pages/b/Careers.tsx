@@ -11,19 +11,19 @@ import { Page, PageHead, SheetGroup, Split, pad2 } from "./parts";
 
 const VALUES = [
   {
-    name: "Doers, Thinkers, Builders",
+    name: "Doers, thinkers, builders",
     body: "If we notice a problem, we fix it, or we bring in the team. Doers, thinkers, and builders work best when they're trusted with the freedom to move.",
   },
   {
-    name: "Hacker Mindset",
+    name: "Hacker mindset",
     body: `Security is a creative discipline. It's built on a deep understanding of the tech, by people who refuse to take "that's just how it works" as a final answer.`,
   },
   {
-    name: "Concerned Optimists",
+    name: "Concerned optimists",
     body: "We're passionate about where AI is going and its potential. But AGI and AI alignment won't happen safely without securing AI systems and their foundations first.",
   },
   {
-    name: "Lifelong Learners",
+    name: "Lifelong learners",
     body: "Cybersecurity never stops moving. Neither do we. Curious by default. Uncomfortable standing still.",
   },
 ];
@@ -97,7 +97,7 @@ export function CareersB() {
             ))}
             <li>
               <a href="mailto:careers@blindsight.io" className="pb-row pb-row--open">
-                <span className="pb-row__n">—</span>
+                <span className="pb-row__n">+</span>
                 <span className="pb-row__main">
                   <span className="pb-row__title">Not on the list?</span>
                   <span className="pb-row__desc">Tell us what you'd build here. We hire for trajectory.</span>

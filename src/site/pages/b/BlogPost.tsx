@@ -5,7 +5,7 @@
    page does; h2/h3 get ids for the outline. */
 import { Children, isValidElement, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown } from "lucide-react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -162,6 +162,16 @@ export function BlogPostB({ slug }: BlogPostProps) {
             )}
           </aside>
           <article className="pb-read__main">
+            {outline.length > 1 && (
+              // ≤ 899 px the side column is gone: the same outline, folded, above the text
+              <details className="pb-read__toc">
+                <summary>
+                  <Label>On this page · {outline.length}</Label>
+                  <ChevronDown size={16} strokeWidth={1.5} aria-hidden="true" />
+                </summary>
+                <Outline items={outline} />
+              </details>
+            )}
             <div className="pb-prose">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={MD}>
                 {post.body}

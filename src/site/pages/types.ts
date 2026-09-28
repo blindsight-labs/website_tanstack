@@ -24,6 +24,7 @@ export type BlogPostProps = { slug: string };
 export type AuthorProps = { slug: string };
 export type ImprintProps = NoProps;
 export type PrivacyProps = NoProps;
+export type EvaluationTermsProps = NoProps;
 /** Free-trial campaign page. FAQ copy: DEMO_FAQS in ./legacy/Demo.tsx (also feeds the route's JSON-LD). */
 export type DemoProps = NoProps;
 /** Shadow AI campaign page (ShadowAiDemo). */
@@ -49,6 +50,7 @@ export type PageProps = {
   author: AuthorProps;
   imprint: ImprintProps;
   privacy: PrivacyProps;
+  evaluationTerms: EvaluationTermsProps;
   demo: DemoProps;
   shadow: ShadowProps;
   notFound: NotFoundProps;

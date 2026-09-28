@@ -22,7 +22,7 @@
    - the violet inlay on one node is the risk the aperture is flagging (the page names it).
 
    Client-only: imported dynamically from Mockup3.tsx. Renders on demand. */
-import { THREE, createRenderer, studioLights, type Theme } from "@/site/three/core";
+import { THREE, createRenderer, studioLights, pixelRatio, type Theme } from "@/site/three/core";
 
 export type Rect = { x0: number; y0: number; x1: number; y1: number };
 /** Stage size (css px) and the frames the move runs between. */
@@ -546,7 +546,7 @@ export async function createLensScene(
 ): Promise<LensScene> {
   const dark = opts.theme === "dark";
   const renderer = createRenderer(canvas);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(pixelRatio(1.75));
   const sky = new THREE.Color().setStyle(opts.sky);
   const sea = new THREE.Color().setStyle(opts.sea);
   const ink = new THREE.Color().setStyle(opts.ink);

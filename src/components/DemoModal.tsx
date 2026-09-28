@@ -43,6 +43,15 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
     setIsOpen(true);
   };
   const close = () => setIsOpen(false);
+  /** A click on the backdrop closes only an untouched card: once something is typed, a stray
+   *  click must not throw it away (the X and Escape still close). */
+  const closeFromBackdrop = () => {
+    const typed = cardRef.current?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+      "input[type=text], input[type=email], textarea",
+    );
+    if (typed && [...typed].some((el) => el.value.trim() !== "")) return;
+    close();
+  };
 
   useModalDialog(isOpen, close, cardRef);
   // on the landing: after the hero's first frame, plus a beat (see src/site/heroReady.ts)
@@ -58,7 +67,7 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
         <div
           className={legacy ? "modal-backdrop bs-legacy" : "modal-backdrop"}
           data-site-variant={legacy ? undefined : variant}
-          onClick={close}
+          onClick={closeFromBackdrop}
           role="presentation"
         >
           <div

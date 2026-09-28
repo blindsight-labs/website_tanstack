@@ -1,8 +1,11 @@
 /* ProofStrip — owner "top". Section 1.
    One mixed, monochrome strip of every name in `proofStrip`. Real logo files are
    flattened to a single grey; names without a file are set as quiet wordmarks at
-   the same optical size. Slow drift (not a ticker), paused on hover, static wrap
-   with reduced motion. */
+   the same optical size. Slow drift (not a ticker), paused on hover or with the
+   pause button (touch has no hover), static wrap with reduced motion. */
+import { useState } from "react";
+import { Pause, Play } from "lucide-react";
+
 import logoAES from "@/assets/LOGO_AES.svg";
 import logoClinic from "@/assets/LOGO_ClinicBarcelona.svg";
 import logoGCRAI from "@/assets/LOGO_GCRAI.png";
@@ -69,10 +72,11 @@ function Item({ name, hidden }: { name: string; hidden?: boolean }) {
 }
 
 export function ProofStrip(_props: SectionProps) {
+  const [paused, setPaused] = useState(false);
   return (
     // no label for now: the strip mixes programs and partners, and no single
     // word covers both yet — the logos carry it on their own
-    <section className="mT-proof" aria-label="Programs and partners">
+    <section className="mT-proof" aria-label="Programs and partners" data-paused={paused ? "true" : "false"}>
       <div className="mD-container mT-proof__inner">
         <div className="mT-proof__viewport">
           <div className="mT-proof__track">
@@ -89,6 +93,19 @@ export function ProofStrip(_props: SectionProps) {
             </ul>
           </div>
         </div>
+        <button
+          type="button"
+          className="mT-proof__toggle"
+          aria-label="Pause logo animation"
+          aria-pressed={paused}
+          onClick={() => setPaused((p) => !p)}
+        >
+          {paused ? (
+            <Play size={14} strokeWidth={1.5} aria-hidden="true" />
+          ) : (
+            <Pause size={14} strokeWidth={1.5} aria-hidden="true" />
+          )}
+        </button>
       </div>
     </section>
   );

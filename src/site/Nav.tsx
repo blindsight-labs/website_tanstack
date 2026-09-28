@@ -160,6 +160,8 @@ export function Nav({ theme }: SectionProps) {
   const [scrolled, setScrolled] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
   const sheetId = useId();
+  const headerRef = useRef<HTMLElement>(null);
+  const burgerRef = useRef<HTMLButtonElement>(null);
 
   // Over a black inset sheet the frosted nav turns black too (as Octane's does),
   // instead of becoming a flat grey band. Re-checked per page.
@@ -196,14 +198,34 @@ export function Nav({ theme }: SectionProps) {
   }, [pathname]);
   useEffect(() => {
     if (!sheetOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSheetOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setSheetOpen(false);
+      burgerRef.current?.focus();
+    };
     const mq = window.matchMedia("(min-width: 900px)");
     const onChange = () => mq.matches && setSheetOpen(false);
     document.addEventListener("keydown", onKey);
     mq.addEventListener("change", onChange);
+    // the sheet is modal: everything outside the header goes inert (Tab stays in the header and
+    // sheet, screen readers skip the page behind it) and the page stops scrolling under it
+    const inerted: HTMLElement[] = [];
+    for (let el = headerRef.current; el && el !== document.body; el = el.parentElement) {
+      for (const sib of el.parentElement?.children ?? []) {
+        if (sib !== el && sib instanceof HTMLElement && !sib.inert) {
+          sib.inert = true;
+          inerted.push(sib);
+        }
+      }
+    }
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       mq.removeEventListener("change", onChange);
+      inerted.forEach((el) => (el.inert = false));
+      root.style.overflow = prevOverflow;
     };
   }, [sheetOpen]);
 
@@ -213,6 +235,7 @@ export function Nav({ theme }: SectionProps) {
 
   return (
     <header
+      ref={headerRef}
       className="mD-nav mT-nav"
       data-scrolled={scrolled || sheetOpen ? "true" : "false"}
       data-over={overInverse && !sheetOpen ? "inverse" : "page"}
@@ -260,6 +283,7 @@ export function Nav({ theme }: SectionProps) {
           </button>
           <CtaButton size="sm" className="mT-nav__cta" label={campaign?.label} kind={campaign?.kind} />
           <button
+            ref={burgerRef}
             type="button"
             className="mT-nav__burger"
             aria-expanded={sheetOpen}

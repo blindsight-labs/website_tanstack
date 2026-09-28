@@ -17,7 +17,7 @@ export const Route = createFileRoute("/careers_/apply")({
     await preloadPage("careersApply");
     return {
       meta: [
-        { title: "Apply · Blindsight Careers" },
+        { title: "Apply · Blindsight careers" },
         {
           name: "description",
           content: "Apply to join Blindsight. Send us your CV and we'll be in touch.",

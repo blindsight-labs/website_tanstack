@@ -95,7 +95,7 @@ function Line({ open, dot = false, kind, aside, children }: { open: boolean; dot
     </li>
   );
 }
-const Dash = () => <span className="s8d-dash"> — </span>;
+const Dash = () => <span className="s8d-dash"> · </span>;
 
 function See({ s, live }: { s: Snap; live: boolean }) {
   return (

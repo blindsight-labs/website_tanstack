@@ -82,7 +82,7 @@
   transform: translateY(-50%);
   background: var(--surface);
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -137,7 +137,7 @@
   align-self: end;
   padding: 0 12px 9px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.04em;
   line-height: 1.35;
   text-align: center;
@@ -223,7 +223,7 @@
   height: 20px;
   border-radius: calc(var(--r) - 2px);
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1;
   color: var(--ink);
@@ -370,7 +370,7 @@
   flex-basis: 100%;
   margin-bottom: 2px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-3);
@@ -493,7 +493,7 @@
 }
 
 /* tablet: three steps side by side leave ~210px each (the tool chips wrap one by one) */
-@media (max-width: 900px) {
+@media (max-width: 899px) {
   .dp7-steps__list {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -511,7 +511,7 @@
    report to, then each lane top to bottom: source ↓ port ↓ destination. The
    boundary can't wrap a card split across the lanes, so it gives way; the out-wire
    captions (pseudonymized / inspected at runtime) still say what leaves. */
-@media (max-width: 600px) {
+@media (max-width: 599px) {
   .dp7-runs__list {
     grid-template-columns: minmax(0, 1fr);
   }

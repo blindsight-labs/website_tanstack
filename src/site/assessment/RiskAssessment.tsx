@@ -18,19 +18,22 @@ export function RiskAssessment({ concept = "d" }: { concept?: string }) {
       <Suspense fallback={<div style={{ minHeight: "100vh" }} />}>
         <Component key={current.meta.id} a={a} theme={theme} />
       </Suspense>
-      <nav className="ra-switch" aria-label="Concepts (review only)">
-        {CONCEPTS.map(({ meta }) => (
-          <Link
-            key={meta.id}
-            to="/risk-assessment"
-            search={{ c: meta.id }}
-            aria-current={meta.id === current.meta.id ? "page" : undefined}
-          >
-            <span>{meta.id}</span>
-            <span className="ra-switch__name">{meta.name}</span>
-          </Link>
-        ))}
-      </nav>
+      {/* concept switcher: design review only, never shipped (pick one with ?c= on a deploy) */}
+      {import.meta.env.DEV && (
+        <nav className="ra-switch" aria-label="Concepts (review only)">
+          {CONCEPTS.map(({ meta }) => (
+            <Link
+              key={meta.id}
+              to="/risk-assessment"
+              search={{ c: meta.id }}
+              aria-current={meta.id === current.meta.id ? "page" : undefined}
+            >
+              <span>{meta.id}</span>
+              <span className="ra-switch__name">{meta.name}</span>
+            </Link>
+          ))}
+        </nav>
+      )}
     </main>
   );
 }

@@ -41,6 +41,7 @@ export async function sendNotification(opts: {
   attachments?: Attachment[];
 }): Promise<void> {
   const from = requireEnv("MAIL_FROM");
+  if (!opts.to) throw new Error("Notification recipient is not set (MAIL_TO_*)");
   const { error } = await getResend().emails.send({
     from,
     to: opts.to,

@@ -25,8 +25,8 @@ export function ContactB() {
         lead="Whether you're evaluating LLM security for the first time or replacing an existing stack, the founders read every note. Expect a reply within one business day."
         actions={
           <>
-            <a href="mailto:info@blindsight.io" className="mD-btn mD-btn--primary">
-              info@blindsight.io
+            <a href="mailto:info@blindsight.io" className="mD-btn mD-btn--primary" title="info@blindsight.io">
+              Email the founders
             </a>
             <CtaButton variant="secondary" />
           </>

@@ -130,7 +130,7 @@
 .mD .rmd-depth,
 .mD .rmd-scale {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -223,7 +223,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.14em;
   color: var(--rmd-v0);
@@ -256,7 +256,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.12em;
   /* the full ink of the water behind it, whichever that is */
@@ -694,7 +694,7 @@
   .mD .rmd-tick,
   .mD .rmd-depth,
   .mD .rmd-scale {
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 0.08em;
   }
   /* phone: the header's copy runs the full width; the black sheet alone carries the page */

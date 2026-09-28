@@ -45,7 +45,7 @@ function useMedia(query: string) {
   }, [query]);
   return on;
 }
-/* the live sequence plays at every width (CSS restacks it ≤ 900 px); reduced motion: stills */
+/* the live sequence plays at every width (CSS restacks it ≤ 899 px); reduced motion: stills */
 const LIVE_MQ = "(prefers-reduced-motion: no-preference)";
 const STILL_MQ = "(prefers-reduced-motion: reduce)";
 /** the stills' frame: 16:10 from 600 px up, 4:3 on a phone (as ./seq/shell.css sizes it) */

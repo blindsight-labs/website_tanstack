@@ -76,6 +76,16 @@
 .mD .ra-prog__seg[data-state="current"]::after {
   background: color-mix(in srgb, var(--ink) 45%, transparent);
 }
+/* touch: a taller hit area around the same 2px bar (the negative margin keeps the layout) */
+@media (pointer: coarse) {
+  .mD .ra-prog__seg {
+    height: 40px;
+    margin-block: -13px;
+  }
+  .mD .ra-prog__seg::after {
+    top: 19px;
+  }
+}
 .mD .ra-prog__seg:focus-visible {
   outline: 2px solid var(--signal);
   outline-offset: 1px;

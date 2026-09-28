@@ -663,7 +663,7 @@
 .mD[data-site-variant="b"] .pb-cites {
   margin-left: 2px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
 }
 .mD[data-site-variant="b"] .pb-cites a {
   padding: 0 2px;
@@ -671,6 +671,11 @@
 }
 .mD[data-site-variant="b"] .pb-cites a:hover {
   color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-cites a:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

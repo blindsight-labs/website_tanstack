@@ -15,7 +15,7 @@
  * (3 o'clock), and that node carries the page's one violet signal. The DOM audit
  * row seals during "Govern it". It also sways gently and leans towards the cursor.
  */
-import { THREE, RoundedBoxGeometry, createRenderer, type Theme } from "./core";
+import { THREE, RoundedBoxGeometry, createRenderer, pixelRatio, type Theme } from "./core";
 
 export const LOOP_MS = 10400;
 /** A calm frame for reduced motion: the mark in its canonical orientation. */
@@ -234,7 +234,7 @@ function puck(r: number, depth: number, bevel: number, segs = 96) {
 export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptions): Promise<HeroScene> {
   const dark = opts.theme === "dark";
   const renderer = createRenderer(canvas);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(pixelRatio(1.75));
   renderer.toneMappingExposure = dark ? 1.0 : 1.04;
 
   const bg = new THREE.Color().setStyle(opts.bg);

@@ -17,6 +17,8 @@ export function legacyPages(): Required<PageLoaders> {
     author: () => import("./Author").then((m) => m.AuthorPage),
     imprint: () => import("./Imprint").then((m) => m.Imprint),
     privacy: () => import("./Privacy").then((m) => m.PrivacyNotice),
+    // No pre-redesign version: the terms were written for version B.
+    evaluationTerms: () => import("../b/EvaluationTerms").then((m) => m.EvaluationTermsB),
     demo: () => import("./Demo").then((m) => m.DemoPage),
     shadow: () => import("./Shadow").then((m) => m.ShadowPage),
     notFound: () => import("./NotFound").then((m) => m.NotFoundPage),

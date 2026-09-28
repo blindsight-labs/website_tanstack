@@ -263,7 +263,7 @@
 }
 
 /* shorter laptop screens: tighten so the sheet still fits */
-@media (max-height: 860px) and (min-width: 901px) {
+@media (max-height: 860px) and (min-width: 900px) {
   .s8d-body {
     margin-top: 12px;
     font-size: 15px;
@@ -284,7 +284,7 @@
     top: calc(9px + 0.725em - 3.5px);
   }
 }
-@media (max-width: 1180px) and (min-width: 901px) {
+@media (max-width: 1180px) and (min-width: 900px) {
   .s8d-body {
     font-size: 15px;
   }
@@ -294,8 +294,8 @@
   }
 }
 
-/* ---- phone and tablet (≤ 900 px): the captions sit under the full-width close-up ---- */
-@media (max-width: 900px) {
+/* ---- phone and tablet (≤ 899 px): the captions sit under the full-width close-up ---- */
+@media (max-width: 899px) {
   .s8d-body {
     margin-top: 12px;
     font-size: 15.5px;
@@ -346,7 +346,7 @@
 .s8d-still .s8d-dot {
   display: none;
 }
-@media (min-width: 901px) {
+@media (min-width: 900px) {
   .mD-seq__block .s8d-still {
     grid-column: 1;
     grid-row: 2;

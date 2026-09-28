@@ -79,7 +79,7 @@
   color: var(--ink-3);
 }
 /* phones: no sideways scroll; each row becomes a block of label / value lines */
-@media (max-width: 600px) {
+@media (max-width: 599px) {
   .mD[data-site-variant="b"] .pb-table__scroll {
     overflow: visible;
     box-shadow: none;
@@ -593,4 +593,24 @@
   font-size: 13px;
   color: var(--ink-2);
   white-space: pre-wrap;
+}
+
+/* inline "Cookie settings" control in legal text: a button that reads as a link */
+.mD[data-site-variant="b"] .pb-linkbtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.mD[data-site-variant="b"] .pb-linkbtn:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+.mD[data-site-variant="b"] .pb-cookie-declaration {
+  margin-top: var(--s5);
+  overflow-x: auto;
 }

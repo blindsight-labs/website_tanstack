@@ -141,7 +141,7 @@
 .mD .rl1-depth,
 .mD .rl1-scale {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
   line-height: 13px;
@@ -254,7 +254,7 @@
   -webkit-backdrop-filter: var(--glass-blur);
 }
 .mD .rl1-flag__k {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.14em;
   color: var(--ink-2);
@@ -269,7 +269,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.12em;
   color: var(--ink-2);
@@ -452,7 +452,7 @@
     right: 12px;
     bottom: auto;
     gap: 8px;
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 0.06em;
   }
   .mD .rl1-head {

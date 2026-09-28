@@ -532,7 +532,7 @@ function RuntimeView() {
         </div>
       </div>
       <div className="mid-c__split">
-        <div className="mid-c__table mid-c__table--rt" role="listbox" aria-label="Runtime events">
+        <div className="mid-c__table mid-c__table--rt" role="group" aria-label="Runtime events">
           <div className="mid-c__th" aria-hidden="true">
             <span>Time</span>
             <span>Flow</span>
@@ -543,8 +543,7 @@ function RuntimeView() {
             <button
               key={ev.t + ev.who}
               type="button"
-              role="option"
-              aria-selected={sel === i}
+              aria-pressed={sel === i}
               className="mid-c__tr"
               data-quiet={ev.policy === "—" ? "true" : undefined}
               onClick={() => setSel(i)}
@@ -604,7 +603,7 @@ function PoliciesView() {
     <>
       <ViewHead title="Policies" sub="14 rules · compiled from 5 written policies" />
       <div className="mid-c__split mid-c__split--pol">
-        <div className="mid-c__table mid-c__table--pol" role="listbox" aria-label="Policies">
+        <div className="mid-c__table mid-c__table--pol" role="group" aria-label="Policies">
           <div className="mid-c__th" aria-hidden="true">
             <span>Rule</span>
             <span>Name</span>
@@ -612,7 +611,7 @@ function PoliciesView() {
             <span className="mid-num mid-hide-sm">Hits · 7d</span>
           </div>
           {POLICIES.map((x, i) => (
-            <button key={x.id} type="button" role="option" aria-selected={sel === i} className="mid-c__tr" onClick={() => setSel(i)}>
+            <button key={x.id} type="button" aria-pressed={sel === i} className="mid-c__tr" onClick={() => setSel(i)}>
               <span className="mid-c__id">{x.id}</span>
               <span className="mid-c__sans mid-c__trunc">{x.name}</span>
               <span className="mid-c__muted mid-hide-sm" data-mode={x.mode}>

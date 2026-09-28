@@ -11,13 +11,13 @@ export const Route = createFileRoute("/demo")({
     const [{ DEMO_FAQS }] = await Promise.all([import("@/site/pages/legacy/Demo"), preloadPage("demo")]);
     return {
       meta: [
-        { title: "Blindsight - Free Trial" },
+        { title: "Free trial · Blindsight" },
         {
           name: "description",
           content:
             "Run Blindsight's Runtime Security and Shadow AI engines on your own traffic. 10,000 free tokens, no card, no procurement.",
         },
-        { property: "og:title", content: "Blindsight - Free Trial" },
+        { property: "og:title", content: "Free trial · Blindsight" },
         {
           property: "og:description",
           content:
@@ -52,7 +52,7 @@ export const Route = createFileRoute("/demo")({
               {
                 "@type": "ListItem",
                 position: 2,
-                name: "Free Trial",
+                name: "Free trial",
                 item: "https://blindsight.io/demo",
               },
             ],

@@ -47,7 +47,7 @@
  *
  * Story values follow tMs and ease from what is on screen after a jump (springs, trk).
  */
-import { THREE, RoundedBoxGeometry, createRenderer, studioEnvironment, yieldToMain, type Theme } from "@/site/three/core";
+import { THREE, RoundedBoxGeometry, createRenderer, studioEnvironment, yieldToMain, pixelRatio, type Theme } from "@/site/three/core";
 
 export const LOOP_MS = 15000;
 /** A calm, representative still (reduced motion): the log written and sealed. */
@@ -622,7 +622,7 @@ function drawInvoice(g: G2, c: Pal) {
   text(g, "Due 26 Sep 2026", PR, 166, sans(400, 11), c.sub, "right");
   text(g, "Lena Brandt · Brandt Logistik AG", PX, 186, sans(500, 13), c.txt);
   hline(g, 254, PX, PR, c.line);
-  [["Item", "Qty", "Amount"], ["Platform license — Q3", "1", "12,400.00"], ["Support, tier 2", "1", "4,800.00"], ["Onboarding", "8 h", "1,040.00"]].forEach(([a, b, d], i) => {
+  [["Item", "Qty", "Amount"], ["Platform license, Q3", "1", "12,400.00"], ["Support, tier 2", "1", "4,800.00"], ["Onboarding", "8 h", "1,040.00"]].forEach(([a, b, d], i) => {
     const y = i ? 276 + i * 23 : 274;
     const f = i ? sans(400, 13) : sans(500, 11);
     const col = i ? c.txt : c.sub;
@@ -893,7 +893,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const dark = opts.theme === "dark";
   await fontReady();
   const renderer = createRenderer(canvas);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(pixelRatio(1.75));
   renderer.toneMapping = THREE.NoToneMapping; // the screen's canvases keep their own colours
   renderer.autoClear = false; // cleared whole, then rendered inside the usable rect
 

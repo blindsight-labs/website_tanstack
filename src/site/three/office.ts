@@ -36,7 +36,7 @@
  *   · INVITE: the window after the story resolves (7000–9000 ms) in which the Hero
  *     lights the CTA once (hero.css).
  */
-import { THREE, RoundedBoxGeometry, createRenderer, yieldToMain, type Theme } from "./core";
+import { THREE, RoundedBoxGeometry, createRenderer, yieldToMain, pixelRatio, type Theme } from "./core";
 
 export const LOOP_MS = 10400;
 /** A frame where everything has happened and nothing is moving (reduced motion). */
@@ -395,7 +395,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   await fontsReady();
 
   const renderer = createRenderer(canvas);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setPixelRatio(pixelRatio(1.75));
   renderer.localClippingEnabled = true;
   renderer.toneMappingExposure = dark ? 1.0 : 1.04;
 

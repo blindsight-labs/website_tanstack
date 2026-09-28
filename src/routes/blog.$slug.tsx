@@ -17,7 +17,10 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   errorComponent: (props) => (
     <LegacyFrame>
-      <BlogPostError {...props} />
+      <BlogPostError
+        error={props.error instanceof Error ? props.error : new Error(String(props.error))}
+        reset={props.reset}
+      />
     </LegacyFrame>
   ),
   // The post page renders its own "post not found" state for an unknown slug.
@@ -26,7 +29,7 @@ export const Route = createFileRoute("/blog/$slug")({
   head: async ({ params, loaderData }) => {
     const [{ getPost }] = await Promise.all([loadPosts(), preloadPage("blogPost")]);
     const post = getPost(loaderData?.slug ?? params.slug);
-    const title = post ? (post.seoTitle ?? `${post.title} | Blindsight Blog`) : "Blog | Blindsight";
+    const title = post ? (post.seoTitle ?? `${post.title} · Blindsight blog`) : "Blog · Blindsight";
     const description = post
       ? (post.seoDescription ?? post.excerpt)
       : "Notes from the Blindsight team on LLM security and AI threat detection.";

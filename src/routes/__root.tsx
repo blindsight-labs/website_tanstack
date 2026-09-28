@@ -7,7 +7,7 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 import { DemoModalProvider } from "@/components/DemoModal";
 import { Footer } from "@/site/Footer";
@@ -23,8 +23,11 @@ import {
   useSiteTheme,
 } from "@/site/theme";
 import { SITE_VARIANT } from "@/site/variant";
+import { consentHeadScripts, trackPageView } from "@/lib/consent";
+import { watchOverflow } from "@/lib/overflow-watch";
 
 import appCss from "../styles.css?url";
+import fontsCss from "@/site/fonts.css?url";
 import systemCss from "@/site/system.css?url";
 import heroCss from "@/site/hero.css?url";
 import topCss from "@/site/top.css?url";
@@ -66,14 +69,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     return {
       meta: [
         { charSet: "utf-8" },
-        { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { title: "Blindsight - Securing AI" },
+        { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+        { title: "Blindsight · Securing AI" },
         {
           name: "description",
           content:
             "Blindsight provides trust to AI Systems, securing its runtime, data and providing visibility - all in one consolidated platform.",
         },
-        { property: "og:title", content: "Blindsight - Securing AI" },
+        { property: "og:title", content: "Blindsight · Securing AI" },
         {
           property: "og:description",
           content:
@@ -84,9 +87,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { property: "og:image:type", content: "image/png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
-        { property: "og:image:alt", content: "Blindsight - Securing AI" },
+        { property: "og:image:alt", content: "Blindsight · Securing AI" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "Blindsight - Securing AI" },
+        { name: "twitter:title", content: "Blindsight · Securing AI" },
         {
           name: "twitter:description",
           content:
@@ -96,22 +99,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       ],
       links: [
         { rel: "stylesheet", href: appCss },
-        { rel: "icon", href: "/favicon.png", type: "image/png" },
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
-        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap",
-        },
+        // .ico first for crawlers and legacy clients; SVG (flips white in dark UIs) wins where supported.
+        { rel: "icon", href: "/favicon.ico", sizes: "48x48" },
+        { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+        { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        { rel: "manifest", href: "/site.webmanifest" },
+        { rel: "stylesheet", href: fontsCss },
         ...(mockup ? [] : SITE_CSS.map((href) => ({ rel: "stylesheet", href }))),
       ],
       scripts: [
-        // Google Analytics (gtag.js) — GA4 property G-06PKBPMVBJ
-        { src: "https://www.googletagmanager.com/gtag/js?id=G-06PKBPMVBJ", async: true },
-        {
-          children:
-            "window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-06PKBPMVBJ');",
-        },
+        // Cookiebot + the analytics it gates (GA4 loads only after statistics consent).
+        ...consentHeadScripts(),
         {
           type: "application/ld+json",
           children: JSON.stringify({
@@ -212,18 +210,37 @@ function SiteChrome() {
   );
 }
 
+/** Router errors are typed `unknown` (anything can be thrown): the error page needs an Error. */
+const toError = (e: unknown): Error => (e instanceof Error ? e : new Error(String(e)));
+
 /** A root-level error replaces RootComponent, so it brings its own frame (no nav/footer). */
 function RootError({ error, reset }: ErrorComponentProps) {
   return (
     <SiteFrame>
-      <SitePage name="error" error={error} reset={reset} />
+      <SitePage name="error" error={toError(error)} reset={reset} />
     </SiteFrame>
   );
+}
+
+/** GA4 page views for client-side navigations (the initial load is counted by gtag's config). */
+function usePageViews(pathname: string) {
+  const first = useRef(true);
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    // after the new route's head() has set the title
+    const t = setTimeout(() => trackPageView(pathname), 0);
+    return () => clearTimeout(t);
+  }, [pathname]);
 }
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  usePageViews(pathname);
+  useEffect(() => (import.meta.env.DEV ? watchOverflow() : undefined), [pathname]);
   if (isMockupPath(pathname)) {
     return (
       <QueryClientProvider client={queryClient}>

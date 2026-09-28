@@ -15,6 +15,7 @@ export type SiteRoute =
   | "/faq"
   | "/imprint"
   | "/privacy"
+  | "/evaluation-terms"
   | "/shadow"
   | "/demo";
 

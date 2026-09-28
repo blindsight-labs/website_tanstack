@@ -11,7 +11,7 @@ import type { DemoModalProps } from "../types";
  *  sharing details; "trial" = start the free-trial program (see /demo). */
 export const DEMO_MODAL_COPY: Record<DemoVariant, { tag: string; title: string; sub: string }> = {
   demo: {
-    tag: "Request a Demo",
+    tag: "Request a demo",
     title: "See Blindsight against your stack.",
     sub: "30-minute working session with the founding team. Reply within one business day.",
   },

@@ -15,7 +15,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 /* the rest of the team: a three-column track, one size down from the founders, so the
-   hierarchy holds; with two people the third slot stays open by design (2 across ≤ 900px) */
+   hierarchy holds; with two people the third slot stays open by design (2 across ≤ 899px) */
 .mD[data-site-variant="b"] .pb-people--sm {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--s7) var(--s5);

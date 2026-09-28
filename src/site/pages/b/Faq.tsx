@@ -153,7 +153,11 @@ export function FaqB() {
                   aria-controls={`pb-panel-${t.id}`}
                   tabIndex={t.id === active ? 0 : -1}
                   className="pb-tab"
-                  onClick={() => setActive(t.id)}
+                  onClick={(e) => {
+                    setActive(t.id);
+                    // on a phone the strip scrolls: bring the picked topic fully into view
+                    e.currentTarget.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+                  }}
                   onKeyDown={(e) => {
                     if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
                     const i = THEMES.findIndex((x) => x.id === active);

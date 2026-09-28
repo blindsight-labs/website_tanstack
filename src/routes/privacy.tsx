@@ -9,12 +9,12 @@ export const Route = createFileRoute("/privacy")({
     await preloadPage("privacy");
     return {
       meta: [
-        { title: "Privacy Notice · Blindsight" },
+        { title: "Privacy notice · Blindsight" },
         {
           name: "description",
           content: "How Blindsight Technologies AG collects, uses, and protects your personal data.",
         },
-        { property: "og:title", content: "Privacy Notice · Blindsight" },
+        { property: "og:title", content: "Privacy notice · Blindsight" },
         { property: "og:url", content: "https://blindsight.io/privacy" },
         { name: "robots", content: "noindex" },
       ],

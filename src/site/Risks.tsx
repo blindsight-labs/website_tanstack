@@ -1691,7 +1691,7 @@ export function Risks({ theme }: SectionProps) {
         console.warn("[risks] no live renderer", err);
         return;
       }
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      renderer.setPixelRatio(core.pixelRatio(1.5));
       el.dataset.callouts = "hover"; // each callout draws in once its card has played
       player.current = {
         core,

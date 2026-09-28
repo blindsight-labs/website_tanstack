@@ -88,7 +88,8 @@
   margin: 0;
   padding: 0;
 }
-.mDb-footer__links a {
+.mDb-footer__links a,
+.mDb-footer__consent {
   display: inline-block;
   padding-block: 12px;
   font-family: var(--font-mono);
@@ -101,13 +102,23 @@
   border-radius: var(--r);
   transition: color var(--dur-1) var(--ease);
 }
-.mDb-footer__links a:hover {
+.mDb-footer__links a:hover,
+.mDb-footer__consent:hover {
   color: var(--ink-3);
 }
 .mDb-footer__links a:focus-visible,
+.mDb-footer__consent:focus-visible,
 .mDb-footer__logo:focus-visible {
   outline: 2px solid var(--signal);
   outline-offset: 3px;
+}
+
+/* The "Cookie settings" control is a button (it opens the consent banner): reset it to the links' look. */
+.mDb-footer__consent {
+  padding-inline: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
 }
 
 .mDb-term {
@@ -163,14 +174,14 @@
 /* ==========================================================================
    Responsive
    ========================================================================== */
-@media (max-width: 900px) {
+@media (max-width: 899px) {
   .mDb-footer__top {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--s4);
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 599px) {
   /* six links as two even rows of three, never one left alone */
   .mDb-footer__links {
     display: grid;

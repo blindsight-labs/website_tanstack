@@ -12,13 +12,13 @@ export const Route = createFileRoute("/shadow")({
     const [{ faqSchemaEntities }] = await Promise.all([import("@/lib/faq-content"), preloadPage("shadow")]);
     return {
       meta: [
-        { title: "Blindsight - Shadow AI Security" },
+        { title: "Shadow AI security · Blindsight" },
         {
           name: "description",
           content:
             "Your team is already using AI tools you never approved. Blindsight surfaces every Shadow AI interaction and secures it before sensitive data leaks.",
         },
-        { property: "og:title", content: "Blindsight - Shadow AI Security" },
+        { property: "og:title", content: "Shadow AI security · Blindsight" },
         {
           property: "og:description",
           content: "Surface and secure every Shadow AI interaction across your organization.",
