@@ -8,10 +8,9 @@ import { useId } from "react";
 import { X } from "lucide-react";
 
 import { DemoForm } from "@/components/DemoForm";
-import type { DemoVariant } from "@/components/DemoModal";
 import { Label } from "@/site/shared";
 import { useSiteTheme } from "@/site/theme";
-import { DEMO_MODAL_COPY } from "../legacy/DemoModalCard";
+import { DEMO_MODAL_COPY } from "../data";
 import type { DemoModalProps } from "../types";
 import { Steps } from "./parts";
 
@@ -22,7 +21,7 @@ const METAL: Record<"light" | "dark", [number, string][]> = {
   light: [
     [0, "#7C8089"],
     [0.45, "#2B2D33"],
-    [0.55, "#0B0B0D"],
+    [0.55, "#111118"],
     [1, "#50535B"],
   ],
   dark: [
@@ -64,36 +63,23 @@ function MetalMark({ className }: { className?: string }) {
   );
 }
 
-const NEXT: Record<DemoVariant, { k: string; v: string }[]> = {
-  demo: [
-    { k: "Reply", v: "A founder replies within one business day, from info@blindsight.io." },
-    { k: "Session", v: "30 minutes with the founding team, against your own stack." },
-    { k: "Discovery", v: "We scope a first look at the AI in use across your organization." },
-  ],
-  download: [
-    { k: "Link", v: "Your download link and setup guide arrive within one business day." },
-    { k: "Install", v: "A desktop app on each machine. Windows now, macOS soon." },
-    { k: "See", v: "Every AI tool in use, with sensitive values masked on the device." },
-  ],
-  trial: [
-    { k: "Apply", v: "Two minutes. A founder replies within one business day." },
-    { k: "Install", v: "Same day, no re-architecture. Your keys and deployment options by email." },
-    { k: "Measure", v: "10,000 tokens across both engines. Your own numbers, day one." },
-  ],
-};
+const NEXT = [
+  { k: "Reply", v: "A founder replies within one business day, from info@blindsight.io." },
+  { k: "Session", v: "30 minutes with the founding team, against your own stack." },
+  { k: "Discovery", v: "We scope a first look at the AI in use across your organization." },
+];
 
-export function DemoModalB({ kind, onClose }: DemoModalProps) {
-  const copy = DEMO_MODAL_COPY[kind];
+export function DemoModalB({ onClose }: DemoModalProps) {
+  const copy = DEMO_MODAL_COPY;
   return (
-    <div className="pb-modal" data-kind={kind}>
+    <div className="pb-modal">
       <button type="button" className="pb-modal__close" aria-label="Close" onClick={onClose}>
         <X size={18} strokeWidth={1.5} aria-hidden="true" />
       </button>
       <div className="pb-modal__head">
         <MetalMark className="pb-modal__mark" />
         <div className="pb-modal__headText">
-          {/* the mark is the card's one brand glyph: no label hex beside it */}
-          <Label hex={false}>{copy.tag}</Label>
+          <Label>{copy.tag}</Label>
           <h2 id="demo-modal-title" className="mD-h2 pb-modal__title">
             {copy.title}
           </h2>
@@ -102,11 +88,11 @@ export function DemoModalB({ kind, onClose }: DemoModalProps) {
       </div>
       <div className="pb-modal__grid">
         <div className="pb-modal__form">
-          <DemoForm variant={kind} />
+          <DemoForm />
         </div>
         <aside className="pb-modal__next" aria-label="What happens next">
           <p className="pb-next__head">What happens next</p>
-          <Steps items={NEXT[kind]} />
+          <Steps items={NEXT} />
         </aside>
       </div>
     </div>

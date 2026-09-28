@@ -4,7 +4,7 @@
 import type * as T from "three";
 
 import { THREE, slab } from "@/site/three/core";
-import { ROLES } from "../../legacy/Careers";
+import { ROLES } from "../../data";
 import { aim, bar, floor, glass, ink, inkCss, paper, satin, setup, wall, type Ctx, type Tone } from "./kit";
 import { imageFor } from "./images";
 import { MARK_R, glassMark, rimmedSlab, roundRect, shadowBlob, textBlock, words, wrap } from "./print";

@@ -456,8 +456,8 @@ type Pal = ReturnType<typeof uiPalette>;
 type G2 = CanvasRenderingContext2D;
 function uiPalette(dark: boolean) {
   return dark
-    ? { desk: "#1a1b1e", bar: "#131416", win: "#0e0f11", line: "#303136", txt: "#d4d5d9", sub: "#86888e", faint: "#232428", ink: "#f4f4f6", sel: "#1d1e22", paper: "#141518", hid: "#1a1b1e", deck: "#4a4c52", key: "#2a2c31", alu: 0x4a4c52, bezel: 0x050506, chrome: 0xe6e7ea }
-    : { desk: "#e2e3e6", bar: "#f0f1f3", win: "#fcfcfd", line: "#d0d2d7", txt: "#2a2b2f", sub: "#76787e", faint: "#e6e7ea", ink: "#0b0b0d", sel: "#eceef1", paper: "#ffffff", hid: "#f4f4f6", deck: "#c9cbd0", key: "#b1b3b8", alu: 0xc9cbd0, bezel: 0x141518, chrome: 0xeeeff2 };
+    ? { desk: "#1a1b1e", bar: "#131416", win: "#0e0f11", line: "#303136", txt: "#d4d5d9", sub: "#86888e", faint: "#232428", ink: "#ececf1", sel: "#1d1e22", paper: "#141518", hid: "#1a1b1e", deck: "#4a4c52", key: "#2a2c31", alu: 0x4a4c52, bezel: 0x050506, chrome: 0xe6e7ea }
+    : { desk: "#e2e3e6", bar: "#f0f1f3", win: "#fcfcfd", line: "#d0d2d7", txt: "#2a2b2f", sub: "#76787e", faint: "#e6e7ea", ink: "#111118", sel: "#eceef1", paper: "#ffffff", hid: "#ececf1", deck: "#c9cbd0", key: "#b1b3b8", alu: 0xc9cbd0, bezel: 0x141518, chrome: 0xeeeff2 };
 }
 function rgbOf(s: string): number[] {
   if (s[0] === "#") return [0, 1, 2].map((i) => parseInt(s.slice(1 + i * 2, 3 + i * 2), 16));
@@ -913,7 +913,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const camera = new THREE.PerspectiveCamera(CAM.fov, 1, 0.2, 80);
   const tanHalf = Math.tan(deg(CAM.fov / 2));
   const C = uiPalette(dark);
-  const vio = dark ? "#A08CFF" : "#6E4BFF";
+  const vio = dark ? "#7C6CF5" : "#5546E0";
   const lineCol = dark ? new THREE.Color(0xffffff) : ink.clone();
   const texs: THREE.Texture[] = [];
   const canvasTex = (cv: HTMLCanvasElement) => {

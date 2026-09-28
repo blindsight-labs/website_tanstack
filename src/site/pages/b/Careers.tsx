@@ -6,8 +6,8 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { FinalCta } from "@/site/FinalCta";
 import { useSiteTheme } from "@/site/theme";
-import { ROLES } from "../legacy/Careers";
-import { Page, PageHead, SheetGroup, Split, pad2 } from "./parts";
+import { ROLES } from "../data";
+import { Page, PageHead, SheetGroup, Split } from "./parts";
 
 const VALUES = [
   {
@@ -61,15 +61,14 @@ export function CareersB() {
             </p>
           }
         >
-          <ol className="pb-values" role="list">
-            {VALUES.map((v, i) => (
+          <ul className="pb-values" role="list">
+            {VALUES.map((v) => (
               <li key={v.name} className="pb-value" data-reveal>
-                <span className="pb-value__n">{pad2(i)}</span>
                 <h3 className="mD-h3">{v.name}</h3>
                 <p>{v.body}</p>
               </li>
             ))}
-          </ol>
+          </ul>
         </Split>
 
         <Split
@@ -79,10 +78,9 @@ export function CareersB() {
           note={<p>{ROLES.length} open roles. Don't see yours? Write to us anyway, we read every note.</p>}
         >
           <ul className="pb-rows pb-rows--roles" role="list" data-reveal>
-            {ROLES.map((r, i) => (
+            {ROLES.map((r) => (
               <li key={r.title}>
                 <Link to="/careers/apply" search={{ role: r.title }} className="pb-row">
-                  <span className="pb-row__n">{pad2(i)}</span>
                   <span className="pb-row__main">
                     <span className="pb-row__title">{r.title}</span>
                     <span className="pb-row__desc">{r.desc}</span>
@@ -97,7 +95,6 @@ export function CareersB() {
             ))}
             <li>
               <a href="mailto:careers@blindsight.io" className="pb-row pb-row--open">
-                <span className="pb-row__n">+</span>
                 <span className="pb-row__main">
                   <span className="pb-row__title">Not on the list?</span>
                   <span className="pb-row__desc">Tell us what you'd build here. We hire for trajectory.</span>

@@ -123,7 +123,6 @@ export function Deployment({ theme }: SectionProps) {
       <div className="mD-container">
         <header className="dp7-head" data-reveal>
           <div>
-            <Label>{deployment.label}</Label>
             <h2 id="dp7-title" className="mD-h1 dp7-title">
               {deployment.headline}
             </h2>
@@ -137,7 +136,6 @@ export function Deployment({ theme }: SectionProps) {
             <ul className="dp7-runs__list">
               {deployment.hosting.map((h) => (
                 <li key={h}>
-                  <span className="mD-hex" aria-hidden="true" />
                   {h}
                 </li>
               ))}

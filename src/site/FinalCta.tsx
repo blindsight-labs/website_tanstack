@@ -7,8 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import type { BufferGeometry, Material, Texture } from "three";
 
 import { finalCta } from "./content";
-import { CtaButton, Label, useReveal, type SectionProps, type Theme } from "./shared";
-import type { DemoVariant } from "@/components/DemoModal";
+import { CtaButton, useReveal, type SectionProps, type Theme } from "./shared";
 
 type Core = typeof import("@/site/three/core");
 
@@ -56,7 +55,7 @@ function blackStudio(core: Core) {
   const sky = g.createLinearGradient(0, 0, 0, H);
   sky.addColorStop(0, "#2c2c30");
   sky.addColorStop(0.3, "#131315");
-  sky.addColorStop(0.5, "#060607");
+  sky.addColorStop(0.5, "#111118");
   sky.addColorStop(1, "#000000");
   g.fillStyle = sky;
   g.fillRect(0, 0, W, H);
@@ -197,15 +196,7 @@ function renderSheet(core: Core, theme: Theme, bg: string, width: number, height
   );
 }
 
-/** the button reads what it opens (the same words as the nav's campaign CTAs) */
-const KIND_LABEL: Record<DemoVariant, string | undefined> = {
-  demo: undefined, // the house CTA
-  trial: "Start your free trial",
-  download: "See my Shadow AI",
-};
-
-/** `kind` picks which form the CTA opens (the campaign pages use "trial" / "download"). */
-export function FinalCta({ theme, kind = "demo" }: SectionProps & { kind?: DemoVariant }) {
+export function FinalCta({ theme }: SectionProps) {
   const ref = useRef<HTMLElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   useReveal(ref);
@@ -224,7 +215,7 @@ export function FinalCta({ theme, kind = "demo" }: SectionProps & { kind?: DemoV
       // bucket the size so small resizes reuse the cached render
       const w = Math.min(1680, Math.max(320, Math.round(r.width / 40) * 40));
       const h = Math.min(1000, Math.max(400, Math.round(r.height / 40) * 40));
-      const bg = getComputedStyle(sheet).backgroundColor || "#060607";
+      const bg = getComputedStyle(sheet).backgroundColor || "#111118";
       const key = `${w}x${h}:${bg}:${theme}`;
       if (key === lastKey) return;
       lastKey = key;
@@ -282,21 +273,20 @@ export function FinalCta({ theme, kind = "demo" }: SectionProps & { kind?: DemoV
           />
         )}
         <div className="mDb-final__content" data-reveal>
-          <Label>Start with discovery</Label>
           <h2 id="mDb-final-title" className="mD-h1 mDb-final__title">
             {finalCta.headline}
           </h2>
-          <CtaButton size="lg" kind={kind} label={KIND_LABEL[kind]} />
+          <CtaButton size="lg" />
         </div>
       </div>
     </section>
   );
 }
 
-/** "rgb(6, 6, 7)" → "#060607" (keeps the render cache key tidy). */
+/** "rgb(17, 17, 24)" → "#111118" (keeps the render cache key tidy). */
 function toHex(css: string) {
   const m = css.match(/\d+(\.\d+)?/g);
-  if (!m || m.length < 3) return "#060607";
+  if (!m || m.length < 3) return "#111118";
   return (
     "#" +
     m

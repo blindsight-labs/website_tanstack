@@ -65,11 +65,13 @@
 }
 .mDb-footer__logo {
   display: inline-flex;
+  justify-self: start; /* one column on phones: the link hugs the mark, not the row */
   border-radius: var(--r);
 }
+/* never smaller than the nav's logo (30px, the minimum size for the wordmark) */
 .mDb-footer__logo img {
   display: block;
-  height: 20px;
+  height: 30px;
   width: auto;
 }
 .mD[data-theme="dark"] .mDb-footer__logo img {
@@ -121,52 +123,17 @@
   cursor: pointer;
 }
 
-.mDb-term {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  padding: 16px 0;
-  border-block: 1px solid var(--line);
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-/* "a ·" segments of the status line and company line: break only between them */
+/* "a ·" segments of the company line: break only between them */
 .mDb-seg {
   white-space: nowrap;
 }
-.mDb-term__prompt {
-  color: var(--ink-3);
-}
-.mDb-term__cmd {
-  color: var(--ink);
-}
-.mDb-term__out {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-.mDb-term__caret {
-  display: inline-block;
-  width: 7px;
-  height: 14px;
-  background: var(--ink-3);
-  animation: mDb-caret 1.1s steps(1) infinite;
-}
-@keyframes mDb-caret {
-  50% {
-    opacity: 0;
-  }
-}
-
 .mDb-footer__base {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--s2) var(--s5);
   padding-top: var(--s5);
+  border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--ink-3);
 }
@@ -174,23 +141,36 @@
 /* ==========================================================================
    Responsive
    ========================================================================== */
+/* one column: the footer stacks on the page's centre line (logo, tagline, links, then
+   the company lines), not ragged down the left edge */
 @media (max-width: 899px) {
   .mDb-footer__top {
     grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
     gap: var(--s4);
+    text-align: center;
+  }
+  .mDb-footer__logo {
+    justify-self: center;
+  }
+  .mDb-footer__links {
+    justify-content: center;
+  }
+  .mDb-footer__base {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 }
 
 @media (max-width: 599px) {
-  /* six links as two even rows of three, never one left alone */
+  /* six links as two even rows of three, never one left alone; the grid centred as a block */
   .mDb-footer__links {
     display: grid;
     grid-template-columns: repeat(3, max-content);
+    justify-content: center;
+    justify-items: center;
     gap: 0 28px;
-  }
-  /* the caret would wrap onto a line of its own */
-  .mDb-term__caret {
-    display: none;
   }
   .mDb-final__sheet {
     min-height: 620px;
@@ -203,8 +183,5 @@
 @media (prefers-reduced-motion: reduce) {
   .mDb-final__render {
     transition: none;
-  }
-  .mDb-term__caret {
-    animation: none;
   }
 }

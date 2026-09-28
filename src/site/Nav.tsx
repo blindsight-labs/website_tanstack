@@ -8,6 +8,7 @@ import { Fragment, useCallback, useEffect, useId, useRef, useState, type ReactNo
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, ChevronDown, Menu, Moon, Sun, X } from "lucide-react";
 
+import mark from "@/assets/ICON_Blindsight.svg";
 import logo from "@/assets/LOGO_Blindsight.svg";
 import { nav, type NavItem } from "./content";
 import { CtaButton, Label, type SectionProps } from "./shared";
@@ -166,6 +167,8 @@ export function Nav({ theme }: SectionProps) {
   // Over a black inset sheet the frosted nav turns black too (as Octane's does),
   // instead of becoming a flat grey band. Re-checked per page.
   const [overInverse, setOverInverse] = useState(false);
+  // While the hero's own CTA is on screen the nav's copy of it steps back: one CTA at a time.
+  const [heroCta, setHeroCta] = useState(false);
   useEffect(() => {
     let raf = 0;
     const check = () => {
@@ -178,6 +181,8 @@ export function Nav({ theme }: SectionProps) {
         if (r.top <= navBottom * 0.5 && r.bottom >= navBottom * 0.5) over = true;
       });
       setOverInverse(over);
+      const cta = document.querySelector<HTMLElement>(".mD-hero__actions")?.getBoundingClientRect();
+      setHeroCta(!!cta && cta.height > 0 && cta.bottom > navBottom && cta.top < window.innerHeight);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(check);
@@ -230,7 +235,6 @@ export function Nav({ theme }: SectionProps) {
   }, [sheetOpen]);
 
   const closeSheet = () => setSheetOpen(false);
-  const campaign = nav.campaignCta[pathname];
   const themeLabel = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
 
   return (
@@ -240,6 +244,7 @@ export function Nav({ theme }: SectionProps) {
       data-scrolled={scrolled || sheetOpen ? "true" : "false"}
       data-over={overInverse && !sheetOpen ? "inverse" : "page"}
       data-sheet={sheetOpen ? "open" : "closed"}
+      data-hero-cta={heroCta ? "true" : undefined}
     >
       <div className="mD-container mT-nav__inner">
         <Link
@@ -255,7 +260,12 @@ export function Nav({ theme }: SectionProps) {
             closeSheet();
           }}
         >
-          <img src={logo} alt="" width={145} height={30} data-theme={theme} />
+          {/* below 410px the wordmark can't fit at a legible size: the mark alone stands in
+              (foundations §7, logo minimum size) */}
+          <picture>
+            <source media="(max-width: 409px)" srcSet={mark} width={30} height={30} />
+            <img src={logo} alt="" width={145} height={30} data-theme={theme} />
+          </picture>
         </Link>
 
         <nav className="mT-nav__links" aria-label="Primary">
@@ -274,6 +284,7 @@ export function Nav({ theme }: SectionProps) {
         </nav>
 
         <div className="mT-nav__end">
+          <CtaButton size="sm" className="mT-nav__cta" />
           <button type="button" className="bs-theme-toggle" aria-label={themeLabel} onClick={toggleTheme}>
             {theme === "dark" ? (
               <Sun size={16} strokeWidth={1.5} aria-hidden="true" />
@@ -281,7 +292,6 @@ export function Nav({ theme }: SectionProps) {
               <Moon size={16} strokeWidth={1.5} aria-hidden="true" />
             )}
           </button>
-          <CtaButton size="sm" className="mT-nav__cta" label={campaign?.label} kind={campaign?.kind} />
           <button
             ref={burgerRef}
             type="button"

@@ -54,7 +54,7 @@ const FIG_MQ = "(min-width: 600px)";
 /** the canvas's clear colour and ink: the sheet it sits on */
 const sceneColors = (el: Element, theme: Theme) => {
   const cs = getComputedStyle(el);
-  return { theme, bg: cs.backgroundColor, ink: cs.getPropertyValue("--ink").trim() || (theme === "dark" ? "#f4f4f6" : "#0b0b0d") };
+  return { theme, bg: cs.backgroundColor, ink: cs.getPropertyValue("--ink").trim() || (theme === "dark" ? "#ececf1" : "#111118") };
 };
 
 /** Release a disposed scene's WebGL context now, instead of whenever the canvas is
@@ -64,10 +64,6 @@ const loseContext = (c: HTMLCanvasElement) => {
   const gl: WebGLRenderingContextBase | null = c.getContext("webgl2") ?? c.getContext("webgl");
   gl?.getExtension("WEBGL_lose_context")?.loseContext();
 };
-
-/** Opens the section with the system label, as every other section does. */
-const SECTION_LABEL = "How it works";
-
 
 /* ---------------- the self-playing sequence (desktop: sticky sheet; ≤ 900 px: one column) ---------------- */
 function SequenceLive({ theme }: { theme: Theme }) {
@@ -246,7 +242,6 @@ function SequenceLive({ theme }: { theme: Theme }) {
         <div className="mD-seq__sticky">
           <div className="mD-sheet mD-seq__sheet" ref={sheetRef}>
             <header className="mD-seq__head">
-              <Label>{SECTION_LABEL}</Label>
               <h2 className="mD-seq__tagline">
                 {CLAUSES.map((c, k) => (
                   <span key={c} data-on={k <= snap.stage}>
@@ -339,7 +334,6 @@ function SequenceStills({ theme }: { theme: Theme }) {
     <div className="mD-seq__stacked">
       <div className="mD-sheet mD-seq__rm" ref={sheetRef}>
         <header className="mD-seq__intro">
-          <Label>{SECTION_LABEL}</Label>
           <h2 className="mD-seq__tagline mD-seq__tagline--static">{sequence.tagline}</h2>
         </header>
         {STAGES.map((st, k) => (

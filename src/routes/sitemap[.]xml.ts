@@ -17,8 +17,6 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
-          { path: "/shadow", changefreq: "weekly", priority: "0.9" },
-          { path: "/demo", changefreq: "weekly", priority: "0.9" },
           { path: "/blog", changefreq: "weekly", priority: "0.9" },
           { path: "/team", changefreq: "monthly", priority: "0.5" },
           // ponytail: uniform priority for every post — the old hand-tiered

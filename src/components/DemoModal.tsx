@@ -2,14 +2,12 @@ import { Suspense, createContext, useContext, useEffect, useRef, useState, type 
 import { useModalDialog } from "@/hooks/useModalDialog";
 import { afterHeroIdle } from "@/site/heroReady";
 import { preloadPage, resolvePage } from "@/site/pages/registry";
-import { useSiteVariant } from "@/site/variant";
 
-/** "demo" = book a working session; "download" = get the app after sharing details;
- *  "trial" = start the free-trial program (see /demo). */
+/** The form's variants (DemoForm). The site's modal always opens the "demo" one. */
 export type DemoVariant = "demo" | "download" | "trial";
 
 const DemoModalContext = createContext<{
-  open: (variant?: DemoVariant) => void;
+  open: () => void;
   close: () => void;
   /** Start loading the card's code (a CTA calls it on hover / focus, so opening is instant). */
   prefetch: () => void;
@@ -31,17 +29,13 @@ const prefetch = () => {
 };
 
 /** Owns the modal shell: backdrop, dialog element, Escape, scroll lock, focus on open and
- *  click-outside. The card CONTENTS come from the active page version's `demoModal` page
- *  (src/site/pages), else the legacy card. A version's card sits in `.bs-modal` (baseline in
- *  src/site/chrome.css); the backdrop carries data-site-variant for version styling. */
+ *  click-outside. The card CONTENTS are the `demoModal` page (src/site/pages/b/DemoModal.tsx),
+ *  inside `.bs-modal` (baseline in src/site/chrome.css); the backdrop carries
+ *  data-site-variant="b", which the page styles are scoped to. */
 export function DemoModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [kind, setKind] = useState<DemoVariant>("demo");
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const open = (v: DemoVariant = "demo") => {
-    setKind(v);
-    setIsOpen(true);
-  };
+  const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
   /** A click on the backdrop closes only an untouched card: once something is typed, a stray
    *  click must not throw it away (the X and Escape still close). */
@@ -57,22 +51,21 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
   // on the landing: after the hero's first frame, plus a beat (see src/site/heroReady.ts)
   useEffect(() => afterHeroIdle(prefetch, { delay: 1500 }), []);
 
-  const { variant, active } = useSiteVariant();
-  const { Component: Card, legacy } = resolvePage("demoModal", active ? variant : null);
+  const Card = resolvePage("demoModal");
 
   return (
     <DemoModalContext.Provider value={{ open, close, prefetch }}>
       {children}
       {isOpen && (
         <div
-          className={legacy ? "modal-backdrop bs-legacy" : "modal-backdrop"}
-          data-site-variant={legacy ? undefined : variant}
+          className="modal-backdrop"
+          data-site-variant="b"
           onClick={closeFromBackdrop}
           role="presentation"
         >
           <div
             ref={cardRef}
-            className={legacy ? "modal-card demo-modal" : "bs-modal"}
+            className="bs-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="demo-modal-title"
@@ -81,7 +74,7 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
           >
             {/* only if opened before the prefetch landed: the card fills in when it arrives */}
             <Suspense fallback={null}>
-              <Card kind={kind} onClose={close} />
+              <Card onClose={close} />
             </Suspense>
           </div>
         </div>

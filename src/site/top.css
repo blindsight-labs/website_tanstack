@@ -10,8 +10,9 @@
   align-items: center;
   gap: var(--s5);
   /* the bar runs wider than the page column, so the logo sits near the window's
-     edge (≈48px at 1440, as on blindsight.io) and the CTA mirrors it */
-  width: calc(100% - 2 * clamp(20px, 3.4vw, 48px));
+     edge (≈48px at 1440, as on blindsight.io) and the CTA mirrors it; on a phone it holds
+     the page's content edge (gutter + sheet inset) */
+  width: calc(100% - 2 * clamp(calc(var(--gutter) + var(--sheet-inset)), 3.4vw, 48px));
 }
 .mT-nav__logo {
   justify-self: start;
@@ -24,21 +25,25 @@
   display: block;
   height: 30px;
   width: auto;
+  max-width: none; /* never squeezed by the grid: a squashed wordmark is illegible */
 }
 .mD[data-theme="dark"] .mT-nav__logo img {
   filter: invert(1);
 }
 
-/* over a black inset sheet: the nav goes black with it (Octane), never grey */
+/* over a dark inset sheet: the nav goes dark with it (Octane), never grey. In light it
+   sits a step above the sheet (neutral 800 over 900), so the bar and its text read apart
+   from the section under it; in dark the sheet is already a lift (#20202b) */
 .mD-nav[data-over="inverse"] {
-  --ink: #f4f4f6;
-  --ink-2: #a9abb3;
-  --ink-3: #8a8c95;
+  --nav-over: var(--color-neutral-800);
+  --ink: var(--inverse-ink);
+  --ink-2: var(--inverse-ink-2);
+  --ink-3: var(--inverse-ink-3);
   --line: rgba(255, 255, 255, 0.12);
-  color: #f4f4f6;
+  color: var(--inverse-ink);
   /* near-opaque + blur: a white console scrolling underneath must not turn
      the bar grey */
-  background: color-mix(in srgb, #060607 96%, transparent);
+  background: color-mix(in srgb, var(--nav-over) 96%, transparent);
   backdrop-filter: blur(20px) saturate(1.2);
   -webkit-backdrop-filter: blur(20px) saturate(1.2);
   border-bottom-color: rgba(255, 255, 255, 0.08);
@@ -47,13 +52,34 @@
     color var(--dur-2) var(--ease),
     border-color var(--dur-2) var(--ease);
 }
+.mD[data-theme="dark"] .mD-nav[data-over="inverse"] {
+  --nav-over: var(--inverse-bg);
+}
 .mD-nav[data-over="inverse"] .mT-nav__logo img {
   filter: invert(1);
 }
 .mD-nav[data-over="inverse"] .mD-btn--primary {
-  background: #f4f4f6;
-  color: #0b0b0d;
+  background: #ececf1;
+  color: #111118;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+}
+/* one CTA at a time: while the hero's own CTA is on screen (Nav.tsx sets data-hero-cta),
+   the nav's copy fades out in place (no layout shift) and leaves the tab order */
+.mT-nav .mT-nav__cta {
+  transition:
+    opacity var(--dur-2) var(--ease),
+    visibility 0s,
+    background var(--dur-1) var(--ease),
+    color var(--dur-1) var(--ease),
+    border-color var(--dur-1) var(--ease),
+    transform var(--dur-1) var(--ease);
+}
+.mT-nav[data-hero-cta="true"] .mT-nav__cta {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-2) var(--ease),
+    visibility 0s var(--dur-2);
 }
 .mT-nav__logo:focus-visible,
 .mT-nav__burger:focus-visible,
@@ -250,7 +276,12 @@
     --btn-h: 44px;
   }
 }
-@media (max-width: 420px) {
+/* compact bar: the full-size logo + CTA + menu button need ~440px of bar; below 500px
+   the wordmark drops to 22px and the CTA tightens so nothing overflows or squeezes */
+@media (max-width: 500px) {
+  .mT-nav__inner {
+    gap: var(--s3);
+  }
   .mT-nav__logo img {
     height: 22px;
   }
@@ -261,6 +292,12 @@
   }
   .mT-nav .mT-nav__cta .mD-btn__arrow {
     display: none;
+  }
+}
+/* the mark alone (Nav.tsx <picture>): square, a touch larger than the wordmark's height */
+@media (max-width: 409px) {
+  .mT-nav__logo img {
+    height: 28px;
   }
 }
 
@@ -494,6 +531,12 @@
     transform: translateY(-3px);
     box-shadow: 0 0 0 1px var(--ink-4);
   }
+}
+/* keyboard focus on any device (touch laptops, keyboards on tablets): the site's one
+   focus ring, not the hover hairline, which is too faint to find */
+.mT-risk:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
 }
 @media (prefers-reduced-motion: reduce) {
   .mT-risk,

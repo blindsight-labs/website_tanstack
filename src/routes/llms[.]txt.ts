@@ -3,11 +3,10 @@ import type {} from "@tanstack/react-start";
 
 const BODY = `# Blindsight
 
-> Blindsight provides runtime security for AI systems: real-time visibility and threat protection across every prompt, response, tool call, and data event. Built for security and compliance teams deploying AI in regulated environments, including under the EU AI Act. Blindsight also ships Shadow AI discovery, surfacing unsanctioned AI tool use before sensitive data leaves the organization. Content is grounded in primary sources: the OWASP Top 10 for LLM Applications, MITRE ATLAS, NVD/CVE records, and EUR-Lex.
+> Blindsight provides runtime security for AI systems: real-time visibility and threat protection across every prompt, response, tool call, and data event. Built for security and compliance teams deploying AI in regulated environments, including under the EU AI Act. Content is grounded in primary sources: the OWASP Top 10 for LLM Applications, MITRE ATLAS, NVD/CVE records, and EUR-Lex.
 
 ## Product
 - [Runtime security platform](https://blindsight.io/): real-time visibility and threat protection for every AI prompt, response, and tool call.
-- [Shadow AI discovery](https://blindsight.io/shadow): finds unsanctioned AI tool use across an organization before sensitive data leaks.
 
 ## Key guides
 - [Security in AI: An Introduction](https://blindsight.io/blog/security-in-ai-introduction): how AI models are compromised, and a map of the attack surface.

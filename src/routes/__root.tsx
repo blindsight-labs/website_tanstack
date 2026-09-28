@@ -1,10 +1,9 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
-  createRootRouteWithContext,
-  useRouterState,
+  createRootRoute,
   HeadContent,
   Scripts,
+  useRouterState,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, useRef, type ReactNode } from "react";
@@ -22,7 +21,6 @@ import {
   THEME_WRAPPER_SCRIPT,
   useSiteTheme,
 } from "@/site/theme";
-import { SITE_VARIANT } from "@/site/variant";
 import { consentHeadScripts, trackPageView } from "@/lib/consent";
 import { watchOverflow } from "@/lib/overflow-watch";
 
@@ -39,11 +37,9 @@ import dotsCss from "@/site/dots.css?url";
 import seqShellCss from "@/site/seq/shell.css?url";
 import seqLeftCss from "@/site/seq/left.css?url";
 import chromeCss from "@/site/chrome.css?url";
-import legacyCss from "@/site/legacy.css?url";
 
-/* The site's design system, in cascade order (as the landing was built), then the chrome and
-   legacy-page layers, then each page version's own stylesheets. styles.css stays first: the
-   legacy pages still use it. */
+/* The site's design system, in cascade order (as the landing was built), then the chrome
+   layer, then the pages' own stylesheets. styles.css stays first (the design-token layer). */
 const SITE_CSS = [
   systemCss,
   heroCss,
@@ -56,16 +52,11 @@ const SITE_CSS = [
   seqShellCss,
   seqLeftCss,
   chromeCss,
-  legacyCss,
   ...stylesB,
 ];
 
-/** Design mockups (/mockups, /mockup-*) bring their own nav, footer and design system. */
-const isMockupPath = (pathname: string) => pathname.startsWith("/mockup");
-
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: ({ matches }) => {
-    const mockup = matches.some((m) => isMockupPath(m.pathname));
+export const Route = createRootRoute({
+  head: () => {
     return {
       meta: [
         { charSet: "utf-8" },
@@ -104,8 +95,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
         { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
         { rel: "manifest", href: "/site.webmanifest" },
+        // self-hosted fonts: no request to Google Fonts (privacy notice)
         { rel: "stylesheet", href: fontsCss },
-        ...(mockup ? [] : SITE_CSS.map((href) => ({ rel: "stylesheet", href }))),
+        ...SITE_CSS.map((href) => ({ rel: "stylesheet", href })),
       ],
       scripts: [
         // Cookiebot + the analytics it gates (GA4 loads only after statistics consent).
@@ -120,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             url: "https://blindsight.io",
             logo: "https://blindsight.io/favicon.png",
             description:
-              "Runtime security for AI. Blindsight provides real-time visibility and threat protection for every AI prompt, response, and tool call, plus Shadow AI discovery for security and compliance teams deploying AI in regulated environments.",
+              "Runtime security for AI. Blindsight provides real-time visibility and threat protection for every AI prompt, response, and tool call, for security and compliance teams deploying AI in regulated environments.",
             address: {
               "@type": "PostalAddress",
               streetAddress: "Rennweg 57",
@@ -180,8 +172,7 @@ function SiteWrapper({ children }: { children: ReactNode }) {
     <div
       className="mD bs-site"
       data-theme={theme}
-      data-type="plex"
-      data-site-variant={SITE_VARIANT}
+      data-site-variant="b"
       suppressHydrationWarning
     >
       <script dangerouslySetInnerHTML={{ __html: THEME_WRAPPER_SCRIPT }} />
@@ -205,7 +196,7 @@ function SiteChrome() {
     <DemoModalProvider>
       <Nav theme={theme} />
       <Outlet />
-      <Footer theme={theme} />
+      <Footer />
     </DemoModalProvider>
   );
 }
@@ -237,24 +228,12 @@ function usePageViews(pathname: string) {
 }
 
 function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   usePageViews(pathname);
   useEffect(() => (import.meta.env.DEV ? watchOverflow() : undefined), [pathname]);
-  if (isMockupPath(pathname)) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <DemoModalProvider>
-          <Outlet />
-        </DemoModalProvider>
-      </QueryClientProvider>
-    );
-  }
   return (
-    <QueryClientProvider client={queryClient}>
-      <SiteFrame>
-        <SiteChrome />
-      </SiteFrame>
-    </QueryClientProvider>
+    <SiteFrame>
+      <SiteChrome />
+    </SiteFrame>
   );
 }

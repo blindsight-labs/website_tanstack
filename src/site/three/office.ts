@@ -465,7 +465,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const matRim = dark ? rimMat(0.5) : null;
   const matRimPost = dark ? rimMat(0.36) : null;
   const matChrome = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(dark ? "#e6e8ec" : "#f3f4f6"),
+    color: new THREE.Color(dark ? "#e6e8ec" : "#f4f4f1"),
     metalness: 1,
     roughness: 0.06,
     envMapIntensity: 1,
@@ -484,11 +484,12 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   // chrome (matCore, below; update() blends them)
   // (anodized satin: part metal, with a clear coat; in dark lighter and less metallic, or
   // it mirrors the black studio into a deep indigo blob)
+  // (the design system's primary 400 / 300; less metal in light too, or the studio darkens it)
   const gunViolet = {
-    color: new THREE.Color(dark ? "#b4a4ff" : "#7a58ff"),
-    metalness: dark ? 0.55 : 0.8,
+    color: new THREE.Color(dark ? "#a8aeff" : "#8889ff"),
+    metalness: dark ? 0.25 : 0.5,
     roughness: dark ? 0.26 : 0.24,
-    env: dark ? 1.25 : 1,
+    env: dark ? 1.6 : 1,
     clearcoat: dark ? 0.8 : 1,
     clearcoatRoughness: dark ? 0.12 : 0.1,
   };
@@ -535,7 +536,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const textGrey = new THREE.Color(dark ? "#6f727b" : "#b4b7bd");
   const matScreenInk = new THREE.MeshBasicMaterial({ color: textGrey, toneMapped: false });
   const matScreenText = new THREE.MeshBasicMaterial({ color: new THREE.Color(dark ? "#6f727b" : "#c9ccd2"), toneMapped: false });
-  const signalCol = new THREE.Color(dark ? "#A08CFF" : "#6E4BFF");
+  const signalCol = new THREE.Color(dark ? "#8889FF" : "#6960EC"); // hero.css --signal
   const matSignal = new THREE.MeshBasicMaterial({ color: signalCol, toneMapped: false });
   const matPacket = new THREE.MeshBasicMaterial({ color: ink, toneMapped: false });
   const matWire = FLAGGED.map(

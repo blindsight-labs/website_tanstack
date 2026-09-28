@@ -16,7 +16,7 @@ import type * as T from "three";
 import type { BuildScene } from "./three/core";
 import { risks, type RiskId } from "./content";
 import { afterHeroIdle } from "./heroReady";
-import { Label, useReveal, type SectionProps, type Theme } from "./shared";
+import { useReveal, type SectionProps, type Theme } from "./shared";
 
 type Core = typeof import("./three/core");
 type Ctx = Parameters<BuildScene>[0];
@@ -283,7 +283,7 @@ function inkCss(core: Core, tone: Tone, k: number) {
   const kk = tone.theme === "light" ? Math.min(1, k * 1.3) : k;
   return "#" + new THREE.Color(tone.ink).lerp(new THREE.Color(tone.surface), 1 - kk).getHexString();
 }
-const signalCss = (theme: Theme) => (theme === "dark" ? "#a08cff" : "#6e4bff");
+const signalCss = (theme: Theme) => (theme === "dark" ? "#7c6cf5" : "#5546e0");
 
 /** A few words of mono type printed flat on an object: a canvas-texture plane in
  *  the XY plane (rotate it onto the face it sits on). `h` is the world height of
@@ -414,7 +414,7 @@ function chatScreen(core: Core, tone: Tone, drop: number) {
   // the drop zone, once a file is dragged over the window
   if (drop > 0.01) {
     g.globalAlpha = drop;
-    g.fillStyle = light ? "rgba(11,11,13,0.035)" : "rgba(255,255,255,0.05)";
+    g.fillStyle = light ? "rgba(17, 17, 24,0.035)" : "rgba(255,255,255,0.05)";
     g.beginPath();
     g.roundRect(290, 320, W - 350, 250, 26);
     g.fill();
@@ -1629,9 +1629,9 @@ export function Risks({ theme }: SectionProps) {
       const css = getComputedStyle(el);
       const tone: Tone = {
         theme,
-        surface: css.getPropertyValue("--surface").trim() || (theme === "dark" ? "#0d0d10" : "#ffffff"),
-        dot: css.getPropertyValue("--ink-4").trim() || (theme === "dark" ? "#3c3e45" : "#b4b7bf"),
-        ink: css.getPropertyValue("--ink").trim() || (theme === "dark" ? "#f4f4f6" : "#0b0b0d"),
+        surface: css.getPropertyValue("--surface").trim() || (theme === "dark" ? "#181821" : "#ffffff"),
+        dot: css.getPropertyValue("--ink-4").trim() || (theme === "dark" ? "#3a3a47" : "#afaeaa"),
+        ink: css.getPropertyValue("--ink").trim() || (theme === "dark" ? "#ececf1" : "#111118"),
       };
       for (const r of risks) {
         if (cancelled) return;
@@ -1792,7 +1792,6 @@ export function Risks({ theme }: SectionProps) {
     <section ref={ref} id="risks" className="mD-section mT-risks" aria-labelledby="mT-risks-h">
       <div className="mD-container">
         <header className="mT-risks__head" data-reveal>
-          <Label>The new risks</Label>
           <h2 id="mT-risks-h" className="mD-h1">
             What AI risk actually looks like.
           </h2>
@@ -1809,6 +1808,8 @@ export function Risks({ theme }: SectionProps) {
                 {...(PLAYBACK
                   ? {
                       tabIndex: 0,
+                      // focusable for the playback: it announces as its risk's title
+                      "aria-labelledby": `mT-risk-${r.id}`,
                       // touch devices loop by scroll position instead (a tap's
                       // emulated mouseenter must not fight it)
                       onMouseEnter: () => player.current?.mode !== "touch" && play(i),
@@ -1834,7 +1835,9 @@ export function Risks({ theme }: SectionProps) {
                   </span>
                 </div>
                 <div className="mT-risk__text">
-                  <h3 className="mD-h3">{r.title}</h3>
+                  <h3 id={`mT-risk-${r.id}`} className="mD-h3">
+                    {r.title}
+                  </h3>
                   <p>{r.scenario}</p>
                 </div>
               </li>

@@ -3,6 +3,9 @@
 
 .mD-hero {
   padding-bottom: var(--s4);
+  /* the hero's violet runs a step lighter than the system signal (primary 500 reads heavy
+     at chip size over the render): 60/40 between primary 500 and 400, still ≥ 4.5:1 on white */
+  --signal: color-mix(in srgb, var(--color-primary-500) 60%, var(--color-primary-400));
 }
 
 .mD-hero__sheet {
@@ -10,6 +13,11 @@
   flex-direction: column;
   min-height: clamp(660px, calc(100svh - 78px), 940px);
   isolation: isolate;
+}
+
+/* dark: primary 400, lighter again than the dark anchor */
+.mD[data-theme="dark"] .mD-hero {
+  --signal: var(--color-primary-400);
 }
 
 /* ---- the render ---- */
@@ -390,10 +398,10 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 1px 2px rgba(0, 0, 0, 0.2);
 }
-/* dark: the light button (system.css) warms to ~#b8a8fe; the ink text stays */
+/* dark: the light button (system.css) warms towards violet; the ink text stays */
 .mD[data-theme="dark"] .mD-hero__actions .mD-btn--primary {
-  --inv-base: #f4f4f6;
-  --inv-fill: color-mix(in srgb, var(--signal) 68%, #f4f4f6);
+  --inv-base: #ececf1;
+  --inv-fill: color-mix(in srgb, var(--signal) 68%, #ececf1);
   --inv-halo-a: 45%;
   --inv-sh: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }

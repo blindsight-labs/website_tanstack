@@ -268,7 +268,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const matArc = glass({ thickness: 0.22 });
   const matLens = glass({ thickness: 0.5 });
   const matChrome = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color(dark ? "#e6e8ec" : "#f3f4f6"),
+    color: new THREE.Color(dark ? "#e6e8ec" : "#f4f4f1"),
     metalness: 1,
     roughness: 0.06,
     envMapIntensity: 1,
@@ -279,7 +279,7 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
     roughness: 0.3,
     envMapIntensity: 1,
   });
-  const signalCol = new THREE.Color(dark ? "#A08CFF" : "#6E4BFF");
+  const signalCol = new THREE.Color(dark ? "#8889FF" : "#6960EC"); // hero.css --signal
 
   /* ---------- the wall behind ---------- */
   const wallTex = backdropTexture(bg, ink, dark);

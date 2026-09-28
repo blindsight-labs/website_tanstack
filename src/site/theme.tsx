@@ -18,7 +18,7 @@ export const THEME_INIT_SCRIPT = `(function(){var t='light';try{var s=localStora
 export const THEME_WRAPPER_SCRIPT = `(function(){var s=document.currentScript,t=document.documentElement.getAttribute('data-theme');if(s&&s.parentNode&&(t==='dark'||t==='light')){s.parentNode.setAttribute('data-theme',t);}})();`;
 
 /** Body background per theme, so overscroll and short pages match the page grey (and SSR does too). */
-export const THEME_BODY_CSS = `html:has(.bs-site) body{background:#F3F4F6}html[data-theme="dark"]:has(.bs-site) body{background:#060607}`;
+export const THEME_BODY_CSS = `html:has(.bs-site) body{background:#F4F4F1}html[data-theme="dark"]:has(.bs-site) body{background:#0D0D13}`;
 
 type SiteThemeContextValue = {
   theme: Theme;

@@ -1,7 +1,6 @@
 /* Site copy: the landing page's sections plus the Nav and Footer, from the Sep 24 website
    brief (@guilherme). Draft copy may be tightened; section ORDER and JOB are settled.
    Anything in [square brackets] is a placeholder the team still has to supply. */
-import type { DemoVariant } from "@/components/DemoModal";
 
 export const CTA = "Discover your AI risk";
 
@@ -15,9 +14,7 @@ export type SiteRoute =
   | "/faq"
   | "/imprint"
   | "/privacy"
-  | "/evaluation-terms"
-  | "/shadow"
-  | "/demo";
+  | "/evaluation-terms";
 
 /** An internal link (`to`, optional `hash`) or an external one (`href`, opens in a new tab).
  *  `n` is the stage number shown in the Platform menu; `sep` puts a divider above the item;
@@ -48,12 +45,6 @@ export const nav = {
       ] as NavItem[],
     },
   ],
-  // The campaign pages keep their own conversion in the Nav CTA (the modal kind their
-  // forms are tracked by); every other page uses the site CTA ("demo").
-  campaignCta: {
-    "/shadow": { label: "See my Shadow AI", kind: "download" },
-    "/demo": { label: "Start your free trial", kind: "trial" },
-  } as Record<string, { label: string; kind: DemoVariant }>,
 };
 
 export const hero = {
@@ -215,7 +206,6 @@ export const finalCta = {
 
 export const footer = {
   company: "Blindsight Technologies AG · Rennweg 57, 8001 Zürich",
-  terminal: "$ blindsight status  →  all AI systems observed · 1 awaiting decision",
   // six: the phone layout sets them as two even rows of three (bottom.css)
   links: [
     { label: "Careers", to: "/careers" },

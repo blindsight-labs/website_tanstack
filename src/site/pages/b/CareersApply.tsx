@@ -12,8 +12,7 @@ import { submitApplication } from "@/lib/careers.functions";
 import { trackEvent } from "@/lib/consent";
 import { checkError, friendlyFormError, isValidEmail, type FormErrorInfo } from "@/lib/form-error";
 import { Label } from "@/site/shared";
-import { ROLES } from "../legacy/Careers";
-import { fileToBase64 } from "../legacy/CareersApply";
+import { ROLES, fileToBase64 } from "../data";
 import { Meta, Page, PageHead, Steps } from "./parts";
 
 const applyRoute = getRouteApi("/careers_/apply");
