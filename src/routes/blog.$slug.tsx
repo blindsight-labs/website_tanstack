@@ -1,7 +1,6 @@
 import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
 import { authorSlugFor } from "@/lib/authors";
-import { LegacyFrame, SitePage, preloadPage } from "@/site/pages/registry";
-import { BlogPostError } from "@/site/pages/legacy/BlogPost";
+import { SitePage, preloadPage } from "@/site/pages/registry";
 
 const BASE = "https://blindsight.io";
 
@@ -15,11 +14,7 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!getPost(params.slug)) throw notFound();
     return { slug: params.slug };
   },
-  errorComponent: (props) => (
-    <LegacyFrame>
-      <BlogPostError {...props} />
-    </LegacyFrame>
-  ),
+  errorComponent: (props) => <SitePage name="error" {...props} />,
   // The post page renders its own "post not found" state for an unknown slug.
   notFoundComponent: BlogPostNotFound,
   // (also awaits the page's chunk: the router renders and hydrates only after head(), see registry)

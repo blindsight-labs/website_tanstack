@@ -9,8 +9,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { submitApplication } from "@/lib/careers.functions";
 import { friendlyFormError, isValidEmail } from "@/lib/form-error";
 import { Label } from "@/site/shared";
-import { ROLES } from "../legacy/Careers";
-import { fileToBase64 } from "../legacy/CareersApply";
+import { ROLES, fileToBase64 } from "../data";
 import { Meta, Page, PageHead, Steps } from "./parts";
 
 const applyRoute = getRouteApi("/careers_/apply");

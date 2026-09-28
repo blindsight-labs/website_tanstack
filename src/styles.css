@@ -1,6 +1,5 @@
 @import "tailwindcss" source(none);
 @source "../src";
-@import "tw-animate-css";
 
 /* Design-system tokens registered as plain (non-inline) @theme entries.
    Unlike @theme inline (which only inlines a value into an ACTUALLY-USED

@@ -10,7 +10,7 @@ import { X } from "lucide-react";
 import { DemoForm } from "@/components/DemoForm";
 import { Label } from "@/site/shared";
 import { useSiteTheme } from "@/site/theme";
-import { DEMO_MODAL_COPY } from "../legacy/DemoModalCard";
+import { DEMO_MODAL_COPY } from "../data";
 import type { DemoModalProps } from "../types";
 import { Steps } from "./parts";
 

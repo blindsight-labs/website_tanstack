@@ -3,7 +3,7 @@
    together, two across, monochrome, on hairlines. */
 import { FinalCta } from "@/site/FinalCta";
 import { useSiteTheme } from "@/site/theme";
-import { FOUNDERS, LEADERSHIP, type Person } from "../legacy/Team";
+import { FOUNDERS, LEADERSHIP, type Person } from "../data";
 import { Page, PageHead, SheetGroup, Split } from "./parts";
 
 function Portrait({ p, size }: { p: Person; size: "lg" | "sm" }) {

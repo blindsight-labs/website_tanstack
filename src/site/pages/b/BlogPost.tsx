@@ -14,7 +14,7 @@ import { getAllPosts, getPost } from "@/lib/blog-content";
 import { FinalCta } from "@/site/FinalCta";
 import { Label } from "@/site/shared";
 import { useSiteTheme } from "@/site/theme";
-import { FOUNDERS, LEADERSHIP } from "../legacy/Team";
+import { FOUNDERS, LEADERSHIP } from "../data";
 import type { BlogPostProps } from "../types";
 import { Outline, Page, PageHead, slugify, type OutlineItem } from "./parts";
 

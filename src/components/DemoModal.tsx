@@ -2,7 +2,6 @@ import { Suspense, createContext, useContext, useEffect, useRef, useState, type 
 import { useModalDialog } from "@/hooks/useModalDialog";
 import { afterHeroIdle } from "@/site/heroReady";
 import { preloadPage, resolvePage } from "@/site/pages/registry";
-import { useSiteVariant } from "@/site/variant";
 
 const DemoModalContext = createContext<{
   open: () => void;
@@ -27,9 +26,9 @@ const prefetch = () => {
 };
 
 /** Owns the modal shell: backdrop, dialog element, Escape, scroll lock, focus on open and
- *  click-outside. The card CONTENTS come from the active page version's `demoModal` page
- *  (src/site/pages), else the legacy card. A version's card sits in `.bs-modal` (baseline in
- *  src/site/chrome.css); the backdrop carries data-site-variant for version styling. */
+ *  click-outside. The card CONTENTS are the `demoModal` page (src/site/pages/b/DemoModal.tsx),
+ *  inside `.bs-modal` (baseline in src/site/chrome.css); the backdrop carries
+ *  data-site-variant="b", which the page styles are scoped to. */
 export function DemoModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -40,22 +39,21 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
   // on the landing: after the hero's first frame, plus a beat (see src/site/heroReady.ts)
   useEffect(() => afterHeroIdle(prefetch, { delay: 1500 }), []);
 
-  const { variant, active } = useSiteVariant();
-  const { Component: Card, legacy } = resolvePage("demoModal", active ? variant : null);
+  const Card = resolvePage("demoModal");
 
   return (
     <DemoModalContext.Provider value={{ open, close, prefetch }}>
       {children}
       {isOpen && (
         <div
-          className={legacy ? "modal-backdrop bs-legacy" : "modal-backdrop"}
-          data-site-variant={legacy ? undefined : variant}
+          className="modal-backdrop"
+          data-site-variant="b"
           onClick={close}
           role="presentation"
         >
           <div
             ref={cardRef}
-            className={legacy ? "modal-card demo-modal" : "bs-modal"}
+            className="bs-modal"
             role="dialog"
             aria-modal="true"
             aria-labelledby="demo-modal-title"

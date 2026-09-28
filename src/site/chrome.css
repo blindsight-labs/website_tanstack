@@ -1,6 +1,5 @@
 /* chrome.css — site chrome additions over top.css: the theme toggle, the Nav's three menus
-   (separators, mobile-sheet groups), the demo-modal card baseline for page versions, and
-   the REVIEW-ONLY switch. Prefix: bs-. Tokens from system.css only. */
+   (separators, mobile-sheet groups) and the demo-modal card baseline. Prefix: bs-. Tokens from system.css only. */
 
 /* ==========================================================================
    Theme toggle (Nav). Hairline square like the menu button; follows the inverse nav.

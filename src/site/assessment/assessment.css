@@ -1,6 +1,6 @@
 /* /risk-assessment — shared pieces of the AI exposure assessment: the quiz card, the result
-   numbers, links, toggle, and the REVIEW-ONLY concept switcher. Scoped under .mD, system.css
-   tokens only. Each concept brings its own stylesheet (concepts/cN/cN.css, scoped .mD .rcN). */
+   numbers, links and toggle. Scoped under .mD, system.css tokens only. The page body
+   (concepts/md) brings its own stylesheet, md.css, scoped .mD .rmd. */
 
 .mD .ra {
   display: block;
@@ -320,44 +320,5 @@
   .mD .ra-q,
   .mD .ra-res {
     animation: none;
-  }
-}
-
-/* REVIEW-ONLY: the concept switcher (delete with the concepts not chosen) */
-.mD .ra-switch {
-  position: fixed;
-  left: 50%;
-  bottom: 14px;
-  z-index: 100;
-  translate: -50% 0;
-  display: flex;
-  gap: 2px;
-  padding: 4px;
-  border-radius: var(--r);
-  background: rgba(20, 20, 24, 0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  max-width: calc(100vw - 24px);
-  overflow-x: auto;
-}
-.mD .ra-switch a {
-  display: inline-flex;
-  gap: 6px;
-  padding: 7px 10px;
-  border-radius: 4px;
-  color: #9a9ca5;
-  white-space: nowrap;
-}
-.mD .ra-switch a[aria-current="page"] {
-  background: #ececf1;
-  color: #111118;
-}
-@media (max-width: 720px) {
-  .mD .ra-switch .ra-switch__name {
-    display: none;
   }
 }

@@ -6,7 +6,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { FinalCta } from "@/site/FinalCta";
 import { useSiteTheme } from "@/site/theme";
-import { ROLES } from "../legacy/Careers";
+import { ROLES } from "../data";
 import { Page, PageHead, SheetGroup, Split } from "./parts";
 
 const VALUES = [

@@ -8,7 +8,7 @@ import { getAuthor } from "@/lib/authors";
 import { getAllPosts } from "@/lib/blog-content";
 import { FinalCta } from "@/site/FinalCta";
 import { useSiteTheme } from "@/site/theme";
-import { FOUNDERS, LEADERSHIP } from "../legacy/Team";
+import { FOUNDERS, LEADERSHIP } from "../data";
 import type { AuthorProps } from "../types";
 import { PostRow } from "./BlogIndex";
 import { Page, PageHead, Split } from "./parts";

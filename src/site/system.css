@@ -6,8 +6,7 @@
 
    Themes:  .mD[data-theme="light"] (default, Octane rhythm: light grey page,
             white/glass surfaces, black inset sheets) and .mD[data-theme="dark"].
-   Type:    .mD[data-type="plex"] (current brand fonts, default) and
-            .mD[data-type="geist"] (proposal).
+   Type:    IBM Plex Sans / Plex Mono.
    ========================================================================== */
 
 .mD {
@@ -134,13 +133,6 @@
   --signal-soft: color-mix(in srgb, var(--signal) 14%, transparent);
 }
 
-.mD[data-type="geist"] {
-  --font-sans: "Geist", system-ui, sans-serif;
-  --font-display: "Geist", system-ui, sans-serif;
-  --display-weight: 300;
-  --display-track: -0.045em;
-}
-
 /* The live site's root stylesheet sets overflow-x: hidden on <html> and <body>.
    That turns <body> into a scroll container that never scrolls, which silently
    breaks every position: sticky inside it (the nav).
@@ -150,27 +142,25 @@ html:has(.mD) body {
   overflow-x: clip;
 }
 
-/* ---- resets inside the scope (the live site's globals leak otherwise) ----
-   The element resets skip .bs-legacy subtrees (pre-redesign pages still rendered inside the
-   site wrapper, see legacy.css); the :where() keeps their specificity unchanged. */
+/* ---- resets inside the scope (the live site's globals leak otherwise) ---- */
 .mD *,
 .mD *::before,
 .mD *::after {
   box-sizing: border-box;
 }
 /* :where(a) keeps the reset at the class level's floor: any link class (.mD-btn--primary, …) wins */
-.mD :where(a):where(:not(.bs-legacy *)) {
+.mD :where(a) {
   color: inherit;
   text-decoration: none;
 }
 /* zero specificity: component classes that set margins on headings/paragraphs
    (hero subline spacing, phone gutters, title offsets) must win over the reset */
-.mD :where(h1, h2, h3, h4, p):where(:not(.bs-legacy *)) {
+.mD :where(h1, h2, h3, h4, p) {
   margin: 0;
 }
-.mD h1:where(:not(.bs-legacy *)),
-.mD h2:where(:not(.bs-legacy *)),
-.mD h3:where(:not(.bs-legacy *)) {
+.mD h1,
+.mD h2,
+.mD h3 {
   font-family: var(--font-display);
   color: var(--ink);
   font-weight: var(--display-weight);
@@ -179,7 +169,7 @@ html:has(.mD) body {
 }
 /* :where() keeps this reset at zero specificity so component classes
    (.mD-btn: mono caps) always win over it */
-.mD :where(button):where(:not(.bs-legacy *)) {
+.mD :where(button) {
   font: inherit;
 }
 .mD ::selection {
@@ -593,37 +583,4 @@ html:has(.mD) body {
   .mD-live::after {
     animation: none;
   }
-}
-
-/* ==========================================================================
-   REVIEW-ONLY control bar (not part of the design): the "a b c · light dark"
-   switch in src/site/variant.tsx. Delete with it once a direction is chosen.
-   ========================================================================== */
-.mD-controls {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 100;
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: var(--r);
-  background: rgba(20, 20, 24, 0.86);
-  backdrop-filter: blur(10px);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.mD-controls button {
-  border: 0;
-  background: transparent;
-  color: #9a9ca5;
-  padding: 7px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.mD-controls button[aria-pressed="true"] {
-  background: #ececf1;
-  color: #111118;
 }

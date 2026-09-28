@@ -9,9 +9,3 @@ export type ConceptProps = {
   a: Assessment;
   theme: Theme;
 };
-
-export type ConceptMeta = {
-  id: string;
-  /** two or three words, shown in the review switcher */
-  name: string;
-};

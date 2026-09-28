@@ -14,17 +14,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ShadowRouteImport } from './routes/shadow'
 import { Route as RiskAssessmentRouteImport } from './routes/risk-assessment'
 import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as MockupsRouteImport } from './routes/mockups'
-import { Route as MockupLabRouteImport } from './routes/mockup-lab'
-import { Route as Mockup9RouteImport } from './routes/mockup-9'
-import { Route as Mockup8RouteImport } from './routes/mockup-8'
-import { Route as Mockup7RouteImport } from './routes/mockup-7'
-import { Route as Mockup6RouteImport } from './routes/mockup-6'
-import { Route as Mockup5RouteImport } from './routes/mockup-5'
-import { Route as Mockup4RouteImport } from './routes/mockup-4'
-import { Route as Mockup3RouteImport } from './routes/mockup-3'
-import { Route as Mockup2RouteImport } from './routes/mockup-2'
-import { Route as Mockup1RouteImport } from './routes/mockup-1'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as ImprintRouteImport } from './routes/imprint'
 import { Route as HowToSecureLlmsRouteImport } from './routes/how-to-secure-llms'
@@ -64,61 +53,6 @@ const RiskAssessmentRoute = RiskAssessmentRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MockupsRoute = MockupsRouteImport.update({
-  id: '/mockups',
-  path: '/mockups',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MockupLabRoute = MockupLabRouteImport.update({
-  id: '/mockup-lab',
-  path: '/mockup-lab',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup9Route = Mockup9RouteImport.update({
-  id: '/mockup-9',
-  path: '/mockup-9',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup8Route = Mockup8RouteImport.update({
-  id: '/mockup-8',
-  path: '/mockup-8',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup7Route = Mockup7RouteImport.update({
-  id: '/mockup-7',
-  path: '/mockup-7',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup6Route = Mockup6RouteImport.update({
-  id: '/mockup-6',
-  path: '/mockup-6',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup5Route = Mockup5RouteImport.update({
-  id: '/mockup-5',
-  path: '/mockup-5',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup4Route = Mockup4RouteImport.update({
-  id: '/mockup-4',
-  path: '/mockup-4',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup3Route = Mockup3RouteImport.update({
-  id: '/mockup-3',
-  path: '/mockup-3',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup2Route = Mockup2RouteImport.update({
-  id: '/mockup-2',
-  path: '/mockup-2',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const Mockup1Route = Mockup1RouteImport.update({
-  id: '/mockup-1',
-  path: '/mockup-1',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
@@ -209,17 +143,6 @@ export interface FileRoutesByFullPath {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/llms.txt': typeof LlmsDottxtRoute
-  '/mockup-1': typeof Mockup1Route
-  '/mockup-2': typeof Mockup2Route
-  '/mockup-3': typeof Mockup3Route
-  '/mockup-4': typeof Mockup4Route
-  '/mockup-5': typeof Mockup5Route
-  '/mockup-6': typeof Mockup6Route
-  '/mockup-7': typeof Mockup7Route
-  '/mockup-8': typeof Mockup8Route
-  '/mockup-9': typeof Mockup9Route
-  '/mockup-lab': typeof MockupLabRoute
-  '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
   '/risk-assessment': typeof RiskAssessmentRoute
   '/shadow': typeof ShadowRoute
@@ -241,17 +164,6 @@ export interface FileRoutesByTo {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/llms.txt': typeof LlmsDottxtRoute
-  '/mockup-1': typeof Mockup1Route
-  '/mockup-2': typeof Mockup2Route
-  '/mockup-3': typeof Mockup3Route
-  '/mockup-4': typeof Mockup4Route
-  '/mockup-5': typeof Mockup5Route
-  '/mockup-6': typeof Mockup6Route
-  '/mockup-7': typeof Mockup7Route
-  '/mockup-8': typeof Mockup8Route
-  '/mockup-9': typeof Mockup9Route
-  '/mockup-lab': typeof MockupLabRoute
-  '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
   '/risk-assessment': typeof RiskAssessmentRoute
   '/shadow': typeof ShadowRoute
@@ -275,17 +187,6 @@ export interface FileRoutesById {
   '/how-to-secure-llms': typeof HowToSecureLlmsRoute
   '/imprint': typeof ImprintRoute
   '/llms.txt': typeof LlmsDottxtRoute
-  '/mockup-1': typeof Mockup1Route
-  '/mockup-2': typeof Mockup2Route
-  '/mockup-3': typeof Mockup3Route
-  '/mockup-4': typeof Mockup4Route
-  '/mockup-5': typeof Mockup5Route
-  '/mockup-6': typeof Mockup6Route
-  '/mockup-7': typeof Mockup7Route
-  '/mockup-8': typeof Mockup8Route
-  '/mockup-9': typeof Mockup9Route
-  '/mockup-lab': typeof MockupLabRoute
-  '/mockups': typeof MockupsRoute
   '/privacy': typeof PrivacyRoute
   '/risk-assessment': typeof RiskAssessmentRoute
   '/shadow': typeof ShadowRoute
@@ -310,17 +211,6 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/llms.txt'
-    | '/mockup-1'
-    | '/mockup-2'
-    | '/mockup-3'
-    | '/mockup-4'
-    | '/mockup-5'
-    | '/mockup-6'
-    | '/mockup-7'
-    | '/mockup-8'
-    | '/mockup-9'
-    | '/mockup-lab'
-    | '/mockups'
     | '/privacy'
     | '/risk-assessment'
     | '/shadow'
@@ -342,17 +232,6 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/llms.txt'
-    | '/mockup-1'
-    | '/mockup-2'
-    | '/mockup-3'
-    | '/mockup-4'
-    | '/mockup-5'
-    | '/mockup-6'
-    | '/mockup-7'
-    | '/mockup-8'
-    | '/mockup-9'
-    | '/mockup-lab'
-    | '/mockups'
     | '/privacy'
     | '/risk-assessment'
     | '/shadow'
@@ -375,17 +254,6 @@ export interface FileRouteTypes {
     | '/how-to-secure-llms'
     | '/imprint'
     | '/llms.txt'
-    | '/mockup-1'
-    | '/mockup-2'
-    | '/mockup-3'
-    | '/mockup-4'
-    | '/mockup-5'
-    | '/mockup-6'
-    | '/mockup-7'
-    | '/mockup-8'
-    | '/mockup-9'
-    | '/mockup-lab'
-    | '/mockups'
     | '/privacy'
     | '/risk-assessment'
     | '/shadow'
@@ -409,17 +277,6 @@ export interface RootRouteChildren {
   HowToSecureLlmsRoute: typeof HowToSecureLlmsRoute
   ImprintRoute: typeof ImprintRoute
   LlmsDottxtRoute: typeof LlmsDottxtRoute
-  Mockup1Route: typeof Mockup1Route
-  Mockup2Route: typeof Mockup2Route
-  Mockup3Route: typeof Mockup3Route
-  Mockup4Route: typeof Mockup4Route
-  Mockup5Route: typeof Mockup5Route
-  Mockup6Route: typeof Mockup6Route
-  Mockup7Route: typeof Mockup7Route
-  Mockup8Route: typeof Mockup8Route
-  Mockup9Route: typeof Mockup9Route
-  MockupLabRoute: typeof MockupLabRoute
-  MockupsRoute: typeof MockupsRoute
   PrivacyRoute: typeof PrivacyRoute
   RiskAssessmentRoute: typeof RiskAssessmentRoute
   ShadowRoute: typeof ShadowRoute
@@ -464,83 +321,6 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockups': {
-      id: '/mockups'
-      path: '/mockups'
-      fullPath: '/mockups'
-      preLoaderRoute: typeof MockupsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-lab': {
-      id: '/mockup-lab'
-      path: '/mockup-lab'
-      fullPath: '/mockup-lab'
-      preLoaderRoute: typeof MockupLabRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-9': {
-      id: '/mockup-9'
-      path: '/mockup-9'
-      fullPath: '/mockup-9'
-      preLoaderRoute: typeof Mockup9RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-8': {
-      id: '/mockup-8'
-      path: '/mockup-8'
-      fullPath: '/mockup-8'
-      preLoaderRoute: typeof Mockup8RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-7': {
-      id: '/mockup-7'
-      path: '/mockup-7'
-      fullPath: '/mockup-7'
-      preLoaderRoute: typeof Mockup7RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-6': {
-      id: '/mockup-6'
-      path: '/mockup-6'
-      fullPath: '/mockup-6'
-      preLoaderRoute: typeof Mockup6RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-5': {
-      id: '/mockup-5'
-      path: '/mockup-5'
-      fullPath: '/mockup-5'
-      preLoaderRoute: typeof Mockup5RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-4': {
-      id: '/mockup-4'
-      path: '/mockup-4'
-      fullPath: '/mockup-4'
-      preLoaderRoute: typeof Mockup4RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-3': {
-      id: '/mockup-3'
-      path: '/mockup-3'
-      fullPath: '/mockup-3'
-      preLoaderRoute: typeof Mockup3RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-2': {
-      id: '/mockup-2'
-      path: '/mockup-2'
-      fullPath: '/mockup-2'
-      preLoaderRoute: typeof Mockup2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mockup-1': {
-      id: '/mockup-1'
-      path: '/mockup-1'
-      fullPath: '/mockup-1'
-      preLoaderRoute: typeof Mockup1RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/llms.txt': {
@@ -675,17 +455,6 @@ const rootRouteChildren: RootRouteChildren = {
   HowToSecureLlmsRoute: HowToSecureLlmsRoute,
   ImprintRoute: ImprintRoute,
   LlmsDottxtRoute: LlmsDottxtRoute,
-  Mockup1Route: Mockup1Route,
-  Mockup2Route: Mockup2Route,
-  Mockup3Route: Mockup3Route,
-  Mockup4Route: Mockup4Route,
-  Mockup5Route: Mockup5Route,
-  Mockup6Route: Mockup6Route,
-  Mockup7Route: Mockup7Route,
-  Mockup8Route: Mockup8Route,
-  Mockup9Route: Mockup9Route,
-  MockupLabRoute: MockupLabRoute,
-  MockupsRoute: MockupsRoute,
   PrivacyRoute: PrivacyRoute,
   RiskAssessmentRoute: RiskAssessmentRoute,
   ShadowRoute: ShadowRoute,
