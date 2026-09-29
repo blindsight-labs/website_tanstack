@@ -3,19 +3,29 @@
    server function are the legacy page's, unchanged. */
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-import { FormAlert } from "@/components/FormAlert";
+import { FieldError, FormAlert } from "@/components/FormAlert";
 import { RecaptchaNotice, useRecaptcha } from "@/components/Recaptcha";
 import { submitApplication } from "@/lib/careers.functions";
 import { trackEvent } from "@/lib/consent";
-import { checkError, friendlyFormError, isValidEmail, type FormErrorInfo } from "@/lib/form-error";
+import {
+  FIELD_MESSAGES,
+  checkError,
+  emailProblem,
+  fieldError,
+  friendlyFormError,
+  type FormErrorInfo,
+} from "@/lib/form-error";
 import { Label } from "@/site/shared";
 import { ROLES, fileToBase64 } from "../data";
 import { Meta, Page, PageHead, Steps } from "./parts";
 
 const applyRoute = getRouteApi("/careers_/apply");
+
+const MAX_CV_BYTES = 4 * 1024 * 1024;
+const CV_TYPES = /\.(pdf|docx?|txt)$/i;
 
 export function CareersApplyB() {
   const { role } = applyRoute.useSearch();
@@ -26,6 +36,17 @@ export function CareersApplyB() {
   const [fileName, setFileName] = useState("");
   const getCaptchaToken = useRecaptcha("careers");
   const known = ROLES.find((r) => r.title === role);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // a field's error goes to that field: the cursor moves there so the fix is one keystroke away
+  useEffect(() => {
+    if (!error?.field) return;
+    const el = formRef.current?.elements.namedItem(error.field);
+    if (el instanceof HTMLElement) el.focus();
+  }, [error]);
+
+  /** Props that mark a field invalid while its error shows. */
+  const invalid = (field: string) => (fieldError(error, field) ? { "aria-invalid": true as const } : {});
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,16 +58,25 @@ export function CareersApplyB() {
     const consent = f.get("consent") === "on";
     const file = f.get("cv") as File | null;
 
-    if (!consent) {
-      setError(checkError("Please confirm you agree to be contacted."));
-      return;
-    }
-    if (!isValidEmail(email)) {
-      setError(checkError("Please enter a valid email address."));
-      return;
-    }
-    if (file && file.size > 4 * 1024 * 1024) {
-      setError(checkError("CV must be 4MB or smaller."));
+    // in the order the fields appear
+    const emailIssue = emailProblem(email);
+    const hasFile = !!file && file.size > 0;
+    const problem = !name
+      ? checkError(FIELD_MESSAGES.name, "name")
+      : emailIssue
+        ? checkError(emailIssue, "email")
+        : hasFile && !CV_TYPES.test(file.name)
+          ? checkError("That file type isn't supported. Upload your CV as a PDF, DOC, DOCX or TXT file.", "cv")
+          : hasFile && file.size > MAX_CV_BYTES
+            ? checkError(
+                `Your CV is ${(file.size / 1024 / 1024).toFixed(1)} MB. Upload one of 4 MB or smaller, e.g. a compressed PDF.`,
+                "cv",
+              )
+            : !consent
+              ? checkError(FIELD_MESSAGES.contact, "consent")
+              : null;
+    if (problem) {
+      setError(problem);
       return;
     }
 
@@ -127,15 +157,27 @@ export function CareersApplyB() {
                 </Link>
               </div>
             ) : (
-              <form className="pb-form" onSubmit={onSubmit} noValidate>
+              <form
+                ref={formRef}
+                className="pb-form"
+                onSubmit={onSubmit}
+                // editing the field an error is about clears it
+                onChange={(e) => {
+                  const { name } = e.target as EventTarget & { name?: string };
+                  if (error?.field && error.field === name) setError(null);
+                }}
+                noValidate
+              >
                 <div className="pb-form__row">
                   <label className="pb-field">
                     <span className="pb-field__k">Name *</span>
-                    <input name="name" type="text" required maxLength={120} autoComplete="name" />
+                    <input name="name" type="text" required maxLength={120} autoComplete="name" {...invalid("name")} />
+                    <FieldError message={fieldError(error, "name")} />
                   </label>
                   <label className="pb-field">
                     <span className="pb-field__k">Email *</span>
-                    <input name="email" type="email" required maxLength={255} autoComplete="email" />
+                    <input name="email" type="email" required maxLength={255} autoComplete="email" {...invalid("email")} />
+                    <FieldError message={fieldError(error, "email")} />
                   </label>
                 </div>
                 <label className="pb-field pb-file" data-has={fileName ? "true" : undefined}>
@@ -145,18 +187,20 @@ export function CareersApplyB() {
                     type="file"
                     accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
                     onChange={(e) => setFileName(e.currentTarget.files?.[0]?.name ?? "")}
+                    {...invalid("cv")}
                   />
                   <span className="pb-file__face" aria-hidden="true">
                     <span className="pb-file__name">{fileName || "Choose a file"}</span>
                     <span className="pb-file__btn">{fileName ? "Replace" : "Browse"}</span>
                   </span>
+                  <FieldError message={fieldError(error, "cv")} />
                 </label>
                 <label className="pb-field">
                   <span className="pb-field__k">Anything you'd like us to know</span>
                   <textarea name="message" rows={5} maxLength={2000} placeholder="Optional: links, what you'd build here, when you can start." />
                 </label>
                 <label className="pb-check">
-                  <input name="consent" type="checkbox" required />
+                  <input name="consent" type="checkbox" required {...invalid("consent")} />
                   <span>
                     I agree to be contacted by Blindsight about this application. See our{" "}
                     <Link to="/privacy" target="_blank" rel="noopener">
@@ -165,7 +209,8 @@ export function CareersApplyB() {
                     .
                   </span>
                 </label>
-                {error && <FormAlert error={error} email="careers@blindsight.io" subject="Job application" />}
+                <FieldError message={fieldError(error, "consent")} />
+                {error && !error.field && <FormAlert error={error} email="careers@blindsight.io" subject="Job application" />}
                 <div className="pb-form__foot">
                   <button type="submit" className="mD-btn mD-btn--primary mD-btn--lg" disabled={submitting}>
                     {submitting ? "Sending…" : "Submit application"}
