@@ -13,7 +13,6 @@ import { Footer } from "@/site/Footer";
 import { Nav } from "@/site/Nav";
 import { MetalDefs } from "@/site/shared";
 import { SitePage } from "@/site/pages/registry";
-import { styles as stylesB } from "@/site/pages/b";
 import {
   SiteThemeProvider,
   THEME_BODY_CSS,
@@ -25,35 +24,9 @@ import { consentHeadScripts, loadCookiebot, trackPageView } from "@/lib/consent"
 import { watchOverflow } from "@/lib/overflow-watch";
 
 import appCss from "../styles.css?url";
-import fontsCss from "@/site/fonts.css?url";
-import systemCss from "@/site/system.css?url";
-import heroCss from "@/site/hero.css?url";
-import topCss from "@/site/top.css?url";
-import sequenceCss from "@/site/sequence.css?url";
-import midCss from "@/site/mid.css?url";
-import bottomCss from "@/site/bottom.css?url";
-import deployCss from "@/site/deploy.css?url";
-import dotsCss from "@/site/dots.css?url";
-import seqShellCss from "@/site/seq/shell.css?url";
-import seqLeftCss from "@/site/seq/left.css?url";
-import chromeCss from "@/site/chrome.css?url";
-
-/* The site's design system, in cascade order (as the landing was built), then the chrome
-   layer, then the pages' own stylesheets. styles.css stays first (the design-token layer). */
-const SITE_CSS = [
-  systemCss,
-  heroCss,
-  topCss,
-  sequenceCss,
-  midCss,
-  bottomCss,
-  deployCss,
-  dotsCss,
-  seqShellCss,
-  seqLeftCss,
-  chromeCss,
-  ...stylesB,
-];
+// The site's design system in one stylesheet (see site/site.css for the cascade order).
+// styles.css stays first (the design-token layer).
+import siteCss from "@/site/site.css?url";
 
 export const Route = createRootRoute({
   head: () => {
@@ -95,9 +68,8 @@ export const Route = createRootRoute({
         { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
         { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
         { rel: "manifest", href: "/site.webmanifest" },
-        // self-hosted fonts: no request to Google Fonts (privacy notice)
-        { rel: "stylesheet", href: fontsCss },
-        ...SITE_CSS.map((href) => ({ rel: "stylesheet", href })),
+        // includes the self-hosted fonts: no request to Google Fonts (privacy notice)
+        { rel: "stylesheet", href: siteCss },
       ],
       scripts: [
         // Cookiebot + the analytics it gates (GA4 loads only after statistics consent).
