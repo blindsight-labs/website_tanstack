@@ -78,17 +78,17 @@ export const submitApplication = createServerFn({ method: "POST" })
       const ext = data.cv.filename.toLowerCase().match(/\.([a-z0-9]+)$/)?.[1] ?? "";
       const mimeType = MIME_BY_EXT[ext];
       if (!mimeType || !ALLOWED_MIME.has(mimeType)) {
-        throw new Error("Unsupported CV file type. Please upload PDF, DOC, DOCX, or TXT.");
+        throw new Error("That file type isn't supported. Upload your CV as a PDF, DOC, DOCX or TXT file.");
       }
       if (!/^[A-Za-z0-9+/]+={0,2}$/.test(data.cv.base64)) {
-        throw new Error("The CV file couldn't be read. Please choose it again.");
+        throw new Error("We couldn't read that CV file. Choose it again and send.");
       }
       const bytes = Buffer.from(data.cv.base64, "base64");
       if (bytes.byteLength > MAX_CV_BYTES) {
-        throw new Error("CV file is too large (max 4MB).");
+        throw new Error("That CV file is too large. Upload one of 4 MB or smaller.");
       }
       if (!contentMatches(ext, bytes)) {
-        throw new Error("That file doesn't look like a real PDF, DOC, DOCX or TXT. Please export your CV again.");
+        throw new Error("That CV file doesn't look like a real PDF, DOC, DOCX or TXT. Export your CV again and upload the new file.");
       }
       // never the visitor's own file name: a fixed, readable one
       const slug = data.name.toLowerCase().normalize("NFKD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60);

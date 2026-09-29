@@ -1,4 +1,5 @@
-/* The error block under a form's fields. "check" errors name what to fix; "failed" errors say
+/* The error block under a form's fields, for problems not tied to one field (those show under
+   the field, FieldError). "check" errors name what to fix; "failed" errors say
    what happened, that it's safe to retry, and give a direct email fallback (subject prefilled,
    with the log reference when there is one). Styled in b-forms.css (.form-alert). */
 import { AlertCircle, CircleSlash } from "lucide-react";
@@ -38,5 +39,16 @@ export function FormAlert({
         )}
       </div>
     </div>
+  );
+}
+
+/** The message under one field, when the current "check" error is about it (see fieldError). */
+export function FieldError({ message }: { message: string | null }) {
+  if (!message) return null;
+  return (
+    <small className="field-error" role="alert">
+      <AlertCircle size={14} strokeWidth={1.75} aria-hidden="true" />
+      {message}
+    </small>
   );
 }

@@ -4,8 +4,15 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft, Building2, Check, Rocket } from "lucide-react";
 import { submitDemoRequest } from "@/lib/demo.functions";
 import { trackEvent } from "@/lib/consent";
-import { checkError, friendlyFormError, isValidEmail, type FormErrorInfo } from "@/lib/form-error";
-import { FormAlert } from "./FormAlert";
+import {
+  FIELD_MESSAGES,
+  checkError,
+  emailProblem,
+  fieldError,
+  friendlyFormError,
+  type FormErrorInfo,
+} from "@/lib/form-error";
+import { FieldError, FormAlert } from "./FormAlert";
 import { RecaptchaNotice, useRecaptcha } from "./Recaptcha";
 import type { DemoVariant } from "./DemoModal";
 
@@ -62,20 +69,30 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       ?.focus();
   }, [step, path]);
 
-  /** The current step's own checks, before moving on. */
-  function stepProblem(f: FormData): string | null {
+  // a field's error goes to that field: the cursor moves there so the fix is one keystroke away
+  useEffect(() => {
+    if (!error?.field) return;
+    const el = formRef.current?.elements.namedItem(error.field);
+    if (el instanceof HTMLElement) el.focus();
+  }, [error]);
+
+  /** The checks for one step's fields, in the order they appear. */
+  function stepProblem(f: FormData, at: number): FormErrorInfo | null {
     const v = (k: string) => String(f.get(k) || "").trim();
-    if (step === 0) {
-      if (!v("name")) return "Please enter your name.";
-      if (!isValidEmail(v("email"))) return "Please enter a valid email address.";
+    if (at === 0) {
+      if (!v("name")) return checkError(FIELD_MESSAGES.name, "name");
+      const email = emailProblem(v("email"));
+      if (email) return checkError(email, "email");
     }
-    if (step === 1 && isTrial) {
-      if (!v("company")) return "Please enter your company name.";
-      if (!v("position")) return "Please select your position.";
+    if (at === 1 && (isTrial || path === "team") && !v("company")) {
+      return checkError(FIELD_MESSAGES.company, "company");
     }
-    if (step === 1 && path === "team" && !v("company")) return "Please enter your company name.";
+    if (at === 1 && isTrial && !v("position")) return checkError(FIELD_MESSAGES.position, "position");
     return null;
   }
+
+  /** Props that mark a field invalid while its error shows. */
+  const invalid = (field: string) => (fieldError(error, field) ? { "aria-invalid": true as const } : {});
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -83,10 +100,19 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
     const f = new FormData(e.currentTarget);
     if (!last) {
       // Continue (or Enter in a field): check this step, then show the next one
-      const problem = stepProblem(f);
-      if (problem) setError(checkError(problem));
+      const problem = stepProblem(f, step);
+      if (problem) setError(problem);
       else setStep(step + 1);
       return;
+    }
+    // every earlier step again (the visitor may have gone back and cleared a field), then this one
+    for (let at = 0; at < step; at++) {
+      const problem = stepProblem(f, at);
+      if (problem) {
+        setStep(at);
+        setError(problem);
+        return;
+      }
     }
     const name = String(f.get("name") || "").trim();
     const email = String(f.get("email") || "").trim();
@@ -94,11 +120,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
     const consent = f.get("consent") === "on";
 
     if (!consent) {
-      setError(checkError("Please accept the Evaluation Terms to continue."));
-      return;
-    }
-    if (!isValidEmail(email)) {
-      setError(checkError("Please enter a valid email address."));
+      setError(checkError(FIELD_MESSAGES.terms, "consent"));
       return;
     }
 
@@ -115,23 +137,11 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       companySize = String(f.get("companySize") || "").trim();
       engine = String(f.get("engine") || "").trim();
       deployment = String(f.get("deployment") || "").trim();
-      if (!company) {
-        setError(checkError("Please enter your company name."));
-        return;
-      }
-      if (!role) {
-        setError(checkError("Please select your position."));
-        return;
-      }
     } else if (path === "team") {
       company = String(f.get("company") || "").trim();
       role = String(f.get("role") || "").trim();
       companySize = String(f.get("companySize") || "").trim();
       useCase = String(f.get("useCase") || "").trim();
-      if (!company) {
-        setError(checkError("Please enter your company name."));
-        return;
-      }
     }
 
     setSubmitting(true);
@@ -159,7 +169,13 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       });
       setDone(true);
     } catch (err) {
-      setError(friendlyFormError(err));
+      const problem = friendlyFormError(err);
+      // a server check about an earlier step's field: take the visitor back to it
+      const at = problem.field
+        ? Number(formRef.current?.querySelector(`[name="${problem.field}"]`)?.closest("[data-step]")?.getAttribute("data-step"))
+        : NaN;
+      if (!Number.isNaN(at) && at !== step) setStep(at);
+      setError(problem);
     } finally {
       setSubmitting(false);
     }
@@ -197,7 +213,17 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
           </p>
         </div>
       ) : (
-        <form ref={formRef} className="demo-form" onSubmit={onSubmit} noValidate>
+        <form
+          ref={formRef}
+          className="demo-form"
+          onSubmit={onSubmit}
+          // editing the field an error is about clears it
+          onChange={(e) => {
+            const { name } = e.target as EventTarget & { name?: string };
+            if (error?.field && error.field === name) setError(null);
+          }}
+          noValidate
+        >
           {!isTrial && (
             <div className="demo-path-toggle" hidden={path !== null}>
               <p className="demo-path-heading">Which best describes you?</p>
@@ -267,11 +293,27 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
             <div className="demo-step" data-step="0" hidden={step !== 0}>
               <label className="demo-field">
                 <span>Name *</span>
-                <input name="name" type="text" required maxLength={120} autoComplete="name" />
+                <input
+                  name="name"
+                  type="text"
+                  required
+                  maxLength={120}
+                  autoComplete="name"
+                  {...invalid("name")}
+                />
+                <FieldError message={fieldError(error, "name")} />
               </label>
               <label className="demo-field">
                 <span>{isTrial || path === "team" ? "Work email *" : "Email *"}</span>
-                <input name="email" type="email" required maxLength={255} autoComplete="email" />
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  maxLength={255}
+                  autoComplete="email"
+                  {...invalid("email")}
+                />
+                <FieldError message={fieldError(error, "email")} />
               </label>
             </div>
 
@@ -285,11 +327,13 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                     required
                     maxLength={200}
                     autoComplete="organization"
+                    {...invalid("company")}
                   />
+                  <FieldError message={fieldError(error, "company")} />
                 </label>
                 <label className="demo-field">
                   <span>Your position *</span>
-                  <select name="position" defaultValue="" required>
+                  <select name="position" defaultValue="" required {...invalid("position")}>
                     <option value="" disabled hidden>
                       Select…
                     </option>
@@ -299,6 +343,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                       </option>
                     ))}
                   </select>
+                  <FieldError message={fieldError(error, "position")} />
                 </label>
                 <label className="demo-field">
                   <span>Company size (optional)</span>
@@ -325,7 +370,9 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                     required
                     maxLength={200}
                     autoComplete="organization"
+                    {...invalid("company")}
                   />
+                  <FieldError message={fieldError(error, "company")} />
                 </label>
                 <div className="demo-row">
                   <label className="demo-field">
@@ -395,7 +442,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                 />
               </label>
               <label className="demo-consent">
-                <input name="consent" type="checkbox" required />
+                <input name="consent" type="checkbox" required {...invalid("consent")} />
                 <span>
                   I accept the{" "}
                   <Link to="/evaluation-terms" target="_blank" rel="noopener">
@@ -409,9 +456,10 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                   .
                 </span>
               </label>
+              <FieldError message={fieldError(error, "consent")} />
             </div>
 
-            {error && (
+            {error && !error.field && (
               <FormAlert error={error} email="info@blindsight.io" subject="Website request" />
             )}
             <div className="demo-nav">
