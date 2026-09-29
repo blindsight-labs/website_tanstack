@@ -20,7 +20,7 @@
  * Client-only: import this from inside useEffect / dynamic import, never at module
  * top level of an SSR-rendered route.
  */
-import * as THREE from "three";
+import * as THREE from "./subset";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 

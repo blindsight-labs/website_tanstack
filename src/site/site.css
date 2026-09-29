@@ -1,0 +1,23 @@
+/* The site's stylesheets as one file: Vite inlines these imports at build time, so every page
+   loads a single render-blocking stylesheet instead of nineteen. Order is the cascade order
+   (as the landing was built), then the chrome layer, then the pages' own stylesheets;
+   styles.css (the design-token layer) is linked separately, before this file. */
+@import "./fonts.css";
+@import "./system.css";
+@import "./hero.css";
+@import "./top.css";
+@import "./sequence.css";
+@import "./mid.css";
+@import "./bottom.css";
+@import "./deploy.css";
+@import "./dots.css";
+@import "./seq/shell.css";
+@import "./seq/left.css";
+@import "./chrome.css";
+@import "./pages/b/b-base.css";
+@import "./pages/b/b-pages.css";
+@import "./pages/b/b-post.css";
+@import "./pages/b/b-more.css";
+@import "./pages/b/b-forms.css";
+@import "./pages/b/b-dform.css";
+@import "./pages/b/b-resp.css";
