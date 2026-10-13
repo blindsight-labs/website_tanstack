@@ -5,6 +5,7 @@ category: "Threat primer"
 date: "2026-10-13"
 read: "11 min"
 author: "Filipa Barros"
+excerpt: "Attacks are not the only nor the most common way that data leaves an organization. In this post we introduce what shadow AI is, how widespread it is, why blocking it fails, and what visibility could look like."
 references:
   - label: "Bing, C. & Viswanatha, A. (2023) - Samsung bans use of generative AI tools like ChatGPT after data leak (Reuters)"
     href: "https://www.reuters.com/technology/samsung-bans-use-generative-ai-tools-like-chatgpt-after-data-leak-2023-05-02/"
