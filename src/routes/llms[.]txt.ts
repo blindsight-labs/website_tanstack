@@ -15,6 +15,7 @@ const BODY = `# Blindsight
 - [Prompt Injection](https://blindsight.io/blog/prompt-injection)
 - [Data Poisoning](https://blindsight.io/blog/data-poisoning)
 - [Misalignment](https://blindsight.io/blog/misalignment)
+- [Shadow AI: The risk you weren't counting on deploying](https://blindsight.io/blog/shadow-ai): what shadow AI is, why blocking it fails, and why visibility is the starting point.
 - [Blog / research index](https://blindsight.io/blog)
 
 ## Company

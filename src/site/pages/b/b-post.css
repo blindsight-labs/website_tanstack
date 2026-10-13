@@ -222,6 +222,14 @@
   border-radius: var(--r);
   box-shadow: 0 0 0 1px var(--line);
 }
+/* Theme pairs (see MD.img in BlogPost.tsx): display:none also keeps the lazy twin from loading */
+.mD[data-site-variant="b"] .pb-prose img.pb-prose__img--dark,
+.mD[data-site-variant="b"][data-theme="dark"] .pb-prose img.pb-prose__img--light {
+  display: none;
+}
+.mD[data-site-variant="b"][data-theme="dark"] .pb-prose img.pb-prose__img--dark {
+  display: block;
+}
 .mD[data-site-variant="b"] .pb-prose__table {
   margin-block: 1.8em;
   overflow-x: auto;

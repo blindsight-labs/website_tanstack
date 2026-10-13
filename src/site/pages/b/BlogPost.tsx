@@ -60,7 +60,19 @@ const MD: Components = {
       </a>
     );
   },
-  img: ({ src, alt }) => <img src={typeof src === "string" ? src : undefined} alt={alt ?? ""} loading="lazy" decoding="async" />,
+  img: ({ src, alt }) => {
+    const url = typeof src === "string" ? src : undefined;
+    // "x-light.png" ships with a "x-dark.png" sibling: render both, CSS shows the one for the theme
+    if (url && /-light\.\w+$/.test(url)) {
+      return (
+        <>
+          <img className="pb-prose__img--light" src={url} alt={alt ?? ""} loading="lazy" decoding="async" />
+          <img className="pb-prose__img--dark" src={url.replace(/-light(\.\w+)$/, "-dark$1")} alt={alt ?? ""} loading="lazy" decoding="async" />
+        </>
+      );
+    }
+    return <img src={url} alt={alt ?? ""} loading="lazy" decoding="async" />;
+  },
   table: ({ children }) => (
     <div className="pb-prose__table" tabIndex={0} role="region" aria-label="Table">
       <table>{children}</table>
