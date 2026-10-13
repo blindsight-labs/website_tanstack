@@ -1,5 +1,5 @@
 ---
-title: "Shadow AI: The risk you weren't counting on deploying"
+title: "Shadow AI: An intro to the undercover risks"
 slug: shadow-ai
 category: "Threat primer"
 date: "2026-10-13"
