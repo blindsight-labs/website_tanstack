@@ -8,7 +8,8 @@ import { COOKIEBOT_CBID, openCookieSettings } from "@/lib/consent";
 import { footer, sequence } from "./content";
 
 /** "a · b": each segment unbreakable with its trailing dot, so a line only ever
- *  breaks after a dot, never inside a phrase ("8001 / Zürich"). */
+ *  breaks after a dot, never inside a phrase ("8001 / Zürich"). Below 900px each
+ *  segment takes its own centred line and the dots are hidden. */
 function Segments({ text }: { text: string }) {
   const parts = text.split(" · ");
   return (
@@ -17,7 +18,7 @@ function Segments({ text }: { text: string }) {
         <Fragment key={s}>
           <span className="mDb-seg">
             {s}
-            {i < parts.length - 1 && " ·"}
+            {i < parts.length - 1 && <span className="mDb-dot"> ·</span>}
           </span>
           {i < parts.length - 1 && " "}
         </Fragment>
@@ -43,7 +44,7 @@ export function Footer() {
                 </li>
               ))}
               {COOKIEBOT_CBID && (
-                <li>
+                <li className="mDb-footer__consent-item">
                   <button
                     type="button"
                     className="mDb-footer__consent"

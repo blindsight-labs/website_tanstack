@@ -161,16 +161,26 @@
     align-items: center;
     text-align: center;
   }
+  .mDb-seg {
+    display: block;
+  }
+  .mDb-dot {
+    display: none;
+  }
 }
 
 @media (max-width: 599px) {
-  /* six links as two even rows of three, never one left alone; the grid centred as a block */
+  /* six links as two even rows of three, never one left alone; the cookie item gets its own
+     full row so it can't widen a column; the grid centred as a block */
   .mDb-footer__links {
     display: grid;
     grid-template-columns: repeat(3, max-content);
     justify-content: center;
     justify-items: center;
     gap: 0 28px;
+  }
+  .mDb-footer__consent-item {
+    grid-column: 1 / -1;
   }
   .mDb-final__sheet {
     min-height: 620px;
