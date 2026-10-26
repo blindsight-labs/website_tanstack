@@ -180,6 +180,19 @@
   transform-origin: left center;
 }
 
+/* ---- the pause control (WCAG 2.2.2; Hero.tsx, the logo strip's toggle look): bottom-left,
+   level with the caption rail, clear of the copy and the render's chips ---- */
+/* rendered only while the loop runs, so it stays shown even if reduced motion is switched on
+   mid-visit (top.css hides .mT-proof__toggle then, which would leave the loop unstoppable) */
+.mD-hero .mD-hero__toggle {
+  display: inline-flex;
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  bottom: 12px;
+  left: max(var(--gutter), (100% - var(--page-max)) / 2);
+}
+
 /* ---- chips over the render: they follow their object ---- */
 .mD-hero__chip {
   position: absolute;
@@ -337,6 +350,13 @@
   }
   .mD-hero__beatResult {
     white-space: normal;
+  }
+  /* the rail fills the width here: the toggle goes to the sheet's empty top-right corner */
+  .mD-hero .mD-hero__toggle {
+    top: var(--s3);
+    right: var(--s3);
+    bottom: auto;
+    left: auto;
   }
   /* the rack's chip would climb into the headline on a short stage */
   .mD-hero__chip[data-k="0"] {

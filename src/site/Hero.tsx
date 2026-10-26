@@ -4,7 +4,8 @@
    policy reaches it. Chips follow their objects and change with the story; the
    caption rail under the render names the beat. (The close-up of the same story,
    on one machine, plays in the See / Secure / Govern section below.) */
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { Pause, Play } from "lucide-react";
 
 import { CtaButton, Label, type SectionProps } from "./shared";
 import { hero } from "./content";
@@ -37,6 +38,12 @@ export function Hero({ theme }: SectionProps) {
   const beatsRef = useRef<HTMLDivElement>(null);
   const fillRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const chipRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  // WCAG 2.2.2: the pause control shows only while the live loop runs (not for posters on
+  // constrained devices, reduced motion or a frozen #hero-t); paused outlives scene rebuilds
+  const [live, setLive] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
+  const setPlayRef = useRef<(paused: boolean) => void>(() => {});
 
   useEffect(() => {
     const sheet = sheetRef.current;
@@ -141,7 +148,8 @@ export function Hero({ theme }: SectionProps) {
       // joins it mid-scan however long the page took to load)
       let offset = performance.now();
       let hiddenAt: number | null = null;
-      const now = () => performance.now() - offset;
+      // frozen while paused, so a redraw (resize) shows the same frame
+      const now = () => (hiddenAt ?? performance.now()) - offset;
 
       const draw = () => {
         const t = still ? stillT : now();
@@ -155,7 +163,7 @@ export function Hero({ theme }: SectionProps) {
 
       const ro = new ResizeObserver(() => {
         fit();
-        if (still) draw();
+        if (still || pausedRef.current) draw();
       });
       ro.observe(stage);
 
@@ -170,6 +178,7 @@ export function Hero({ theme }: SectionProps) {
         raf = 0;
       };
       const resume = () => {
+        if (pausedRef.current) return;
         if (hiddenAt !== null) {
           offset += performance.now() - hiddenAt;
           hiddenAt = null;
@@ -185,17 +194,29 @@ export function Hero({ theme }: SectionProps) {
       io.observe(stage);
       const onVis = () => (document.hidden || !onScreen ? pause() : resume());
       document.addEventListener("visibilitychange", onVis);
+      setPlayRef.current = (p) => (p ? pause() : !document.hidden && onScreen && resume());
 
       if (still) draw();
-      else resume();
+      else {
+        if (pausedRef.current) {
+          draw();
+          pause();
+        } else resume();
+        setLive(true);
+      }
 
       cleanup = () => {
         cancelAnimationFrame(raf);
+        setPlayRef.current = () => {};
         ro.disconnect();
         io.disconnect();
         document.removeEventListener("visibilitychange", onVis);
         scene.dispose();
       };
+    }).catch((err: unknown) => {
+      // a scene that failed to build (e.g. WebGL lost on a theme rebuild) runs no loop: no control
+      console.warn("[hero] 3D unavailable", err);
+      if (!disposed) setLive(false);
     });
 
     const section = sectionRef.current;
@@ -251,6 +272,27 @@ export function Hero({ theme }: SectionProps) {
             <CtaButton size="lg" />
           </div>
         </div>
+
+        {live && (
+          <button
+            type="button"
+            className="mT-proof__toggle mD-hero__toggle"
+            aria-label="Pause hero animation"
+            aria-pressed={paused}
+            onClick={() => {
+              const p = !paused;
+              pausedRef.current = p;
+              setPaused(p);
+              setPlayRef.current(p);
+            }}
+          >
+            {paused ? (
+              <Play size={14} strokeWidth={1.5} aria-hidden="true" />
+            ) : (
+              <Pause size={14} strokeWidth={1.5} aria-hidden="true" />
+            )}
+          </button>
+        )}
 
         <div className="mD-hero__beats" ref={beatsRef} data-beat="0" aria-hidden="true">
           {hero.beats.map((b, k) => (
