@@ -383,9 +383,14 @@
    scroll container, which silently breaks every position: sticky on the site.
    `hidden` stays first as the fallback for browsers without clip. */
 html {
-  scroll-behavior: smooth;
   overflow-x: hidden;
   overflow-x: clip;
+}
+/* in-page anchor links (#roles, footnotes, the article outline) glide; route changes don't (router.tsx) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
