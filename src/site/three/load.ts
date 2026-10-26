@@ -10,3 +10,13 @@ export function loadOffice() {
   });
   return office;
 }
+
+/** Phones, and devices that ask for less (Save-Data, ≤ 4 GB): their 3× screens would otherwise
+ *  render every scene at 2× or more, the dominant GPU/battery cost. They also keep the Hero's
+ *  poster instead of the live scene (Hero.tsx). */
+export function constrainedDevice(): boolean {
+  if (typeof window === "undefined") return false;
+  const n = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+  const phone = window.matchMedia("(pointer: coarse) and (max-width: 899px)").matches;
+  return phone || n.connection?.saveData === true || (n.deviceMemory ?? 8) <= 4;
+}

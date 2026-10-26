@@ -10,7 +10,7 @@ import { CtaButton, Label, type SectionProps } from "./shared";
 import { hero } from "./content";
 import { markHeroReady } from "./heroReady";
 import { HERO_POSTERS } from "./heroPosters";
-import { loadOffice } from "./three/load";
+import { constrainedDevice, loadOffice } from "./three/load";
 
 /** Dev aid for screenshots: /#hero-t=4500 freezes the storyboard at 4.5 s. */
 function frozenTime(): number | null {
@@ -43,6 +43,11 @@ export function Hero({ theme }: SectionProps) {
     const stage = stageRef.current;
     const canvas = canvasRef.current;
     if (!sheet || !stage || !canvas) return;
+    // Constrained devices keep the poster (chips hidden, caption rail at rest) and skip three.js.
+    if (POSTER_STYLE && constrainedDevice()) {
+      markHeroReady();
+      return;
+    }
     // Hydration renders "light"; a dark page re-renders with "dark" a moment later
     // (SiteThemeProvider). Now that the module may already be loaded (Home.tsx starts it),
     // don't start a build for the theme that is about to change: wait for that render.

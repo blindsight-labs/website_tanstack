@@ -21,6 +21,7 @@
  * top level of an SSR-rendered route.
  */
 import * as THREE from "./subset";
+import { constrainedDevice } from "./load";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
@@ -35,15 +36,6 @@ export const PALETTE = {
   signal: "#5546E0",
   signalOnDark: "#7C6CF5",
 };
-
-/** Phones, and devices that ask for less (Save-Data, ≤ 4 GB): their 3× screens would otherwise
- *  render every scene at 2× or more, the dominant GPU/battery cost. */
-function constrainedDevice(): boolean {
-  if (typeof window === "undefined") return false;
-  const n = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
-  const phone = window.matchMedia("(pointer: coarse) and (max-width: 899px)").matches;
-  return phone || n.connection?.saveData === true || (n.deviceMemory ?? 8) <= 4;
-}
 
 /** The device pixel ratio a scene renders at: `cap` normally, at most 1.5 on constrained devices. */
 export function pixelRatio(cap: number): number {

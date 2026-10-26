@@ -4,16 +4,17 @@
 import { Deployment } from "./Deployment";
 import { FinalCta } from "./FinalCta";
 import { Hero } from "./Hero";
+import { HERO_POSTERS } from "./heroPosters";
 import { ProofStrip } from "./ProofStrip";
 import { Risks } from "./Risks";
 import { Sequence } from "./Sequence";
 import { Walkthrough } from "./Walkthrough";
 import { useSiteTheme } from "./theme";
-import { loadOffice } from "./three/load";
+import { constrainedDevice, loadOffice } from "./three/load";
 
 // Start the Hero's 3D download (three.js + the office scene) now, while the page hydrates,
 // not after: the Hero's effect picks up the same promise.
-if (typeof window !== "undefined") loadOffice().catch(() => undefined);
+if (typeof window !== "undefined" && !(HERO_POSTERS && constrainedDevice())) loadOffice().catch(() => undefined);
 
 export function Home() {
   const { theme } = useSiteTheme();

@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Home } from "@/site/Home";
 import { hero } from "@/site/content";
 import { HERO_POSTERS } from "@/site/heroPosters";
-import { loadOffice } from "@/site/three/load";
+import { constrainedDevice, loadOffice } from "@/site/three/load";
 
 const TITLE = `Blindsight · ${hero.headline}`;
 
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/")({
     // hydrating or navigating here, before React renders (Home.tsx starts it too). Vite
     // preloads the scene's chunks in parallel. (A <link rel="modulepreload"> can't be written
     // here: the hashed chunk names aren't known in source.)
-    if (typeof window !== "undefined") loadOffice().catch(() => undefined);
+    if (typeof window !== "undefined" && !(HERO_POSTERS && constrainedDevice())) loadOffice().catch(() => undefined);
     return {
       meta: [
         { title: TITLE },

@@ -18,6 +18,7 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 
 import { afterHeroIdle } from "./heroReady";
+import { constrainedDevice } from "./three/load";
 import { Label, type SectionProps, type Theme } from "./shared";
 import { sequence } from "./content";
 import { BOUNDS, CLAUSES, HOLD_MS, SETTLED, STAGES, STAGE_DWELL, STAGE_MS, netTime, snapAt, stageLocal, type Snap } from "./seq/model";
@@ -356,8 +357,12 @@ function SequenceStills({ theme }: { theme: Theme }) {
 
 export function Sequence({ theme }: SectionProps) {
   // fetch the close-up's code once the hero is up and the page is idle, so it is cached
-  // before the visitor scrolls here (the scene itself is still built only when near)
-  useEffect(() => afterHeroIdle(() => void loadScene().catch(() => undefined), { delay: 500 }), []);
+  // before the visitor scrolls here (the scene itself is still built only when near).
+  // Constrained devices skip it: they fetch the scene only once scrolled near.
+  useEffect(
+    () => (constrainedDevice() ? undefined : afterHeroIdle(() => void loadScene().catch(() => undefined), { delay: 500 })),
+    [],
+  );
   return (
     <section id="sequence" className="mD-seq" aria-label={sequence.tagline}>
       <SequenceLive theme={theme} />
