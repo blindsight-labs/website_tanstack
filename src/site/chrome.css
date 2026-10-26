@@ -115,4 +115,8 @@
 .bs-modal:focus {
   outline: none;
 }
+/* the version's modal chunk still loading: keep the empty card unseen (it still takes focus) */
+.bs-modal:empty {
+  opacity: 0;
+}
 

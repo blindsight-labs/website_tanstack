@@ -204,7 +204,7 @@ export function Nav({ theme }: SectionProps) {
   useEffect(() => {
     if (!sheetOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
+      if (e.key !== "Escape" || e.defaultPrevented) return;
       setSheetOpen(false);
       burgerRef.current?.focus();
     };

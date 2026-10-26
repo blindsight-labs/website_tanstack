@@ -15,6 +15,8 @@ export function useModalDialog(
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        // capture phase + preventDefault: the mobile sheet's Escape (Nav.tsx) leaves this one to us
+        e.preventDefault();
         close();
         return;
       }
@@ -39,7 +41,7 @@ export function useModalDialog(
         first.focus();
       }
     };
-    document.addEventListener("keydown", onKey);
+    document.addEventListener("keydown", onKey, true);
     // Lock the page behind it: iOS Safari ignores overflow:hidden for touch scrolling, so the body
     // is pinned at its offset (overflow:hidden would also make body a scroll container and take
     // the sticky nav with it). The padding stands in for the scrollbar the pin removes.
@@ -52,7 +54,7 @@ export function useModalDialog(
     // Move focus into the dialog for keyboard/screen-reader users.
     cardRef.current?.focus();
     return () => {
-      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("keydown", onKey, true);
       body.cssText = prevBody;
       // back where it was, unless browser Back changed the page underneath (the router owns that)
       if (location.href === href) window.scrollTo({ top: y, behavior: "instant" });

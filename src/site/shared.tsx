@@ -42,7 +42,17 @@ export function CtaButton({
     .filter(Boolean)
     .join(" ");
   return (
-    <button type="button" className={cls} onClick={open} onPointerEnter={prefetch} onFocus={prefetch}>
+    <button
+      type="button"
+      className={cls}
+      onClick={(e) => {
+        // Safari doesn't focus a clicked button: focus it so the modal returns focus here on close
+        e.currentTarget.focus({ preventScroll: true });
+        open();
+      }}
+      onPointerEnter={prefetch}
+      onFocus={prefetch}
+    >
       {label}
       <ArrowRight size={14} strokeWidth={1.75} className="mD-btn__arrow" aria-hidden="true" />
     </button>
