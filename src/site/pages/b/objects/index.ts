@@ -7,11 +7,9 @@ import { preload } from "./images";
 import type { Ctx, Tone } from "./kit";
 import { sceneApply, sceneAuthor, sceneBlog, sceneCareers, sceneTeam, type AuthorArg, type PageArg } from "./scenes-company";
 import { sceneColumns, sceneContact, sceneFaq, sceneLegal, sceneLost, sceneRegister } from "./scenes-site";
+import { VERSION } from "./version";
 
 export type { Tone };
-
-/** Bump when any scene changes, so cached stills are not reused. */
-const VERSION = "b12";
 
 function json<T>(a: string, fallback: T): T {
   try {
