@@ -101,7 +101,7 @@
   line-height: 1.04;
 }
 .mD-seq__tagline span {
-  color: var(--ink-4);
+  color: var(--ink-3);
   transition: color var(--dur-3) var(--ease);
 }
 .mD-seq__tagline span[data-on="true"] {
@@ -109,10 +109,6 @@
 }
 .mD-seq__tagline--static {
   color: var(--ink);
-}
-/* dark: ink-4 on the sheet is ~1.9:1; the clauses still to come stay legible */
-.mD[data-theme="dark"] .mD-seq__tagline span:not([data-on="true"]) {
-  color: var(--ink-3);
 }
 
 /* ---- rail: 01 · SEE IT / 02 · SECURE IT / 03 · GOVERN IT ---- */

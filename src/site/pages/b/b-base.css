@@ -349,9 +349,6 @@
   padding-top: 2px;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--ink-4);
-}
-.mD[data-site-variant="b"] .pb-outline__link[aria-current] .pb-outline__n {
   color: var(--ink-3);
 }
 
