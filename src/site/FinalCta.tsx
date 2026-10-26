@@ -1,7 +1,8 @@
 /* 09 · Closing sheet — Octane's black closing sheet: thick clear glass slabs
    cropped by the sheet's corners and a machined chrome hex (our marker, made
    real) half behind the glass. No colour: violet is reserved for live signals.
-   Rendered once (three.js renderOnce → <img>); the sheet colour is the
+   A pre-rendered WebP from src/assets/final when one fits the sheet (see its README),
+   otherwise rendered once (three.js renderOnce → <img>); the sheet colour is the
    render's backdrop. */
 import { useEffect, useRef, useState } from "react";
 import type { BufferGeometry, Material, Texture } from "three";
@@ -10,6 +11,18 @@ import { finalCta } from "./content";
 import { CtaButton, useReveal, type SectionProps, type Theme } from "./shared";
 
 type Core = typeof import("@/site/three/core");
+
+/** Bump when the scene changes: it keys the runtime render and names the static files. */
+const FINAL_VERSION = "v5";
+/** Pre-rendered backgrounds, `final-{FINAL_VERSION}-{theme}-{wide|narrow}.webp`
+ *  (src/assets/final/README.md); `#stills-live` in the hash skips them. */
+const FINAL = import.meta.glob("/src/assets/final/*.webp", {
+  eager: true,
+  query: "?url",
+  import: "default",
+}) as Record<string, string>;
+/** w / h of the exported files; a sheet within 1.3× of it uses the file (cover-cropped). */
+const FILE_ASPECT = { wide: 2.1, narrow: 0.5625 }; // 2520 × 1200, 540 × 960
 
 /** Faint dot field in the sheet colour; empty in the middle where the type sits,
  *  denser towards the corners where the glass needs something to refract. */
@@ -120,7 +133,7 @@ function renderSheet(core: Core, theme: Theme, bg: string, width: number, height
   const aspect = width / height;
   const wide = aspect >= 1.1;
   return core.renderOnce(
-    `mDb-final-v5-${wide ? "wide" : "tall"}-${bg}`,
+    `mDb-final-${FINAL_VERSION}-${wide ? "wide" : "tall"}-${bg}`,
     ({ scene, camera }) => {
       const dist = 10;
       const fov = 30;
@@ -206,9 +219,15 @@ export function FinalCta({ theme }: SectionProps) {
   useEffect(() => {
     const sheet = sheetRef.current;
     if (!sheet) return;
+    // before hydration settles the theme prop can lag the page's (SiteThemeProvider): don't
+    // fetch or render for the theme that is about to change, wait for that render
+    const pageTheme = document.documentElement.getAttribute("data-theme");
+    if ((pageTheme === "light" || pageTheme === "dark") && pageTheme !== theme) return;
     let alive = true;
     let lastKey = "";
     let timer = 0;
+    // a file draw lands at once, a runtime one after the core import: only the latest may set src
+    let seq = 0;
 
     const draw = () => {
       const r = sheet.getBoundingClientRect();
@@ -219,9 +238,18 @@ export function FinalCta({ theme }: SectionProps) {
       const key = `${w}x${h}:${bg}:${theme}`;
       if (key === lastKey) return;
       lastKey = key;
+      const id = ++seq;
+      const kind = w / h >= 1.1 ? "wide" : "narrow";
+      const file = /stills-live/.test(window.location.hash)
+        ? undefined
+        : FINAL[`/src/assets/final/final-${FINAL_VERSION}-${theme}-${kind}.webp`];
+      if (file && Math.abs(Math.log(w / h / FILE_ASPECT[kind])) < Math.log(1.3)) {
+        setSrc(file);
+        return;
+      }
       import("@/site/three/core")
         .then((core) => {
-          if (!alive) return;
+          if (!alive || id !== seq) return;
           try {
             setSrc(renderSheet(core, theme, toHex(bg), w, h));
           } finally {
@@ -260,7 +288,11 @@ export function FinalCta({ theme }: SectionProps) {
 
   return (
     <section ref={ref} className="mDb-final" aria-labelledby="mDb-final-title">
-      <div ref={sheetRef} className="mD-sheet mD-sheet--inverse mDb-final__sheet">
+      <div
+        ref={sheetRef}
+        className="mD-sheet mD-sheet--inverse mDb-final__sheet"
+        data-version={FINAL_VERSION}
+      >
         {src && (
           <img
             className="mDb-final__render"

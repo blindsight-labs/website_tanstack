@@ -1,4 +1,5 @@
-// Pre-renders the subpage header stills into src/assets/stills (see its README).
+// Pre-renders the subpage header stills into src/assets/stills and the closing sheet's
+// background into src/assets/final (see their READMEs).
 // Zero deps: a temporary vite dev server + installed Edge over the DevTools Protocol.
 //   node scripts/export-stills.mjs        (EDGE=<path to msedge/chrome> to override)
 import { execFileSync, spawn } from "node:child_process";
@@ -13,6 +14,12 @@ const ORIGIN = "http://127.0.0.1:3123";
 const CDP_PORT = 9339;
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const OUT = join(ROOT, "src/assets/stills");
+const OUT_FINAL = join(ROOT, "src/assets/final");
+// the closing sheet's two renders (FinalCta's wide/narrow split): CSS viewport → 1.5× file
+const FINAL_VIEWPORTS = [
+  { width: 1920, height: 1080 }, // sheet 1680 × 800 (its size cap) → 2520 × 1200
+  { width: 390, height: 844 }, // sheet 360 × 640 → 540 × 960
+];
 const THEMES = ["light", "dark"];
 const MAX_BYTES = 120 * 1024;
 
@@ -138,12 +145,51 @@ try {
 
   // nothing on disk changes until both themes have rendered
   const files = [];
+  const add = (dir, file, shot, note) => {
+    const bytes = Buffer.from(shot.url.split(",")[1], "base64");
+    files.push({ dir, file, bytes });
+    console.log(`${file}  ${shot.w}x${shot.h}  ${(bytes.length / 1024).toFixed(1)} KB  ${note}`);
+    if (bytes.length > MAX_BYTES) console.warn(`  warning: ${file} is over 120 KB`);
+  };
   for (const theme of THEMES) {
     profiles.push(mkdtempSync(join(tmpdir(), "stills-edge-")));
     const { send, evaluate, close } = await openEdge(profiles.at(-1));
     await send("Emulation.setEmulatedMedia", {
       features: [{ name: "prefers-color-scheme", value: theme }],
     });
+    // the closing sheet first: after the 404 page (last below) the tab stops navigating
+    for (const vp of FINAL_VIEWPORTS) {
+      await send("Emulation.setDeviceMetricsOverride", {
+        ...vp,
+        deviceScaleFactor: 1.5,
+        mobile: false,
+      });
+      await send("Page.navigate", { url: "about:blank" });
+      await send("Page.navigate", { url: `${ORIGIN}/contact#stills-live` });
+      const shot = await until(`final ${vp.width}x${vp.height} (${theme})`, 60_000, () =>
+        evaluate(`(() => {
+          const sheet = document.querySelector(".mDb-final__sheet");
+          if (!sheet) return null;
+          sheet.scrollIntoView({ block: "center" });
+          const img = sheet.querySelector(".mDb-final__render[data-ready=true]");
+          if (!img || !img.src.startsWith("data:")) return null;
+          const c = document.createElement("canvas");
+          c.width = img.naturalWidth;
+          c.height = img.naturalHeight;
+          c.getContext("2d").drawImage(img, 0, 0);
+          return { version: sheet.dataset.version, dom: document.documentElement.dataset.theme, w: c.width, h: c.height, url: c.toDataURL("image/webp", 0.75) };
+        })()`),
+      );
+      if (shot.dom !== theme)
+        throw new Error(`/contact: data-theme is ${shot.dom}, expected ${theme}`);
+      const kind = shot.w / shot.h >= 1.1 ? "wide" : "narrow";
+      add(
+        OUT_FINAL,
+        `final-${shot.version}-${theme}-${kind}.webp`,
+        shot,
+        `FILE_ASPECT ${(shot.w / shot.h).toFixed(4)}`,
+      );
+    }
     await send("Emulation.setDeviceMetricsOverride", {
       width: 1440,
       height: 900,
@@ -170,18 +216,15 @@ try {
         throw new Error(`${path}: data-theme is ${shot.dom}, expected ${theme}`);
       if (done.has(shot.name)) continue;
       done.add(shot.name);
-      const bytes = Buffer.from(shot.url.split(",")[1], "base64");
-      const file = `${shot.name}-${VERSION}-${theme}.webp`;
-      files.push({ file, bytes });
-      const kb = (bytes.length / 1024).toFixed(1);
-      console.log(`${file}  ${shot.w}x${shot.h}  ${kb} KB  ${path}`);
-      if (bytes.length > MAX_BYTES) console.warn(`  warning: ${file} is over 120 KB`);
+      add(OUT, `${shot.name}-${VERSION}-${theme}.webp`, shot, path);
     }
     close();
   }
-  mkdirSync(OUT, { recursive: true });
-  for (const f of readdirSync(OUT)) if (f.endsWith(".webp")) rmSync(join(OUT, f));
-  for (const { file, bytes } of files) writeFileSync(join(OUT, file), bytes);
+  for (const dir of [OUT, OUT_FINAL]) {
+    mkdirSync(dir, { recursive: true });
+    for (const f of readdirSync(dir)) if (f.endsWith(".webp")) rmSync(join(dir, f));
+  }
+  for (const { dir, file, bytes } of files) writeFileSync(join(dir, file), bytes);
   const total = files.reduce((n, f) => n + f.bytes.length, 0);
   console.log(`wrote ${files.length} files, ${(total / 1024).toFixed(1)} KB`);
 } finally {
