@@ -386,6 +386,12 @@ html {
   overflow-x: hidden;
   overflow-x: clip;
 }
+/* anchor targets land below the 68px sticky nav (system.css .mD-nav) + 28px air. On the page's
+   targets, not html's scroll-padding (or every [id]): either would also scroll the page whenever
+   focus enters the nav, and the modal's fields would get the offset inside the modal */
+main [id] {
+  scroll-margin-top: 96px;
+}
 /* in-page anchor links (#roles, footnotes, the article outline) glide; route changes don't (router.tsx) */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -3763,11 +3769,6 @@ footer {
 }
 .demo-success h2 {
   margin: 8px 0 8px;
-}
-
-/* ── Scroll-spy offset for in-page anchors (under fixed nav) ── */
-:where(#hero, #pipeline, #clients, #showcase, #case-studies, #faq) {
-  scroll-margin-top: 72px;
 }
 
 /* ── Section progress rail (right side) ── */

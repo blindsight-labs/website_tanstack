@@ -5,9 +5,6 @@
 .mD[data-site-variant="b"] .pb {
   display: block;
 }
-.mD[data-site-variant="b"] .pb [id] {
-  scroll-margin-top: 96px;
-}
 
 /* ==========================================================================
    The object header: white inset sheet, copy left, one rendered object right
@@ -157,9 +154,6 @@
    ========================================================================== */
 .mD[data-site-variant="b"] .pb-sec {
   padding-block: var(--s9);
-}
-.mD[data-site-variant="b"] .pb-sec[id] {
-  scroll-margin-top: 68px; /* the sticky nav */
 }
 .mD[data-site-variant="b"] .pb-sec--tight {
   padding-block: var(--s6) 0;

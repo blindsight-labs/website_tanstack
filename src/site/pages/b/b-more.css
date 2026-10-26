@@ -159,7 +159,6 @@
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr);
   overflow-wrap: anywhere;
-  scroll-margin-top: 96px;
 }
 .mD[data-site-variant="b"] .pb-sources a {
   color: var(--ink-2);
