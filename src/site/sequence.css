@@ -310,9 +310,6 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 0 1px var(--line);
 }
-.mD-seq__muted {
-  color: var(--ink-4);
-}
 .mD-seq__count {
   color: var(--ink);
   font-variant-numeric: tabular-nums;
@@ -468,31 +465,6 @@
 .mD[data-theme="dark"] .mD-seq__frameworks {
   background: transparent;
 }
-.mD-seq__fwlabel {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-.mD-seq__fwlist {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.mD-seq__fw {
-  padding: 4px 8px;
-  border-radius: var(--r);
-  box-shadow: inset 0 0 0 1px var(--line);
-  font-size: 11.5px;
-  color: var(--ink-4);
-  transition:
-    color var(--dur-3) var(--ease),
-    box-shadow var(--dur-3) var(--ease);
-}
-.mD-seq__frameworks[data-on="true"] .mD-seq__fw {
-  color: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--ink-3);
-}
 
 /* AI systems are named in the signal colour: the inventory is a list of them */
 .mD-seq__ai {
@@ -582,9 +554,6 @@
   background: var(--ink);
   color: var(--surface);
   border-bottom-color: var(--ink);
-}
-.mD-seq__panel[data-stage="2"] .mD-seq__phead .mD-seq__muted {
-  color: color-mix(in srgb, var(--surface) 58%, var(--ink));
 }
 .mD-seq__panel[data-stage="2"] .mD-seq__count {
   color: var(--surface);

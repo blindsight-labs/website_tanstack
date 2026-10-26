@@ -718,69 +718,6 @@ h4 {
   color: var(--violet);
 }
 
-/* ── Main nav (site-wide): steps · Company · Resources | Book a demo · theme ── */
-.nav-main .nav-links {
-  margin: 0 auto 0 48px;
-  padding: 0;
-}
-.nav-sep {
-  width: 1px;
-  height: 16px;
-  background: var(--border-mid);
-}
-/* BrainExperience sets <html data-layer> to the active home-page layer. */
-html[data-layer="see"] .nav-step[href$="#see"],
-html[data-layer="govern"] .nav-step[href$="#govern"],
-html[data-layer="prove"] .nav-step[href$="#prove"] {
-  color: var(--text);
-  text-decoration: underline 2px var(--violet);
-  text-underline-offset: 8px;
-}
-.nav-demo {
-  white-space: nowrap;
-}
-.nav-main .nav-dropdown-menu {
-  left: 0;
-  right: auto;
-}
-/* Bridges the gap between trigger and panel so hover survives the crossing. */
-.nav-main .nav-dropdown-menu::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 100%;
-  height: 12px;
-}
-.nav-mobile-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dim);
-  padding: 16px 0 4px;
-}
-.nav-main .nav-mobile-menu {
-  max-height: calc(100svh - 57px);
-  overflow-y: auto;
-}
-/* Steps + two menus + CTA don't fit below desktop: everything moves into the menu. */
-@media (max-width: 1024px) {
-  .nav-main .nav-links,
-  .nav-main .nav-demo {
-    display: none;
-  }
-  .nav-main .nav-hamburger {
-    display: block;
-  }
-}
-@media (min-width: 641px) and (max-width: 1024px) {
-  .nav-main .nav-mobile-menu {
-    top: 63px;
-    max-height: calc(100svh - 63px);
-  }
-}
-
 /* ── Layout ── */
 .section {
   padding: 80px 48px;
@@ -1751,18 +1688,6 @@ footer {
   }
 }
 
-/* ── In-Action page ── */
-.demo-page {
-  padding: 136px 48px 80px;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-@media (max-width: 640px) {
-  .demo-page {
-    padding: 120px 20px 56px;
-  }
-}
-
 /* Chat window (used standalone by TopologyGraphDemo.tsx) */
 .chat-window {
   background: var(--surface);
@@ -2351,83 +2276,6 @@ footer {
   border-top: 1px solid var(--border);
 }
 
-/* ── Version A — split hero (heading | demo) ── */
-.va-hero {
-  position: relative;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 104px 48px 16px;
-  min-height: 100vh;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-.va-hero-inner {
-  flex: 1;
-  display: grid;
-  /* Copy-favoured split — gives the headline/lede room to breathe. The demo
-     slot currently holds the placeholder icon, which centres comfortably in
-     the narrower column. (Revisit if the wider Shadow AI animation returns.) */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 56px;
-  align-items: center;
-}
-/* Clients banner lives inside the hero — break it out of the hero's centered
-   max-width/padding so it spans the full viewport edge-to-edge, and compact it
-   so the whole top (copy + demo + banner) stays above the fold. */
-.va-hero .logostrip-section {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  margin-top: 40px;
-  padding: 16px 0;
-}
-.va-hero .logostrip-eyebrow {
-  margin-bottom: 8px;
-}
-.va-hero-copy {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-}
-.va-hero-copy h1 {
-  font-size: clamp(28px, 3.45vw, 45px);
-  line-height: 1.04;
-  letter-spacing: -0.03em;
-}
-.va-hero-copy h1 .hero-h1-pre {
-  display: block;
-  font-size: 0.6em;
-  font-weight: 600;
-  color: var(--muted);
-  letter-spacing: -0.02em;
-  margin-bottom: 0.18em;
-}
-.va-hero-copy h1 .accent {
-  color: var(--violet);
-}
-.va-hero-copy .lede {
-  font-size: 16px;
-  color: var(--muted);
-  line-height: 1.55;
-  max-width: 540px;
-}
-.va-hero-copy .lede .accent {
-  color: var(--violet);
-  font-weight: 600;
-}
-.va-hero-copy .hero-trust {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.55;
-  max-width: 540px;
-  margin-top: 4px;
-}
-.va-hero-demo {
-  width: 100%;
-  min-width: 0;
-}
 /* Caption above the pipeline graphic (moved out of the headline stack). */
 .hero-demo-cap {
   font-family: var(--font-mono);
@@ -2895,57 +2743,6 @@ footer {
     animation: none;
   }
 }
-@media (max-width: 1024px) {
-  .va-hero {
-    padding: 112px 20px 32px;
-    min-height: 0;
-  }
-  .va-hero-inner {
-    grid-template-columns: 1fr;
-    row-gap: 16px;
-    text-align: center;
-  }
-  /* Stacked order is headline → animation → copy → CTA. The headline, copy and
-     CTA live inside .va-hero-copy while the animation is its SIBLING, so `order`
-     alone cannot interleave them — order only sorts items within one formatting
-     context. `display: contents` dissolves the copy column so its three children
-     become grid items of .va-hero-inner, in the same ordering context as
-     .va-hero-demo. Safe here: .va-hero-copy paints nothing of its own (no
-     background, border or padding), and its `.reveal` class is inert. */
-  .va-hero-copy {
-    display: contents;
-  }
-  .va-hero-copy > h1 {
-    order: 1;
-  }
-  .va-hero-demo {
-    order: 2;
-    /* 18px row-gap + 18px margin = the 36px that used to separate the two
-       columns, preserved above and below the animation. */
-    margin-block: 16px;
-  }
-  .va-hero-copy > .lede {
-    order: 3;
-    max-width: none;
-  }
-  .hero-actions {
-    order: 4;
-    /* .va-hero-copy's `align-items: center` used to centre this; with the box
-       gone the row must centre its own button. */
-    justify-content: center;
-  }
-}
-@media (max-width: 640px) {
-  /* Phone: a slightly larger headline for impact, a slightly smaller body. */
-  .va-hero-copy h1 {
-    font-size: 33px;
-  }
-  .va-hero-copy .lede {
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-}
-/* Mobile: give the copy a little breathing room below the title. */
 
 /* ── Why Blindsight — founder photo placeholders ── */
 .founders-grid {
@@ -3462,44 +3259,6 @@ footer {
 }
 
 /* ── Demo request page ── */
-.demo-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: 56px;
-  align-items: start;
-}
-@media (max-width: 1024px) {
-  .demo-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-}
-
-.demo-section {
-  padding-top: 120px;
-}
-.demo-compact {
-  max-width: 620px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-.demo-compact-head {
-  text-align: center;
-}
-.demo-title {
-  font-size: clamp(28px, 3.4vw, 40px);
-  line-height: 1.15;
-  margin: 8px 0 8px;
-}
-.demo-sub {
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.5;
-  margin: 0;
-}
-
 .demo-form-wrap {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -3695,23 +3454,10 @@ footer {
 .demo-startup-link:hover {
   color: var(--violet-deep);
 }
-.demo-error {
-  padding: 8px 8px;
-  border-radius: var(--radius-md);
-  background: color-mix(in oklab, #dc2626 12%, transparent);
-  color: #880000;
-  font-size: 13px;
-}
 .demo-form .btn {
   align-self: flex-start;
 }
 
-.demo-side {
-  padding: 24px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--bg);
-}
 .demo-steps {
   list-style: none;
   padding: 0;
@@ -3721,44 +3467,9 @@ footer {
   gap: 16px;
   counter-reset: step;
 }
-.demo-steps li {
-  position: relative;
-  padding-left: 32px;
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.55;
-  counter-increment: step;
-}
-.demo-steps li::before {
-  content: counter(step);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-circle);
-  background: var(--violet-soft);
-  color: var(--violet);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-}
 .demo-steps strong {
   color: var(--text);
   font-weight: 600;
-}
-.demo-side-foot {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-  font-size: 13px;
-  color: var(--muted);
-}
-.demo-side-foot a {
-  color: var(--violet);
 }
 
 .demo-success {
@@ -3766,9 +3477,6 @@ footer {
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   padding: 40px;
-}
-.demo-success h2 {
-  margin: 8px 0 8px;
 }
 
 /* ── Section progress rail (right side) ── */
@@ -3909,20 +3617,6 @@ footer {
 @media (max-width: 1024px) {
   .section-rail {
     display: none;
-  }
-}
-/* Gutters on the home route (rail shown only above 980px). The rail's labels now
-   collapse to bare dots at rest (expanding only on hover, as a transient overlay),
-   so the resting state needs only enough right clearance for the dot pill — not the
-   old 232px label lane that skewed content to the left. We keep near-symmetric
-   gutters (a touch more on the right for the dot pill) so the content reads centered.
-   Full-bleed backgrounds stay edge-to-edge — only the inner content insets. Scoped
-   to .page-home because the rail is rendered only on the home route. */
-@media (min-width: 1025px) {
-  .page-home .va-hero,
-  .page-home .section {
-    padding-left: 96px;
-    padding-right: 120px;
   }
 }
 
@@ -4382,73 +4076,8 @@ footer {
     opacity: 1;
   }
 }
-.modal-card {
-  position: relative;
-  width: 100%;
-  max-width: 560px;
-  max-height: calc(100dvh - 48px);
-  overflow-y: auto;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 32px;
-  box-shadow: var(--shadow-lg);
-  animation: modal-pop var(--duration-normal) var(--easing-entrance);
-}
-@keyframes modal-pop {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.modal-card:focus {
-  outline: none;
-}
-.modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--muted);
-  transition:
-    background var(--duration-fast) ease,
-    color var(--duration-fast) ease;
-}
-.modal-close:hover {
-  background: var(--surface-2);
-  color: var(--text);
-}
-/* The modal card is the container, so the inner form-wrap drops its own chrome. */
-.demo-modal .demo-compact-head {
-  text-align: center;
-  margin-bottom: 24px;
-}
-.demo-modal .demo-form-wrap {
-  background: none;
-  border: none;
-  padding: 0;
-  box-shadow: none;
-}
-@media (max-width: 540px) {
-  .modal-card {
-    padding: 24px 24px;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  .modal-backdrop,
-  .modal-card {
+  .modal-backdrop {
     animation: none;
   }
 }

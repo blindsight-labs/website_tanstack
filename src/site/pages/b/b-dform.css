@@ -184,14 +184,6 @@
   margin: 2px 0 0;
   accent-color: var(--ink);
 }
-.mD[data-site-variant="b"] .pb-modal .demo-error {
-  padding: 12px 14px;
-  border-radius: var(--r);
-  background: var(--surface-2);
-  box-shadow: inset 2px 0 0 var(--ink);
-  font-size: 14px;
-  color: var(--ink);
-}
 /* the submit: the site's primary button, full width */
 .mD[data-site-variant="b"] .pb-modal .demo-form .btn {
   align-self: stretch;
