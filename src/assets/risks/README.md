@@ -4,7 +4,7 @@ Pre-rendered stills of the four risk cards (`src/site/Risks.tsx`). When a file e
 used as the card's image; a missing file falls back to rendering it at runtime
 (`core.renderOnce`, VERSION-keyed in Risks.tsx). Re-export them whenever VERSION changes.
 
-Expected files, `{id}-{theme}.webp` (export at 2×, the size renderOnce renders on a 2× screen):
+Expected files, `{id}-{theme}.webp` (exported at 2×; renderOnce now caps runtime renders at 1.5×, so these stay the sharper copy):
 
 | File                             | Card size (CSS px) | Export (px)  |
 | -------------------------------- | ------------------ | ------------ |

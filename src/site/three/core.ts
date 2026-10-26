@@ -56,7 +56,6 @@ export function createRenderer(canvas?: HTMLCanvasElement, opts: { alpha?: boole
     antialias: true,
     alpha: opts.alpha ?? false,
     powerPreference: "high-performance",
-    preserveDrawingBuffer: true,
   });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   // Neutral (Khronos PBR) keeps the page white white when seen through glass;
@@ -248,7 +247,7 @@ export function studioLights(scene: THREE.Scene, theme: Theme) {
 
 /* ------------------------------------------------------------------ */
 /* Render-once: a shared offscreen renderer that turns a small scene   */
-/* into a PNG data URL. Use for static objects (risk-card renders,     */
+/* into a WebP data URL. Use for static objects (risk-card renders,    */
 /* metallic symbols) so the page doesn't hold a dozen live WebGL       */
 /* contexts. Results are cached by key.                                */
 /* ------------------------------------------------------------------ */
@@ -272,7 +271,7 @@ export function renderOnce(
   if (hit) return hit;
   if (!offscreen) offscreen = createRenderer(undefined, { alpha: true });
   const r = offscreen;
-  const dpr = pixelRatio(2);
+  const dpr = pixelRatio(1.5);
   r.setPixelRatio(dpr);
   r.setSize(opts.width, opts.height, false);
   const scene = new THREE.Scene();
@@ -284,7 +283,7 @@ export function renderOnce(
   build({ scene, camera, env, theme: opts.theme });
   r.setClearColor(0x000000, opts.transparent ? 0 : 1);
   r.render(scene, camera);
-  const url = r.domElement.toDataURL("image/png");
+  const url = r.domElement.toDataURL("image/webp", 0.9);
   scene.traverse((o) => {
     const m = o as THREE.Mesh;
     m.geometry?.dispose?.();

@@ -1,4 +1,4 @@
-/* Version B · the header objects, by name. Each renders ONCE (core.renderOnce → PNG data URL,
+/* Version B · the header objects, by name. Each renders ONCE (core.renderOnce → WebP data URL,
    cached by key); ../Still.tsx queues the renders and gives the offscreen WebGL context back
    when the queue drains. Images a scene prints are loaded and decoded first (renderOnce is
    synchronous). Client-only: imported dynamically. */
