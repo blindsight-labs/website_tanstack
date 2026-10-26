@@ -35,6 +35,22 @@
   }
 }
 
+/* Skip link: off-screen until focused, then over the nav (nav z 50, modal 200) */
+.bs-skip {
+  position: fixed;
+  top: var(--s3);
+  left: var(--s3);
+  z-index: 60;
+  transform: translateY(-200%);
+}
+.bs-skip:focus {
+  transform: none;
+}
+/* its target sits outside <main> (no main [id] margin in styles.css): land below the 68px sticky nav */
+#main {
+  scroll-margin-top: 68px;
+}
+
 /* ==========================================================================
    Nav menus: a divider above an item marked data-sep (instead of top.css's
    "always above the last item")

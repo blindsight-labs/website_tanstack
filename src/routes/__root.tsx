@@ -166,8 +166,13 @@ function SiteChrome() {
   const { theme } = useSiteTheme();
   return (
     <DemoModalProvider>
+      <a href="#main" className="mD-btn mD-btn--primary bs-skip">
+        Skip to content
+      </a>
       <Nav theme={theme} />
-      <Outlet />
+      <div id="main">
+        <Outlet />
+      </div>
       <Footer />
     </DemoModalProvider>
   );
