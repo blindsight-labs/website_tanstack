@@ -518,6 +518,7 @@ export function Risks({ theme }: SectionProps) {
                       tabIndex: 0,
                       // focusable for the playback: it announces as its risk's title
                       "aria-labelledby": `mT-risk-${r.id}`,
+                      "aria-describedby": `mT-risk-${r.id}-k mT-risk-${r.id}-v`,
                       // touch devices loop by scroll position instead (a tap's
                       // emulated mouseenter must not fight it)
                       onMouseEnter: () => player.current?.mode !== "touch" && play(i),
@@ -531,22 +532,27 @@ export function Risks({ theme }: SectionProps) {
                 <div className="mT-risk__fig" aria-hidden="true">
                   {src && <img src={src} alt="" className="mT-risk__img" draggable={false} onLoad={layout} />}
                 </div>
-                {/* the detection, pointed at the incident with a leader line */}
-                <div className="mT-call" aria-hidden="true">
-                  <svg className="mT-call__line" preserveAspectRatio="none">
-                    <polyline points="" />
-                  </svg>
-                  <span className="mT-call__dot" />
-                  <span className="mT-call__label">
-                    <span className="mT-call__k">Detected</span>
-                    <span className="mT-call__v">{r.evidence}</span>
-                  </span>
-                </div>
                 <div className="mT-risk__text">
                   <h3 id={`mT-risk-${r.id}`} className="mD-h3">
                     {r.title}
                   </h3>
                   <p>{r.scenario}</p>
+                </div>
+                {/* the detection, pointed at the incident with a leader line (after the text, so
+                    screen readers read the evidence after the scenario; it is positioned absolutely) */}
+                <div className="mT-call">
+                  <svg className="mT-call__line" preserveAspectRatio="none" aria-hidden="true">
+                    <polyline points="" />
+                  </svg>
+                  <span className="mT-call__dot" aria-hidden="true" />
+                  <span className="mT-call__label">
+                    <span id={`mT-risk-${r.id}-k`} className="mT-call__k">
+                      Detected
+                    </span>
+                    <span id={`mT-risk-${r.id}-v`} className="mT-call__v">
+                      {r.evidence}
+                    </span>
+                  </span>
                 </div>
               </li>
             );
