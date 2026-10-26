@@ -52,14 +52,8 @@
 }
 
 /* ==========================================================================
-   Nav menus: a divider above an item marked data-sep (instead of top.css's
-   "always above the last item")
+   Nav menus: a divider above an item marked data-sep
    ========================================================================== */
-.mT-nav .mT-dd__menu li:last-child:not([data-sep]) {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
 .mT-nav .mT-dd__menu li[data-sep] {
   margin-top: 6px;
   padding-top: 6px;
@@ -69,12 +63,7 @@
   min-width: 200px;
 }
 
-/* Mobile sheet: scrolls when taller than the screen; menus are labelled groups */
-.mT-nav .mT-sheet {
-  max-height: calc(100dvh - 68px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
+/* Mobile sheet: menus are labelled groups */
 .bs-sheet__group {
   padding: 22px 0 8px;
 }
