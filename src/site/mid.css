@@ -2678,6 +2678,10 @@
 }
 /* phone: the working part of each page; every control a 44px tap target */
 @media (max-width: 599px) {
+  /* the console's inner scroll must leave room to swipe the page past it */
+  .mid-c__body {
+    height: min(600px, 60svh);
+  }
   /* the four view tabs share one row on a phone */
   .mid-wt__tab,
   .mid-wt__tab + .mid-wt__tab {
