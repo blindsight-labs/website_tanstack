@@ -10,7 +10,6 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { authorSlugFor } from "@/lib/authors";
-import { getAllPosts, getPost } from "@/lib/blog-content";
 import { FinalCta } from "@/site/FinalCta";
 import { Label } from "@/site/shared";
 import { useSiteTheme } from "@/site/theme";
@@ -110,13 +109,9 @@ function PostMissing() {
   );
 }
 
-export function BlogPostB({ slug }: BlogPostProps) {
+export function BlogPostB({ post, next }: BlogPostProps) {
   const { theme } = useSiteTheme();
-  const post = getPost(slug);
   if (!post) return <PostMissing />;
-  const all = getAllPosts();
-  const idx = all.findIndex((p) => p.slug === post.slug);
-  const next = all[idx + 1] ?? all[0];
   const authorSlug = authorSlugFor(post.author);
   const person = PHOTOS.get(post.author);
   const printed = JSON.stringify({ kicker: post.category, title: post.title, foot: post.dateLabel.toUpperCase() });
@@ -219,7 +214,7 @@ export function BlogPostB({ slug }: BlogPostProps) {
         </div>
       </div>
 
-      {next && next.slug !== post.slug && (
+      {next && (
         <nav className="mD-sheet pb-nextpost" aria-label="Next post">
           <Link to="/blog/$slug" params={{ slug: next.slug }} className="mD-container pb-nextpost__link">
             <Label>Next up · {next.category}</Label>

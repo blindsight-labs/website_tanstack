@@ -5,10 +5,11 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
 import { authorSlugFor } from "@/lib/authors";
-import { getAllPosts, type BlogPost } from "@/lib/blog-content";
+import type { PostMeta } from "@/lib/blog-content";
 import { FinalCta } from "@/site/FinalCta";
 import { Label } from "@/site/shared";
 import { useSiteTheme } from "@/site/theme";
+import type { BlogIndexProps } from "../types";
 import { Page, PageHead, SheetGroup, Split } from "./parts";
 
 const INDEX_PAGE = JSON.stringify({ kicker: "Field notes", title: "Notes from the field.", foot: "BLINDSIGHT · ZÜRICH" });
@@ -19,7 +20,7 @@ function splitDate(label: string) {
   return m ? { day: m[1], year: m[2] } : { day: label, year: "" };
 }
 
-export function PostRow({ post }: { post: BlogPost }) {
+export function PostRow({ post }: { post: PostMeta }) {
   const d = splitDate(post.dateLabel);
   return (
     <Link to="/blog/$slug" params={{ slug: post.slug }} className="pb-row">
@@ -42,9 +43,9 @@ export function PostRow({ post }: { post: BlogPost }) {
 
 const plural = (c: string) => (c.endsWith("s") ? c : `${c}s`);
 
-export function BlogIndexB() {
+export function BlogIndexB({ posts }: BlogIndexProps) {
   const { theme } = useSiteTheme();
-  const [featured, ...rest] = getAllPosts();
+  const [featured, ...rest] = posts;
   const groups = Array.from(new Set(rest.map((p) => p.category))).map((c) => ({
     category: c,
     posts: rest.filter((p) => p.category === c),

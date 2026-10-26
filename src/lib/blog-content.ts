@@ -29,6 +29,13 @@ export type BlogPost = {
   howToSteps?: HowToStep[];
 };
 
+/** A post without its content: what lists and "Next up" links need. */
+export type PostMeta = Omit<BlogPost, "body" | "references" | "faq" | "howToSteps">;
+
+export function toMeta({ body: _b, references: _r, faq: _f, howToSteps: _h, ...meta }: BlogPost): PostMeta {
+  return meta;
+}
+
 // Eager glob — markdown content is bundled at build time.
 const modules = import.meta.glob("/src/content/blog/*.md", {
   query: "?raw",

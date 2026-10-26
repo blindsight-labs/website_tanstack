@@ -1,16 +1,20 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import { getAuthor } from "@/lib/authors";
+import { getPostList } from "@/lib/blog.functions";
 import { SitePage, preloadPage } from "@/site/pages/registry";
 
 const BASE = "https://blindsight.io";
 
 export const Route = createFileRoute("/authors/$slug")({
   component: AuthorRoute,
-  loader: ({ params }) => {
-    if (!getAuthor(params.slug)) throw notFound();
-    return { slug: params.slug };
+  loader: async ({ params }) => {
+    const author = getAuthor(params.slug);
+    if (!author) throw notFound();
+    const posts = (await getPostList()).filter((p) => p.author === author.name);
+    return { slug: params.slug, posts };
   },
+  staleTime: Infinity,
   // (awaits the page's chunk: the router renders and hydrates only after head(), see registry)
   head: async ({ params }) => {
     await preloadPage("author");
@@ -48,6 +52,6 @@ export const Route = createFileRoute("/authors/$slug")({
 });
 
 function AuthorRoute() {
-  const { slug } = Route.useLoaderData();
-  return <SitePage name="author" slug={slug} />;
+  const { slug, posts } = Route.useLoaderData();
+  return <SitePage name="author" slug={slug} posts={posts} />;
 }

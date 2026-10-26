@@ -1,19 +1,18 @@
-import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
+import { createFileRoute, notFound } from "@tanstack/react-router";
 import { authorSlugFor } from "@/lib/authors";
+import { getPostPage } from "@/lib/blog.functions";
 import { SitePage, preloadPage } from "@/site/pages/registry";
 
 const BASE = "https://blindsight.io";
 
-/** The posts (markdown + its YAML parser) load with this route, not in the main chunk. */
-const loadPosts = () => import("@/lib/blog-content");
-
 export const Route = createFileRoute("/blog/$slug")({
   component: BlogPostRoute,
   loader: async ({ params }) => {
-    const [{ getPost }] = await Promise.all([loadPosts(), preloadPage("blogPost")]);
-    if (!getPost(params.slug)) throw notFound();
-    return { slug: params.slug };
+    const [page] = await Promise.all([getPostPage({ data: params.slug }), preloadPage("blogPost")]);
+    if (!page) throw notFound();
+    return page;
   },
+  staleTime: Infinity,
   errorComponent: (props) => (
     <SitePage
       name="error"
@@ -25,8 +24,8 @@ export const Route = createFileRoute("/blog/$slug")({
   notFoundComponent: BlogPostNotFound,
   // (also awaits the page's chunk: the router renders and hydrates only after head(), see registry)
   head: async ({ params, loaderData }) => {
-    const [{ getPost }] = await Promise.all([loadPosts(), preloadPage("blogPost")]);
-    const post = getPost(loaderData?.slug ?? params.slug);
+    await preloadPage("blogPost");
+    const post = loaderData?.post;
     const title = post ? (post.seoTitle ?? `${post.title} · Blindsight blog`) : "Blog · Blindsight";
     const description = post
       ? (post.seoDescription ?? post.excerpt)
@@ -117,11 +116,10 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function BlogPostRoute() {
-  const { slug } = Route.useLoaderData();
-  return <SitePage name="blogPost" slug={slug} />;
+  const { post, next } = Route.useLoaderData();
+  return <SitePage name="blogPost" post={post} next={next} />;
 }
 
 function BlogPostNotFound() {
-  const { slug } = useParams({ strict: false });
-  return <SitePage name="blogPost" slug={slug ?? ""} />;
+  return <SitePage name="blogPost" />;
 }

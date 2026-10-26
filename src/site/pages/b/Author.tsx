@@ -5,7 +5,6 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 import { getAuthor } from "@/lib/authors";
-import { getAllPosts } from "@/lib/blog-content";
 import { FinalCta } from "@/site/FinalCta";
 import { useSiteTheme } from "@/site/theme";
 import { FOUNDERS, LEADERSHIP } from "../data";
@@ -15,11 +14,10 @@ import { Page, PageHead, Split } from "./parts";
 
 const PEOPLE = new Map([...FOUNDERS, ...LEADERSHIP].map((p) => [p.name, p]));
 
-export function AuthorB({ slug }: AuthorProps) {
+export function AuthorB({ slug, posts }: AuthorProps) {
   const { theme } = useSiteTheme();
   const author = getAuthor(slug);
   if (!author) return null;
-  const posts = getAllPosts().filter((p) => p.author === author.name);
   const person = PEOPLE.get(author.name);
   const frame = JSON.stringify({ name: author.name, photo: person?.photo ?? "", pos: person?.photoPosition ?? "" });
   return (

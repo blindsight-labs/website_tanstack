@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { getPostList } from "@/lib/blog.functions";
 import { SitePage, preloadPage } from "@/site/pages/registry";
 
 export const Route = createFileRoute("/blog/")({
-  component: () => <SitePage name="blogIndex" />,
+  component: BlogIndexRoute,
+  loader: async () => ({ posts: await getPostList() }),
+  staleTime: Infinity,
   // (awaits the page's chunk: the router renders and hydrates only after head(), see registry)
   head: async () => {
     await preloadPage("blogIndex");
@@ -26,3 +29,8 @@ export const Route = createFileRoute("/blog/")({
     };
   },
 });
+
+function BlogIndexRoute() {
+  const { posts } = Route.useLoaderData();
+  return <SitePage name="blogIndex" posts={posts} />;
+}
