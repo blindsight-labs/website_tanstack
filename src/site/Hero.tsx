@@ -9,6 +9,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import { CtaButton, Label, type SectionProps } from "./shared";
 import { hero } from "./content";
 import { markHeroReady } from "./heroReady";
+import { HERO_POSTERS } from "./heroPosters";
 import { loadOffice } from "./three/load";
 
 /** Dev aid for screenshots: /#hero-t=4500 freezes the storyboard at 4.5 s. */
@@ -22,15 +23,9 @@ function frozenTime(): number | null {
    here: the theme is only known before paint on the client (THEME_INIT_SCRIPT), and wide /
    narrow follows the stage's own width (≥ 880 px, as fit() below). Only when all four exist;
    otherwise the stage fades in as before. */
-const POSTER_FILES = import.meta.glob("/src/assets/hero/*.webp", {
-  eager: true,
-  query: "?url",
-  import: "default",
-}) as Record<string, string>;
-const POSTER_KEYS = ["light-wide", "light-narrow", "dark-wide", "dark-narrow"] as const;
-const POSTER_STYLE = POSTER_KEYS.every((k) => POSTER_FILES[`/src/assets/hero/poster-${k}.webp`])
+const POSTER_STYLE = HERO_POSTERS
   ? (Object.fromEntries(
-      POSTER_KEYS.map((k) => [`--hero-poster-${k}`, `url("${POSTER_FILES[`/src/assets/hero/poster-${k}.webp`]}")`]),
+      Object.entries(HERO_POSTERS).map(([k, url]) => [`--hero-poster-${k}`, `url("${url}")`]),
     ) as unknown as CSSProperties)
   : null;
 
