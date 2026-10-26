@@ -109,6 +109,11 @@ function NavMenu({ label, items }: { label: string; items: NavItem[] }) {
       ref={ddRef}
       onPointerEnter={() => hoverOpen(true)}
       onPointerLeave={() => hoverOpen(false)}
+      onBlur={(e) => {
+        // only when focus moves to something outside: Safari blurs to nothing on a mouse press,
+        // and closing then would swallow the click (outside clicks are handled by pointerdown)
+        if (e.relatedTarget && !e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false);
+      }}
     >
       <button
         ref={btnRef}
