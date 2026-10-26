@@ -27,7 +27,11 @@ export function useModalDialog(
       const first = items[0];
       const last = items[items.length - 1];
       const active = document.activeElement;
-      if (e.shiftKey && (active === first || active === cardRef.current)) {
+      // focus fell out (its element unmounted, so it sits on body): pull it back in
+      if (!cardRef.current.contains(active)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && (active === first || active === cardRef.current)) {
         e.preventDefault();
         last.focus();
       } else if (!e.shiftKey && active === last) {

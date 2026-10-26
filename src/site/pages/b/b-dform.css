@@ -262,6 +262,10 @@
   letter-spacing: -0.03em;
   color: var(--ink);
 }
+/* focused by script after a submit so it's announced; a heading, not a control: no ring */
+.mD[data-site-variant="b"] .pb-modal .demo-success h2:focus {
+  outline: none;
+}
 .mD[data-site-variant="b"] .pb-modal .demo-success p {
   margin: 0;
   color: var(--ink-2);

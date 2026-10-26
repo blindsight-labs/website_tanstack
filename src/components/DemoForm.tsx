@@ -64,10 +64,22 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       firstRender.current = false;
       return;
     }
+    // "Change" clears the path and unmounts itself: the cursor goes back to the path choice
     formRef.current
-      ?.querySelector<HTMLElement>(`[data-step="${step}"] :is(input, select, textarea)`)
+      ?.querySelector<HTMLElement>(
+        !isTrial && path === null
+          ? ".demo-path-pill"
+          : `[data-step="${step}"] :is(input, select, textarea)`,
+      )
       ?.focus();
-  }, [step, path]);
+  }, [step, path, isTrial]);
+
+  // the form (and its focused submit button) is swapped for the confirmation: focus its heading,
+  // which also reads the confirmation out (so no role="status" on top, that would read it twice)
+  const doneRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (done) doneRef.current?.focus();
+  }, [done]);
 
   // a field's error goes to that field: the cursor moves there so the fix is one keystroke away
   useEffect(() => {
@@ -186,7 +198,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       {done ? (
         <div className="demo-success">
           <span className="tag">Got it</span>
-          <h2>
+          <h2 ref={doneRef} tabIndex={-1}>
             {isTrial
               ? "A founder replies within one business day."
               : isDownload
