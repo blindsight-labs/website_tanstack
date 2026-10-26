@@ -624,7 +624,8 @@ export function Walkthrough(_props: SectionProps) {
             </p>
           </header>
 
-          <div ref={tabs} className="mid-wt__tabs" role="tablist" aria-label="Console views" data-reveal>
+          {/* focus on a tab stops the auto-advance, as in the console: the selection mustn't move under it */}
+          <div ref={tabs} className="mid-wt__tabs" role="tablist" aria-label="Console views" data-reveal onFocusCapture={takeOver}>
             {VIEWS.map((v) => (
               <button
                 key={v.id}
@@ -633,8 +634,17 @@ export function Walkthrough(_props: SectionProps) {
                 id={`mid-tab-${v.id}`}
                 aria-selected={view === v.id}
                 aria-controls="mid-wt-panel"
+                tabIndex={view === v.id ? 0 : -1}
                 className="mid-wt__tab"
                 onClick={() => go(v.page)}
+                onKeyDown={(e) => {
+                  if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+                  const i = VIEWS.indexOf(v);
+                  const n =
+                    VIEWS[(i + (e.key === "ArrowRight" ? 1 : VIEWS.length - 1)) % VIEWS.length];
+                  go(n.page);
+                  document.getElementById(`mid-tab-${n.id}`)?.focus();
+                }}
               >
                 <span className="mid-wt__tab-k">{v.label}</span>
                 <span className="mid-wt__tab-bar" key={`${v.id}-${view === v.id}-${auto}`} aria-hidden="true" />
