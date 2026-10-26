@@ -18,7 +18,7 @@
   justify-self: start;
   display: inline-flex;
   align-items: center;
-  height: 40px;
+  height: 44px;
   border-radius: var(--r);
 }
 .mT-nav__logo img {

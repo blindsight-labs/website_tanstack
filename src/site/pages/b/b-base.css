@@ -633,8 +633,15 @@
   font-size: 11px;
 }
 .mD[data-site-variant="b"] .pb-cites a {
+  position: relative;
   padding: 0 2px;
   color: var(--ink-3);
+}
+/* a taller hit area without changing the 11px type */
+.mD[data-site-variant="b"] .pb-cites a::after {
+  content: "";
+  position: absolute;
+  inset: -8px 0;
 }
 .mD[data-site-variant="b"] .pb-cites a:hover {
   color: var(--ink);
