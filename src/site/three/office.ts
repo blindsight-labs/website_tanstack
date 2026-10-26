@@ -394,8 +394,10 @@ export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptio
   const dark = opts.theme === "dark";
   await fontsReady();
 
-  const renderer = createRenderer(canvas);
-  renderer.setPixelRatio(pixelRatio(1.75));
+  const dpr = pixelRatio(1.75);
+  // MSAA is wasted cost at ≥ 1.5× where the pixels are already small.
+  const renderer = createRenderer(canvas, { antialias: dpr < 1.5 });
+  renderer.setPixelRatio(dpr);
   renderer.localClippingEnabled = true;
   renderer.toneMappingExposure = dark ? 1.0 : 1.04;
 

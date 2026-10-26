@@ -50,10 +50,10 @@ export function pixelRatio(cap: number): number {
   return Math.min(window.devicePixelRatio || 1, constrainedDevice() ? Math.min(cap, 1.5) : cap);
 }
 
-export function createRenderer(canvas?: HTMLCanvasElement, opts: { alpha?: boolean } = {}) {
+export function createRenderer(canvas?: HTMLCanvasElement, opts: { alpha?: boolean; antialias?: boolean } = {}) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: true,
+    antialias: opts.antialias ?? true,
     alpha: opts.alpha ?? false,
     powerPreference: "high-performance",
   });

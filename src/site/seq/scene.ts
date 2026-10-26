@@ -892,8 +892,10 @@ const MASK_FRAG = /* glsl */ `
 export async function createHeroScene(canvas: HTMLCanvasElement, opts: HeroOptions): Promise<HeroScene> {
   const dark = opts.theme === "dark";
   await fontReady();
-  const renderer = createRenderer(canvas);
-  renderer.setPixelRatio(pixelRatio(1.75));
+  const dpr = pixelRatio(1.75);
+  // MSAA is wasted cost at ≥ 1.5× where the pixels are already small.
+  const renderer = createRenderer(canvas, { antialias: dpr < 1.5 });
+  renderer.setPixelRatio(dpr);
   renderer.toneMapping = THREE.NoToneMapping; // the screen's canvases keep their own colours
   renderer.autoClear = false; // cleared whole, then rendered inside the usable rect
 

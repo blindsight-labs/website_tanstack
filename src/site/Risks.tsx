@@ -1685,13 +1685,14 @@ export function Risks({ theme }: SectionProps) {
       const canvas = document.createElement("canvas");
       canvas.className = "mT-risk__play";
       let renderer: T.WebGLRenderer;
+      const dpr = core.pixelRatio(1.5);
       try {
-        renderer = core.createRenderer(canvas);
+        renderer = core.createRenderer(canvas, { antialias: dpr < 1.5 });
       } catch (err) {
         console.warn("[risks] no live renderer", err);
         return;
       }
-      renderer.setPixelRatio(core.pixelRatio(1.5));
+      renderer.setPixelRatio(dpr);
       el.dataset.callouts = "hover"; // each callout draws in once its card has played
       player.current = {
         core,
