@@ -1,17 +1,22 @@
 /* IBM Plex, self-hosted (was Google Fonts): no visitor IP goes to a third party before consent.
-   Each file declares its subsets with unicode-range, so the browser fetches only what a page uses. */
-@import "@fontsource/ibm-plex-sans/300.css";
-@import "@fontsource/ibm-plex-sans/400.css";
-@import "@fontsource/ibm-plex-sans/500.css";
-@import "@fontsource/ibm-plex-sans/600.css";
-@import "@fontsource/ibm-plex-sans/700.css";
-@import "@fontsource/ibm-plex-mono/400.css";
-@import "@fontsource/ibm-plex-mono/500.css";
-@import "@fontsource/ibm-plex-mono/700.css";
+   Latin subsets: the copy has no Cyrillic, Vietnamese or Latin Extended characters (re-check if that
+   changes); the two exceptions below are noted where they're imported. */
+@import "@fontsource/ibm-plex-sans/latin-300.css";
+@import "@fontsource/ibm-plex-sans/latin-400.css";
+@import "@fontsource/ibm-plex-sans/latin-500.css";
+@import "@fontsource/ibm-plex-sans/latin-600.css";
+@import "@fontsource/ibm-plex-sans/latin-700.css";
+/* Latin Extended for what visitors type (Łukasz, Ștefan in a form's name field), fetched only when used. */
+@import "@fontsource/ibm-plex-sans/latin-ext-400.css";
+/* Greek for one glyph: the Ω in Sovereign Mind's proof-strip badge (Plex Sans 600). */
+@import "@fontsource/ibm-plex-sans/greek-600.css";
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "@fontsource/ibm-plex-mono/latin-700.css";
 /* The console copy in the walkthrough speaks the product's own type: DM Sans and JetBrains Mono.
    Declared here, fetched only when the console renders text in them. */
-@import "@fontsource/dm-sans/400.css";
-@import "@fontsource/dm-sans/500.css";
-@import "@fontsource/dm-sans/600.css";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/dm-sans/latin-400.css";
+@import "@fontsource/dm-sans/latin-500.css";
+@import "@fontsource/dm-sans/latin-600.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";

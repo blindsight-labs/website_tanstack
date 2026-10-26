@@ -1619,7 +1619,7 @@ export function Risks({ theme }: SectionProps) {
       await Promise.race([
         Promise.all([
           document.fonts.load('500 96px "IBM Plex Mono"'),
-          document.fonts.load('600 96px "IBM Plex Mono"'),
+          document.fonts.load('700 96px "IBM Plex Mono"'),
           document.fonts.load('400 96px "IBM Plex Mono"'),
           document.fonts.load('400 40px "IBM Plex Sans"'),
           document.fonts.load('500 40px "IBM Plex Sans"'),

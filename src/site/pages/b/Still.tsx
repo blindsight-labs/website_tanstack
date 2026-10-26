@@ -19,7 +19,7 @@ function fontsReady() {
     Promise.all([
       f.load('400 96px "IBM Plex Mono"'),
       f.load('500 96px "IBM Plex Mono"'),
-      f.load('600 96px "IBM Plex Mono"'),
+      f.load('700 96px "IBM Plex Mono"'),
       f.load('300 96px "IBM Plex Sans"'),
       f.load('400 96px "IBM Plex Sans"'),
     ]).catch(() => undefined),
