@@ -40,13 +40,22 @@ export function useModalDialog(
       }
     };
     document.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    // Lock the page behind it: iOS Safari ignores overflow:hidden for touch scrolling, so the body
+    // is pinned at its offset (overflow:hidden would also make body a scroll container and take
+    // the sticky nav with it). The padding stands in for the scrollbar the pin removes.
+    const body = document.body.style;
+    const prevBody = body.cssText;
+    const y = window.scrollY;
+    const href = location.href;
+    const gutter = window.innerWidth - document.documentElement.clientWidth;
+    Object.assign(body, { position: "fixed", top: `-${y}px`, left: "0", right: "0", paddingRight: `${gutter}px` });
     // Move focus into the dialog for keyboard/screen-reader users.
     cardRef.current?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      body.cssText = prevBody;
+      // back where it was, unless browser Back changed the page underneath (the router owns that)
+      if (location.href === href) window.scrollTo({ top: y, behavior: "instant" });
       // back to the control that opened it, so keyboard users keep their place
       if (opener?.isConnected) opener.focus({ preventScroll: true });
     };

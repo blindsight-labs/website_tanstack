@@ -94,6 +94,7 @@
   max-width: 560px;
   max-height: calc(100dvh - 48px);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .bs-modal:focus {
   outline: none;
