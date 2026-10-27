@@ -341,16 +341,6 @@
   --color-error-500: #ef4444;
 }
 
-/* Chrome surfaces that hardcode a light background need an explicit dark value. */
-[data-theme="dark"] .nav {
-  background: rgba(13, 13, 19, 0.72);
-}
-[data-theme="dark"] .nav.scrolled {
-  background: rgba(13, 13, 19, 0.9);
-}
-[data-theme="dark"] .nav-mobile-menu {
-  background: rgba(13, 13, 19, 0.97);
-}
 /* In-action threat-theater tints (illustrative) — keep the red/green
    semantics but on a dark wash instead of a near-white one. */
 [data-theme="dark"] .chat-bubble.blocked,
@@ -495,60 +485,6 @@ h4 {
   transform: translateY(-1px);
 }
 
-/* ── Nav ── */
-.nav {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 48px;
-  background: rgba(250, 250, 248, 0.78);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid transparent;
-  transition:
-    border-color var(--duration-normal),
-    background var(--duration-normal);
-}
-.nav.scrolled {
-  border-bottom-color: var(--border);
-  background: rgba(250, 250, 248, 0.92);
-}
-.nav-logo {
-  height: 30px;
-  width: auto;
-  display: block;
-}
-/* The logo SVG renders as a solid black wordmark; flip it to white in dark
-   mode (loaded via <img>, so a filter is the way to recolour it). */
-[data-theme="dark"] .nav-logo {
-  filter: brightness(0) invert(1);
-}
-.nav-links {
-  display: flex;
-  gap: 24px;
-  align-items: center;
-  list-style: none;
-}
-.nav-links a,
-.nav-dropdown-trigger {
-  font-size: 13.5px;
-  color: var(--muted);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color var(--duration-fast);
-  line-height: 1;
-}
-.nav-links a:hover,
-.nav-dropdown-trigger:hover {
-  color: var(--text);
-}
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
 /* Light/dark theme toggle — sits left of the nav links */
 .theme-toggle {
   display: inline-flex;
@@ -576,146 +512,6 @@ h4 {
   width: 18px;
   height: 18px;
   display: block;
-}
-/* Nav CTA collapses while the hero CTA is on screen so the other nav items
-   slide over to fill the space (box-sizing: border-box lets max-width:0 fully
-   collapse it; the negative margin cancels the nav-right gap). It expands —
-   mirroring the hero's primary button — once the hero CTA scrolls out of view. */
-.nav-cta {
-  white-space: nowrap;
-  overflow: hidden;
-  max-width: 0;
-  margin-left: -24px;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    max-width var(--duration-slow) ease,
-    margin-left var(--duration-slow) ease,
-    opacity var(--duration-normal) ease;
-}
-.nav-cta.is-revealed {
-  max-width: 260px;
-  margin-left: 0;
-  opacity: 1;
-  pointer-events: auto;
-}
-
-@media (max-width: 640px) {
-  .nav {
-    padding: 16px 20px;
-  }
-  .nav-links {
-    display: none;
-  }
-  /* The CTA is duplicated inside the hamburger menu on mobile; hiding it here
-     stops the wide "nav-right" group from crowding the logo into the toggle. */
-  .nav-cta {
-    display: none;
-  }
-  .nav-right {
-    gap: 16px;
-  }
-  .nav .btn {
-    font-size: 12px;
-    padding: 8px 16px;
-  }
-}
-
-.nav-hamburger {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  color: var(--text);
-  line-height: 1;
-}
-.nav-hamburger svg {
-  width: 22px;
-  height: 22px;
-  display: block;
-}
-@media (max-width: 640px) {
-  .nav-hamburger {
-    display: block;
-  }
-}
-
-.nav-mobile-menu {
-  position: fixed;
-  top: 57px;
-  left: 0;
-  right: 0;
-  z-index: 99;
-  background: rgba(250, 250, 248, 0.97);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  padding: 8px 20px 16px;
-  opacity: 0;
-  transform: translateY(-6px);
-  pointer-events: none;
-  transition:
-    opacity var(--duration-normal) ease,
-    transform var(--duration-normal) ease;
-}
-.nav-mobile-menu.open {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-.nav-mobile-menu a,
-.nav-mobile-menu button {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text);
-  text-decoration: none;
-  padding: 16px 0;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  border-bottom: 1px solid var(--border);
-  opacity: 0;
-  transform: translateY(-4px);
-  transition:
-    opacity var(--duration-fast) ease,
-    transform var(--duration-fast) ease,
-    color var(--duration-fast);
-}
-.nav-mobile-menu.open a,
-.nav-mobile-menu.open button {
-  opacity: 1;
-  transform: translateY(0);
-}
-.nav-mobile-menu.open > *:nth-child(1) {
-  transition-delay: 0.04s;
-}
-.nav-mobile-menu.open > *:nth-child(2) {
-  transition-delay: 0.08s;
-}
-.nav-mobile-menu.open > *:nth-child(3) {
-  transition-delay: 0.12s;
-}
-.nav-mobile-menu.open > *:nth-child(4) {
-  transition-delay: 0.16s;
-}
-.nav-mobile-menu.open > *:nth-child(5) {
-  transition-delay: 0.2s;
-}
-.nav-mobile-menu.open > *:nth-child(6) {
-  transition-delay: 0.24s;
-}
-.nav-mobile-menu a:last-child,
-.nav-mobile-menu button:last-child {
-  border-bottom: none;
-}
-.nav-mobile-menu a:hover,
-.nav-mobile-menu button:hover {
-  color: var(--violet);
 }
 
 /* ── Layout ── */
@@ -746,125 +542,6 @@ h4 {
 @media (max-width: 640px) {
   .section {
     padding: 56px 20px;
-  }
-}
-
-/* ── Hero (legacy two-column, kept for any old usage) ── */
-.hero {
-  padding: 176px 48px 120px;
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 80px;
-  max-width: 1240px;
-  margin: 0 auto;
-  align-items: center;
-}
-@media (max-width: 1024px) {
-  .hero {
-    grid-template-columns: 1fr;
-    gap: 56px;
-    padding: 136px 20px 80px;
-    text-align: left;
-  }
-}
-
-.hero h1 {
-  font-size: clamp(40px, 5.4vw, 72px);
-  line-height: 1.02;
-  letter-spacing: -0.035em;
-  margin: 16px 0 24px;
-}
-.hero h1 .accent {
-  color: var(--violet);
-  display: inline-block;
-  margin-top: 8px;
-}
-.hero h1 .hero-line {
-  white-space: nowrap;
-}
-.hero p.lede {
-  font-size: 18px;
-  color: var(--muted);
-  max-width: 540px;
-  margin-bottom: 32px;
-}
-.hero-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* ── Hero · Hex Lattice (full-bleed center pulse) ── */
-.hero-hex {
-  position: relative;
-  min-height: 82vh;
-  padding: 120px 32px 80px;
-  overflow: hidden;
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.hero-hex-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  display: block;
-}
-.hero-hex::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: none;
-}
-.hero-hex-inner {
-  position: relative;
-  z-index: 2;
-  max-width: 920px;
-  margin: 0 auto;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.hero-hex-inner h1 {
-  font-size: clamp(44px, 6.4vw, 86px);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  margin: 16px 0 24px;
-}
-.hero-hex-inner .hero-line {
-  white-space: nowrap;
-}
-.hero-hex-inner .accent-grad {
-  display: inline-block;
-  background: linear-gradient(180deg, #0a0a0a 0%, #1a0a2e 35%, #3f2fb5 75%, #a99bf2 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 18px rgba(167, 139, 250, 0.25));
-}
-.hero-hex-inner .lede {
-  font-size: 18px;
-  color: color-mix(in oklab, var(--text) 78%, transparent);
-  max-width: 620px;
-  margin: 0 auto 32px;
-}
-.hero-hex-inner .hero-actions {
-  justify-content: center;
-}
-@media (max-width: 640px) {
-  .hero-hex {
-    padding: 128px 20px 80px;
-    min-height: 88vh;
-  }
-  .hero-hex-inner .hero-line {
-    white-space: normal;
   }
 }
 
@@ -1951,68 +1628,6 @@ footer {
   }
 }
 
-/* ── Nav dropdown ── */
-.nav-dropdown {
-  position: relative;
-}
-.nav-dropdown-trigger {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-family: var(--font-sans);
-}
-.nav-dropdown-trigger .nav-caret {
-  font-size: 10px;
-  opacity: 0.7;
-  transition: transform var(--duration-normal) ease;
-  display: inline-block;
-}
-.nav-dropdown[aria-expanded="true"] .nav-caret,
-.nav-dropdown:hover .nav-caret {
-  transform: translateY(1px);
-}
-.nav-dropdown-menu {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  min-width: 180px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 4px;
-  box-shadow: 0 16px 40px -16px rgba(17, 17, 24, 0.18);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-4px);
-  transition:
-    opacity var(--duration-fast) ease,
-    transform var(--duration-fast) ease,
-    visibility var(--duration-fast);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  z-index: 50;
-}
-.nav-dropdown-menu.open {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-}
-.nav-dropdown-menu a {
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  color: var(--text);
-  text-decoration: none;
-}
-.nav-dropdown-menu a:hover {
-  background: var(--surface-2);
-}
-
 /* ── Careers page ── */
 .careers-hero {
   grid-template-columns: 1fr;
@@ -2276,15 +1891,6 @@ footer {
   border-top: 1px solid var(--border);
 }
 
-/* Caption above the pipeline graphic (moved out of the headline stack). */
-.hero-demo-cap {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 8px;
-}
 /* ── Hero "AI Pipeline" demo — protection wave + exposure metrics. Violet =
    Blindsight/secured; scoped red (--rd*) = exposed/threat (illustrative). */
 .hpp {
@@ -2696,54 +2302,6 @@ footer {
   }
 }
 
-/* Scroll affordance beneath the clients banner — a gently bobbing chevron. */
-.hero-scroll-cue {
-  align-self: center;
-  margin-top: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  background: transparent;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  color: var(--muted);
-  transition: color var(--duration-normal);
-}
-.hero-scroll-cue:hover {
-  color: var(--violet);
-}
-/* On phones the scroll-cue arrow (between the logo bar and the Why section)
-   adds clutter, so hide it. */
-@media (max-width: 640px) {
-  .hero-scroll-cue {
-    display: none;
-  }
-}
-.hero-scroll-chevron {
-  width: 39px;
-  height: 39px;
-  animation: heroScrollBob 1.8s ease-in-out infinite;
-}
-@keyframes heroScrollBob {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.6;
-  }
-  50% {
-    transform: translateY(5px);
-    opacity: 1;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-scroll-chevron {
-    animation: none;
-  }
-}
-
 /* ── Why Blindsight — founder photo placeholders ── */
 .founders-grid {
   display: grid;
@@ -3151,113 +2709,6 @@ footer {
   margin-top: 56px;
 }
 
-/* ── Nav mega menu (Resources) ── */
-.nav-mega {
-  position: absolute;
-  top: calc(100% + 14px);
-  right: 0;
-  display: grid;
-  grid-template-columns: 200px 340px;
-  gap: 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 24px;
-  box-shadow: 0 24px 60px -20px rgba(17, 17, 24, 0.22);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-6px);
-  transition:
-    opacity var(--duration-fast) ease,
-    transform var(--duration-fast) ease,
-    visibility var(--duration-fast);
-  z-index: 60;
-}
-.nav-mega.open {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-}
-.nav-mega-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
-}
-.nav-mega-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-.nav-mega-label {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--dim);
-  padding: 4px 8px 8px;
-}
-.nav-mega-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 8px;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  color: var(--text);
-  text-decoration: none;
-  transition: background var(--duration-fast) ease;
-}
-.nav-mega-item:hover {
-  background: var(--surface-2);
-}
-.nav-mega-icon {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  color: var(--violet);
-}
-.nav-mega-card {
-  display: block;
-  text-decoration: none;
-  padding: 8px 16px;
-  margin-bottom: 4px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg);
-  transition:
-    border-color var(--duration-fast) ease,
-    transform var(--duration-fast) ease;
-}
-.nav-mega-card:hover {
-  border-color: var(--violet);
-  transform: translateY(-1px);
-}
-.nav-mega-card-title {
-  font-size: 13.5px;
-  line-height: 1.35;
-  color: var(--text);
-  font-weight: 500;
-}
-.nav-mega-card-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 4px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--violet);
-}
-@media (max-width: 1024px) {
-  .nav-mega {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    min-width: 260px;
-    padding: 16px;
-  }
-}
-
 /* ── Demo request page ── */
 .demo-form-wrap {
   background: var(--surface);
@@ -3465,7 +2916,6 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  counter-reset: step;
 }
 .demo-steps strong {
   color: var(--text);
@@ -3626,10 +3076,6 @@ footer {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   overflow: hidden;
-}
-.logostrip-eyebrow {
-  text-align: center;
-  margin-bottom: 24px;
 }
 .logostrip {
   overflow: hidden;
