@@ -165,14 +165,6 @@
   margin: 1px 0 0;
   accent-color: var(--ink);
 }
-.mD[data-site-variant="b"] .pb-error {
-  padding: 12px 14px;
-  border-radius: var(--r);
-  background: var(--surface-2);
-  box-shadow: inset 2px 0 0 var(--ink);
-  font-size: 14px;
-  color: var(--ink);
-}
 .mD[data-site-variant="b"] .pb-form__foot {
   padding-top: var(--s3);
 }
@@ -182,6 +174,10 @@
   align-items: flex-start;
   gap: var(--s5);
   padding-block: var(--s5);
+}
+/* focused by script after a submit so it's announced; a heading, not a control: no ring */
+.mD[data-site-variant="b"] .pb-done h2:focus {
+  outline: none;
 }
 .mD[data-site-variant="b"] .pb-done a:not(.mD-btn) {
   color: var(--ink);

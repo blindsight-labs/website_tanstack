@@ -3514,6 +3514,10 @@ footer {
   backdrop-filter: blur(4px);
   animation: modal-fade var(--duration-normal) ease;
 }
+/* closed after a first open: kept mounted so the card keeps what was typed (DemoModal.tsx) */
+.modal-backdrop[hidden] {
+  display: none;
+}
 @keyframes modal-fade {
   from {
     opacity: 0;

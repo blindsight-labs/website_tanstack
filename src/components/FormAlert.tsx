@@ -2,9 +2,10 @@
    the field, FieldError). "check" errors name what to fix; "failed" errors say
    what happened, that it's safe to retry, and give a direct email fallback (subject prefilled,
    with the log reference when there is one). Styled in b-forms.css (.form-alert). */
+import { useEffect, useId, useRef, type RefObject } from "react";
 import { AlertCircle, CircleSlash } from "lucide-react";
 
-import type { FormErrorInfo } from "@/lib/form-error";
+import { fieldError, type FormErrorInfo } from "@/lib/form-error";
 
 export function FormAlert({
   error,
@@ -42,13 +43,54 @@ export function FormAlert({
   );
 }
 
-/** The message under one field, when the current "check" error is about it (see fieldError). */
-export function FieldError({ message }: { message: string | null }) {
+/** The message under one field, when the current "check" error is about it (see fieldError).
+ *  The field points at `id` with aria-describedby, so it's read with the field (see
+ *  useFieldErrors). Inside the field's <label> it is aria-hidden, or it would also be part of
+ *  the field's name and read twice; aria-describedby still reads hidden text. */
+export function FieldError({
+  id,
+  message,
+  inLabel = true,
+}: {
+  id: string;
+  message: string | null;
+  inLabel?: boolean;
+}) {
   if (!message) return null;
   return (
-    <small className="field-error" role="alert">
+    <small className="field-error" id={id} aria-hidden={inLabel || undefined}>
       <AlertCircle size={14} strokeWidth={1.75} aria-hidden="true" />
       {message}
     </small>
   );
+}
+
+/** A form's field-error wiring. The cursor goes to the field an error is about, so the fix is
+ *  one keystroke away and the error is read as its description. When the field already has
+ *  focus (Enter in it), focus can't move to say it, so `live` announces it instead. */
+export function useFieldErrors(error: FormErrorInfo | null, formRef: RefObject<HTMLFormElement | null>) {
+  const uid = useId();
+  const liveRef = useRef<HTMLParagraphElement>(null);
+  const errorId = (field: string) => `${uid}-${field}-error`;
+  /** Props that mark a field invalid while its error shows, and point it at that error. */
+  const invalid = (field: string) =>
+    fieldError(error, field) ? { "aria-invalid": true as const, "aria-describedby": errorId(field) } : {};
+
+  useEffect(() => {
+    const live = liveRef.current;
+    if (live) live.textContent = "";
+    if (!error?.field) return;
+    const el = formRef.current?.elements.namedItem(error.field);
+    if (!(el instanceof HTMLElement)) return;
+    if (el !== document.activeElement) return el.focus();
+    // set directly, a beat after the clear: the same error twice is still a change to announce
+    const t = setTimeout(() => {
+      if (live) live.textContent = error.detail;
+    }, 100);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- formRef is a stable ref
+  }, [error]);
+
+  const live = <p ref={liveRef} className="sr-only" aria-live="polite" />;
+  return { errorId, invalid, live };
 }

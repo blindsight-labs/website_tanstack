@@ -12,40 +12,17 @@ import {
   friendlyFormError,
   type FormErrorInfo,
 } from "@/lib/form-error";
-import { FieldError, FormAlert } from "./FormAlert";
+import { FieldError, FormAlert, useFieldErrors } from "./FormAlert";
 import { RecaptchaNotice, useRecaptcha } from "./Recaptcha";
-import type { DemoVariant } from "./DemoModal";
 
 type Path = "startup" | "team" | null;
 
-function stepsFor(isTrial: boolean, path: Path): string[] {
-  if (isTrial) return ["About you", "Your company", "Your setup"];
-  if (path === "team") return ["About you", "Your company", "Anything else"];
-  return ["About you", "Anything else"];
-}
-
-const TRIAL_POSITIONS = [
-  "CEO / Founder",
-  "CTO",
-  "CISO",
-  "Head of IT",
-  "Head of Compliance / Risk",
-  "Head of Data / AI",
-  "Engineering lead",
-  "Other",
-];
-
-/** Shared demo-request form + success state. Used by the demo modal.
- *  `variant` switches between booking a demo, requesting the app download, or
- *  starting the free trial — same shared fields, different submit label,
- *  source tag and confirmation copy. "demo"/"download" ask the startup-vs-team
- *  question first. The fields then come in short steps (2–3 fields each, see
- *  stepsFor) so the dialog never shows the whole form at once; every field stays
- *  mounted (hidden), so the final submit still reads them all from FormData. */
-export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
+/** Demo-request form + success state, in the demo modal. It asks the startup-vs-team question
+ *  first; the fields then come in short steps (2–3 fields each) so the dialog never shows the
+ *  whole form at once; every field stays mounted (hidden), so the final submit still reads
+ *  them all from FormData. */
+export function DemoForm() {
   const submit = useServerFn(submitDemoRequest);
-  const isDownload = variant === "download";
-  const isTrial = variant === "trial";
   const [path, setPath] = useState<Path>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<FormErrorInfo | null>(null);
@@ -53,7 +30,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
   const getCaptchaToken = useRecaptcha("demo");
   const [step, setStep] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
-  const steps = stepsFor(isTrial, path);
+  const steps = path === "team" ? ["About you", "Your company", "Anything else"] : ["About you", "Anything else"];
   const last = step === steps.length - 1;
 
   // a new path restarts the steps; each new step puts the cursor in its first field
@@ -67,12 +44,10 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
     // "Change" clears the path and unmounts itself: the cursor goes back to the path choice
     formRef.current
       ?.querySelector<HTMLElement>(
-        !isTrial && path === null
-          ? ".demo-path-pill"
-          : `[data-step="${step}"] :is(input, select, textarea)`,
+        path === null ? ".demo-path-pill" : `[data-step="${step}"] :is(input, select, textarea)`,
       )
       ?.focus();
-  }, [step, path, isTrial]);
+  }, [step, path]);
 
   // the form (and its focused submit button) is swapped for the confirmation: focus its heading,
   // which also reads the confirmation out (so no role="status" on top, that would read it twice)
@@ -81,12 +56,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
     if (done) doneRef.current?.focus();
   }, [done]);
 
-  // a field's error goes to that field: the cursor moves there so the fix is one keystroke away
-  useEffect(() => {
-    if (!error?.field) return;
-    const el = formRef.current?.elements.namedItem(error.field);
-    if (el instanceof HTMLElement) el.focus();
-  }, [error]);
+  const { errorId, invalid, live } = useFieldErrors(error, formRef);
 
   /** The checks for one step's fields, in the order they appear. */
   function stepProblem(f: FormData, at: number): FormErrorInfo | null {
@@ -96,15 +66,12 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
       const email = emailProblem(v("email"));
       if (email) return checkError(email, "email");
     }
-    if (at === 1 && (isTrial || path === "team") && !v("company")) {
+    if (at === 1 && path === "team" && !v("company")) {
       return checkError(FIELD_MESSAGES.company, "company");
     }
-    if (at === 1 && isTrial && !v("position")) return checkError(FIELD_MESSAGES.position, "position");
     return null;
   }
 
-  /** Props that mark a field invalid while its error shows. */
-  const invalid = (field: string) => (fieldError(error, field) ? { "aria-invalid": true as const } : {});
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -140,16 +107,8 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
     let role = "";
     let companySize = "";
     let useCase = "";
-    let engine = "";
-    let deployment = "";
 
-    if (isTrial) {
-      company = String(f.get("company") || "").trim();
-      role = String(f.get("position") || "").trim();
-      companySize = String(f.get("companySize") || "").trim();
-      engine = String(f.get("engine") || "").trim();
-      deployment = String(f.get("deployment") || "").trim();
-    } else if (path === "team") {
+    if (path === "team") {
       company = String(f.get("company") || "").trim();
       role = String(f.get("role") || "").trim();
       companySize = String(f.get("companySize") || "").trim();
@@ -167,18 +126,14 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
           role,
           companySize,
           useCase,
-          engine,
-          deployment,
           message,
           consent,
-          source: isTrial ? "free-trial" : isDownload ? "download-app" : "demo-form",
+          source: "demo-form",
           segment: path === "team" ? "Larger team" : path === "startup" ? "Startup" : "",
           captchaToken,
         },
       });
-      trackEvent("generate_lead", {
-        form: isTrial ? "free-trial" : isDownload ? "download-app" : "demo-form",
-      });
+      trackEvent("generate_lead", { form: "demo-form" });
       setDone(true);
     } catch (err) {
       const problem = friendlyFormError(err);
@@ -199,29 +154,11 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
         <div className="demo-success">
           <span className="tag">Got it</span>
           <h2 ref={doneRef} tabIndex={-1}>
-            {isTrial
-              ? "A founder replies within one business day."
-              : isDownload
-                ? "Thanks, your download is on the way."
-                : "Thanks, we'll be in touch."}
+            Thanks, we'll be in touch.
           </h2>
           <p>
-            {isTrial ? (
-              <>
-                We'll send your keys and deployment options from{" "}
-                <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
-              </>
-            ) : isDownload ? (
-              <>
-                We'll email your download link and setup guide within one business day from{" "}
-                <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
-              </>
-            ) : (
-              <>
-                A founder will reply within one business day from{" "}
-                <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
-              </>
-            )}
+            A founder will reply within one business day from{" "}
+            <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
           </p>
         </div>
       ) : (
@@ -236,49 +173,48 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
           }}
           noValidate
         >
-          {!isTrial && (
-            <div className="demo-path-toggle" hidden={path !== null}>
-              <p className="demo-path-heading">Which best describes you?</p>
-              <div className="demo-path-row">
-                <button
-                  type="button"
-                  className={
-                    path === "team"
-                      ? "demo-path-pill demo-path-pill-primary is-selected"
-                      : "demo-path-pill demo-path-pill-primary"
-                  }
-                  aria-pressed={path === "team"}
-                  onClick={() => setPath("team")}
-                >
-                  <span className="demo-path-pill-row">
-                    <Building2 size={22} aria-hidden="true" />
-                    <span className="demo-path-pill-title">Larger team</span>
-                  </span>
-                  <span className="demo-path-pill-meta">
-                    Security &amp; compliance for your org
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  className={
-                    path === "startup"
-                      ? "demo-path-pill demo-path-pill-secondary is-selected"
-                      : "demo-path-pill demo-path-pill-secondary"
-                  }
-                  aria-pressed={path === "startup"}
-                  onClick={() => setPath("startup")}
-                >
-                  <span className="demo-path-pill-row">
-                    <Rocket size={15} aria-hidden="true" />
-                    <span className="demo-path-pill-title">Startup</span>
-                  </span>
-                  <span className="demo-path-pill-meta">Quick self-serve setup</span>
-                </button>
-              </div>
+          {live}
+          <div className="demo-path-toggle" hidden={path !== null}>
+            <p className="demo-path-heading">Which best describes you?</p>
+            <div className="demo-path-row">
+              <button
+                type="button"
+                className={
+                  path === "team"
+                    ? "demo-path-pill demo-path-pill-primary is-selected"
+                    : "demo-path-pill demo-path-pill-primary"
+                }
+                aria-pressed={path === "team"}
+                onClick={() => setPath("team")}
+              >
+                <span className="demo-path-pill-row">
+                  <Building2 size={22} aria-hidden="true" />
+                  <span className="demo-path-pill-title">Larger team</span>
+                </span>
+                <span className="demo-path-pill-meta">
+                  Security &amp; compliance for your org
+                </span>
+              </button>
+              <button
+                type="button"
+                className={
+                  path === "startup"
+                    ? "demo-path-pill demo-path-pill-secondary is-selected"
+                    : "demo-path-pill demo-path-pill-secondary"
+                }
+                aria-pressed={path === "startup"}
+                onClick={() => setPath("startup")}
+              >
+                <span className="demo-path-pill-row">
+                  <Rocket size={15} aria-hidden="true" />
+                  <span className="demo-path-pill-title">Startup</span>
+                </span>
+                <span className="demo-path-pill-meta">Quick self-serve setup</span>
+              </button>
             </div>
-          )}
+          </div>
 
-          {!isTrial && path !== null && (
+          {path !== null && (
             <div className="demo-path-confirm">
               <Check size={16} aria-hidden="true" />
               <span>{path === "startup" ? "Startup" : "Larger team"}</span>
@@ -288,7 +224,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
             </div>
           )}
 
-          <div className="demo-fields" hidden={!isTrial && path === null}>
+          <div className="demo-fields" hidden={path === null}>
             <div className="demo-steps" aria-live="polite">
               <p className="demo-steps__label">
                 Step {step + 1} of {steps.length}
@@ -304,7 +240,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
 
             <div className="demo-step" data-step="0" hidden={step !== 0}>
               <label className="demo-field">
-                <span>Name *</span>
+                <span>Name <span aria-hidden="true">*</span></span>
                 <input
                   name="name"
                   type="text"
@@ -313,10 +249,12 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                   autoComplete="name"
                   {...invalid("name")}
                 />
-                <FieldError message={fieldError(error, "name")} />
+                <FieldError id={errorId("name")} message={fieldError(error, "name")} />
               </label>
               <label className="demo-field">
-                <span>{isTrial || path === "team" ? "Work email *" : "Email *"}</span>
+                <span>
+                  {path === "team" ? "Work email" : "Email"} <span aria-hidden="true">*</span>
+                </span>
                 <input
                   name="email"
                   type="email"
@@ -325,14 +263,14 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                   autoComplete="email"
                   {...invalid("email")}
                 />
-                <FieldError message={fieldError(error, "email")} />
+                <FieldError id={errorId("email")} message={fieldError(error, "email")} />
               </label>
             </div>
 
-            {isTrial && (
+            {path === "team" && (
               <div className="demo-step" data-step="1" hidden={step !== 1}>
                 <label className="demo-field">
-                  <span>Company *</span>
+                  <span>Company <span aria-hidden="true">*</span></span>
                   <input
                     name="company"
                     type="text"
@@ -341,50 +279,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                     autoComplete="organization"
                     {...invalid("company")}
                   />
-                  <FieldError message={fieldError(error, "company")} />
-                </label>
-                <label className="demo-field">
-                  <span>Your position *</span>
-                  <select name="position" defaultValue="" required {...invalid("position")}>
-                    <option value="" disabled hidden>
-                      Select…
-                    </option>
-                    {TRIAL_POSITIONS.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
-                  </select>
-                  <FieldError message={fieldError(error, "position")} />
-                </label>
-                <label className="demo-field">
-                  <span>Company size (optional)</span>
-                  <select name="companySize" defaultValue="">
-                    <option value="" disabled hidden>
-                      Select…
-                    </option>
-                    <option value="1–49">1–49</option>
-                    <option value="50–200">50–200</option>
-                    <option value="200–1,000">200–1,000</option>
-                    <option value="1,000+">1,000+</option>
-                  </select>
-                </label>
-              </div>
-            )}
-
-            {!isTrial && path === "team" && (
-              <div className="demo-step" data-step="1" hidden={step !== 1}>
-                <label className="demo-field">
-                  <span>Company *</span>
-                  <input
-                    name="company"
-                    type="text"
-                    required
-                    maxLength={200}
-                    autoComplete="organization"
-                    {...invalid("company")}
-                  />
-                  <FieldError message={fieldError(error, "company")} />
+                  <FieldError id={errorId("company")} message={fieldError(error, "company")} />
                 </label>
                 <div className="demo-row">
                   <label className="demo-field">
@@ -421,29 +316,6 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
             )}
 
             <div className="demo-step" data-step={steps.length - 1} hidden={!last}>
-              {isTrial && (
-                <div className="demo-row">
-                  <label className="demo-field">
-                    <span>Which engine first?</span>
-                    <select name="engine" defaultValue="Both, combined">
-                      <option value="Both, combined">Both, combined</option>
-                      <option value="Runtime Security Proxy">Runtime Security Proxy</option>
-                      <option value="Shadow AI discovery">Shadow AI discovery</option>
-                      <option value="Not sure yet">Not sure yet</option>
-                    </select>
-                  </label>
-                  <label className="demo-field">
-                    <span>Deployment preference</span>
-                    <select name="deployment" defaultValue="Not sure, advise me">
-                      <option value="Private cloud / your VPC">Private cloud / your VPC</option>
-                      <option value="Public cloud, managed by Blindsight">
-                        Public cloud, managed by Blindsight
-                      </option>
-                      <option value="Not sure, advise me">Not sure, advise me</option>
-                    </select>
-                  </label>
-                </div>
-              )}
               <label className="demo-field">
                 <span>Anything we should know (optional)</span>
                 <textarea
@@ -468,7 +340,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                   .
                 </span>
               </label>
-              <FieldError message={fieldError(error, "consent")} />
+              <FieldError id={errorId("consent")} message={fieldError(error, "consent")} inLabel={false} />
             </div>
 
             {error && !error.field && (
@@ -489,15 +361,7 @@ export function DemoForm({ variant = "demo" }: { variant?: DemoVariant }) {
                 </button>
               )}
               <button type="submit" className="btn btn-primary" disabled={submitting}>
-                {!last
-                  ? "Continue"
-                  : submitting
-                    ? "Sending…"
-                    : isTrial
-                      ? "Send request"
-                      : isDownload
-                        ? "Send my download link"
-                        : "Request demo"}
+                {!last ? "Continue" : submitting ? "Sending…" : "Request demo"}
               </button>
             </div>
             <RecaptchaNotice className="demo-captcha-note" />

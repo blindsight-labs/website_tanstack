@@ -3,9 +3,6 @@ import { useModalDialog } from "@/hooks/useModalDialog";
 import { afterHeroIdle } from "@/site/heroReady";
 import { preloadPage, resolvePage } from "@/site/pages/registry";
 
-/** The form's variants (DemoForm). The site's modal always opens the "demo" one. */
-export type DemoVariant = "demo" | "download" | "trial";
-
 const DemoModalContext = createContext<{
   open: () => void;
   close: () => void;
@@ -34,9 +31,19 @@ const prefetch = () => {
  *  data-site-variant="b", which the page styles are scoped to. */
 export function DemoModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  /** Once opened, the card stays mounted (hidden) while closed, so Escape or the X don't throw
+   *  away what was typed: reopening brings back the fields, the path and the step. */
+  const [mounted, setMounted] = useState(false);
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const open = () => setIsOpen(true);
-  const close = () => setIsOpen(false);
+  const open = () => {
+    setMounted(true);
+    setIsOpen(true);
+  };
+  const close = () => {
+    setIsOpen(false);
+    // a request went through (DemoForm shows .demo-success): the next open starts fresh
+    if (cardRef.current?.querySelector(".demo-success")) setMounted(false);
+  };
   /** A click on the backdrop closes only an untouched card: once something is typed, a stray
    *  click must not throw it away (the X and Escape still close). */
   const closeFromBackdrop = () => {
@@ -56,9 +63,10 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
   return (
     <DemoModalContext.Provider value={{ open, close, prefetch }}>
       {children}
-      {isOpen && (
+      {mounted && (
         <div
           className="modal-backdrop"
+          hidden={!isOpen}
           data-site-variant="b"
           onClick={closeFromBackdrop}
           role="presentation"

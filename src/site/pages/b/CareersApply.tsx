@@ -6,7 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-import { FieldError, FormAlert } from "@/components/FormAlert";
+import { FieldError, FormAlert, useFieldErrors } from "@/components/FormAlert";
 import { RecaptchaNotice, useRecaptcha } from "@/components/Recaptcha";
 import { submitApplication } from "@/lib/careers.functions";
 import { trackEvent } from "@/lib/consent";
@@ -38,15 +38,15 @@ export function CareersApplyB() {
   const known = ROLES.find((r) => r.title === role);
   const formRef = useRef<HTMLFormElement>(null);
 
-  // a field's error goes to that field: the cursor moves there so the fix is one keystroke away
-  useEffect(() => {
-    if (!error?.field) return;
-    const el = formRef.current?.elements.namedItem(error.field);
-    if (el instanceof HTMLElement) el.focus();
-  }, [error]);
+  const { errorId, invalid, live } = useFieldErrors(error, formRef);
 
-  /** Props that mark a field invalid while its error shows. */
-  const invalid = (field: string) => (fieldError(error, field) ? { "aria-invalid": true as const } : {});
+  // the form (and its focused submit button) is swapped for the confirmation: focus its heading,
+  // which also reads the confirmation out (so no role="status" on top, that would read it twice)
+  const doneRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (done) doneRef.current?.focus();
+  }, [done]);
+
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -145,9 +145,9 @@ export function CareersApplyB() {
 
           <div className="pb-apply__panel" data-reveal>
             {done ? (
-              <div className="pb-done" role="status">
+              <div className="pb-done">
                 <Label>Received</Label>
-                <h2 className="mD-h2">Thanks, we'll be in touch.</h2>
+                <h2 ref={doneRef} tabIndex={-1} className="mD-h2">Thanks, we'll be in touch.</h2>
                 <p>
                   Questions in the meantime? Write to <a href="mailto:careers@blindsight.io">careers@blindsight.io</a>.
                 </p>
@@ -168,20 +168,21 @@ export function CareersApplyB() {
                 }}
                 noValidate
               >
+                {live}
                 <div className="pb-form__row">
                   <label className="pb-field">
-                    <span className="pb-field__k">Name *</span>
+                    <span className="pb-field__k">Name <span aria-hidden="true">*</span></span>
                     <input name="name" type="text" required maxLength={120} autoComplete="name" {...invalid("name")} />
-                    <FieldError message={fieldError(error, "name")} />
+                    <FieldError id={errorId("name")} message={fieldError(error, "name")} />
                   </label>
                   <label className="pb-field">
-                    <span className="pb-field__k">Email *</span>
+                    <span className="pb-field__k">Email <span aria-hidden="true">*</span></span>
                     <input name="email" type="email" required maxLength={255} autoComplete="email" {...invalid("email")} />
-                    <FieldError message={fieldError(error, "email")} />
+                    <FieldError id={errorId("email")} message={fieldError(error, "email")} />
                   </label>
                 </div>
                 <label className="pb-field pb-file" data-has={fileName ? "true" : undefined}>
-                  <span className="pb-field__k">CV · PDF, DOC, DOCX or TXT · max 4MB</span>
+                  <span className="pb-field__k">CV (optional) · PDF, DOC, DOCX or TXT · max 4MB</span>
                   <input
                     name="cv"
                     type="file"
@@ -193,11 +194,11 @@ export function CareersApplyB() {
                     <span className="pb-file__name">{fileName || "Choose a file"}</span>
                     <span className="pb-file__btn">{fileName ? "Replace" : "Browse"}</span>
                   </span>
-                  <FieldError message={fieldError(error, "cv")} />
+                  <FieldError id={errorId("cv")} message={fieldError(error, "cv")} />
                 </label>
                 <label className="pb-field">
-                  <span className="pb-field__k">Anything you'd like us to know</span>
-                  <textarea name="message" rows={5} maxLength={2000} placeholder="Optional: links, what you'd build here, when you can start." />
+                  <span className="pb-field__k">Anything you'd like us to know (optional)</span>
+                  <textarea name="message" rows={5} maxLength={2000} placeholder="Links, what you'd build here, when you can start." />
                 </label>
                 <label className="pb-check">
                   <input name="consent" type="checkbox" required {...invalid("consent")} />
@@ -209,7 +210,7 @@ export function CareersApplyB() {
                     .
                   </span>
                 </label>
-                <FieldError message={fieldError(error, "consent")} />
+                <FieldError id={errorId("consent")} message={fieldError(error, "consent")} inLabel={false} />
                 {error && !error.field && <FormAlert error={error} email="careers@blindsight.io" subject="Job application" />}
                 <div className="pb-form__foot">
                   <button type="submit" className="mD-btn mD-btn--primary mD-btn--lg" disabled={submitting}>

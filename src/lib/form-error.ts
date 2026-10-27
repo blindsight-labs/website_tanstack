@@ -30,7 +30,6 @@ export const FIELD_MESSAGES = {
   emailMissing: "Enter your email address so we can reply.",
   emailInvalid: "That email address doesn't look complete. It should look like name@company.com.",
   company: "Enter your company name.",
-  position: "Choose your position from the list.",
   terms: "Tick the box to accept the Evaluation Terms, then send again.",
   contact: "Tick the box so we can contact you about your application.",
 } as const;
@@ -109,14 +108,19 @@ export function friendlyFormError(err: unknown): FormErrorInfo {
     const known = SERVER_MESSAGES.find((m) => m.match.test(detail));
     return checkError(known?.message ?? detail, known?.field);
   }
-  if (/spam check|looked automated|verify your request/i.test(detail)) {
+  if (/looked automated/i.test(detail)) {
     return { kind: "failed", title: "Our spam check stopped this request", detail, ref: refMatch?.[1] };
+  }
+  // the check itself couldn't run (didn't load, didn't complete, couldn't be verified): not a rejection
+  if (/spam check|verify your request/i.test(detail)) {
+    return { kind: "failed", title: "We couldn't run our spam check", detail, ref: refMatch?.[1] };
   }
   return { kind: "failed", title: "Your request wasn't sent", detail, ref: refMatch?.[1] };
 }
 
 // Lightweight email check for instant client-side feedback before the server
-// roundtrip. Matches the intent of the server's `zod` `.email()` rule.
+// roundtrip: something@something, ending in a dot and a 2+ letter TLD, like the server's `zod`
+// `.email()` rule, which rejects ada@x.c and ada@ex.c1.
 export function isValidEmail(value: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  return /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(value);
 }
