@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Pause, Play } from "lucide-react";
 
 import logoAES from "@/assets/LOGO_AES.svg";
+import logoAgentegra from "@/assets/LOGO_Agentegra.svg";
 import logoClinic from "@/assets/LOGO_ClinicBarcelona.svg";
 import logoGCRAI from "@/assets/LOGO_GCRAI.png";
 import logoJFloor from "@/assets/LOGO_JFloor.svg";
@@ -22,7 +23,8 @@ import { type SectionProps } from "./shared";
 const LOGOS: Record<string, { src: string; h: number }> = {
   Noéda: { src: logoNoeda, h: 36 },
   "J floor": { src: logoJFloor, h: 15 },
-  Rebels: { src: logoRebels, h: 34 },
+  Rebels: { src: logoRebels, h: 17 },
+  Agentegra: { src: logoAgentegra, h: 20 },
   "Clínic Barcelona / Universitat de Barcelona": { src: logoClinic, h: 44 },
   "NVIDIA Inception": { src: logoNvidia, h: 40 },
   "Agent Economy Association": { src: logoAES, h: 56 },

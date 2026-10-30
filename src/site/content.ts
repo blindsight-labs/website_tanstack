@@ -83,6 +83,7 @@ export const proofStrip = [
   "Noéda",
   "J floor",
   "Rebels",
+  "Agentegra",
   "Clínic Barcelona / Universitat de Barcelona",
   "NVIDIA Inception",
   "ETH AI Center",
