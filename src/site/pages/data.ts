@@ -67,7 +67,6 @@ export const LEADERSHIP: Person[] = [
     name: "Filipa Barros",
     label: "Head of Research photo",
     photo: photoFilipa,
-    photoZoom: 1.35,
     bio: "PhD in Computer Science (FCUP/LIACC)",
     highlights: [
       "Published researcher in Adversarial Anomaly Detection and ML",
