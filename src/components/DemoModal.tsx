@@ -1,3 +1,4 @@
+import { useRouter, useSearch } from "@tanstack/react-router";
 import { Suspense, createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { useModalDialog } from "@/hooks/useModalDialog";
 import { afterHeroIdle } from "@/site/heroReady";
@@ -53,6 +54,18 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
     if (typed && [...typed].some((el) => el.value.trim() !== "")) return;
     close();
   };
+
+  // `?demo` on any page (blindsight.io/demo redirects to /?demo) opens the card, then the
+  // param is dropped so a reload or a copied URL doesn't open it again
+  const { demo } = useSearch({ strict: false }) as { demo?: unknown };
+  const router = useRouter();
+  useEffect(() => {
+    if (demo === undefined) return;
+    open();
+    const url = new URL(window.location.href);
+    url.searchParams.delete("demo");
+    router.history.replace(url.pathname + url.search + url.hash);
+  }, [demo, router]);
 
   useModalDialog(isOpen, close, cardRef);
   // on the landing: after the hero's first frame, plus a beat (see src/site/heroReady.ts)
