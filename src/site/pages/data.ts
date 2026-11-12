@@ -129,11 +129,19 @@ export const ROLES: Role[] = [
   },
 ];
 
-/** The demo card's heading copy. */
+/** The demo card's copy: the offer on the left, the form panel's heading on the right. */
 export const DEMO_MODAL_COPY = {
   tag: "Request a Demo",
   title: "See Blindsight against your stack.",
   sub: "30-minute working session with the founding team. Reply within one business day.",
+  steps: [
+    { k: "We reply within a business day", v: "We confirm a time that suits you." },
+    { k: "30-minute working session", v: "With the founding team, against your own stack." },
+    { k: "A plan for your environment", v: "Deployed on-prem, in your private cloud or ours." },
+  ],
+  hostingLabel: "Deploys on",
+  formTitle: "Book your session",
+  formSub: "We use these details only to arrange it.",
 };
 
 /** Reads a File as bare base64 (no data: prefix), as submitApplication expects. */

@@ -83,14 +83,10 @@
     border-bottom: 1px solid var(--line);
   }
 
-  .mD[data-site-variant="b"] .pb-modal__grid {
-    grid-template-columns: minmax(0, 1fr);
+  .mD[data-site-variant="b"] .pb-modal {
     gap: var(--s6);
-  }
-  .mD[data-site-variant="b"] .pb-modal__next {
-    padding: var(--s5) 0 0;
-    border-left: 0;
-    border-top: 1px solid var(--line-2);
+    /* the top clears the 44px close X (at 4px), so it never sits on the panel's corner */
+    padding: 56px var(--s6) var(--s6);
   }
 }
 
@@ -203,37 +199,44 @@
     font-size: clamp(32px, 9.4vw, 40px);
     overflow-wrap: break-word;
   }
-  /* the demo card: nearly full screen */
+  /* the demo card: a bottom sheet, one column; the steps keep only their titles so the form
+     starts within the first screen */
   .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] {
-    /* clear of the notch (landscape) and the home indicator */
-    padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right))
-      max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    /* clear of the notch (landscape); the sheet itself pads for the home indicator */
+    padding: max(8px, env(safe-area-inset-top)) 0 0;
     align-items: flex-end;
   }
   .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
-    max-height: calc(100dvh - max(8px, env(safe-area-inset-top)) - max(8px, env(safe-area-inset-bottom)));
+    max-height: calc(100dvh - max(8px, env(safe-area-inset-top)));
+    border-bottom: 0;
+    border-radius: var(--r) var(--r) 0 0;
   }
   .mD[data-site-variant="b"] .pb-modal {
-    padding: var(--s5);
-  }
-  .mD[data-site-variant="b"] .pb-modal__head {
-    grid-template-columns: 30px minmax(0, 1fr);
-    gap: var(--s3);
-    padding-right: 48px;
-  }
-  .mD[data-site-variant="b"] .pb-modal__mark {
-    width: 30px;
-    height: 30px;
-  }
-  .mD[data-site-variant="b"] .pb-modal__close {
-    top: 10px;
-    right: 10px;
-  }
-  .mD[data-site-variant="b"] .pb-modal .demo-path-row {
     grid-template-columns: minmax(0, 1fr);
+    gap: var(--s5);
+    padding: var(--s5) var(--s4) max(var(--s5), env(safe-area-inset-bottom));
   }
-  .mD[data-site-variant="b"] .pb-modal .demo-path-pill {
-    min-height: 72px;
+  .mD[data-site-variant="b"] .pb-modal__intro {
+    gap: var(--s3);
+    padding-right: 36px;
+  }
+  .mD[data-site-variant="b"] .pb-modal .pb-next {
+    gap: var(--s2);
+    margin-top: 0;
+  }
+  .mD[data-site-variant="b"] .pb-modal .pb-next__item {
+    grid-template-columns: 24px minmax(0, 1fr);
+    column-gap: 10px;
+  }
+  .mD[data-site-variant="b"] .pb-modal .pb-next__n {
+    width: 24px;
+    height: 24px;
+  }
+  .mD[data-site-variant="b"] .pb-modal :is(.pb-next__v, .pb-modal__hosting) {
+    display: none;
+  }
+  .mD[data-site-variant="b"] .pb-modal__panel {
+    padding: var(--s5) var(--s4);
   }
 }
 
@@ -243,10 +246,3 @@
   }
 }
 
-/* Phones: the demo card is the form and nothing else. The header's one-line promise already
-   says what happens next; the three steps below the form only made it longer. */
-@media (max-width: 720px) {
-  .mD[data-site-variant="b"] .pb-modal__next {
-    display: none;
-  }
-}

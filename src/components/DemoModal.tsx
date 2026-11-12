@@ -33,7 +33,7 @@ const prefetch = () => {
 export function DemoModalProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   /** Once opened, the card stays mounted (hidden) while closed, so Escape or the X don't throw
-   *  away what was typed: reopening brings back the fields, the path and the step. */
+   *  away what was typed: reopening brings back the fields. */
   const [mounted, setMounted] = useState(false);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const open = () => {
@@ -48,9 +48,7 @@ export function DemoModalProvider({ children }: { children: ReactNode }) {
   /** A click on the backdrop closes only an untouched card: once something is typed, a stray
    *  click must not throw it away (the X and Escape still close). */
   const closeFromBackdrop = () => {
-    const typed = cardRef.current?.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-      "input[type=text], input[type=email], textarea",
-    );
+    const typed = cardRef.current?.querySelectorAll<HTMLInputElement>("input[type=text], input[type=email]");
     if (typed && [...typed].some((el) => el.value.trim() !== "")) return;
     close();
   };

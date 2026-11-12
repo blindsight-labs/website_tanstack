@@ -2709,7 +2709,7 @@ footer {
   margin-top: 56px;
 }
 
-/* ── Demo request page ── */
+/* ── Demo request form (DemoForm; version B restyles it in b-dform.css) ── */
 .demo-form-wrap {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -2721,16 +2721,6 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-.demo-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-@media (max-width: 640px) {
-  .demo-row {
-    grid-template-columns: 1fr;
-  }
 }
 .demo-field {
   display: flex;
@@ -2745,8 +2735,7 @@ footer {
   color: var(--dim);
 }
 .demo-field input,
-.demo-field select,
-.demo-field textarea {
+.demo-field select {
   width: 100%;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -2759,14 +2748,8 @@ footer {
     border-color var(--duration-fast) ease,
     box-shadow var(--duration-fast) ease;
 }
-.demo-field textarea {
-  resize: vertical;
-  min-height: 110px;
-  font-family: var(--font-sans);
-}
 .demo-field input:focus,
-.demo-field select:focus,
-.demo-field textarea:focus {
+.demo-field select:focus {
   outline: none;
   border-color: var(--violet);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--violet) 18%, transparent);
@@ -2782,146 +2765,6 @@ footer {
 .demo-consent input {
   margin-top: 4px;
 }
-.demo-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.demo-path-toggle {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.demo-path-heading {
-  margin: 0;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--dim);
-}
-.demo-path-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.demo-path-pill {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  background: var(--bg);
-  border: 1px solid var(--border-mid);
-  border-radius: var(--radius-full);
-  padding: 8px 16px;
-  font: inherit;
-  color: var(--text);
-  text-align: center;
-  cursor: pointer;
-  transition:
-    border-color var(--duration-fast) ease,
-    background-color var(--duration-fast) ease,
-    box-shadow var(--duration-fast) ease,
-    color var(--duration-fast) ease;
-}
-.demo-path-pill-primary {
-  min-height: 64px;
-  padding: 16px 16px;
-}
-.demo-path-pill-primary .demo-path-pill-title {
-  font-size: 17px;
-}
-.demo-path-pill-secondary {
-  min-height: 40px;
-  padding: 4px 16px;
-}
-.demo-path-pill-secondary .demo-path-pill-title {
-  font-size: 13px;
-}
-.demo-path-pill-secondary .demo-path-pill-meta {
-  font-size: 11px;
-}
-.demo-path-pill-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  line-height: 1;
-}
-.demo-path-pill-row svg {
-  color: var(--violet);
-  flex-shrink: 0;
-  transition: color var(--duration-fast) ease;
-}
-.demo-path-pill-title {
-  font-weight: 600;
-  font-size: 14.5px;
-}
-.demo-path-pill-meta {
-  font-size: 12px;
-  color: var(--muted);
-  transition: color var(--duration-fast) ease;
-}
-.demo-path-pill:hover,
-.demo-path-pill:focus-visible {
-  outline: none;
-  border-color: var(--violet);
-  background: color-mix(in oklab, var(--violet) 6%, var(--bg));
-}
-.demo-path-pill.is-selected {
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--violet) 0%, var(--violet-deep) 100%);
-  color: #fff;
-  box-shadow: 0 6px 18px rgba(85, 70, 224, 0.28);
-}
-.demo-path-pill.is-selected .demo-path-pill-row svg,
-.demo-path-pill.is-selected .demo-path-pill-meta {
-  color: #fff;
-}
-.demo-path-confirm {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--text);
-}
-.demo-path-confirm svg {
-  flex-shrink: 0;
-  color: var(--violet);
-}
-.demo-path-confirm .demo-startup-link {
-  margin-left: auto;
-}
-.demo-startup-link {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  color: var(--violet);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  cursor: pointer;
-}
-.demo-startup-link:hover {
-  color: var(--violet-deep);
-}
-.demo-form .btn {
-  align-self: flex-start;
-}
-
-.demo-steps {
-  list-style: none;
-  padding: 0;
-  margin: 16px 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.demo-steps strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
 .demo-success {
   background: var(--surface);
   border: 1px solid var(--border);

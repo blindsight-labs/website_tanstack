@@ -189,8 +189,8 @@
 /* ==========================================================================
    The demo card: dark glass (the black-sheet language) in both themes
    ========================================================================== */
-/* chrome tokens: the rim (the site's metal gradient, 1px) and the quieter hairline shared by
-   the close button, the path cards and the fields. The card follows the site theme. */
+/* chrome tokens: the rim (the site's metal gradient, 1px) and the quieter hairline on the
+   fields. The card follows the site theme. */
 .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
   --pb-card: var(--surface);
   --pb-field: var(--surface);
@@ -217,7 +217,7 @@
 }
 /* the card: its own surface inside a 1px machined metal rim */
 .mD[data-site-variant="b"] .modal-backdrop[data-site-variant="b"] .bs-modal {
-  max-width: 880px;
+  max-width: 960px;
   overscroll-behavior: contain;
   border: 1px solid transparent;
   border-radius: var(--r);
@@ -243,30 +243,32 @@
     transform: translateY(12px);
   }
 }
+/* two columns: the offer (tag, headline, steps, where it deploys) | the form panel */
 .mD[data-site-variant="b"] .pb-modal {
   position: relative;
-  padding: var(--s7) var(--s7) var(--s7);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: var(--s7);
+  align-items: start;
+  padding: var(--s7);
 }
-/* the chrome hairline, shared: the path cards, the fields */
-.mD[data-site-variant="b"] .pb-modal .demo-path-pill,
-.mD[data-site-variant="b"] .pb-modal .demo-path-confirm,
-.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea) {
+/* the chrome hairline on the fields */
+.mD[data-site-variant="b"] .pb-modal .demo-field input {
   border: 1px solid transparent;
   background:
     linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
     var(--pb-hair) border-box;
   box-shadow: none;
 }
-.mD[data-site-variant="b"] .pb-modal .demo-path-pill:hover,
-.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea):hover {
+.mD[data-site-variant="b"] .pb-modal .demo-field input:hover {
   background:
     linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
     var(--pb-hair-strong) border-box;
 }
 .mD[data-site-variant="b"] .pb-modal__close {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 4px;
+  right: 4px;
   z-index: 2;
   display: grid;
   place-items: center;
@@ -288,76 +290,99 @@
   outline: 2px solid var(--signal);
   outline-offset: 2px;
 }
-.mD[data-site-variant="b"] .pb-modal__head {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: var(--s4);
-  align-items: start;
-  padding-right: 52px;
-}
-/* the maker's badge: the flat mark in the site's metal gradient */
-.mD[data-site-variant="b"] .pb-modal__mark {
-  display: block;
-  width: 34px;
-  height: 34px;
-  margin-top: -2px;
-}
-.mD[data-site-variant="b"] .pb-modal__headText {
+.mD[data-site-variant="b"] .pb-modal__intro {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
-  padding-top: 4px;
+  gap: var(--s4);
+  min-width: 0;
+}
+.mD[data-site-variant="b"] .pb-modal__tag {
+  padding: 7px 12px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--line);
 }
 .mD[data-site-variant="b"] .pb-modal__title {
-  font-size: clamp(26px, 3vw, 34px);
-  line-height: 1.12;
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1.1;
 }
 .mD[data-site-variant="b"] .pb-modal__sub {
   font-size: 15px;
   line-height: 1.55;
   color: var(--ink-2);
 }
-.mD[data-site-variant="b"] .pb-modal__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
-  gap: var(--s7);
-  align-items: start;
-  margin-top: var(--s6);
-  padding-top: var(--s6);
-  border-top: 1px solid var(--line);
-}
-/* while the form is still only the path choice (or already sent), the left column is short:
-   the steps run across under it instead of down beside it, so the card has no void */
-@media (min-width: 721px) {
-  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-modal__grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--s6);
-  }
-  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-modal__next {
-    padding: var(--s5) 0 0;
-    border-left: 0;
-    border-top: 1px solid var(--line-2);
-  }
-  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-next {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0 var(--s5);
-    border-top: 0;
-  }
-  .mD[data-site-variant="b"] .pb-modal:is(:has(.demo-path-toggle:not([hidden])), :has(.demo-success)) .pb-next__item {
-    border-bottom: 0;
-    padding-bottom: 0;
-  }
-}
-.mD[data-site-variant="b"] .pb-modal__form {
-  min-width: 0;
-}
-.mD[data-site-variant="b"] .pb-modal__next {
+/* the steps (parts.tsx Steps): unruled, each number in a small rounded-square badge */
+.mD[data-site-variant="b"] .pb-modal .pb-next {
   display: flex;
   flex-direction: column;
-  padding-left: var(--s6);
-  border-left: 1px solid var(--line-2);
+  gap: var(--s4);
+  margin-top: var(--s3);
+  border-top: 0;
+}
+.mD[data-site-variant="b"] .pb-modal .pb-next__item {
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 2px 14px;
+  padding: 0;
+  border-bottom: 0;
+}
+.mD[data-site-variant="b"] .pb-modal .pb-next__n {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: var(--r);
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal .pb-next__k {
+  align-self: center;
+}
+.mD[data-site-variant="b"] .pb-modal__hosting {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: var(--s4);
+}
+.mD[data-site-variant="b"] .pb-modal__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mD[data-site-variant="b"] .pb-modal__chips li {
+  padding: 5px 10px;
+  border-radius: var(--r);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+/* the form panel: a hairline card, as the application form's (.pb-apply__panel) */
+.mD[data-site-variant="b"] .pb-modal__panel {
+  min-width: 0;
+  padding: var(--s6);
+  border-radius: var(--r);
+  box-shadow: 0 0 0 1px var(--line);
+}
+.mD[data-site-variant="b"] .pb-modal__panelTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.mD[data-site-variant="b"] .pb-modal__panelSub {
+  margin: 4px 0 var(--s5);
+  font-size: var(--t-small);
+  color: var(--ink-3);
+}
+/* sent: the confirmation stands alone in the panel */
+.mD[data-site-variant="b"] .pb-modal__panel:has(.demo-success) :is(.pb-modal__panelTitle, .pb-modal__panelSub) {
+  display: none;
 }
 
 /* reCAPTCHA v3: the floating badge is hidden (Google allows it when the form carries the
@@ -464,7 +489,7 @@
 .mD[data-site-variant="b"] .pb-file:has(input[aria-invalid="true"]) .pb-file__face {
   box-shadow: inset 0 0 0 1px var(--form-error);
 }
-.mD[data-site-variant="b"] .pb-modal .demo-field :is(input, textarea)[aria-invalid="true"] {
+.mD[data-site-variant="b"] .pb-modal .demo-field input[aria-invalid="true"] {
   background:
     linear-gradient(var(--pb-field), var(--pb-field)) padding-box,
     linear-gradient(var(--form-error), var(--form-error)) border-box;
