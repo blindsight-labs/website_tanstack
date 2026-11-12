@@ -126,10 +126,10 @@ type Tone = "allow" | "flag" | "redact" | "block" | "ok" | "warn" | "bad" | "inf
 type Icon = ComponentType<LucideProps>;
 
 const VIEWS: { id: ViewId; label: string; page: PageId; caption: string }[] = [
-  { id: "discovery", label: "Shadow AI", page: "discovery", caption: "Every AI service in use at the bank, ranked by risk." },
+  { id: "discovery", label: "Shadow AI", page: "discovery", caption: "Every AI service in use across the company, ranked by risk." },
   { id: "insights", label: "Insights", page: "insights", caption: "How much AI is in use, and how much of it is governed." },
   { id: "endpoints", label: "Endpoints", page: "endpoints", caption: "Client data pseudonymized on the device, before a prompt leaves." },
-  { id: "policies", label: "Policies", page: "configurations", caption: "The bank's written AI policy, read once and compiled into rules." },
+  { id: "policies", label: "Policies", page: "configurations", caption: "Your written AI policy, read once and compiled into rules." },
 ];
 const PAGE_VIEW: Record<PageId, ViewId> = {
   overview: "discovery",
@@ -616,11 +616,11 @@ export function Walkthrough(_props: SectionProps) {
           <header ref={head} className="mid-wt__head" data-reveal>
             <div>
               <h2 id="mid-wt-title" className="mD-h1 mid-wt__title">
-                One console, from the first AI found to the policy enforced.
+                Find the AI in use. Protect what goes into it. Enforce the policy.
               </h2>
             </div>
             <p className="mid-wt__intro">
-              Shadow AI and endpoint DLP as a security team at a private bank works in them. Switch between the views; the data is illustrative.
+              A look inside Shadow AI discovery and endpoint DLP. Switch between the views; all data is illustrative.
             </p>
           </header>
 
