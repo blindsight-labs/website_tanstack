@@ -91,8 +91,8 @@ export function DemoForm() {
             Thanks, we'll be in touch.
           </h2>
           <p>
-            A founder will reply within one business day from{" "}
-            <a href="mailto:info@blindsight.io">info@blindsight.io</a>.
+            We'll email you from <a href="mailto:info@blindsight.io">info@blindsight.io</a> to set up
+            your assessment.
           </p>
         </div>
       ) : (
@@ -171,7 +171,7 @@ export function DemoForm() {
             <FormAlert error={error} email="info@blindsight.io" subject="Website request" />
           )}
           <button type="submit" className="mD-btn mD-btn--primary mD-btn--lg" disabled={submitting}>
-            {submitting ? "Sending…" : "Request a demo"}
+            {submitting ? "Sending…" : "Request my free assessment"}
           </button>
           <RecaptchaNotice className="demo-captcha-note" />
         </form>
