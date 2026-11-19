@@ -215,5 +215,7 @@ export const footer = {
     { label: "FAQ", to: "/faq" },
     { label: "Imprint", to: "/imprint" },
     { label: "Privacy", to: "/privacy" },
-  ] as { label: string; to: SiteRoute }[],
+    // static pages in public/ (not routes of this app), so a plain link
+    { label: "Platform legal", href: "/platform/legal/" },
+  ] as ({ label: string; to: SiteRoute } | { label: string; href: string })[],
 };

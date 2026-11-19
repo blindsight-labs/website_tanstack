@@ -40,6 +40,12 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/imprint", changefreq: "yearly", priority: "0.3" },
           { path: "/privacy", changefreq: "yearly", priority: "0.3" },
           { path: "/evaluation-terms", changefreq: "yearly", priority: "0.3" },
+          { path: "/platform/legal/", changefreq: "yearly", priority: "0.3" },
+          { path: "/platform/legal/eula", changefreq: "yearly", priority: "0.3" },
+          { path: "/platform/legal/dpa", changefreq: "yearly", priority: "0.3" },
+          { path: "/platform/legal/subprocessors", changefreq: "yearly", priority: "0.3" },
+          { path: "/platform/legal/privacy", changefreq: "yearly", priority: "0.3" },
+          { path: "/platform/legal/third-party", changefreq: "yearly", priority: "0.3" },
         ];
 
         const urls = entries.map((e) =>
