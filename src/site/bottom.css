@@ -170,7 +170,7 @@
 }
 
 @media (max-width: 599px) {
-  /* six links as two even rows of three, never one left alone; the cookie item gets its own
+  /* six links as two even rows of three, the seventh (platform legal) centred on its own row, never one left alone; the cookie item gets its own
      full row so it can't widen a column; the grid centred as a block */
   .mDb-footer__links {
     display: grid;
@@ -179,7 +179,8 @@
     justify-items: center;
     gap: 0 28px;
   }
-  .mDb-footer__consent-item {
+  .mDb-footer__consent-item,
+  .mDb-footer__links li:nth-child(7) {
     grid-column: 1 / -1;
   }
   .mDb-final__sheet {

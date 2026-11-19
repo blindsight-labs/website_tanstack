@@ -40,7 +40,7 @@ export function Footer() {
             <ul className="mDb-footer__links">
               {footer.links.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to}>{l.label}</Link>
+                  {"href" in l ? <a href={l.href}>{l.label}</a> : <Link to={l.to}>{l.label}</Link>}
                 </li>
               ))}
               {COOKIEBOT_CBID && (
